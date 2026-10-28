@@ -1,0 +1,20 @@
+Muse Spark High is failing to fix our UI issues.
+
+## Asset List
+This asset list should appear on these two urls:
+/assets
+/assets/<asset>
+It should be all the way to left
+Not centering the content area.
+When we add or edit an asset it should not have the asset list as the assets list form will take up the entire content area, but header will still be there.
+
+## Asset Form
+We should not see the form inline
+/assets/<asset>
+
+We should have:
+/assets/<asset>/new
+/assets/<asset>/edit
+
+## Run Generaiton
+The run generation button should not be in the asset form, it should be button on the version. Judgement it a seperate form, and it should be its own button and have its own urls.

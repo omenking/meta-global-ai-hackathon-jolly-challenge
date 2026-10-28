@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Asset Design Tool</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { color-scheme: light; }
+  body { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+         margin: 0; color: #1c1c1c; background: #f4f4f4; font-size: 14px;
+         padding-bottom: 36px; }
+  header { background: #2b2b2b; color: #fff; padding: 10px 16px;
+           display: flex; align-items: center; justify-content: space-between;
+           gap: 12px; }
+  header h1 { font-size: 16px; margin: 0; font-weight: 600; }
+  header p { margin: 2px 0 0; font-size: 12px; color: #bbb; }
+  header nav { display: flex; align-items: center; gap: 12px; }
+  header nav a { color: #fff; font-size: 13px; }
+  header button { margin-top: 0; white-space: nowrap; }
+  main { padding: 12px; }
+  .view { max-width: 960px; margin: 0 auto; }
+  .view-fluid { max-width: none; margin: 0; }
+  .ws-grid { display: grid; grid-template-columns: 240px 1fr; gap: 12px;
+             align-items: start; }
+  @media (max-width: 700px) { .ws-grid { grid-template-columns: 1fr; } }
+  li.asset.sel { background: #e0eaf5; font-weight: 600; }
+  section { background: #fff; border: 1px solid #ddd; border-radius: 6px;
+            padding: 12px; }
+  section h2 { font-size: 13px; margin: 0 0 8px; text-transform: none; }
+  .form-page { max-width: 640px; }
+  ul.clean { list-style: none; margin: 0; padding: 0; }
+  li.asset { padding: 6px 8px; border-radius: 4px; }
+  li.asset:hover { background: #eee; }
+  .ver { display: flex; gap: 10px; border: 1px solid #ddd; border-radius: 6px;
+         padding: 8px; margin-bottom: 8px; cursor: pointer; }
+  .ver.sel { border-color: #2f6fbb; }
+  .ver-info { flex: 1; min-width: 0; }
+  .ver-actions { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .ver-actions a { text-decoration: none; }
+  .badge { display: inline-block; font-size: 11px; padding: 1px 7px;
+           border-radius: 10px; background: #e4e4e4; margin-left: 6px; }
+  .badge.completed { background: #d9ecd9; }
+  .badge.failed { background: #f3d3d3; }
+  .thumb { width: 100%; max-height: 240px; object-fit: contain;
+           background: #f1f1f1; border: 1px solid #ccc; margin-top: 6px;
+           display: block; box-sizing: border-box; }
+  .thumb-link { flex: 0 0 112px; position: relative; display: block;
+                align-self: flex-start; }
+  .thumb-small { width: 112px; height: 112px; object-fit: cover;
+                 border: 1px solid #ccc; background: #f1f1f1; display: block; }
+  .thumb-link .zoom { display: none; position: absolute; right: 116px; top: 0;
+                      width: 320px; max-height: 320px; object-fit: contain;
+                      background: #fff; border: 1px solid #999; z-index: 30; }
+  .thumb-link:hover .zoom { display: block; }
+  .prompt { white-space: pre-wrap; font-size: 12px; background: #f7f7f7;
+            padding: 6px; border-radius: 4px; margin: 6px 0; }
+  label { display: block; font-size: 12px; margin: 8px 0 2px; font-weight: 600; }
+  input[type=text], input[type=number], textarea, select {
+    width: 100%; box-sizing: border-box; font: inherit; padding: 5px;
+    border: 1px solid #bbb; border-radius: 4px; }
+  textarea { min-height: 90px; font-size: 12px; }
+  button { font: inherit; padding: 6px 14px; margin-top: 10px;
+           background: #2f6fbb; color: #fff; border: none; border-radius: 4px;
+           cursor: pointer; }
+  button:disabled { background: #999; cursor: default; }
+  button.secondary { background: #666; }
+  .row { display: flex; gap: 8px; }
+  .row > div { flex: 1; }
+  footer { position: fixed; left: 0; right: 0; bottom: 0; background: #2b2b2b;
+           color: #ddd; padding: 6px 16px; font-size: 12px; }
+  #status { min-height: 16px; display: block; }
+  #status.err { color: #ff9d9d; }
+  #status.ok { color: #9fe09f; }
+  .cost { font-size: 12px; color: #444; margin-top: 6px; }
+  .warn { font-size: 12px; color: #8a5a00; margin-top: 4px; }
+  .ref { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  .ref-thumb { width: 48px; height: 48px; object-fit: cover;
+               border: 1px solid #ccc; }
+  .tile3 { display: grid; grid-template-columns: repeat(3, 1fr);
+           width: 288px; max-width: 100%; border: 1px solid #999;
+           margin: 6px 0; line-height: 0; background: #fff; }
+  .tile3 img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .tile3-sm { width: 144px; }
+  .lot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+             gap: 8px; margin: 8px 0; }
+  .lot-cell { border: 1px solid #ccc; border-radius: 4px; padding: 6px;
+              background: #fafafa; font-size: 11px; }
+  .lot-cell img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+                 border: 1px solid #ddd; background: #fff; }
+  .lot-cell.sel { border-color: #2f6fbb; box-shadow: 0 0 0 1px #2f6fbb; }
+  .lot-cell .key { word-break: break-all; margin: 4px 0; }
+  .judge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+               gap: 6px; margin: 8px 0; }
+  .judge-cell { border: 2px solid transparent; border-radius: 4px; padding: 0;
+               background: none; margin: 0; cursor: pointer; }
+  .judge-cell img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+                   border: 1px solid #ccc; }
+  .judge-cell.sel { border-color: #2f6fbb; }
+  .sel-card { border: 1px solid #ddd; border-radius: 6px; padding: 8px;
+              margin: 8px 0; background: #fafafa; }
+  .sel-head { display: flex; gap: 8px; align-items: flex-start; }
+  .sel-thumb { width: 72px; height: 72px; object-fit: cover; flex: none;
+               border: 1px solid #ccc; background: #fff; }
+  .sel-key { font-size: 12px; font-weight: 600; word-break: break-all; }
+  .sel-judge { font-size: 12px; color: #444; white-space: pre-wrap; margin-top: 2px; }
+  .mode { font-size: 12px; padding: 6px; border: 1px solid #bbb;
+          background: #f7f7f7; border-radius: 4px; margin: 8px 0; }
+  .diff { white-space: pre-wrap; font-size: 12px; background: #f7f7f7;
+          padding: 6px; border-radius: 4px; margin: 6px 0; }
+  .diff ins { background: #d9ecd9; text-decoration: none; }
+  .diff del { background: #f3d3d3; }
+  .check { display: flex; gap: 6px; align-items: center; font-size: 12px;
+           font-weight: 400; margin: 4px 0; }
+  .pref-badge { background: #2f6fbb; color: #fff; }
+  .pane-head { display: flex; align-items: center; justify-content: space-between;
+               margin-bottom: 8px; }
+  .pane-head h2 { margin: 0; }
+  button.small { padding: 3px 10px; margin-top: 0; font-size: 12px; }
+  .err { color: #a00; font-size: 12px; margin-top: 6px; min-height: 16px; }
+  .back { font-size: 12px; display: inline-block; margin-bottom: 8px; }
+  .muted { font-size: 12px; color: #666; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Asset Design Tool</h1>
+    <p id="summary">loading…</p>
+  </div>
+  <nav>
+    <a href="/assets">Assets</a>
+    <button id="go-new">New asset</button>
+  </nav>
+</header>
+<main>
+  <div id="view-home" class="view view-fluid" style="display:none">
+    <section>
+      <div class="pane-head">
+        <h2>Assets</h2>
+        <a href="/assets/new"><button class="secondary small">New asset</button></a>
+      </div>
+      <ul id="home-assets" class="clean"></ul>
+    </section>
+  </div>
+  <div id="view-new" class="view view-fluid" style="display:none">
+    <section class="form-page">
+      <a class="back" href="/assets">← Back to Assets</a>
+      <h2>New asset</h2>
+      <label>Name <input type="text" id="new-name" placeholder="floor_default"></label>
+      <div class="row">
+        <div><label>Width <input type="number" id="new-w" value="512"></label></div>
+        <div><label>Height <input type="number" id="new-h" value="512"></label></div>
+      </div>
+      <div id="new-error" class="err"></div>
+      <div class="modal-actions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <a href="/assets">Cancel</a>
+        <button id="add-asset">Create asset</button>
+      </div>
+    </section>
+  </div>
+  <div id="view-asset-edit" class="view view-fluid" style="display:none">
+    <section class="form-page">
+      <a class="back" id="ae-back" href="/assets">← Back to asset</a>
+      <h2 id="ae-title">Edit asset</h2>
+      <div class="row">
+        <div><label>Width <input type="number" id="ae-w"></label></div>
+        <div><label>Height <input type="number" id="ae-h"></label></div>
+      </div>
+      <div id="ae-error" class="err"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <a id="ae-cancel" href="/assets">Cancel</a>
+        <button id="ae-save">Save changes</button>
+      </div>
+    </section>
+  </div>
+  <div id="view-asset" class="view view-fluid" style="display:none">
+    <div class="ws-grid">
+      <section>
+        <div class="pane-head">
+          <h2>Assets</h2>
+          <a href="/assets/new"><button class="secondary small">New</button></a>
+        </div>
+        <ul id="ws-assets" class="clean"></ul>
+      </section>
+      <div>
+      <section>
+        <div class="pane-head">
+          <div>
+            <h2 id="ws-title">asset</h2>
+            <p id="ws-sub" class="muted" style="margin:4px 0 0"></p>
+          </div>
+          <div style="display:flex;gap:6px">
+            <a id="ws-edit-asset" href="#"><button class="secondary small">Edit asset</button></a>
+            <a id="ws-new-version" href="#"><button class="secondary small">New version</button></a>
+          </div>
+        </div>
+        <div id="versions"></div>
+      </section>
+      </div>
+    </div>
+  </div>
+  <div id="view-version-new" class="view view-fluid" style="display:none">
+    <section class="form-page">
+      <a class="back" id="nv-back" href="/assets">← Back to asset</a>
+      <h2 id="nv-title">New version</h2>
+      <label>New slug <input type="text" id="nv-slug" placeholder="v2"></label>
+      <label>Description <textarea id="nv-desc" rows="2"></textarea></label>
+      <div id="nv-refs"></div>
+      <div id="nv-sel"></div>
+      <button id="nv-compose" type="button" class="secondary small">Build prompt from selected images</button>
+      <label>Prompt <textarea id="nv-prompt"></textarea></label>
+      <div class="row">
+        <div><label>Width override <input type="number" id="nv-w" placeholder="asset default"></label></div>
+        <div><label>Height override <input type="number" id="nv-h" placeholder="asset default"></label></div>
+      </div>
+      <div id="nv-mode" class="mode"></div>
+      <div id="nv-error" class="err"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <a id="nv-cancel" href="/assets">Cancel</a>
+        <button id="nv-save" class="secondary">Save new version</button>
+      </div>
+    </section>
+  </div>
+  <div id="view-version-edit" class="view view-fluid" style="display:none">
+    <section class="form-page">
+      <a class="back" id="ev-back" href="/assets">← Back to asset</a>
+      <h2 id="ev-title">Edit version</h2>
+      <p id="ev-meta" class="muted"></p>
+      <div id="ev-parent-block">
+        <label>Inherited from parent <span id="ev-parent-slug" class="muted"></span>
+          <div id="ev-parent-prompt" class="prompt"></div>
+        </label>
+        <img id="ev-parent-img" class="thumb" style="display:none" alt="">
+        <label>Parent judgement
+          <div id="ev-parent-judge" class="prompt"></div>
+        </label>
+      </div>
+      <label>Description <textarea id="ev-desc" rows="2"></textarea></label>
+      <div id="ev-refs"></div>
+      <div id="ev-sel"></div>
+      <button id="ev-compose" type="button" class="secondary small">Build prompt from selected images</button>
+      <label>Prompt <textarea id="ev-prompt"></textarea></label>
+      <div id="ev-parent-diff-block">
+        <label>Prompt changes vs parent
+          <div id="ev-diff" class="diff"></div>
+        </label>
+      </div>
+      <div class="row">
+        <div><label>Width override <input type="number" id="ev-w" placeholder="asset default"></label></div>
+        <div><label>Height override <input type="number" id="ev-h" placeholder="asset default"></label></div>
+      </div>
+      <div id="ev-mode" class="mode"></div>
+      <div id="ev-error" class="err"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <a id="ev-cancel" href="/assets">Cancel</a>
+        <button id="ev-save">Save changes</button>
+      </div>
+    </section>
+  </div>
+  <div id="view-run" class="view view-fluid" style="display:none">
+    <section class="form-page">
+      <a class="back" id="run-back" href="/assets">← Back to asset</a>
+      <h2 id="run-title">Run generation</h2>
+      <p id="run-info" class="muted"></p>
+      <label>Exact prompt that will be sent
+        <div id="run-prompt" class="prompt"></div>
+      </label>
+      <label>Prompt changes vs parent
+        <div id="run-diff" class="diff"></div>
+      </label>
+      <div id="run-mode" class="mode"></div>
+      <label>Number of images (lottery, 1–10)
+        <input type="number" id="run-num" min="1" max="10" step="1" value="4">
+      </label>
+      <div class="muted">One API call produces N images (~$0.01/image). N=1 behaves as before.</div>
+      <div id="run-refs"></div>
+      <button id="run-btn">Run generation</button>
+      <div id="run-result"></div>
+    </section>
+  </div>
+  <div id="view-judge" class="view view-fluid" style="display:none">
+    <section class="form-page">
+      <a class="back" id="judge-back" href="/assets">← Back to asset</a>
+      <h2 id="judge-title">Judgement</h2>
+      <label>Output
+        <select id="judge-output"></select>
+      </label>
+      <div id="judge-grid" class="judge-grid"></div>
+      <label>Parent judgement
+        <img id="judge-parent-img" class="thumb" style="display:none" alt="">
+        <div id="judge-parent-text" class="prompt"></div>
+      </label>
+      <label>This output
+        <img id="judge-cur-img" class="thumb" style="display:none" alt="">
+        <div id="judge-cur-tile" class="tile3" style="display:none"></div>
+        <span class="muted">3×3 tiled above — check seams, corners and edge fill here, not only in the single image.</span>
+      </label>
+      <div>
+        <label>Tile checklist</label>
+        <label class="check"><input type="checkbox" id="chk-edge"> Covers frame edge-to-edge, no white/frame</label>
+        <label class="check"><input type="checkbox" id="chk-corners"> Sharp square 90° corners</label>
+        <label class="check"><input type="checkbox" id="chk-cracks"> No cracks, joints or separate slabs</label>
+        <label class="check"><input type="checkbox" id="chk-clean"> No moss, weathering or stains</label>
+        <label class="check"><input type="checkbox" id="chk-seamless"> Seamless in 3×3 (no seams/grid)</label>
+        <label class="check"><input type="checkbox" id="judge-preferred"> Preferred output for this version</label>
+      </div>
+      <label>Judgement
+        <textarea id="judge-text"></textarea>
+      </label>
+      <div id="judge-error" class="err"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap">
+        <a id="judge-cancel" href="/assets">Cancel</a>
+        <button id="judge-next" type="button" class="secondary">Save + create next version</button>
+        <button id="judge-save" class="secondary">Save judgement</button>
+      </div>
+    </section>
+  </div>
+  <div id="view-404" class="view view-fluid" style="display:none">
+    <section>
+      <h2>Not found</h2>
+      <p id="nf-text">No asset named <strong id="nf-name"></strong>.</p>
+      <a href="/assets">← Back to Assets</a>
+    </section>
+  </div>
+</main>
+<footer><span id="status"></span></footer>
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+let assets = [], curAsset = null, curVersion = null, pendingRefs = null;
+
+function assetByName(name) { return assets.find(a => a.name === name) || null; }
+function versionBySlug(asset, slug) {
+  return asset ? (asset.versions.find(v => v.slug === slug) || null) : null;
+}
+function newestFirst(asset) { return asset.versions.slice().reverse(); }
+
+function toServedUrl(stored) {
+  if (!stored) return stored;
+  if (stored.charAt(0) === "/") return stored;
+  const m = stored.match(/^assets\/outputs\/(.+)$/);
+  if (m) return "/outputs/" + m[1];
+  return "/" + stored;
+}
+
+function escapeHtml(s) {
+  return (s || "").replace(/[&<>"']/g, c =>
+    ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+}
+
+function status(msg, cls) {
+  const el = $("status");
+  el.textContent = msg || "";
+  el.className = cls || "";
+}
+
+async function api(method, path, body) {
+  const res = await fetch(path, {
+    method,
+    headers: {"Content-Type": "application/json"},
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || ("HTTP " + res.status));
+  return data;
+}
+
+async function refresh() {
+  const data = await api("GET", "/api/assets");
+  assets = data.assets;
+  $("summary").textContent = assets.length + " asset(s). Lottery runs 1–10; spend is recorded in Cost Center.";
+  if (curAsset) curAsset = assetByName(curAsset.name);
+  if (curAsset && curVersion) curVersion = versionBySlug(curAsset, curVersion.slug);
+  route();
+}
+
+function renderHome() {
+  const ul = $("home-assets");
+  ul.innerHTML = "";
+  if (!assets.length) {
+    ul.innerHTML = '<li class="asset">No assets yet.</li>';
+    return;
+  }
+  for (const a of assets) {
+    const li = document.createElement("li");
+    li.className = "asset";
+    const link = document.createElement("a");
+    link.href = "/assets/" + encodeURIComponent(a.name);
+    link.textContent = a.name + " (" + a.versions.length + ")";
+    li.appendChild(link);
+    ul.appendChild(li);
+  }
+}
+
+function nav(path) {
+  history.pushState(null, "", path);
+  route();
+}
+
+function show(id) {
+  for (const v of document.querySelectorAll(".view")) v.style.display = "none";
+  $(id).style.display = "";
+}
+
+function notFound(text, name) {
+  $("nf-text").innerHTML = "";
+  $("nf-text").appendChild(document.createTextNode(text + " "));
+  const strong = document.createElement("strong");
+  strong.textContent = name || "";
+  $("nf-text").appendChild(strong);
+  $("nf-text").appendChild(document.createTextNode("."));
+  show("view-404");
+}
+
+function route() {
+  const p = location.pathname;
+  const q = new URLSearchParams(location.search);
+  let m;
+  if (p === "/" || p === "/assets") {
+    curAsset = null; curVersion = null;
+    renderHome();
+    show("view-home");
+    return;
+  }
+  if (p === "/assets/new") {
+    $("new-error").textContent = "";
+    show("view-new");
+    return;
+  }
+  if ((m = p.match(/^\/assets\/([^/]+)\/([^/]+)\/edit$/))) {
+    const a = assetByName(decodeURIComponent(m[1]));
+    if (!a) { notFound("No asset named", decodeURIComponent(m[1])); return; }
+    const v = versionBySlug(a, decodeURIComponent(m[2]));
+    if (!v) { notFound("No version named", decodeURIComponent(m[2])); return; }
+    curAsset = a; curVersion = v;
+    renderVersionEdit();
+    show("view-version-edit");
+    return;
+  }
+  if ((m = p.match(/^\/assets\/([^/]+)\/([^/]+)\/run$/))) {
+    const a = assetByName(decodeURIComponent(m[1]));
+    if (!a) { notFound("No asset named", decodeURIComponent(m[1])); return; }
+    const v = versionBySlug(a, decodeURIComponent(m[2]));
+    if (!v) { notFound("No version named", decodeURIComponent(m[2])); return; }
+    curAsset = a; curVersion = v;
+    renderRun();
+    show("view-run");
+    return;
+  }
+  if ((m = p.match(/^\/assets\/([^/]+)\/([^/]+)\/judge$/))) {
+    const a = assetByName(decodeURIComponent(m[1]));
+    if (!a) { notFound("No asset named", decodeURIComponent(m[1])); return; }
+    const v = versionBySlug(a, decodeURIComponent(m[2]));
+    if (!v) { notFound("No version named", decodeURIComponent(m[2])); return; }
+    curAsset = a; curVersion = v;
+    renderJudge(q.get("output"));
+    show("view-judge");
+    return;
+  }
+  if ((m = p.match(/^\/assets\/([^/]+)\/new$/))) {
+    const a = assetByName(decodeURIComponent(m[1]));
+    if (!a) { notFound("No asset named", decodeURIComponent(m[1])); return; }
+    curAsset = a; curVersion = null;
+    renderVersionNew();
+    show("view-version-new");
+    return;
+  }
+  if ((m = p.match(/^\/assets\/([^/]+)\/edit$/))) {
+    const a = assetByName(decodeURIComponent(m[1]));
+    if (!a) { notFound("No asset named", decodeURIComponent(m[1])); return; }
+    curAsset = a; curVersion = null;
+    renderAssetEdit();
+    show("view-asset-edit");
+    return;
+  }
+  if ((m = p.match(/^\/assets\/([^/]+)$/))) {
+    const a = assetByName(decodeURIComponent(m[1]));
+    if (!a) { notFound("No asset named", decodeURIComponent(m[1])); return; }
+    curAsset = a; curVersion = null;
+    renderWorkspace();
+    show("view-asset");
+    return;
+  }
+  notFound("Unknown path", p);
+}
+window.addEventListener("popstate", route);
+document.addEventListener("click", (e) => {
+  if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  const a = e.target.closest && e.target.closest('a[href^="/assets"], a[href="/"]');
+  if (!a || a.target) return;
+  e.preventDefault();
+  nav(a.getAttribute("href"));
+});
+
+function assetHref(name) { return "/assets/" + encodeURIComponent(name); }
+function versionNewHref(name) { return assetHref(name) + "/new"; }
+function assetEditHref(name) { return assetHref(name) + "/edit"; }
+function versionEditHref(name, slug) {
+  return assetHref(name) + "/" + encodeURIComponent(slug) + "/edit";
+}
+function versionRunHref(name, slug) {
+  return assetHref(name) + "/" + encodeURIComponent(slug) + "/run";
+}
+function versionJudgeHref(name, slug, outputKey) {
+  let u = assetHref(name) + "/" + encodeURIComponent(slug) + "/judge";
+  if (outputKey) u += "?output=" + encodeURIComponent(outputKey);
+  return u;
+}
+
+function renderWorkspace() {
+  $("ws-title").textContent = curAsset.name;
+  $("ws-sub").textContent = curAsset.width + "x" + curAsset.height +
+    " · " + curAsset.versions.length + " version(s), newest first";
+  $("ws-edit-asset").href = assetEditHref(curAsset.name);
+  $("ws-new-version").href = versionNewHref(curAsset.name);
+  const ul = $("ws-assets");
+  ul.innerHTML = "";
+  for (const a of assets) {
+    const li = document.createElement("li");
+    li.className = "asset" + (a.name === curAsset.name ? " sel" : "");
+    const link = document.createElement("a");
+    link.href = assetHref(a.name);
+    link.textContent = a.name + " (" + a.versions.length + ")";
+    li.appendChild(link);
+    ul.appendChild(li);
+  }
+  renderVersions();
+}
+
+function badge(v) {
+  const s = v.status || (v.outputs.length ? "completed" : "not run");
+  return '<span class="badge ' + s + '">' + s + "</span>";
+}
+
+function renderVersions() {
+  const box = $("versions");
+  box.innerHTML = "";
+  if (!curAsset.versions.length) {
+    box.textContent = "No versions yet — use New version above.";
+    return;
+  }
+  for (const v of newestFirst(curAsset)) {
+    const div = document.createElement("div");
+    div.className = "ver";
+    const info = document.createElement("div");
+    info.className = "ver-info";
+    let html = "<strong>" + escapeHtml(v.slug) + "</strong>" + badge(v);
+    if (v.outputs.length > 1) html += ' <span style="font-size:12px">' + v.outputs.length + " outputs</span>";
+    if (v.parent) html += ' <span style="font-size:12px">from ' + escapeHtml(v.parent) + "</span>";
+    else if ((v.references || []).length) html += ' <span style="font-size:12px">' + v.references.length + " ref" + (v.references.length > 1 ? "s" : "") + "</span>";
+    if (v.desc) html += '<div style="font-size:12px">' + escapeHtml(v.desc) + "</div>";
+    html += '<div class="prompt">' + escapeHtml(v.prompt) + "</div>";
+    const latest = displayOutput(v);
+    if (latest && latest.preferred)
+      html += ' <span class="badge pref-badge">preferred output shown</span>';
+    if (latest && latest.estimated_usd)
+      html += '<div class="cost">last run ~$' + escapeHtml(latest.estimated_usd) + "</div>";
+    const j = latest && latest.human_review;
+    if (j) html += '<div class="prompt">judgement: ' + escapeHtml(j) + "</div>";
+    info.innerHTML = html;
+    div.appendChild(info);
+    if (latest) {
+      const a = document.createElement("a");
+      a.className = "thumb-link";
+      a.href = toServedUrl(latest.original_path || latest.path);
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.title = "Open original (raw)";
+      const img = document.createElement("img");
+      img.className = "thumb-small";
+      img.src = toServedUrl(latest.path);
+      img.alt = "";
+      const zoom = document.createElement("img");
+      zoom.className = "zoom";
+      zoom.src = img.src;
+      zoom.alt = "";
+      a.appendChild(img);
+      a.appendChild(zoom);
+      div.appendChild(a);
+    }
+    const actions = document.createElement("div");
+    actions.className = "ver-actions";
+    const editA = document.createElement("a");
+    editA.href = versionEditHref(curAsset.name, v.slug);
+    editA.innerHTML = '<button class="secondary small" type="button">Edit</button>';
+    const runA = document.createElement("a");
+    runA.href = versionRunHref(curAsset.name, v.slug);
+    runA.innerHTML = '<button class="small" type="button">Run generation</button>';
+    actions.appendChild(editA);
+    actions.appendChild(runA);
+    if (v.outputs.length) {
+      const judgeA = document.createElement("a");
+      judgeA.href = versionJudgeHref(curAsset.name, v.slug);
+      judgeA.innerHTML = '<button class="secondary small" type="button">Judge</button>';
+      actions.appendChild(judgeA);
+    }
+    info.appendChild(actions);
+    box.appendChild(div);
+  }
+}
+
+function findOutputByFile(asset, file) {
+  for (const v of asset.versions)
+    for (const o of v.outputs)
+      if (o.key + ".png" === file) return {version: v, output: o};
+  return null;
+}
+function constraintsFor(checklist) {
+  const checks = checklist || {};
+  return CHECKLIST_ORDER.filter(k => checks[k] === false)
+    .map(k => CHECKLIST_CONSTRAINTS[k]).filter(Boolean);
+}
+function composePromptFromSelected(sels) {
+  const notes = [], phrases = [], reviews = [];
+  for (const s of sels) {
+    if ((s.note || "").trim()) notes.push("Image " + s.key + ": " + s.note.trim());
+    if (!s.bring) continue;
+    for (const p of constraintsFor(s.checklist))
+      if (!phrases.includes(p)) phrases.push(p);
+    if ((s.review || "").trim()) reviews.push('"' + s.review.trim() + '" (' + s.key + ")");
+  }
+  const parts = [];
+  if (notes.length) parts.push(notes.join("\n"));
+  if (phrases.length) parts.push("Constraints: " + phrases.join("; "));
+  if (reviews.length) parts.push("Judged notes: " + reviews.join(" "));
+  return parts.join("\n\n");
+}
+function selEntry(file) {
+  const found = findOutputByFile(curAsset, file);
+  const o = found && found.output;
+  const review = (o && o.human_review || "").trim();
+  const hasJ = !!review || constraintsFor(o && o.checklist).length > 0;
+  return {file, key: file.replace(/\.png$/, ""), bring: hasJ, note: ""};
+}
+function enrichSel(sel) {
+  return sel.map(s => {
+    const found = findOutputByFile(curAsset, s.file);
+    const o = found && found.output;
+    return {key: s.file.replace(/\.png$/, ""),
+            review: (o && o.human_review) || "",
+            checklist: (o && o.checklist) || {},
+            bring: s.bring, note: s.note};
+  });
+}
+function renderSelDetails(boxId, sel, onBring, onNote) {
+  const box = $(boxId);
+  box.innerHTML = "";
+  for (const s of sel) {
+    const found = findOutputByFile(curAsset, s.file);
+    const o = found && found.output;
+    const review = (o && o.human_review || "").trim();
+    const phrases = constraintsFor(o && o.checklist);
+    const card = document.createElement("div");
+    card.className = "sel-card";
+    const head = document.createElement("div");
+    head.className = "sel-head";
+    const im = document.createElement("img");
+    im.className = "sel-thumb";
+    if (o) im.src = toServedUrl(o.path);
+    im.alt = "";
+    head.appendChild(im);
+    const txt = document.createElement("div");
+    const key = document.createElement("div");
+    key.className = "sel-key";
+    key.textContent = s.key;
+    txt.appendChild(key);
+    const j = document.createElement("div");
+    j.className = "sel-judge";
+    j.textContent = review ||
+      (phrases.length ? "Checklist: " + phrases.join("; ") : "(no judgement yet)");
+    txt.appendChild(j);
+    head.appendChild(txt);
+    card.appendChild(head);
+    if (review || phrases.length) {
+      const lab = document.createElement("label");
+      lab.className = "check";
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = s.bring;
+      cb.onchange = () => onBring(s.file, cb.checked);
+      lab.appendChild(cb);
+      lab.appendChild(document.createTextNode(" Bring this judgement into the prompt"));
+      card.appendChild(lab);
+    }
+    const nlab = document.createElement("label");
+    nlab.textContent = "Note for this image";
+    const nin = document.createElement("input");
+    nin.type = "text";
+    nin.placeholder = "e.g. keep the background, drop the cracks";
+    nin.value = s.note;
+    nin.oninput = () => onNote(s.file, nin.value);
+    nlab.appendChild(nin);
+    card.appendChild(nlab);
+    box.appendChild(card);
+  }
+}
+function applyComposed(promptEl, composed, st) {
+  if (!composed) return false;
+  const cur = promptEl.value;
+  if (!cur.trim()) promptEl.value = composed;
+  else if (st.last && cur.trimEnd().endsWith(st.last)) {
+    const head = cur.trimEnd().slice(0, cur.trimEnd().length - st.last.length).trimEnd();
+    promptEl.value = head ? head + "\n\n" + composed : composed;
+  }
+  else promptEl.value = cur.trimEnd() + "\n\n" + composed;
+  st.last = composed;
+  return true;
+}
+let nvSel = [];
+const nvSt = {last: ""};
+function renderNvRefs() {
+  const {rows} = collectRefRows(curAsset, {slug: "", outputs: [], parent: null});
+  renderRefPicker($("nv-refs"), "nv-ref-count", rows,
+    row => nvSel.some(s => s.file === row.output.key + ".png"), syncNvSel);
+}
+function syncNvSel() {
+  const checked = selectedRefs($("nv-refs"));
+  nvSel = checked.map(f => nvSel.find(s => s.file === f) || selEntry(f));
+  renderNvSel();
+  updateNvMode();
+}
+function renderNvSel() {
+  renderSelDetails("nv-sel", nvSel,
+    (f, v) => { nvSel.find(s => s.file === f).bring = v; },
+    (f, v) => { nvSel.find(s => s.file === f).note = v; });
+}
+function updateNvMode() {
+  const box = $("nv-refs");
+  updateRefCount(box);
+  $("nv-mode").textContent = modeTextFor(selectedRefs(box).length, false, null, false);
+}
+function renderVersionNew() {
+  const base = assetHref(curAsset.name);
+  $("nv-back").href = base;
+  $("nv-cancel").href = base;
+  $("nv-title").textContent = "New version for " + curAsset.name;
+  $("nv-error").textContent = "";
+  nvSel = (pendingRefs || []).map(selEntry);
+  pendingRefs = null;
+  nvSt.last = "";
+  $("nv-slug").value = "";
+  $("nv-desc").value = "";
+  $("nv-prompt").value = "";
+  $("nv-w").value = "";
+  $("nv-h").value = "";
+  renderNvRefs();
+  renderNvSel();
+  if (nvSel.length) {
+    const composed = composePromptFromSelected(enrichSel(nvSel));
+    if (composed) { $("nv-prompt").value = composed; nvSt.last = composed; }
+  }
+  updateNvMode();
+}
+
+function renderVersionEdit() {
+  const base = assetHref(curAsset.name);
+  $("ev-back").href = base;
+  $("ev-cancel").href = base;
+  $("ev-title").textContent = "Edit version " + curVersion.slug;
+  $("ev-error").textContent = "";
+  $("ev-meta").textContent = "Asset " + curAsset.name +
+    (curVersion.parent ? " · parent " + curVersion.parent : " · no parent");
+  $("ev-desc").value = curVersion.desc || "";
+  $("ev-prompt").value = curVersion.prompt || "";
+  $("ev-w").value = curVersion.width || "";
+  $("ev-h").value = curVersion.height || "";
+  evSel = (curVersion.references || []).map(selEntry);
+  evSt.last = "";
+  const parent = curVersion.parent && versionBySlug(curAsset, curVersion.parent);
+  $("ev-parent-block").style.display = parent ? "" : "none";
+  $("ev-parent-diff-block").style.display = parent ? "" : "none";
+  if (parent) {
+    $("ev-parent-slug").textContent = "(" + parent.slug + ")";
+    $("ev-parent-prompt").textContent = parent.prompt || "(empty prompt)";
+    const pLatest = parent.outputs[parent.outputs.length - 1];
+    setImg($("ev-parent-img"), pLatest && pLatest.path);
+    $("ev-parent-judge").textContent =
+      (pLatest && pLatest.human_review) || "(no parent judgement)";
+    renderDiff($("ev-diff"), parent.prompt, curVersion.prompt);
+  }
+  renderEvRefs();
+  renderEvSel();
+  updateEvMode();
+}
+
+let evSel = [];
+const evSt = {last: ""};
+function renderEvRefs() {
+  const {rows} = collectRefRows(curAsset, curVersion);
+  renderRefPicker($("ev-refs"), "ev-ref-count", rows,
+    row => evSel.some(s => s.file === row.output.key + ".png"), syncEvSel);
+}
+function syncEvSel() {
+  const checked = selectedRefs($("ev-refs"));
+  evSel = checked.map(f => evSel.find(s => s.file === f) || selEntry(f));
+  renderEvSel();
+  updateEvMode();
+}
+function renderEvSel() {
+  renderSelDetails("ev-sel", evSel,
+    (f, v) => { evSel.find(s => s.file === f).bring = v; },
+    (f, v) => { evSel.find(s => s.file === f).note = v; });
+}
+function updateEvMode() {
+  const box = $("ev-refs");
+  updateRefCount(box);
+  const refs = selectedRefs(box);
+  const parent = parentOf(curVersion);
+  const identical = parent && (parent.prompt || "") === ($("ev-prompt").value || "");
+  $("ev-mode").textContent = modeTextFor(refs.length, identical,
+    parent && parent.slug, curVersion.outputs.length > 0);
+}
+
+function renderAssetEdit() {
+  const base = assetHref(curAsset.name);
+  $("ae-back").href = base;
+  $("ae-back").textContent = "← Back to " + curAsset.name;
+  $("ae-cancel").href = base;
+  $("ae-title").textContent = "Edit asset " + curAsset.name;
+  $("ae-error").textContent = "";
+  $("ae-w").value = curAsset.width;
+  $("ae-h").value = curAsset.height;
+}
+
+function displayOutput(v) {
+  if (!v || !v.outputs.length) return null;
+  return v.outputs.find(o => o.preferred) || v.outputs[v.outputs.length - 1];
+}
+function parentOf(v) {
+  return v && v.parent ? versionBySlug(curAsset, v.parent) : null;
+}
+const CHECKLIST_ORDER = ["covers_frame", "square_corners", "no_cracks", "no_weathering", "seamless_3x3"];
+const CHECKLIST_CONSTRAINTS = {
+  covers_frame: "texture must fill the entire frame edge to edge with no margin/border",
+  square_corners: "sharp square 90-degree corners, no rounding/bevel",
+  no_cracks: "no cracks/joints/grout/flagstones",
+  no_weathering: "no moss/weathering/stains",
+  seamless_3x3: "opposite edges must match so 3x3 tiling shows no seams",
+};
+function runNum() {
+  const n = parseInt(($("run-num") && $("run-num").value) || "4", 10);
+  return n;
+}
+function setTile(el, stored) {
+  el.innerHTML = "";
+  if (!stored) { el.style.display = "none"; return; }
+  const url = toServedUrl(stored);
+  for (let i = 0; i < 9; i++) {
+    const im = document.createElement("img");
+    im.src = url; im.alt = "";
+    el.appendChild(im);
+  }
+  el.style.display = "";
+}
+function wordDiffHTML(oldText, newText) {
+  const a = (oldText || "").split(/\s+/).filter(Boolean);
+  const b = (newText || "").split(/\s+/).filter(Boolean);
+  const dp = Array.from({length: a.length + 1}, () => new Array(b.length + 1).fill(0));
+  for (let i = a.length - 1; i >= 0; i--)
+    for (let j = b.length - 1; j >= 0; j--)
+      dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  let html = "", i = 0, j = 0;
+  while (i < a.length && j < b.length) {
+    if (a[i] === b[j]) { html += escapeHtml(a[i]) + " "; i++; j++; }
+    else if (dp[i + 1][j] >= dp[i][j + 1]) { html += "<del>" + escapeHtml(a[i]) + "</del> "; i++; }
+    else { html += "<ins>" + escapeHtml(b[j]) + "</ins> "; j++; }
+  }
+  while (i < a.length) { html += "<del>" + escapeHtml(a[i++]) + "</del> "; }
+  while (j < b.length) { html += "<ins>" + escapeHtml(b[j++]) + "</ins> "; }
+  return html || "(empty)";
+}
+function renderDiff(el, parentPrompt, prompt) {
+  if (parentPrompt == null) { el.textContent = "(no parent)"; return; }
+  if ((parentPrompt || "") === (prompt || "")) {
+    el.innerHTML = "<strong>Identical to parent prompt.</strong> Running it text-only would just re-roll the same prompt — change the prompt, not only the description.";
+    return;
+  }
+  el.innerHTML = wordDiffHTML(parentPrompt, prompt);
+}
+
+function setImg(el, stored) {
+  if (stored) {
+    el.src = toServedUrl(stored);
+    el.style.display = "";
+  } else {
+    el.removeAttribute("src");
+    el.style.display = "none";
+  }
+}
+
+function selectedRefs(box) {
+  return [...box.querySelectorAll("input:checked")].map(i => i.value);
+}
+function updateRefCount(box) {
+  const s = box.querySelector("span");
+  if (s) s.textContent = box.querySelectorAll("input:checked").length;
+}
+function collectRefRows(asset, versionLike) {
+  const rows = [];
+  const seen = new Set();
+  const parent = versionLike && versionLike.parent
+    ? versionBySlug(asset, versionLike.parent) : null;
+  if (parent) {
+    const pDisp = displayOutput(parent);
+    for (const o of parent.outputs.slice().reverse()) {
+      if (seen.has(o.key)) continue;
+      rows.push({output: o,
+                 label: "parent: " + parent.slug + (o.preferred ? " (preferred)" : ""),
+                 group: "Parent " + parent.slug + " (" + parent.outputs.length + ")",
+                 parentRow: true, parentDisplay: o === pDisp});
+      seen.add(o.key);
+    }
+  }
+  for (const o of ((versionLike && versionLike.outputs) || []).slice().reverse()) {
+    if (seen.has(o.key)) continue;
+    rows.push({output: o, label: "this version" + (o.preferred ? " (preferred)" : ""),
+               group: "This version", ownRow: true});
+    seen.add(o.key);
+  }
+  for (const v of asset.versions.slice().reverse()) {
+    if (v.slug === (versionLike && versionLike.slug) ||
+        (parent && v.slug === parent.slug)) continue;
+    if (!v.outputs.length) continue;
+    for (const o of v.outputs.slice().reverse()) {
+      if (seen.has(o.key)) continue;
+      rows.push({output: o,
+                 label: v.slug + (o.preferred ? " (preferred)" : ""),
+                 group: "Version " + v.slug + " (" + v.outputs.length + ")"});
+      seen.add(o.key);
+    }
+  }
+  return {rows, parent};
+}
+function defaultRefChecked(versionLike, row, stored) {
+  if (stored && stored.length)
+    return stored.includes(row.output.key + ".png");
+  if (row.parentRow)
+    return !!row.parentDisplay && !((versionLike.outputs || []).length);
+  if (row.ownRow) {
+    if (!(versionLike.outputs || []).length) return false;
+    return row.output === displayOutput(versionLike);
+  }
+  return false;
+}
+function renderRefPicker(box, countId, rows, isChecked, onChange) {
+  box.innerHTML = "<label>Reference images (<span id='" + countId +
+    "'>0</span>/10 — tick specific images)</label>";
+  let lastGroup = null;
+  for (const row of rows) {
+    if (row.group && row.group !== lastGroup) {
+      lastGroup = row.group;
+      const h = document.createElement("div");
+      h.className = "muted";
+      h.textContent = row.group;
+      box.appendChild(h);
+    }
+    const lab = document.createElement("label");
+    lab.className = "ref";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.value = row.output.key + ".png";
+    input.checked = !!isChecked(row);
+    input.onchange = onChange;
+    lab.appendChild(input);
+    const im = document.createElement("img");
+    im.className = "ref-thumb";
+    im.src = toServedUrl(row.output.path);
+    im.alt = "";
+    lab.appendChild(im);
+    lab.appendChild(document.createTextNode(" " + row.label + " · " + row.output.key));
+    box.appendChild(lab);
+  }
+  if (!rows.length)
+    box.innerHTML += '<div class="ref">no outputs yet — text-only run</div>';
+}
+function modeTextFor(count, identical, parentSlug, hasOutputs) {
+  let t;
+  if (count) {
+    t = "Mode: image edit (" + count + " reference image" +
+      (count > 1 ? "s" : "") + ") — the model edits from the reference. " +
+      "Use an imperative prompt (\"remove…, extend…, keep…\"), not just a re-description.";
+  } else {
+    t = "Mode: text-only generation — a fresh image from the prompt alone. No reference image is sent in this mode.";
+  }
+  if (count > 10)
+    t += " At most 10 reference images (untick " + (count - 10) + ").";
+  if (identical && !count && !hasOutputs)
+    t += " Note: prompt is identical to parent " + parentSlug +
+      " with no reference — running it would only re-roll the same prompt. Change the prompt or tick a reference.";
+  return t;
+}
+function runRefs() {
+  return selectedRefs($("run-refs"));
+}
+function updateRunMode() {
+  const refs = runRefs();
+  updateRefCount($("run-refs"));
+  const parent = parentOf(curVersion);
+  const mode = $("run-mode");
+  const btn = $("run-btn");
+  const n = runNum();
+  const identical = parent && (parent.prompt || "") === (curVersion.prompt || "");
+  mode.textContent = modeTextFor(refs.length, identical, parent && parent.slug,
+    curVersion.outputs.length > 0);
+  if (Number.isInteger(n) && n >= 1 && n <= 10)
+    mode.textContent += " Lottery: " + n + " image" + (n > 1 ? "s" : "") + " in one call (~$" + (n * 0.01).toFixed(2) + ").";
+  const blockedNoop = identical && !refs.length && !curVersion.outputs.length;
+  const blockedNum = !(Number.isInteger(n) && n >= 1 && n <= 10);
+  const blockedRefs = refs.length > 10;
+  const blocked = blockedNoop || blockedNum || blockedRefs;
+  btn.disabled = !!blocked;
+  if (blockedNoop) {
+    mode.textContent += " Blocked: prompt is identical to parent " + parent.slug +
+      " with no reference — this would only re-roll the same prompt. Change the prompt or tick a reference.";
+  }
+  if (blockedNum)
+    mode.textContent += " Blocked: N must be an integer 1–10.";
+  if (blockedRefs)
+    mode.textContent += " Blocked: at most 10 reference images (untick " + (refs.length - 10) + ").";
+  return !blocked;
+}
+function renderRun() {
+  const base = assetHref(curAsset.name);
+  $("run-back").href = base;
+  $("run-title").textContent = "Run generation: " + curVersion.slug;
+  const w = curVersion.width || curAsset.width;
+  const h = curVersion.height || curAsset.height;
+  $("run-info").textContent = "Asset " + curAsset.name + " · " + w + "x" + h +
+    (curVersion.parent ? " · parent " + curVersion.parent : " · no parent");
+  $("run-prompt").textContent = curVersion.prompt || "(empty prompt)";
+  const parent = parentOf(curVersion);
+  renderDiff($("run-diff"), parent ? parent.prompt : null, curVersion.prompt);
+  $("run-result").innerHTML = "";
+  const {rows} = collectRefRows(curAsset, curVersion);
+  const stored = curVersion.references || [];
+  renderRefPicker($("run-refs"), "run-ref-count", rows,
+    row => defaultRefChecked(curVersion, row, stored), updateRunMode);
+  if ($("run-num") && !$("run-num").onchange) $("run-num").onchange = updateRunMode;
+  if ($("run-num") && !$("run-num").oninput) $("run-num").oninput = updateRunMode;
+  updateRunMode();
+}
+
+function selectedJudgeOutput(wantedKey) {
+  if (wantedKey) {
+    const found = curVersion.outputs.find(o => o.key === wantedKey);
+    if (found) return found;
+  }
+  return curVersion.outputs[curVersion.outputs.length - 1] || null;
+}
+
+function renderJudge(wantedKey) {
+  const base = assetHref(curAsset.name);
+  $("judge-back").href = base;
+  $("judge-cancel").href = base;
+  $("judge-title").textContent = "Judgement: " + curVersion.slug + " (" + curVersion.outputs.length + " output" + (curVersion.outputs.length === 1 ? "" : "s") + " — pick the winner)";
+  $("judge-error").textContent = "";
+  const sel = $("judge-output");
+  sel.innerHTML = "";
+  for (const o of curVersion.outputs.slice().reverse()) {
+    const opt = document.createElement("option");
+    opt.value = o.key;
+    opt.textContent = o.key + (o.preferred ? " (preferred)" : "");
+    sel.appendChild(opt);
+  }
+  const current = selectedJudgeOutput(wantedKey);
+  if (current) sel.value = current.key;
+  const grid = $("judge-grid");
+  grid.innerHTML = "";
+  for (const o of curVersion.outputs.slice().reverse()) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "judge-cell" + (current && o.key === current.key ? " sel" : "");
+    btn.title = o.key + (o.preferred ? " (preferred)" : "");
+    const im = document.createElement("img");
+    im.src = toServedUrl(o.path);
+    im.alt = "";
+    btn.appendChild(im);
+    btn.onclick = () => { $("judge-output").value = o.key; renderJudgeDetail(); };
+    grid.appendChild(btn);
+  }
+  grid.style.display = curVersion.outputs.length > 1 ? "" : "none";
+  renderJudgeDetail();
+}
+
+const CHECKS = [["chk-edge", "covers_frame"], ["chk-corners", "square_corners"],
+                ["chk-cracks", "no_cracks"], ["chk-clean", "no_weathering"],
+                ["chk-seamless", "seamless_3x3"]];
+function renderJudgeDetail() {
+  const key = $("judge-output").value;
+  for (const cell of document.querySelectorAll("#judge-grid .judge-cell"))
+    cell.classList.toggle("sel", cell.title === key || cell.title === key + " (preferred)");
+  const out = curVersion.outputs.find(o => o.key === key) || null;
+  if (!out) {
+    setImg($("judge-parent-img"), null);
+    setImg($("judge-cur-img"), null);
+    setTile($("judge-cur-tile"), null);
+    $("judge-parent-text").textContent = "(no outputs yet)";
+    $("judge-text").value = "";
+    return;
+  }
+  const parent = curVersion.parent && versionBySlug(curAsset, curVersion.parent);
+  const pLatest = parent && displayOutput(parent);
+  setImg($("judge-parent-img"), pLatest && pLatest.path);
+  $("judge-parent-text").textContent =
+    (pLatest && pLatest.human_review) || "(no parent judgement)";
+  setImg($("judge-cur-img"), out.path);
+  setTile($("judge-cur-tile"), out.path);
+  const chk = out.checklist || {};
+  for (const [id, name] of CHECKS) $(id).checked = !!chk[name];
+  $("judge-preferred").checked = !!out.preferred;
+  if (document.activeElement !== $("judge-text"))
+    $("judge-text").value = out.human_review || "";
+}
+async function saveJudgement() {
+  const key = $("judge-output").value;
+  if (!key) throw new Error("no output selected");
+  const checklist = {};
+  for (const [id, name] of CHECKS) checklist[name] = $(id).checked;
+  await api("PUT", "/api/judgements/" + encodeURIComponent(key), {
+    human_review: $("judge-text").value,
+    checklist, preferred: $("judge-preferred").checked,
+  });
+}
+
+$("go-new").onclick = () => nav("/assets/new");
+
+$("add-asset").onclick = async () => {
+  try {
+    const name = $("new-name").value.trim();
+    await api("POST", "/api/assets", {
+      name,
+      width: parseInt($("new-w").value, 10),
+      height: parseInt($("new-h").value, 10),
+    });
+    $("new-name").value = "";
+    $("new-error").textContent = "";
+    status("asset added", "ok");
+    await refresh();
+    nav(assetHref(name));
+  } catch (e) { $("new-error").textContent = e.message; status(e.message, "err"); }
+};
+
+$("ae-save").onclick = async () => {
+  try {
+    await api("PUT", "/api/assets/" + encodeURIComponent(curAsset.name), {
+      width: parseInt($("ae-w").value, 10),
+      height: parseInt($("ae-h").value, 10),
+    });
+    $("ae-error").textContent = "";
+    status("asset updated", "ok");
+    await refresh();
+    nav(assetHref(curAsset.name));
+  } catch (e) { $("ae-error").textContent = e.message; status(e.message, "err"); }
+};
+
+$("ev-prompt").addEventListener("input", () => {
+  const parent = parentOf(curVersion);
+  if (parent) renderDiff($("ev-diff"), parent.prompt, $("ev-prompt").value);
+  updateEvMode();
+});
+$("nv-compose").onclick = () => {
+  const composed = composePromptFromSelected(enrichSel(nvSel));
+  if (!composed) { $("nv-error").textContent = "select images and add notes or bring a judgement first"; return; }
+  $("nv-error").textContent = "";
+  applyComposed($("nv-prompt"), composed, nvSt);
+};
+$("ev-compose").onclick = () => {
+  const composed = composePromptFromSelected(enrichSel(evSel));
+  if (!composed) { $("ev-error").textContent = "select images and add notes or bring a judgement first"; return; }
+  $("ev-error").textContent = "";
+  applyComposed($("ev-prompt"), composed, evSt);
+};
+
+$("nv-save").onclick = async () => {
+  try {
+    const body = {
+      slug: $("nv-slug").value.trim(),
+      desc: $("nv-desc").value.trim(),
+      prompt: $("nv-prompt").value,
+      parent: null,
+      references: selectedRefs($("nv-refs")),
+    };
+    const w = parseInt($("nv-w").value, 10), h = parseInt($("nv-h").value, 10);
+    if (w > 0) body.width = w;
+    if (h > 0) body.height = h;
+    const v = await api("POST", "/api/assets/" + encodeURIComponent(curAsset.name) + "/versions", body);
+    status("version " + v.slug + " saved", "ok");
+    await refresh();
+    nav(assetHref(curAsset.name));
+  } catch (e) { $("nv-error").textContent = e.message; status(e.message, "err"); }
+};
+
+$("ev-save").onclick = async () => {
+  try {
+    const w = parseInt($("ev-w").value, 10), h = parseInt($("ev-h").value, 10);
+    const v = await api("PUT", "/api/assets/" + encodeURIComponent(curAsset.name) +
+      "/versions/" + encodeURIComponent(curVersion.slug), {
+      desc: $("ev-desc").value,
+      prompt: $("ev-prompt").value,
+      width: w > 0 ? w : null,
+      height: h > 0 ? h : null,
+      references: selectedRefs($("ev-refs")),
+    });
+    status("version " + v.slug + " updated", "ok");
+    await refresh();
+    nav(assetHref(curAsset.name));
+  } catch (e) { $("ev-error").textContent = e.message; status(e.message, "err"); }
+};
+
+$("run-btn").onclick = async () => {
+  const btn = $("run-btn");
+  btn.disabled = true;
+  const n = runNum();
+  status("running " + n + " image" + (n > 1 ? "s" : "") + "… (one run at a time; spend is recorded in Cost Center)");
+  $("run-result").innerHTML = "";
+  try {
+    const refs = [...document.querySelectorAll("#run-refs input:checked")]
+      .map(i => i.value);
+    const rec = await api("POST", "/api/runs", {
+      asset: curAsset.name, version: curVersion.slug, references: refs, num: n,
+    });
+    const outs = (rec.outputs && rec.outputs.length) ? rec.outputs : [{
+      key: rec.key, path: rec.path, original_path: rec.original_path,
+      requested_width: rec.requested_width, requested_height: rec.requested_height,
+      raw_width: rec.raw_width, raw_height: rec.raw_height,
+      estimated_usd: rec.total_estimated_usd || rec.estimated_usd,
+    }];
+    const total = rec.total_estimated_usd || rec.estimated_usd;
+    let html;
+    if (outs.length > 1) {
+      html = '<div class="lot-grid">';
+      for (const o of outs) {
+        html += '<div class="lot-cell"><img src="' + escapeHtml(toServedUrl(o.path)) + '" alt="">' +
+          '<div class="key">' + escapeHtml(o.key) + "</div>" +
+          '<div class="cost">' + escapeHtml(o.requested_width + "x" + o.requested_height) +
+          (o.estimated_usd ? " · ~$" + escapeHtml(o.estimated_usd) : "") + "</div></div>";
+      }
+      html += "</div>";
+      html += '<div class="cost">saved ' + outs.length + " images" +
+        (total ? " — ~$" + escapeHtml(total) + " total recorded in Cost Center" : " — Cost Center gave no price") + "</div>";
+    } else {
+      const o = outs[0];
+      html = '<img class="thumb" src="' + escapeHtml(toServedUrl(o.path)) + '" alt="">';
+      html += '<div class="cost">saved ' + escapeHtml(o.path);
+      if (o.requested_width && o.requested_height)
+        html += " (" + o.requested_width + "x" + o.requested_height + ")";
+      if (o.original_path) {
+        html += ' — <a href="' + escapeHtml(toServedUrl(o.original_path)) + '" target="_blank" rel="noopener">original (raw';
+        if (o.raw_width && o.raw_height)
+          html += " " + o.raw_width + "x" + o.raw_height;
+        html += ")</a>";
+      }
+      if (total) html += " — ~$" + escapeHtml(total) + " recorded in Cost Center";
+      else html += " — Cost Center gave no price (unpriced model?)";
+      html += "</div>";
+    }
+    if (rec.recording_warning)
+      html += '<div class="warn">' + escapeHtml(rec.recording_warning) + "</div>";
+    $("run-result").innerHTML = html;
+    const costNote = total ? " (~$" + total + ")" : "";
+    status("done" + costNote + " — now judge the batch", "ok");
+    const assetName = curAsset.name, slug = curVersion.slug;
+    await refresh();
+    curAsset = assetByName(assetName);
+    curVersion = versionBySlug(curAsset, slug);
+    nav(versionJudgeHref(assetName, slug, rec.key));
+  } catch (e) { status(e.message, "err"); btn.disabled = false; updateRunMode(); }
+};
+
+$("judge-output").onchange = () => renderJudgeDetail();
+
+$("judge-save").onclick = async () => {
+  try {
+    await saveJudgement();
+    $("judge-error").textContent = "";
+    status("judgement saved", "ok");
+    await refresh();
+    curAsset = assetByName(curAsset.name);
+    curVersion = versionBySlug(curAsset, curVersion.slug);
+    nav(assetHref(curAsset.name));
+  } catch (e) { $("judge-error").textContent = e.message; status(e.message, "err"); }
+};
+$("judge-next").onclick = async () => {
+  try {
+    $("judge-preferred").checked = true;
+    await saveJudgement();
+    $("judge-error").textContent = "";
+    status("winner marked preferred — create the next version from this one", "ok");
+    pendingRefs = [$("judge-output").value + ".png"];
+    const assetName = curAsset.name;
+    await refresh();
+    curAsset = assetByName(assetName);
+    nav(versionNewHref(assetName));
+  } catch (e) { $("judge-error").textContent = e.message; status(e.message, "err"); }
+};
+
+refresh().catch(e => status(e.message, "err"));
+</script>
+</body>
+</html>
+
+

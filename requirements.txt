@@ -1,0 +1,9 @@
+# Direct Python dependencies. Install into the project env with:
+#   source .venv/bin/activate
+#   pip install -r requirements.txt
+#
+# External (non-pip) tools, installed separately:
+#   openai SDK talks to the Meta Model API; the key comes from meta-keyguard,
+#   and spend is tracked by meta-cost (needs a version with `record`).
+openai==3.40.0
+pyyaml==6.0.3

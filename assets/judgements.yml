@@ -1,0 +1,35 @@
+# The purpose of this file to provide judgement of the outputed assets.
+# It can be human reviewed
+# The name of the assets: floor_default-init-[hash]:
+# floor_default-init-[hash]:
+#  human_review: |
+#    yada yada
+floor_default-init-20261027-151142:
+  human_review: 'For a floor tile, it must cover the entire image, it can''t a white
+    background order around it or it will produce a seamless image.
+
+    The stone should have no cracks, and now moss or weathering.'
+floor_default-clean-stone-20261027-161114:
+  human_review: the rounder corners with the white background will show up in tiling
+    so they should be not be rounded.
+floor_default-no-round-corners-20261027-161327:
+  human_review: It does not pass, it has rounded corners still with background, it
+    has cracks, it has moss, so it fails on these points.
+  checklist:
+    covers_frame: false
+    square_corners: false
+    no_cracks: false
+    no_weathering: false
+    seamless_3x3: false
+  preferred: false
+floor_default-smooth-stone-20261027-165323:
+  human_review: Very close to good, but it still has a white frame in the very absolute
+    corners, so we can have rounding effect without actually having white background
+    but you'd fill those corners in with something like ground.
+  checklist:
+    covers_frame: false
+    square_corners: false
+    no_cracks: true
+    no_weathering: true
+    seamless_3x3: true
+  preferred: true

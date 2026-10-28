@@ -1,0 +1,1 @@
+Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art style, single square tile filling the frame, no text

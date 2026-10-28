@@ -1,0 +1,244 @@
+# this manifest file is for managing versioned prompts.
+
+# versions
+  # desc: describe what your goal is
+  # judgement: you judgement of the output.
+  # prompt: the actual prompt
+  # queue: [ignore|ready|completed] the status of the version, it helps know if we should od a run.
+  # - ignore    - don't run it
+  # - ready     - run it
+  # - completed - don't run it, but it shows it completed
+  # - failed    - it failed for some reason
+
+assets:
+  floor_default:
+    width: 512
+    height: 512
+    versions:
+    - slug: init
+      desc: ''
+      prompt: Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
+        style, single square tile filling the frame, no text
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references: []
+      outputs:
+      - key: floor_default-init-20261027-151142
+        path: assets/outputs/floor_default-init-20261027-151142.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-init-20261027-151142-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - slug: clean-stone
+      desc: 'Our previous attempt had a few issues, the stone has break patterns and
+        tiled assets this will be very messy looking. W
+
+        The border around the tile will mess things up.'
+      prompt: Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
+        style, single square tile filling the frame, no text
+      parent: init
+      status: completed
+      width: null
+      height: null
+      references: []
+      outputs:
+      - key: floor_default-clean-stone-20261027-161114
+        path: assets/outputs/floor_default-clean-stone-20261027-161114.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-clean-stone-20261027-161114-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - slug: no-round-corners
+      desc: 'Prior run had corners, lets hope we get rid of those.
+
+        The only thing is we aren''t brining the previous judgements, so I''m not
+        sure if out iteration process it broken. If we can always feed the last image
+        you think it would be editing from there.'
+      prompt: Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
+        style, single square tile filling the frame, no text
+      parent: clean-stone
+      status: completed
+      width: null
+      height: null
+      references: []
+      outputs:
+      - key: floor_default-no-round-corners-20261027-161327
+        path: assets/outputs/floor_default-no-round-corners-20261027-161327.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-no-round-corners-20261027-161327-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - slug: smooth-stone
+      desc: We want to correct the defects from prior.
+      prompt: 'Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
+        style, single square tile filling the frame, no text
+
+        Constraints from parent judgement: It does not pass, it has rounded corners
+        still with background, it has cracks, it has moss, so it fails on these points.'
+      parent: no-round-corners
+      status: completed
+      width: null
+      height: null
+      references: []
+      outputs:
+      - key: floor_default-smooth-stone-20261027-165323
+        path: assets/outputs/floor_default-smooth-stone-20261027-165323.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-smooth-stone-20261027-165323-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - slug: refined-background
+      desc: Very close to correct was the last one but dealing corners was not correct.
+      prompt: 'Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
+        style, single square tile filling the frame, no text
+
+        Constraints from parent judgement: It does not pass, it has rounded corners
+        still with background, it has cracks, it has moss, so it fails on these points.
+
+        Constraints from parent judgement: Very close to good, but it still has a
+        white frame in the very absolute corners, so we can have rounding effect without
+        actually having white background but you''d fill those corners in with something
+        like ground.'
+      parent: smooth-stone
+      status: completed
+      width: null
+      height: null
+      references: []
+      outputs:
+      - key: floor_default-refined-background-20261027-165701
+        path: assets/outputs/floor_default-refined-background-20261027-165701.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-refined-background-20261027-165701-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - slug: multi-ref-image
+      desc: Now that we can reference multiple images we can provide clearer generation
+        instructions.
+      prompt: 'Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
+        style, single square tile filling the frame, no text
+
+        Constraints from parent judgement: It does not pass, it has rounded corners
+        still with background, it has cracks, it has moss, so it fails on these points.
+
+
+        Image floor_default-refined-background-20261027-165701: While the dirt covers
+        up the corners, it simply is exposing to much corner.
+
+        Image floor_default-smooth-stone-20261027-165323: This image is nearly perfect
+        but there are tiny white corners, and if that had ground that would fix our
+        issue.
+
+
+        Constraints: texture must fill the entire frame edge to edge with no margin/border;
+        sharp square 90-degree corners, no rounding/bevel
+
+
+        Judged notes: "Very close to good, but it still has a white frame in the very
+        absolute corners, so we can have rounding effect without actually having white
+        background but you''d fill those corners in with something like ground." (floor_default-smooth-stone-20261027-165323)'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references:
+      - floor_default-refined-background-20261027-165701.png
+      - floor_default-smooth-stone-20261027-165323.png
+      outputs:
+      - key: floor_default-multi-ref-image-20261027-175930-1
+        path: assets/outputs/floor_default-multi-ref-image-20261027-175930-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-multi-ref-image-20261027-175930-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-multi-ref-image-20261027-175930-2
+        path: assets/outputs/floor_default-multi-ref-image-20261027-175930-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-multi-ref-image-20261027-175930-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-multi-ref-image-20261027-175930-3
+        path: assets/outputs/floor_default-multi-ref-image-20261027-175930-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-multi-ref-image-20261027-175930-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-multi-ref-image-20261027-175930-4
+        path: assets/outputs/floor_default-multi-ref-image-20261027-175930-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-multi-ref-image-20261027-175930-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - slug: best-attempt
+      desc: I want to see if I can bring in reference image with information to better
+        generate the ideal output.
+      prompt: 'Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
+        style, single square tile filling the frame, no text.
+
+
+        Constraints from parent judgement: It does not pass, it has rounded corners
+        still with background, it has cracks, it has moss, so it fails on these points.'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references:
+      - floor_default-refined-background-20261027-165701.png
+      - floor_default-smooth-stone-20261027-165323.png
+      - floor_default-no-round-corners-20261027-161327.png
+      outputs:
+      - key: floor_default-best-attempt-20261027-195828-1
+        path: assets/outputs/floor_default-best-attempt-20261027-195828-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-best-attempt-20261027-195828-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-best-attempt-20261027-195828-2
+        path: assets/outputs/floor_default-best-attempt-20261027-195828-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-best-attempt-20261027-195828-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-best-attempt-20261027-195828-3
+        path: assets/outputs/floor_default-best-attempt-20261027-195828-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-best-attempt-20261027-195828-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-best-attempt-20261027-195828-4
+        path: assets/outputs/floor_default-best-attempt-20261027-195828-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-best-attempt-20261027-195828-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  clean-lottery:
+    width: 512
+    height: 512
+    versions: []

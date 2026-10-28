@@ -1,0 +1,606 @@
+#!/usr/bin/env python3
+"""Generate images with Muse Image 1.0 via the Meta Model API.
+
+Uses the OpenAI SDK (the Meta Model API is OpenAI-compatible) and loads
+``META_API_KEY`` via ``meta-keyguard get``. Meta Cost Center only sees Muse's
+own logs, so after each run this script reports the images it generated with
+``meta-cost record``; they then appear under this project in Cost Center and
+count toward its alerts. Pass --no-record to skip that.
+
+Examples:
+    scripts/gen-image -p "a red panda astronaut" -o out/panda.png
+    scripts/gen-image -p "sunset over the city" --ratio 16:9 -o out/city.png
+    scripts/gen-image -p "same character, new pose" -i ref1.png -i ref2.png -o out/pose.png
+    scripts/gen-image --prompt "a logo" --size 1024x1024 --num 4 --output out/
+    scripts/gen-image --prompt-file prompts/tile.txt --width 512 --height 512 -o out/tile.png
+
+Note on sizing: the Muse Image API treats `size` as an aspect-ratio carrier,
+not exact pixels (e.g. 512x512 and 1024x1024 both mean "square"; the raw file
+may come back at 1600x1600). This script therefore resizes the result locally
+with ffmpeg to exactly --width/--height and preserves the raw generator output
+as <stem>-orig.<fmt> alongside it. Pass --no-resize to keep the raw file as-is.
+"""
+from __future__ import annotations
+
+import argparse
+import base64
+import json
+import mimetypes
+import os
+import re
+import shutil
+import struct
+import subprocess
+import sys
+import time
+import urllib.error
+import urllib.request
+import uuid
+from pathlib import Path
+from types import SimpleNamespace
+
+DEFAULT_MODEL = os.environ.get("MUSE_IMAGE_MODEL", "muse-image-1.0")
+DEFAULT_BASE_URL = os.environ.get("MUSE_BASE_URL", "https://api.meta.ai/v1")
+DEFAULT_KEY_LABEL = os.environ.get("META_KEYGUARD_LABEL", "jolly-challenge")
+COST_COMMAND = os.environ.get("META_COST_COMMAND", "meta-cost")
+# Cost Center names a project after its repository, as Muse names this workspace.
+PROJECT = Path(__file__).resolve().parent.parent.name
+
+# Ratio -> concrete WxH. On the Muse images endpoints size sets aspect
+# ratio only, not exact pixels, so these are canonical ratio carriers.
+RATIO_TO_SIZE = {
+    "1:1": "1024x1024",
+    "square": "1024x1024",
+    "16:9": "1792x1024",
+    "wide": "1792x1024",
+    "9:16": "1024x1792",
+    "tall": "1024x1792",
+    "3:2": "1536x1024",
+    "2:3": "1024x1536",
+    "4:3": "1536x1024",
+    "3:4": "1024x1536",
+}
+
+
+def load_api_key(label: str) -> tuple[str, str | None]:
+    """Load META_API_KEY via `meta-keyguard get <label>`.
+
+    Returns the key and the keyguard label it came from. Falls back to the
+    META_API_KEY env var (with no label) only when keyguard fails and the env
+    var is set, so ad-hoc runs still work.
+    """
+    try:
+        proc = subprocess.run(
+            ["meta-keyguard", "get", label],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except FileNotFoundError:
+        env_key = os.environ.get("META_API_KEY", "").strip()
+        if env_key:
+            print("warning: meta-keyguard not found, using META_API_KEY env var", file=sys.stderr)
+            return env_key, None
+        raise SystemExit(
+            "error: `meta-keyguard` not found and META_API_KEY is not set"
+        )
+    except subprocess.CalledProcessError as exc:
+        env_key = os.environ.get("META_API_KEY", "").strip()
+        if env_key:
+            print(
+                f"warning: `meta-keyguard get {label}` failed ({exc.stderr.strip()}), "
+                "falling back to META_API_KEY env var",
+                file=sys.stderr,
+            )
+            return env_key, None
+        raise SystemExit(
+            f"error: `meta-keyguard get {label}` failed: {exc.stderr.strip() or exc}"
+        )
+    key = proc.stdout.strip()
+    if not key:
+        raise SystemExit(f"error: `meta-keyguard get {label}` returned an empty key")
+    return key, label
+
+
+def record_usage(response, model: str, key_label: str | None) -> str | None:
+    """Report the call to Meta Cost Center with `meta-cost record`.
+
+    Only images actually returned are billed, so that is the count recorded.
+    The token counts in ``response.usage`` are recorded for reference; image
+    tokens are not billed. A failure here only warns, since the images are
+    already saved. Returns the estimated cost in USD, if Cost Center gave one.
+    """
+    images = len(getattr(response, "data", None) or [])
+    command = [COST_COMMAND, "record", "--tool", "gen-image", "--project", PROJECT,
+               "--model", model, "--images", str(images), "--id", f"gen-image-{uuid.uuid4().hex}"]
+    usage = getattr(response, "usage", None)
+    for flag, name in (("--input-tokens", "input_tokens"), ("--output-tokens", "output_tokens")):
+        value = getattr(usage, name, None)
+        if isinstance(value, int) and value >= 0:
+            command += [flag, str(value)]
+    if key_label:
+        command += ["--key", key_label]
+    try:
+        proc = subprocess.run(command, capture_output=True, text=True, check=True, timeout=30)
+        return json.loads(proc.stdout).get("estimated_api_equivalent_usd")
+    except FileNotFoundError:
+        print(f"warning: `{COST_COMMAND}` not found; this run was not recorded in Cost Center",
+              file=sys.stderr)
+    except subprocess.CalledProcessError as exc:
+        print(f"warning: recording in Cost Center failed: {exc.stderr.strip() or exc}",
+              file=sys.stderr)
+    except (subprocess.TimeoutExpired, ValueError) as exc:
+        print(f"warning: recording in Cost Center failed: {exc}", file=sys.stderr)
+    return None
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    p = argparse.ArgumentParser(
+        description="Generate images with Muse Image 1.0 (OpenAI-compatible API).",
+    )
+    p.add_argument("prompt_positional", nargs="?", default=None,
+                   help="image prompt (alternative to --prompt)")
+    p.add_argument("-p", "--prompt", default=None, help="image prompt text")
+    p.add_argument("--prompt-file", default=None, metavar="PATH",
+                   help="read the image prompt from a text file")
+    p.add_argument("-o", "--output", default=None,
+                   help="output file path or directory (default: ./muse-<timestamp>.<fmt>)")
+    p.add_argument("--size", default=None,
+                   help='aspect-ratio carrier as WxH sent to the API, e.g. 1024x1024, 1792x1024 (default: 1024x1024, or from --width/--height/--ratio; exact pixels come from local resize)')
+    p.add_argument("--width", type=int, default=None,
+                   help="exact final image width in pixels after local ffmpeg resize (requires --height)")
+    p.add_argument("--height", type=int, default=None,
+                   help="exact final image height in pixels after local ffmpeg resize (requires --width)")
+    p.add_argument("--ratio", default=None,
+                   help=f"aspect ratio shortcut sent to the API, one of: {', '.join(sorted(RATIO_TO_SIZE))}")
+    p.add_argument("--no-resize", action="store_true",
+                   help="skip the local ffmpeg resize; keep the raw generator output at -o and write no -orig file")
+    p.add_argument("--keep-original", default="auto",
+                   help="where to preserve the raw generator output: 'auto' (default) writes <stem>-orig.<fmt> alongside -o, 'off' skips preservation (only valid with one output file for an explicit path)")
+    p.add_argument("--no-keep-original", action="store_true",
+                   help="do not preserve the raw generator output (same as --keep-original off)")
+    p.add_argument("-i", "--image", "--reference", dest="images", action="append", default=[],
+                   metavar="PATH", help="reference image for editing (repeatable)")
+    p.add_argument("--model", default=DEFAULT_MODEL, help=f"model id (default: {DEFAULT_MODEL})")
+    p.add_argument("-n", "--num", type=int, default=1,
+                   help="number of images, 1-10 (default: 1)")
+    p.add_argument("--output-format", default="png", choices=["png", "jpeg", "webp"],
+                   help="output format (default: png)")
+    p.add_argument("--key-label", default=DEFAULT_KEY_LABEL,
+                   help=f"keyguard label for `meta-keyguard get` (default: {DEFAULT_KEY_LABEL})")
+    p.add_argument("--api-key", default=None,
+                   help="use this key directly instead of `meta-keyguard get`")
+    p.add_argument("--base-url", default=DEFAULT_BASE_URL,
+                   help=f"API base URL (default: {DEFAULT_BASE_URL})")
+    p.add_argument("--no-record", action="store_true",
+                   help="don't report this run to Meta Cost Center")
+    args = p.parse_args(argv)
+
+    if args.prompt_file is not None:
+        try:
+            file_prompt = Path(args.prompt_file).read_text(encoding="utf-8").strip()
+        except OSError as exc:
+            p.error(f"cannot read --prompt-file {args.prompt_file}: {exc}")
+        if not file_prompt:
+            p.error(f"--prompt-file {args.prompt_file} is empty")
+    else:
+        file_prompt = None
+    prompt = args.prompt or file_prompt or args.prompt_positional
+    if not prompt:
+        p.error("a prompt is required (positional arg, --prompt, or --prompt-file)")
+    args.prompt = prompt
+
+    if not 1 <= args.num <= 10:
+        p.error("--num must be between 1 and 10")
+
+    if (args.width is None) != (args.height is None):
+        p.error("--width and --height must be given together")
+    if args.width is not None and (args.width <= 0 or args.height <= 0):
+        p.error("--width and --height must be positive integers")
+    if args.size is not None:
+        if args.width is not None or args.ratio is not None:
+            print("note: --size takes precedence over --width/--height/--ratio",
+                  file=sys.stderr)
+    elif args.width is not None:
+        args.size = f"{args.width}x{args.height}"
+    elif args.ratio is not None:
+        key = args.ratio.strip()
+        if key not in RATIO_TO_SIZE:
+            p.error(f"--ratio must be one of: {', '.join(sorted(RATIO_TO_SIZE))}")
+        args.size = RATIO_TO_SIZE[key]
+    else:
+        args.size = "1024x1024"
+    if not re.fullmatch(r"\d+x\d+", args.size):
+        p.error("--size must look like WxH, e.g. 1024x1024")
+    if args.no_keep_original:
+        args.keep_original = "off"
+    if args.keep_original not in ("auto", "off") and args.num > 1:
+        p.error("--keep-original <path> is only valid with a single output file")
+
+    return args
+
+
+def resolve_outputs(output: str | None, num: int, fmt: str) -> list[Path]:
+    if output is None:
+        output = f"./muse-{time.strftime('%Y%m%d-%H%M%S')}.{fmt}"
+    dest = Path(output)
+    if num == 1:
+        if dest.suffix == "":
+            return [dest.with_suffix(f".{fmt}")]
+        return [dest]
+    # Multiple images: directory gets indexed files; a file path gets -N suffix.
+    if dest.suffix == "" or dest.is_dir():
+        dest.mkdir(parents=True, exist_ok=True)
+        stem = f"muse-{time.strftime('%Y%m%d-%H%M%S')}"
+        return [dest / f"{stem}-{i + 1}.{fmt}" for i in range(num)]
+    return [dest.with_name(f"{dest.stem}-{i + 1}{dest.suffix or '.' + fmt}")
+            for i in range(num)]
+
+
+def save_images(response, paths: list[Path], fmt: str) -> None:
+    data = getattr(response, "data", None) or []
+    if len(data) < len(paths):
+        raise SystemExit(
+            f"error: API returned {len(data)} image(s), expected {len(paths)}"
+        )
+    for item, path in zip(data, paths):
+        b64 = getattr(item, "b64_json", None)
+        url = getattr(item, "url", None)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if b64:
+            path.write_bytes(base64.b64decode(b64))
+        elif url:
+            with urllib.request.urlopen(url) as resp, open(path, "wb") as fh:
+                fh.write(resp.read())
+        else:
+            raise SystemExit("error: API returned an image with neither b64_json nor url")
+        print(f"saved {path}")
+
+
+def _png_dims(path: Path) -> tuple[int, int] | None:
+    try:
+        with open(path, "rb") as fh:
+            header = fh.read(33)
+        if len(header) < 33 or header[:8] != b"\x89PNG\r\n\x1a\n":
+            return None
+        w, h = struct.unpack(">II", header[16:24])
+        return (w, h) if w > 0 and h > 0 else None
+    except OSError:
+        return None
+
+
+def _jpeg_dims(path: Path) -> tuple[int, int] | None:
+    try:
+        data = path.read_bytes()
+    except OSError:
+        return None
+    if len(data) < 4 or data[0:2] != b"\xff\xd8":
+        return None
+    i = 2
+    while i + 3 < len(data):
+        if data[i] != 0xFF:
+            i += 1
+            continue
+        marker = data[i + 1]
+        if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7,
+                      0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+            if i + 9 > len(data):
+                return None
+            h, w = struct.unpack(">HH", data[i + 5:i + 9])
+            return (w, h) if w > 0 and h > 0 else None
+        if i + 3 >= len(data):
+            return None
+        seg_len = struct.unpack(">H", data[i + 2:i + 4])[0]
+        if seg_len < 2:
+            return None
+        i += 2 + seg_len
+    return None
+
+
+def _webp_dims(path: Path) -> tuple[int, int] | None:
+    try:
+        with open(path, "rb") as fh:
+            header = fh.read(30)
+    except OSError:
+        return None
+    if len(header) < 12 or header[:4] != b"RIFF" or header[8:12] != b"WEBP":
+        return None
+    fourcc = header[12:16]
+    if fourcc == b"VP8 " and len(header) >= 30:
+        w = struct.unpack("<H", header[26:28])[0] & 0x3FFF
+        h = struct.unpack("<H", header[28:30])[0] & 0x3FFF
+        return (w, h) if w > 0 and h > 0 else None
+    if fourcc == b"VP8L" and len(header) >= 25:
+        b0, b1, b2, b3 = header[21], header[22], header[23], header[24]
+        w = 1 + (((b1 & 0x3F) << 8) | b0)
+        h = 1 + (((b3 & 0x0F) << 10) | (b2 << 2) | ((b1 & 0xC0) >> 6))
+        return (w, h) if w > 0 and h > 0 else None
+    if fourcc == b"VP8X" and len(header) >= 30:
+        w = 1 + struct.unpack("<I", header[24:27] + b"\x00")[0]
+        h = 1 + struct.unpack("<I", header[27:30] + b"\x00")[0]
+        return (w, h) if w > 0 and h > 0 else None
+    return None
+
+
+def probe_dims(path: Path) -> tuple[int, int] | None:
+    """Return (width, height) of an image file, or None when unknown.
+
+    Prefers ffprobe when available, else parses PNG/JPEG/WebP headers with
+    the stdlib so no new pip dependency is needed.
+    """
+    try:
+        proc = subprocess.run(
+            ["ffprobe", "-v", "error", "-select_streams", "v:0",
+             "-show_entries", "stream=width,height", "-of", "csv=p=0",
+             str(path)],
+            capture_output=True, text=True, timeout=30,
+        )
+        if proc.returncode == 0:
+            parts = proc.stdout.strip().split(",")
+            if len(parts) == 2:
+                w, h = int(parts[0]), int(parts[1])
+                if w > 0 and h > 0:
+                    return (w, h)
+    except (FileNotFoundError, subprocess.SubprocessError, ValueError):
+        pass
+    for parser in (_png_dims, _jpeg_dims, _webp_dims):
+        dims = parser(path)
+        if dims is not None:
+            return dims
+    return None
+
+
+def _multipart_encode(fields: dict[str, str],
+                      files: list[tuple[str, str, bytes, str]]) -> tuple[bytes, str]:
+    """Encode multipart/form-data with stdlib only.
+
+    ``files`` entries are (field name, filename, content, content type).
+    Returns (body, content type header value).
+    """
+    boundary = f"----genimage{uuid.uuid4().hex}"
+    buf = bytearray()
+    for name, value in fields.items():
+        buf += f"--{boundary}\r\n".encode()
+        buf += f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode()
+        buf += value.encode() + b"\r\n"
+    for name, filename, content, ctype in files:
+        buf += f"--{boundary}\r\n".encode()
+        buf += (f'Content-Disposition: form-data; name="{name}"; '
+                f'filename="{filename}"\r\n').encode()
+        buf += f"Content-Type: {ctype}\r\n\r\n".encode()
+        buf += content + b"\r\n"
+    buf += f"--{boundary}--\r\n".encode()
+    return bytes(buf), f"multipart/form-data; boundary={boundary}"
+
+
+def edit_images_indexed(base_url: str, api_key: str, *, model: str,
+                        prompt: str, ref_paths: list[str], size: str, num: int,
+                        output_format: str, timeout: int = 600):
+    """Edit from 2+ reference images with indexed image[N] part names.
+
+    Returns an SDK-shaped namespace (``data`` items with ``b64_json``/``url``,
+    optional ``usage``) so downstream handling is identical. Exits 1 with a
+    one-line stderr error on HTTP failure, matching gen-image's contract
+    (callers surface the tail of stderr on failure).
+    """
+    fields = {
+        "model": model,
+        "prompt": prompt,
+        "size": size,
+        "n": str(num),
+        "response_format": "b64_json",
+        "output_format": output_format,
+    }
+    parts = []
+    for idx, ref in enumerate(ref_paths):
+        with open(ref, "rb") as fh:
+            content = fh.read()
+        ctype = mimetypes.guess_type(ref)[0] or "application/octet-stream"
+        parts.append((f"image[{idx}]", Path(ref).name, content, ctype))
+    body, content_type = _multipart_encode(fields, parts)
+    req = urllib.request.Request(
+        base_url.rstrip("/") + "/images/edits", data=body,
+        headers={"Authorization": f"Bearer {api_key}",
+                 "Content-Type": content_type},
+        method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            payload = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", "replace")[:500]
+        print(f"error: images/edits returned {exc.code}: {detail}",
+              file=sys.stderr)
+        raise SystemExit(1)
+    data = [SimpleNamespace(b64_json=item.get("b64_json"), url=item.get("url"))
+            for item in payload.get("data", [])]
+    usage = payload.get("usage")
+    ns_usage = (SimpleNamespace(input_tokens=usage.get("input_tokens"),
+                                output_tokens=usage.get("output_tokens"))
+                if isinstance(usage, dict) else None)
+    return SimpleNamespace(data=data, usage=ns_usage)
+
+
+def orig_path_for(final: Path, keep_original: str) -> Path | None:
+    """Return where to preserve the raw output, without clobbering.
+
+    'off' -> None. An explicit path is used directly (indexed when taken).
+    'auto' -> <stem>-orig<suffix> next to the final file, indexed when taken.
+    """
+    if keep_original == "off":
+        return None
+    if keep_original != "auto":
+        candidate = Path(keep_original)
+    else:
+        candidate = final.with_name(f"{final.stem}-orig{final.suffix}")
+    if not candidate.exists():
+        return candidate
+    for i in range(2, 1000):
+        indexed = candidate.with_name(f"{candidate.stem}-{i}{candidate.suffix}")
+        if not indexed.exists():
+            return indexed
+    raise SystemExit(f"error: too many preserved originals next to {candidate}")
+
+
+def resize_outputs(paths: list[Path], width: int, height: int,
+                   keep_original: str) -> list[dict]:
+    """Preserve each raw file and ffmpeg-resize it to exactly width x height.
+
+    Returns per-file dicts with path/original_path/raw/saved dims. Resize is
+    best-effort: any failure warns on stderr and leaves the raw bytes at the
+    requested path so the generation itself still succeeds.
+    """
+    infos: list[dict] = []
+    for final in paths:
+        raw = probe_dims(final)
+        raw_w, raw_h = raw if raw is not None else (0, 0)
+        if raw is not None and abs(raw_w / raw_h - width / height) / (width / height) > 0.02:
+            print(f"warning: raw output is {raw_w}x{raw_h} but {width}x{height} "
+                  f"was requested; resizing exactly (aspect will stretch)",
+                  file=sys.stderr)
+        orig = orig_path_for(final, keep_original)
+        if orig is not None:
+            try:
+                orig.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(final, orig)
+                print(f"saved original {orig}")
+            except OSError as exc:
+                print(f"warning: cannot preserve original {orig}: {exc}; "
+                      f"resizing in place", file=sys.stderr)
+                orig = None
+        if raw == (width, height):
+            infos.append({"path": final, "original_path": orig,
+                          "raw": raw, "saved": (width, height)})
+            continue
+        try:
+            proc = subprocess.run(
+                ["ffmpeg", "-y", "-v", "error", "-i", str(orig if orig is not None else final),
+                 "-vf", f"scale={width}:{height}:flags=lanczos", str(final)],
+                capture_output=True, text=True, timeout=120,
+            )
+        except FileNotFoundError:
+            print("warning: `ffmpeg` not found; leaving raw dimensions "
+                  f"({raw_w}x{raw_h} at {final})", file=sys.stderr)
+            if orig is not None:
+                try:
+                    orig.unlink()
+                except OSError:
+                    pass
+                orig = None
+            infos.append({"path": final, "original_path": orig,
+                          "raw": raw, "saved": raw})
+            continue
+        except subprocess.SubprocessError as exc:
+            print(f"warning: resize failed ({exc}); leaving raw dimensions "
+                  f"at {final}", file=sys.stderr)
+            infos.append({"path": final, "original_path": orig,
+                          "raw": raw, "saved": raw})
+            continue
+        if proc.returncode != 0:
+            detail = (proc.stderr or "").strip()[-300:]
+            print(f"warning: resize failed ({detail}); leaving raw dimensions "
+                  f"at {final}", file=sys.stderr)
+            infos.append({"path": final, "original_path": orig,
+                          "raw": raw, "saved": raw})
+            continue
+        saved = probe_dims(final) or (width, height)
+        infos.append({"path": final, "original_path": orig,
+                      "raw": raw, "saved": saved})
+    return infos
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(argv)
+    paths = resolve_outputs(args.output, args.num, args.output_format)
+
+    for ref in args.images:
+        if not Path(ref).is_file():
+            print(f"error: reference image not found: {ref}", file=sys.stderr)
+            return 2
+
+    try:
+        from openai import OpenAI
+    except ImportError:
+        print("error: the `openai` package is not installed. Run:\n"
+              "  source .venv/bin/activate\n  pip install openai",
+              file=sys.stderr)
+        return 1
+
+    if args.api_key:
+        api_key, key_label = args.api_key, None
+    else:
+        api_key, key_label = load_api_key(args.key_label)
+    client = OpenAI(base_url=args.base_url, api_key=api_key)
+
+    if args.images:
+        if len(args.images) > 1:
+            # The OpenAI SDK serializes a file list as image[] parts, which
+            # the Meta API rejects (400: use image[N] numbered from 0), and
+            # offers no override. Multi-image edits therefore go over plain
+            # urllib with indexed part names. Single-image edits keep the
+            # SDK path, which sends a bare `image` part that works today.
+            response = edit_images_indexed(
+                args.base_url, api_key, model=args.model, prompt=args.prompt,
+                ref_paths=args.images, size=args.size, num=args.num,
+                output_format=args.output_format)
+        else:
+            files = [open(ref, "rb") for ref in args.images]
+            try:
+                response = client.images.edit(
+                    model=args.model,
+                    prompt=args.prompt,
+                    image=files[0],
+                    size=args.size,
+                    n=args.num,
+                    response_format="b64_json",
+                    output_format=args.output_format,  # type: ignore[arg-type]
+                )
+            finally:
+                for fh in files:
+                    fh.close()
+        mode = "edit"
+    else:
+        response = client.images.generate(
+            model=args.model,
+            prompt=args.prompt,
+            size=args.size,
+            n=args.num,
+            response_format="b64_json",
+            output_format=args.output_format,  # type: ignore[arg-type]
+        )
+        mode = "generate"
+
+    save_images(response, paths, args.output_format)
+    req_w, req_h = (int(v) for v in args.size.split("x"))
+    if args.no_resize:
+        infos = [{"path": p, "original_path": None,
+                  "raw": probe_dims(p), "saved": probe_dims(p)} for p in paths]
+    else:
+        infos = resize_outputs(paths, req_w, req_h, args.keep_original)
+    cost = None if args.no_record else record_usage(response, args.model, key_label)
+    try:
+        cost_text = f", ~${float(cost):.2f} recorded in Cost Center" if cost is not None else ""
+    except (TypeError, ValueError):
+        cost_text = ""
+    if len(infos) == 1:
+        info = infos[0]
+        raw = info["raw"]
+        saved = info["saved"]
+        raw_text = f"{raw[0]}x{raw[1]}" if raw is not None else "unknown"
+        saved_text = f"{saved[0]}x{saved[1]}" if saved is not None else "unknown"
+        orig_text = f", original={info['original_path']}" if info["original_path"] is not None else ""
+        print(f"done ({mode}, model={args.model}, requested={req_w}x{req_h}, "
+              f"raw={raw_text}, saved={saved_text}{orig_text}, n={args.num}{cost_text})")
+    else:
+        print(f"done ({mode}, model={args.model}, requested={req_w}x{req_h}, "
+              f"n={args.num}{cost_text})")
+        for info in infos:
+            raw = info["raw"]
+            saved = info["saved"]
+            raw_text = f"{raw[0]}x{raw[1]}" if raw is not None else "unknown"
+            saved_text = f"{saved[0]}x{saved[1]}" if saved is not None else "unknown"
+            print(f"  {info['path']}: raw={raw_text}, saved={saved_text}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
