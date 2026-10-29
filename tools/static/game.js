@@ -58,6 +58,17 @@
     return;
   }
   const rows = level.rows, legend = level.legend, TILE = level.tile || 64;
+  let forkSeed = null;
+  if (params.get('fork')) {
+    try {
+      const fres = await fetch('/api/game/sessions/' + encodeURIComponent(params.get('fork')));
+      if (fres.ok) {
+        const fdata = await fres.json();
+        forkSeed = { id: params.get('fork'), records: fdata.records,
+                     header: fdata.records[0] };
+      }
+    } catch (err) { /* fall through to a fresh session */ }
+  }
   const COLS = rows[0].length, ROWS = rows.length;
 
   const spriteNames = new Set();

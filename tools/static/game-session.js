@@ -32,6 +32,10 @@
       task: opts.task || null,
       branch: opts.branch || null,
       commit: opts.commit || null,
+      engine_version: opts.engine_version || 'game-core-1',
+      forked_by: opts.forked_by || null,
+      forked_from: opts.forked_from || null,
+      fork_step: (opts.fork_step === undefined ? null : opts.fork_step),
     };
     const lines = [header];
     let ended = false;
