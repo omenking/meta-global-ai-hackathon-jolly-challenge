@@ -117,7 +117,7 @@ export default function GamePage() {
   // Parent-side replay keys (iframe keys are handled in game.js).
   useEffect(() => {
     const onKey = (ev) => {
-      if (/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
+      if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(ev.target.tagName)) return;
       const g = game();
       if (!g || !replay || !replay.active) return;
       if (ev.key === ' ') { ev.preventDefault(); g.togglePlay(); }
@@ -253,26 +253,37 @@ export default function GamePage() {
         <button type="button" className={btn} disabled={!active}
           onClick={() => { const g = game(); if (g) { g.pauseReplay(); g.showReplay(replay.index - 1); } }}>Step back</button>
         <button type="button" className={btnPrimary} disabled={!active}
-          onClick={() => { const g = game(); if (g) g.togglePlay(); }}>
+          onClick={(e) => { e.currentTarget.blur(); const g = game(); if (g) g.togglePlay(); }}>
           {active && replay.playing ? 'Pause' : 'Play'}
         </button>
         <button type="button" className={btn} disabled={!active}
           onClick={() => { const g = game(); if (g) { g.pauseReplay(); g.showReplay(replay.index + 1); } }}>Step forward</button>
         <span className="text-[12px] text-neutral-400">{active ? (replay.playing ? 'playing' : 'paused') : 'no replay'}</span>
-        <div className="relative min-w-24 flex-1 pt-1">
-          <input type="range" aria-label="Timeline" className="w-full" min="0"
-            max={active ? replay.duration_ms / 1000 : 0} step="0.01"
-            value={active ? (replay.playing ? replay.playhead_ms / 1000 : (live ? live.t_ms / 1000 : 0)) : 0} disabled={!active}
-            onChange={(e) => { const g = game(); if (g) g.seekTime(Number(e.target.value)); }} />
-          {active && replay.duration_ms > 0 && (
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-2" aria-hidden="true">
-              {replay.step_times.map((ms, i) => (
-                <span key={i} title={'Step ' + (i + 1)}
-                  className="absolute top-0 h-2 w-px bg-sky-300/80"
-                  style={{ left: (ms / replay.duration_ms * 100) + '%' }} />
-              ))}
-            </div>
-          )}
+        <div role="slider" aria-label="Timeline" aria-valuemin="0"
+          aria-valuemax={active ? Math.round(replay.duration_ms / 1000) : 0}
+          aria-valuenow={active && live ? Math.round(live.t_ms / 1000) : 0}
+          tabIndex={0} className="relative h-8 min-w-24 flex-1 cursor-pointer"
+          onPointerDown={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const seek = (x) => { const g = game(); if (g && active) g.seekTime(Math.min(1, Math.max(0, (x - rect.left) / rect.width)) * replay.duration_ms / 1000); };
+            seek(e.clientX);
+            const move = (ev) => seek(ev.clientX);
+            const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+            window.addEventListener('pointermove', move);
+            window.addEventListener('pointerup', up);
+          }}>
+          <div className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 rounded bg-neutral-700" />
+          {active && replay.duration_ms > 0 && (<>
+            <div className="absolute top-1/2 h-1 -translate-y-1/2 rounded bg-sky-500"
+              style={{ width: ((replay.playing ? replay.playhead_ms : (live ? live.t_ms : 0)) / replay.duration_ms * 100) + '%' }} />
+            {replay.step_times.map((ms, i) => (
+              <span key={i} title={'Step ' + (i + 1) + ' at ' + (ms / 1000) + 's'}
+                className="absolute top-1/2 h-3 w-0.5 -translate-x-1/2 -translate-y-1/2 bg-sky-200"
+                style={{ left: (ms / replay.duration_ms * 100) + '%' }} />
+            ))}
+            <div className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-400 shadow"
+              style={{ left: ((replay.playing ? replay.playhead_ms : (live ? live.t_ms : 0)) / replay.duration_ms * 100) + '%' }} />
+          </>)}
         </div>
         <span className="text-[13px] [font-variant-numeric:tabular-nums]">{active ? 'Step ' + replay.index + '/' + replay.steps : 'Step —'}</span>
         <span className="text-[13px] [font-variant-numeric:tabular-nums]">{active && live ? fmtClock(live.t_ms / 1000) + ' / ' + fmtClock(replay.duration_ms / 1000) : ''}</span>

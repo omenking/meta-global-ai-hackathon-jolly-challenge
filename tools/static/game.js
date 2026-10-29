@@ -210,7 +210,13 @@
   const sessionId = forkSeed ? forkSeed.id :
     'game-' + levelName + '-' + stamp + '-' +
     Math.random().toString(36).slice(2, 8);
-  const recorder = window.GameSession.createRecorder({
+  // No session exists until the first move: refreshes and idle
+  // viewing must not create junk session files, and the session
+  // clock starts at that first move, not at page load.
+  let recorder = null;
+  function ensureRecorder() {
+    if (recorder) return recorder;
+    recorder = window.GameSession.createRecorder({
     id: sessionId,
     created_at: now.toISOString(),
     created_by: forkSeed ? forkSeed.header.created_by : (params.get('creator') === 'agent' ? 'agent' : 'human'),
@@ -223,19 +229,26 @@
     engine_version: window.GameCore.VERSION,
     forked_by: forkSeed ? forkSeed.header.forked_by : null,
     forked_from: forkSeed ? forkSeed.header.forked_from : null,
-    fork_step: forkSeed ? forkSeed.header.fork_step : null,
-  });
+      fork_step: forkSeed ? forkSeed.header.fork_step : null,
+    });
+    if (forkSeed) {
+      const fsteps = window.GameReplay.stepsOf(forkSeed.records);
+      for (const s of fsteps) recorder.recordStep(s.n, s.t_ms, s.input);
+    }
+    document.getElementById('dbg-session').textContent =
+      sessionId + ' (' + recorder.header.created_by + ')' +
+      (forkSeed ? ' forked from ' + forkSeed.header.forked_from : '');
+    return recorder;
+  }
   if (forkSeed) {
-    const fsteps = window.GameReplay.stepsOf(forkSeed.records);
-    for (const s of fsteps) recorder.recordStep(s.n, s.t_ms, s.input);
     state = window.GameReplay.buildStates(
       window.GameCore, level, levelName, forkSeed.records).slice(-1)[0] || state;
     renderState();
   }
   document.getElementById('dbg-session').textContent =
-    sessionId + ' (' + recorder.header.created_by + ')' +
-    (forkSeed ? ' forked from ' + forkSeed.header.forked_from : '');
+    'no session yet — move to start one';
   function flushSession(beacon) {
+    if (!recorder) return;
     const payload = JSON.stringify({ id: sessionId, content: recorder.toJSONL() });
     if (beacon && navigator.sendBeacon) {
       navigator.sendBeacon('/api/game/sessions',
@@ -248,15 +261,15 @@
     }
   }
   function endSession(result) {
-    if (recorder.isEnded()) return;
+    if (!recorder || recorder.isEnded()) return;
     recorder.end(result || 'quit', { time_left: state.time_left_s });
     flushSession(false);
     document.getElementById('dbg-session').textContent =
       sessionId + ' — ended (' + (result || 'quit') + ')';
   }
-  flushSession(false);
   document.getElementById('btn-end-session').addEventListener('click', () => endSession('quit'));
   window.addEventListener('pagehide', () => {
+    if (!recorder) return;
     if (!recorder.isEnded()) { recorder.end('quit', { time_left: state.time_left_s }); }
     flushSession(true);
   });
@@ -265,6 +278,7 @@
     ? window.GameReplay.stepsOf(forkSeed.records).map((s) => ({ t_ms: s.t_ms, input: s.input }))
     : [];
   function applyStep(input) {
+    ensureRecorder();
     state = window.GameCore.step(state, input);
     inputLog.push({ t_ms: state.t_ms, input: state.last_input });
     recorder.recordStep(state.steps, state.t_ms, state.last_input);
@@ -278,6 +292,11 @@
   // function (which moves the player one tile on floor) with the
   // recorded elapsed t_ms, and show in the debug readout.
   const startedAt = performance.now();
+  let sessionStartTs = null;
+  function sessionElapsedMs() {
+    return forkBaseMs + (sessionStartTs === null
+      ? 0 : performance.now() - sessionStartTs);
+  }
   // Forked sessions continue the recorded clock: new inputs must carry
   // t_ms at or after the last forked step, never a restarted clock.
   const forkBaseMs = forkSeed
@@ -285,8 +304,7 @@
     : 0;
   (function clockLoop() {
     if (!window.__replayActive) {
-      const elapsed = forkBaseMs / 1000 +
-        (performance.now() - startedAt) / 1000;
+      const elapsed = sessionElapsedMs() / 1000;
       drawHud(elapsed, state.time_limit_s);
       const dbg = document.getElementById('dbg-timer');
       if (dbg) dbg.textContent = elapsed.toFixed(1) + 's (live clock)';
@@ -306,7 +324,8 @@
     const input = window.GameCore.inputForKey(ev.key);
     if (!input) return;
     ev.preventDefault();
-    applyStep({ t_ms: forkBaseMs + Math.round(performance.now() - startedAt), input: input });
+    if (sessionStartTs === null) sessionStartTs = performance.now();
+    applyStep({ t_ms: Math.round(sessionElapsedMs()), input: input });
   });
   document.getElementById('btn-replay').addEventListener('click', () => {
     const states = window.GameCore.replay(level, levelName, inputLog);
@@ -335,7 +354,7 @@
       ' — deep link ?replay=' + replayId + '&t=' + (r.t_ms / 1000);
     document.getElementById('replay-scrub').max = String(replayStates.length - 1);
     document.getElementById('replay-scrub').value = String(replayIndex);
-    playheadMs = replayStates[replayIndex].t_ms;
+    if (!window.__keepPlayhead) playheadMs = replayStates[replayIndex].t_ms;
   }
   // Continuous time playback: a playhead advances with the wall
   // clock (scaled by viewer speed); steps land exactly at their
@@ -351,25 +370,22 @@
     pauseReplay();
     if (!replayStates) return;
     if (replayIndex >= replayStates.length - 1) showReplay(0);
-    playheadMs = replayStates[replayIndex].t_ms;
+    else if (playheadMs < replayStates[replayIndex].t_ms ||
+             playheadMs > (replayStates[replayIndex + 1] || {}).t_ms) {
+      playheadMs = replayStates[replayIndex].t_ms;
+    }
     lastFrameTs = performance.now();
     const loop = (ts) => {
       if (!replayStates) { replayTimer = null; return; }
       playheadMs += (ts - lastFrameTs) * replaySpeed;
       lastFrameTs = ts;
+      window.__keepPlayhead = true;
       while (replayIndex < replayStates.length - 1 &&
              replayStates[replayIndex + 1].t_ms <= playheadMs) {
         showReplay(replayIndex + 1);
       }
+      window.__keepPlayhead = false;
       const cur = replayStates[replayIndex];
-      const nxt = replayStates[replayIndex + 1];
-      if (playerSprite && nxt && nxt.t_ms > cur.t_ms) {
-        const f = Math.min(1, Math.max(0,
-          (playheadMs - cur.t_ms) / (nxt.t_ms - cur.t_ms)));
-        playerSprite.position.set(
-          (cur.player.x + (nxt.player.x - cur.player.x) * f) * TILE,
-          (cur.player.y + (nxt.player.y - cur.player.y) * f) * TILE);
-      }
       drawHud(cur.elapsed_s + (playheadMs - cur.t_ms) / 1000, cur.time_limit_s);
       if (replayIndex >= replayStates.length - 1 &&
           playheadMs >= cur.t_ms) { pauseReplay(); return; }
@@ -475,7 +491,7 @@
     showReplay: showReplay, forkFromReplay: forkFromReplay,
     togglePlay: () => { if (replayTimer) pauseReplay(); else playReplay(); },
     seekTime: (seconds) => { if (window.__replayRecords) { pauseReplay(); showReplay(window.GameReplay.stepIndexAtTime(window.__replayRecords, seconds)); } },
-    getClock: () => ({ elapsed_s: forkBaseMs / 1000 + (performance.now() - startedAt) / 1000, time_limit_s: state.time_limit_s, time_left_s: Math.max(0, state.time_limit_s - (forkBaseMs / 1000 + (performance.now() - startedAt) / 1000)) }),
+    getClock: () => ({ started: sessionStartTs !== null, elapsed_s: sessionElapsedMs() / 1000, time_limit_s: state.time_limit_s, time_left_s: Math.max(0, state.time_limit_s - sessionElapsedMs() / 1000) }),
     getReplay: () => ({ playing: replayTimer !== null, playhead_ms: playheadMs, id: replayId, index: replayIndex,
       duration_ms: window.__replayRecords ? (window.GameReplay.stepsOf(window.__replayRecords).slice(-1)[0] || { t_ms: 0 }).t_ms : 0,
       step_times: window.__replayRecords ? window.GameReplay.stepsOf(window.__replayRecords).map((s) => s.t_ms) : [],

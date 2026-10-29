@@ -81,11 +81,12 @@ class SessionWriterTests(unittest.TestCase):
                 self.tmp, "game-x-1",
                 '{"type":"session","id":"game-x-2"}\n')
 
-    def test_game_page_records_from_load(self):
+    def test_game_page_records_from_first_move_not_load(self):
         js = (ROOT / "tools" / "static" / "game.js").read_text(
             encoding="utf-8")
         self.assertIn("GameSession.createRecorder", js)
-        self.assertIn("flushSession(false)", js)
+        self.assertIn("ensureRecorder", js)
+        self.assertIn("no session yet", js)
         self.assertIn("pagehide", js)
 
 
