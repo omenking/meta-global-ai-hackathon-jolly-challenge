@@ -50,11 +50,12 @@
     return { x: nx, y: ny };
   }
 
-  // time_limit (seconds) is optional in a level file; when absent the
-  // clock counts up from zero and time_left stays null.
+  // Countdown timer: scoped by its max time. A level may set
+  // time_limit (seconds); when absent the fixed default is 2 minutes.
+  const DEFAULT_TIME_LIMIT_S = 120;
   function initialState(level, levelName) {
     const limit = (level && typeof level.time_limit === 'number')
-      ? level.time_limit : null;
+      ? level.time_limit : DEFAULT_TIME_LIMIT_S;
     return {
       level: levelName || (level && level.name) || '',
       grid: ((level && level.rows) || []).slice(),
@@ -126,8 +127,17 @@
     return KEY_INPUTS[key.toLowerCase()] || null;
   }
 
+  const VERSION = 'game-core-1';
+  function readout(state) {
+    let orbs = 0;
+    for (const row of state.grid || []) for (const ch of row) if (ch === '*' || ch === 'O') orbs++;
+    return { step: state.steps, position: { x: state.player.x, y: state.player.y },
+      inventory: [], orbs_left: orbs,
+      timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
+      elapsed_s: state.elapsed_s, t_ms: state.t_ms, input: state.last_input };
+  }
   const api = { findPlayer, initialState, step, replay, stateDigest,
-    inputForKey, isWalkable, DIRECTIONS };
+    inputForKey, isWalkable, DIRECTIONS, VERSION, readout, DEFAULT_TIME_LIMIT_S };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

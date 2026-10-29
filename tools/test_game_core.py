@@ -27,6 +27,8 @@ const log = [
 ];
 const a = core.replay(level, 'chip1', log);
 const b = core.replay(level, 'chip1', JSON.parse(JSON.stringify(log)));
+const cd0 = core.initialState({ rows: ['P.'], legend: {} }, 'x');
+const cd1 = core.step(cd0, { t_ms: 30000, input: 'right' });
 const before = JSON.stringify(a[0]);
 core.step(a[0], log[0]);
 const pure = JSON.stringify(a[0]) === before;
@@ -38,6 +40,7 @@ console.log(JSON.stringify({
   digests: a.map(core.stateDigest),
   final: a[a.length - 1],
   player: a[0].player,
+  countdown: { limit: cd0.time_limit_s, start: cd0.time_left_s, after30s: cd1.time_left_s },
 }));
 """
 
@@ -56,6 +59,12 @@ class GameCoreTests(unittest.TestCase):
 
     def test_step_is_pure(self):
         self.assertTrue(self.result["pure"])
+
+    def test_countdown_defaults_to_two_minutes(self):
+        cd = self.result["countdown"]
+        self.assertEqual(cd["limit"], 120)
+        self.assertEqual(cd["start"], 120)
+        self.assertEqual(cd["after30s"], 90)
 
     def test_timer_derived_from_recorded_t_ms(self):
         final = self.result["final"]

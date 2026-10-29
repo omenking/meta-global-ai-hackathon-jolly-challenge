@@ -12,6 +12,8 @@
   if (!window.PIXI) { fail('PixiJS failed to load (vendor/pixi.min.js).'); return; }
 
   const params = new URLSearchParams(location.search);
+  const embed = params.get('embed') === '1';
+  if (embed) document.body.classList.add('embed');
   const levelName = (params.get('level') || 'test-room').replace(/[^a-zA-Z0-9_-]/g, '');
 
   // Game menu: only Test Levels are offered for test play (review
@@ -58,6 +60,17 @@
     return;
   }
   const rows = level.rows, legend = level.legend, TILE = level.tile || 64;
+  let forkSeed = null;
+  if (params.get('fork')) {
+    try {
+      const fres = await fetch('/api/game/sessions/' + encodeURIComponent(params.get('fork')));
+      if (fres.ok) {
+        const fdata = await fres.json();
+        forkSeed = { id: params.get('fork'), records: fdata.records,
+                     header: fdata.records[0] };
+      }
+    } catch (err) { /* fall through to a fresh session */ }
+  }
   const COLS = rows[0].length, ROWS = rows.length;
 
   const spriteNames = new Set();
@@ -77,11 +90,26 @@
   }));
 
   const app = new PIXI.Application();
-  await app.init({ width: COLS * TILE, height: ROWS * TILE, background: '#111' });
+  await app.init({ width: embed ? window.innerWidth : COLS * TILE,
+    height: embed ? window.innerHeight : ROWS * TILE, background: '#111' });
   document.getElementById('stage').appendChild(app.canvas);
   const scale = TILE / 512;
   const board = new PIXI.Container();
   app.stage.addChild(board);
+  // Embed: keep the board's true aspect ratio at any window size —
+  // scale to fit and centre (letterbox), refitting on resize. The
+  // canvas is never CSS-stretched to the container.
+  function fitBoard() {
+    if (!embed) return;
+    app.renderer.resize(window.innerWidth, window.innerHeight);
+    const fit = Math.min(window.innerWidth / (COLS * TILE),
+      window.innerHeight / (ROWS * TILE));
+    board.scale.set(fit);
+    board.position.set((window.innerWidth - COLS * TILE * fit) / 2,
+      (window.innerHeight - ROWS * TILE * fit) / 2);
+  }
+  fitBoard();
+  if (embed) window.addEventListener('resize', fitBoard);
 
   function fallbackTile(gx, gy, ch) {
     const g = new PIXI.Graphics();
@@ -139,6 +167,21 @@
   }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
+  // Visible in-game countdown timer (HUD on the stage, not the board,
+  // so it stays put at any board scale). Runs from session start.
+  const hudTimer = new PIXI.Text({ text: '2:00', style: {
+    fontSize: 28, fill: 0xffffff, fontWeight: 'bold',
+    stroke: { color: 0x111111, width: 5 } } });
+  hudTimer.position.set(12, 8);
+  app.stage.addChild(hudTimer);
+  function fmtHud(totalSeconds) {
+    const v = Math.max(0, Math.floor(totalSeconds));
+    return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0');
+  }
+  function drawHud(elapsedS, limitS) {
+    hudTimer.text = limitS === null ? fmtHud(elapsedS)
+      : fmtHud(limitS - elapsedS);
+  }
   function renderState() {
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
@@ -155,6 +198,7 @@
     document.getElementById('dbg-digest').textContent =
       window.GameCore.stateDigest(state);
     document.getElementById('dbg-state').textContent = JSON.stringify(state);
+    drawHud(state.elapsed_s, state.time_limit_s);
   }
   renderState();
 
@@ -163,22 +207,48 @@
   // closes the file — no play is ever unrecorded.
   const now = new Date();
   const stamp = now.toISOString().replace(/[^0-9]/g, '').slice(0, 14);
-  const sessionId = 'game-' + levelName + '-' + stamp + '-' +
+  const sessionId = forkSeed ? forkSeed.id :
+    'game-' + levelName + '-' + stamp + '-' +
     Math.random().toString(36).slice(2, 8);
-  const recorder = window.GameSession.createRecorder({
+  // No session exists until the first move: refreshes and idle
+  // viewing must not create junk session files, and the session
+  // clock starts at that first move, not at page load.
+  let recorder = null;
+  function ensureRecorder() {
+    if (recorder) return recorder;
+    recorder = window.GameSession.createRecorder({
     id: sessionId,
     created_at: now.toISOString(),
-    created_by: params.get('creator') === 'agent' ? 'agent' : 'human',
+    created_by: forkSeed ? forkSeed.header.created_by : (params.get('creator') === 'agent' ? 'agent' : 'human'),
     label: params.get('label') || '',
     level: levelName,
     level_file: 'levels/' + levelName + '.json',
     level_data: level,
-    feature: params.get('feature') || null,
+    feature: params.get('feature') || (forkSeed ? forkSeed.header.feature : null),
     task: params.get('task') || null,
-  });
+    engine_version: window.GameCore.VERSION,
+    forked_by: forkSeed ? forkSeed.header.forked_by : null,
+    forked_from: forkSeed ? forkSeed.header.forked_from : null,
+      fork_step: forkSeed ? forkSeed.header.fork_step : null,
+    });
+    if (forkSeed) {
+      const fsteps = window.GameReplay.stepsOf(forkSeed.records);
+      for (const s of fsteps) recorder.recordStep(s.n, s.t_ms, s.input);
+    }
+    document.getElementById('dbg-session').textContent =
+      sessionId + ' (' + recorder.header.created_by + ')' +
+      (forkSeed ? ' forked from ' + forkSeed.header.forked_from : '');
+    return recorder;
+  }
+  if (forkSeed) {
+    state = window.GameReplay.buildStates(
+      window.GameCore, level, levelName, forkSeed.records).slice(-1)[0] || state;
+    renderState();
+  }
   document.getElementById('dbg-session').textContent =
-    sessionId + ' (' + recorder.header.created_by + ')';
+    'no session yet — move to start one';
   function flushSession(beacon) {
+    if (!recorder) return;
     const payload = JSON.stringify({ id: sessionId, content: recorder.toJSONL() });
     if (beacon && navigator.sendBeacon) {
       navigator.sendBeacon('/api/game/sessions',
@@ -191,21 +261,24 @@
     }
   }
   function endSession(result) {
-    if (recorder.isEnded()) return;
+    if (!recorder || recorder.isEnded()) return;
     recorder.end(result || 'quit', { time_left: state.time_left_s });
     flushSession(false);
     document.getElementById('dbg-session').textContent =
       sessionId + ' — ended (' + (result || 'quit') + ')';
   }
-  flushSession(false);
   document.getElementById('btn-end-session').addEventListener('click', () => endSession('quit'));
   window.addEventListener('pagehide', () => {
+    if (!recorder) return;
     if (!recorder.isEnded()) { recorder.end('quit', { time_left: state.time_left_s }); }
     flushSession(true);
   });
 
-  const inputLog = [];
+  const inputLog = forkSeed
+    ? window.GameReplay.stepsOf(forkSeed.records).map((s) => ({ t_ms: s.t_ms, input: s.input }))
+    : [];
   function applyStep(input) {
+    ensureRecorder();
     state = window.GameCore.step(state, input);
     inputLog.push({ t_ms: state.t_ms, input: state.last_input });
     recorder.recordStep(state.steps, state.t_ms, state.last_input);
@@ -219,12 +292,40 @@
   // function (which moves the player one tile on floor) with the
   // recorded elapsed t_ms, and show in the debug readout.
   const startedAt = performance.now();
+  let sessionStartTs = null;
+  function sessionElapsedMs() {
+    return forkBaseMs + (sessionStartTs === null
+      ? 0 : performance.now() - sessionStartTs);
+  }
+  // Forked sessions continue the recorded clock: new inputs must carry
+  // t_ms at or after the last forked step, never a restarted clock.
+  const forkBaseMs = forkSeed
+    ? (window.GameReplay.stepsOf(forkSeed.records).slice(-1)[0] || { t_ms: 0 }).t_ms
+    : 0;
+  (function clockLoop() {
+    if (!window.__replayActive) {
+      const elapsed = sessionElapsedMs() / 1000;
+      drawHud(elapsed, state.time_limit_s);
+      const dbg = document.getElementById('dbg-timer');
+      if (dbg) dbg.textContent = elapsed.toFixed(1) + 's (live clock)';
+    }
+    requestAnimationFrame(clockLoop);
+  })();
   document.addEventListener('keydown', (ev) => {
     if (/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
+    if (window.__replayActive) {
+      if (ev.key === ' ') { ev.preventDefault(); if (replayTimer) pauseReplay(); else playReplay(); }
+      else if (ev.key === 'ArrowLeft') { ev.preventDefault(); pauseReplay(); showReplay(replayIndex - (ev.shiftKey ? 10 : 1)); }
+      else if (ev.key === 'ArrowRight') { ev.preventDefault(); pauseReplay(); showReplay(replayIndex + (ev.shiftKey ? 10 : 1)); }
+      else if (ev.key === 'Home') { ev.preventDefault(); showReplay(0); }
+      else if (ev.key === 'End') { ev.preventDefault(); showReplay(1e9); }
+      return;
+    }
     const input = window.GameCore.inputForKey(ev.key);
     if (!input) return;
     ev.preventDefault();
-    applyStep({ t_ms: Math.round(performance.now() - startedAt), input: input });
+    if (sessionStartTs === null) sessionStartTs = performance.now();
+    applyStep({ t_ms: Math.round(sessionElapsedMs()), input: input });
   });
   document.getElementById('btn-replay').addEventListener('click', () => {
     const states = window.GameCore.replay(level, levelName, inputLog);
@@ -236,7 +337,168 @@
         : 'MISMATCH replay ' + finalDigest + ' vs live ' + liveDigest;
   });
 
+  // --- Sessions menu, replay player, annotations, forks ---
+  let replayId = null, replayStates = null, replayIndex = 0, replayTimer = null;
+  const actor = params.get('creator') === 'agent' ? 'agent' : 'human';
+  function replayActive() { return replayStates !== null; }
+  function showReplay(index) {
+    if (!replayStates) return;
+    replayIndex = Math.max(0, Math.min(index, replayStates.length - 1));
+    state = replayStates[replayIndex];
+    renderState();
+    const r = window.GameCore.readout(state);
+    document.getElementById('replay-readout').textContent =
+      'step ' + r.step + ' pos ' + r.position.x + ',' + r.position.y +
+      ' inventory ' + JSON.stringify(r.inventory) + ' orbs_left ' + r.orbs_left +
+      ' timer ' + Number(r.timer).toFixed(1) + 's input ' + String(r.input) +
+      ' — deep link ?replay=' + replayId + '&t=' + (r.t_ms / 1000);
+    document.getElementById('replay-scrub').max = String(replayStates.length - 1);
+    document.getElementById('replay-scrub').value = String(replayIndex);
+    if (!window.__keepPlayhead) playheadMs = replayStates[replayIndex].t_ms;
+  }
+  // Continuous time playback: a playhead advances with the wall
+  // clock (scaled by viewer speed); steps land exactly at their
+  // recorded t_ms and the sprite interpolates between tiles, so
+  // time — and the timeline — moves smoothly, not step-by-step.
+  let playheadMs = 0, lastFrameTs = 0;
+  function pauseReplay() {
+    if (replayTimer) { cancelAnimationFrame(replayTimer); replayTimer = null; }
+    renderState();
+  }
+  let replaySpeed = 1;
+  function playReplay() {
+    pauseReplay();
+    if (!replayStates) return;
+    if (replayIndex >= replayStates.length - 1) showReplay(0);
+    else if (playheadMs < replayStates[replayIndex].t_ms ||
+             playheadMs > (replayStates[replayIndex + 1] || {}).t_ms) {
+      playheadMs = replayStates[replayIndex].t_ms;
+    }
+    lastFrameTs = performance.now();
+    const loop = (ts) => {
+      if (!replayStates) { replayTimer = null; return; }
+      playheadMs += (ts - lastFrameTs) * replaySpeed;
+      lastFrameTs = ts;
+      window.__keepPlayhead = true;
+      while (replayIndex < replayStates.length - 1 &&
+             replayStates[replayIndex + 1].t_ms <= playheadMs) {
+        showReplay(replayIndex + 1);
+      }
+      window.__keepPlayhead = false;
+      const cur = replayStates[replayIndex];
+      drawHud(cur.elapsed_s + (playheadMs - cur.t_ms) / 1000, cur.time_limit_s);
+      if (replayIndex >= replayStates.length - 1 &&
+          playheadMs >= cur.t_ms) { pauseReplay(); return; }
+      replayTimer = requestAnimationFrame(loop);
+    };
+    replayTimer = requestAnimationFrame(loop);
+  }
+  async function loadReplay(id, tSeconds) {
+    const res = await fetch('/api/game/sessions/' + encodeURIComponent(id));
+    if (!res.ok) { fail('Could not load session ' + id); return; }
+    const data = await res.json();
+    const header = data.records[0];
+    if (header.level && header.level !== levelName) {
+      const next = new URLSearchParams(params);
+      next.set('level', header.level); next.set('replay', id);
+      if (tSeconds !== undefined) next.set('t', String(tSeconds));
+      location.search = '?' + next.toString(); return;
+    }
+    const warns = window.GameReplay.warnings(header, null,
+      window.GameCore.VERSION, null, window.GameSession.levelHash, level);
+    const warnBox = document.getElementById('replay-warning');
+    warnBox.style.display = warns.length ? 'block' : 'none';
+    warnBox.textContent = warns.join('; ');
+    replayId = id; window.__replayRecords = data.records; window.__replayActive = true;
+    replayStates = window.GameReplay.buildStates(
+      window.GameCore, level, levelName, data.records);
+    const idx = tSeconds === undefined ? 0
+      : window.GameReplay.stepIndexAtTime(data.records, tSeconds);
+    showReplay(idx);
+  }
+  async function refreshSessions() {
+    const q = new URLSearchParams();
+    const map = { 'filter-q': 'q', 'filter-level': 'level',
+      'filter-creator': 'creator', 'filter-feature': 'feature',
+      'filter-date': 'date', 'filter-result': 'result', 'filter-label': 'label' };
+    for (const [el, key] of Object.entries(map)) {
+      const v = document.getElementById(el).value.trim();
+      if (v) q.set(key, v);
+    }
+    const res = await fetch('/api/game/sessions?' + q.toString());
+    const data = await res.json();
+    const list = document.getElementById('sessions-list');
+    list.innerHTML = '';
+    for (const s of data.sessions || []) {
+      const li = document.createElement('li');
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = s.id + ' (' + s.level + ', ' +
+        s.created_by + ', ' + (s.result || 'open') + ')' +
+        (s.labels && s.labels.length ? ' [' + s.labels.join(',') + ']' : '');
+      b.addEventListener('click', () => loadReplay(s.id));
+      li.appendChild(b); list.appendChild(li);
+    }
+  }
+  document.getElementById('btn-filter-sessions').addEventListener('click', refreshSessions);
+  document.getElementById('btn-replay-play').addEventListener('click', playReplay);
+  document.getElementById('btn-replay-pause').addEventListener('click', pauseReplay);
+  document.getElementById('btn-step-back').addEventListener('click', () => { pauseReplay(); showReplay(replayIndex - 1); });
+  document.getElementById('btn-step-fwd').addEventListener('click', () => { pauseReplay(); showReplay(replayIndex + 1); });
+  document.getElementById('replay-scrub').addEventListener('input', (ev) => { pauseReplay(); showReplay(Number(ev.target.value)); });
+  document.getElementById('btn-annotate').addEventListener('click', async () => {
+    const target = replayId || sessionId;
+    const res = await fetch('/api/game/sessions/' + encodeURIComponent(target) + '/annotations', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ author: actor,
+        body: document.getElementById('annotate-body').value,
+        labels: document.getElementById('annotate-labels').value }) });
+    document.getElementById('annotate-status').textContent =
+      res.ok ? 'annotation added to ' + target : 'annotation failed';
+    if (res.ok) refreshSessions();
+  });
+  document.getElementById('btn-fork').addEventListener('click', async () => {
+    if (!replayId) { fail('Load a session replay before forking.'); return; }
+    const newId = 'game-' + levelName + '-fork' + replayIndex + '-' +
+      Math.random().toString(36).slice(2, 8);
+    const res = await fetch('/api/game/sessions/' + encodeURIComponent(replayId) + '/fork', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fork_step: replayIndex, forked_by: actor, id: newId }) });
+    if (!res.ok) { fail('Fork failed'); return; }
+    const next = new URLSearchParams(params);
+    next.set('level', levelName); next.set('fork', newId);
+    next.delete('replay'); next.delete('t');
+    location.search = '?' + next.toString();
+  });
+  refreshSessions();
+  if (params.get('replay')) {
+    loadReplay(params.get('replay'),
+      params.get('t') === null ? undefined : Number(params.get('t')));
+  }
+
+  async function forkFromReplay() {
+    if (!replayId) { fail('Load a session replay before forking.'); return null; }
+    const newId = 'game-' + levelName + '-fork' + replayIndex + '-' +
+      Math.random().toString(36).slice(2, 8);
+    const res = await fetch('/api/game/sessions/' + encodeURIComponent(replayId) + '/fork', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fork_step: replayIndex, forked_by: actor, id: newId }) });
+    if (!res.ok) { fail('Fork failed'); return null; }
+    return newId;
+  }
   window.__game = {
+    loadReplay: loadReplay, playReplay: playReplay, pauseReplay: pauseReplay,
+    setReplaySpeed: (s) => { replaySpeed = Number(s) || 1; },
+    showReplay: showReplay, forkFromReplay: forkFromReplay,
+    togglePlay: () => { if (replayTimer) pauseReplay(); else playReplay(); },
+    seekTime: (seconds) => { if (window.__replayRecords) { pauseReplay(); showReplay(window.GameReplay.stepIndexAtTime(window.__replayRecords, seconds)); } },
+    getClock: () => ({ started: sessionStartTs !== null, elapsed_s: sessionElapsedMs() / 1000, time_limit_s: state.time_limit_s, time_left_s: Math.max(0, state.time_limit_s - sessionElapsedMs() / 1000) }),
+    getReplay: () => ({ playing: replayTimer !== null, playhead_ms: playheadMs, id: replayId, index: replayIndex,
+      duration_ms: window.__replayRecords ? (window.GameReplay.stepsOf(window.__replayRecords).slice(-1)[0] || { t_ms: 0 }).t_ms : 0,
+      step_times: window.__replayRecords ? window.GameReplay.stepsOf(window.__replayRecords).map((s) => s.t_ms) : [],
+      steps: replayStates ? replayStates.length - 1 : 0,
+      active: replayStates !== null,
+      readout: document.getElementById('replay-readout').textContent,
+      warning: document.getElementById('replay-warning').textContent }),
     getState: () => state,
     getPlayerSpritePos: () => playerSprite
       ? { x: playerSprite.position.x, y: playerSprite.position.y }

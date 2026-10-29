@@ -179,6 +179,55 @@ def _save_pm_evidence(fid: str, filename: object, data: bytes) -> dict:
             "size": len(data)}
 
 
+def _playwright_python():
+    import shutil as _sh
+    candidates = [sys.executable, _sh.which("python3") or "",
+                  str(Path.home() / "miniconda3" / "bin" / "python")]
+    for cand in candidates:
+        if not cand:
+            continue
+        try:
+            r = subprocess.run([cand, "-c", "import playwright.sync_api"],
+                               capture_output=True, timeout=15)
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        if r.returncode == 0:
+            return cand
+    return None
+
+
+def _game_screenshot(handler, body: dict) -> dict:
+    level = str(body.get("level") or "movement-room")
+    if not game_levels.SLUG_RE.match(level):
+        raise LevelError(f"invalid level {level!r}")
+    query = {"level": level}
+    if body.get("replay"):
+        query["replay"] = str(body["replay"])
+        if body.get("t") is not None:
+            query["t"] = str(body["t"])
+    if body.get("fork"):
+        query["fork"] = str(body["fork"])
+    host = handler.headers.get("Host") or "127.0.0.1:8321"
+    url = f"http://{host}/game?" + urllib.parse.urlencode(query)
+    width = int(body.get("width") or 1200)
+    height = int(body.get("height") or 800)
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    name = f"{stamp}-{level}.png"
+    out = ROOT / "screenshots" / "game" / name
+    py = _playwright_python()
+    if py is None:
+        raise StoreError("no python with playwright found for screenshot")
+    proc = subprocess.run(
+        [py, str(Path(__file__).resolve().parent / "game_screenshot.py"),
+         url, str(out), str(width), str(height)],
+        capture_output=True, text=True, timeout=90)
+    if proc.returncode != 0 or not out.is_file():
+        raise StoreError(
+            f"screenshot failed: {(proc.stderr or proc.stdout).strip()[-300:]}")
+    return {"path": f"screenshots/game/{name}",
+            "url": f"/api/pm/evidence/game/{name}", "size": out.stat().st_size}
+
+
 def _new_session_id() -> str:
     base = "s" + time.strftime("%Y%m%d-%H%M%S")
     sid = base
@@ -788,10 +837,23 @@ class Handler(BaseHTTPRequestHandler):
             if len(parts) == 4 and parts[:3] == ["api", "game", "levels"]:
                 return _send(self, 200, game_levels.load_level(
                     ROOT / "levels", urllib.parse.unquote(parts[3])))
+            if parts == ["api", "game", "sessions"]:
+                q = urllib.parse.parse_qs(parsed.query or "")
+                def _q(k):
+                    return (q.get(k) or [None])[0]
+                return _send(self, 200, {"sessions": game_sessions.list_sessions(
+                    pm_store.SESSIONS_ROOT, level=_q("level"),
+                    creator=_q("creator"), feature=_q("feature"),
+                    date=_q("date"), result=_q("result"), label=_q("label"),
+                    query=_q("q"))})
             if len(parts) == 4 and parts[:3] == ["api", "game", "sessions"]:
                 records = game_sessions.read_session(
                     pm_store.SESSIONS_ROOT, urllib.parse.unquote(parts[3]))
-                return _send(self, 200, {"records": records})
+                return _send(self, 200, {"records": records,
+                                         "warnings": game_sessions.version_warnings(
+                                             records[0],
+                                             engine_version=game_sessions.ENGINE_VERSION),
+                                         "summary": game_sessions.summarize(records)})
             if parts == ["api", "pm", "features"]:
                 with STATE_LOCK:
                     payload = [_pm_feature_view(f) for f in STATE.pm["features"]]
@@ -819,7 +881,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self._serve_file(target)
             if parts[:1] == ["api"]:
                 return _send(self, 404, {"error": "not found"})
-            if parts and parts[0] == "pm":
+            if parts and parts[0] in ("pm", "game"):
                 app_index = STATIC_DIR / "app" / "index.html"
                 if app_index.is_file():
                     return self._serve_file(app_index)
@@ -840,6 +902,29 @@ class Handler(BaseHTTPRequestHandler):
                 return _send(self, 201, {
                     "id": body.get("id"),
                     "path": f"sessions/{path.name}"})
+            if len(parts) == 5 and parts[:3] == ["api", "game", "sessions"] and parts[4] == "annotations":
+                sid = urllib.parse.unquote(parts[3])
+                rec = game_sessions.append_annotation(
+                    pm_store.SESSIONS_ROOT, sid,
+                    body.get("author", "human"), body.get("body", ""),
+                    labels=body.get("labels"), step=body.get("step"))
+                return _send(self, 201, rec)
+            if len(parts) == 5 and parts[:3] == ["api", "game", "sessions"] and parts[4] == "fork":
+                sid = urllib.parse.unquote(parts[3])
+                fork_step = body.get("fork_step")
+                if not isinstance(fork_step, int):
+                    raise SessionError("fork needs an integer fork_step")
+                forked_by = body.get("forked_by") or body.get("author") or "human"
+                new_id = body.get("id") or (
+                    sid[:40] + "-fork" + str(fork_step) + "-" +
+                    time.strftime("%H%M%S"))
+                forked = game_sessions.write_fork(
+                    pm_store.SESSIONS_ROOT, sid, fork_step, new_id, forked_by,
+                    created_at=body.get("created_at"))
+                return _send(self, 201, {"id": new_id, "records": forked,
+                                         "summary": game_sessions.summarize(forked)})
+            if parts == ["api", "game", "screenshot"]:
+                return _send(self, 201, _game_screenshot(self, body))
             if parts == ["api", "assets"]:
                 with STATE_LOCK:
                     asset = create_asset(STATE.assets, body.get("name", ""),

@@ -1,6 +1,7 @@
 import { Button, Card, Chip, Spinner } from '@heroui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { api, evidenceUrl, PM } from './api.js';
+import GamePage from './GamePage.jsx';
 
 const STATUSES = ['proposed', 'approved', 'in_progress', 'in_review', 'completed', 'blocked', 'abandoned'];
 // Tasks are agent-managed and have no in_review stage: done means completed.
@@ -36,6 +37,7 @@ export function linkProps(to) {
 function parseRoute(pathname) {
   const parts = pathname.split('/').filter(Boolean).map(decodeURIComponent);
   if (parts.length === 0) return { view: 'home' };
+  if (parts[0] === 'game') return { view: 'game' };
   if (parts[0] !== 'pm') return { view: 'home' };
   if (parts.length === 1) return { view: 'list' };
   if (parts[1] === 'board') return { view: 'board' };
@@ -94,6 +96,7 @@ function Shell({ route, dark, onToggleDark, children }) {
           {navBtn('/pm', 'Project Manager', pmActive)}
           <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/assets">Asset Design</a>
           <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/static/level-preview.html">Level Preview</a>
+          <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/game">Game</a>
           <span className="flex-1" />
           <Button size="md" variant="outline" onPress={onToggleDark}>{dark ? 'Light' : 'Dark'}</Button>
         </div>
@@ -923,6 +926,7 @@ export default function App() {
   }, []);
   useEffect(() => { reload(); }, [reload]);
 
+  if (route.view === 'game') return <GamePage />;
   return (
     <Shell route={route} dark={dark} onToggleDark={() => setDark(!dark)}>
       {error && (
