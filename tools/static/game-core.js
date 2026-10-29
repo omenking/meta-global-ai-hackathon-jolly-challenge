@@ -126,8 +126,17 @@
     return KEY_INPUTS[key.toLowerCase()] || null;
   }
 
+  const VERSION = 'game-core-1';
+  function readout(state) {
+    let orbs = 0;
+    for (const row of state.grid || []) for (const ch of row) if (ch === '*' || ch === 'O') orbs++;
+    return { step: state.steps, position: { x: state.player.x, y: state.player.y },
+      inventory: [], orbs_left: orbs,
+      timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
+      elapsed_s: state.elapsed_s, t_ms: state.t_ms, input: state.last_input };
+  }
   const api = { findPlayer, initialState, step, replay, stateDigest,
-    inputForKey, isWalkable, DIRECTIONS };
+    inputForKey, isWalkable, DIRECTIONS, VERSION, readout };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

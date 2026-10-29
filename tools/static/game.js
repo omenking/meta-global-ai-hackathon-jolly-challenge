@@ -163,21 +163,34 @@
   // closes the file — no play is ever unrecorded.
   const now = new Date();
   const stamp = now.toISOString().replace(/[^0-9]/g, '').slice(0, 14);
-  const sessionId = 'game-' + levelName + '-' + stamp + '-' +
+  const sessionId = forkSeed ? forkSeed.id :
+    'game-' + levelName + '-' + stamp + '-' +
     Math.random().toString(36).slice(2, 8);
   const recorder = window.GameSession.createRecorder({
     id: sessionId,
     created_at: now.toISOString(),
-    created_by: params.get('creator') === 'agent' ? 'agent' : 'human',
+    created_by: forkSeed ? forkSeed.header.created_by : (params.get('creator') === 'agent' ? 'agent' : 'human'),
     label: params.get('label') || '',
     level: levelName,
     level_file: 'levels/' + levelName + '.json',
     level_data: level,
-    feature: params.get('feature') || null,
+    feature: params.get('feature') || (forkSeed ? forkSeed.header.feature : null),
     task: params.get('task') || null,
+    engine_version: window.GameCore.VERSION,
+    forked_by: forkSeed ? forkSeed.header.forked_by : null,
+    forked_from: forkSeed ? forkSeed.header.forked_from : null,
+    fork_step: forkSeed ? forkSeed.header.fork_step : null,
   });
+  if (forkSeed) {
+    const fsteps = window.GameReplay.stepsOf(forkSeed.records);
+    for (const s of fsteps) recorder.recordStep(s.n, s.t_ms, s.input);
+    state = window.GameReplay.buildStates(
+      window.GameCore, level, levelName, forkSeed.records).slice(-1)[0] || state;
+    renderState();
+  }
   document.getElementById('dbg-session').textContent =
-    sessionId + ' (' + recorder.header.created_by + ')';
+    sessionId + ' (' + recorder.header.created_by + ')' +
+    (forkSeed ? ' forked from ' + forkSeed.header.forked_from : '');
   function flushSession(beacon) {
     const payload = JSON.stringify({ id: sessionId, content: recorder.toJSONL() });
     if (beacon && navigator.sendBeacon) {
@@ -204,7 +217,9 @@
     flushSession(true);
   });
 
-  const inputLog = [];
+  const inputLog = forkSeed
+    ? window.GameReplay.stepsOf(forkSeed.records).map((s) => ({ t_ms: s.t_ms, input: s.input }))
+    : [];
   function applyStep(input) {
     state = window.GameCore.step(state, input);
     inputLog.push({ t_ms: state.t_ms, input: state.last_input });
