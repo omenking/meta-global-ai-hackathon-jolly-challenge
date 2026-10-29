@@ -179,6 +179,55 @@ def _save_pm_evidence(fid: str, filename: object, data: bytes) -> dict:
             "size": len(data)}
 
 
+def _playwright_python():
+    import shutil as _sh
+    candidates = [sys.executable, _sh.which("python3") or "",
+                  str(Path.home() / "miniconda3" / "bin" / "python")]
+    for cand in candidates:
+        if not cand:
+            continue
+        try:
+            r = subprocess.run([cand, "-c", "import playwright.sync_api"],
+                               capture_output=True, timeout=15)
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        if r.returncode == 0:
+            return cand
+    return None
+
+
+def _game_screenshot(handler, body: dict) -> dict:
+    level = str(body.get("level") or "movement-room")
+    if not game_levels.SLUG_RE.match(level):
+        raise LevelError(f"invalid level {level!r}")
+    query = {"level": level}
+    if body.get("replay"):
+        query["replay"] = str(body["replay"])
+        if body.get("t") is not None:
+            query["t"] = str(body["t"])
+    if body.get("fork"):
+        query["fork"] = str(body["fork"])
+    host = handler.headers.get("Host") or "127.0.0.1:8321"
+    url = f"http://{host}/game?" + urllib.parse.urlencode(query)
+    width = int(body.get("width") or 1200)
+    height = int(body.get("height") or 800)
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    name = f"{stamp}-{level}.png"
+    out = ROOT / "screenshots" / "game" / name
+    py = _playwright_python()
+    if py is None:
+        raise StoreError("no python with playwright found for screenshot")
+    proc = subprocess.run(
+        [py, str(Path(__file__).resolve().parent / "game_screenshot.py"),
+         url, str(out), str(width), str(height)],
+        capture_output=True, text=True, timeout=90)
+    if proc.returncode != 0 or not out.is_file():
+        raise StoreError(
+            f"screenshot failed: {(proc.stderr or proc.stdout).strip()[-300:]}")
+    return {"path": f"screenshots/game/{name}",
+            "url": f"/api/pm/evidence/game/{name}", "size": out.stat().st_size}
+
+
 def _new_session_id() -> str:
     base = "s" + time.strftime("%Y%m%d-%H%M%S")
     sid = base
@@ -874,6 +923,8 @@ class Handler(BaseHTTPRequestHandler):
                     created_at=body.get("created_at"))
                 return _send(self, 201, {"id": new_id, "records": forked,
                                          "summary": game_sessions.summarize(forked)})
+            if parts == ["api", "game", "screenshot"]:
+                return _send(self, 201, _game_screenshot(self, body))
             if parts == ["api", "assets"]:
                 with STATE_LOCK:
                     asset = create_asset(STATE.assets, body.get("name", ""),

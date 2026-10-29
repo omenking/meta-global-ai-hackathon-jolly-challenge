@@ -134,6 +134,16 @@ export default function GamePage() {
         <span className="text-[12px] text-neutral-400" role="status" aria-live="polite">{status}</span>
         <button type="button" className={btn} aria-expanded={inspectorOpen}
           onClick={() => setInspectorOpen(!inspectorOpen)}>Inspector</button>
+        <button type="button" className={btn} onClick={async () => {
+          try {
+            const shot = await api('POST', '/api/game/screenshot', {
+              level, replay: selected || undefined,
+              t: live ? live.t_ms / 1000 : undefined,
+              width: window.innerWidth, height: window.innerHeight });
+            setStatus('Screenshot saved: ' + shot.path);
+            window.open(shot.url, '_blank');
+          } catch (e) { setStatus('Screenshot failed: ' + e.message); }
+        }}>Screenshot</button>
         <a className="text-[13px] text-neutral-400 hover:underline" href="/pm">Project Manager</a>
       </header>
       {active && replay.warning && (

@@ -43,6 +43,13 @@ class GameOverlayTests(unittest.TestCase):
         self.assertIn("togglePlay", self.game_js)
         self.assertIn("ArrowLeft", self.game_js)
 
+    def test_screenshot_button_saves_to_screenshots_game(self):
+        self.assertIn("Screenshot", self.page)
+        self.assertIn("/api/game/screenshot", self.page + self.server)
+        helper = ROOT / "tools/game_screenshot.py"
+        self.assertTrue(helper.is_file())
+        self.assertIn("screenshot", helper.read_text().lower())
+
     def test_filters_and_diagnostics_disclosed(self):
         self.assertIn("More filters", self.page)
         self.assertIn("Diagnostics", self.page)
