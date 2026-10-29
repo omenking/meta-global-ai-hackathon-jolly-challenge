@@ -18,6 +18,7 @@ NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
 
 MANIFEST_PATH = Path(__file__).resolve().parent.parent / "assets" / "manifest.yml"
 JUDGEMENTS_PATH = Path(__file__).resolve().parent.parent / "assets" / "judgements.yml"
+SESSIONS_PATH = Path(__file__).resolve().parent.parent / "assets" / "sessions.yml"
 
 LOTTERY_MIN = 1
 LOTTERY_MAX = 10
@@ -446,3 +447,220 @@ def validate_run_not_noop(version: dict, parent: dict | None,
         "this run would just re-roll the same prompt. Change the prompt "
         "(put the fix in the prompt, not only in the description) or "
         "select a reference image to edit from.")
+
+
+# --- Multi-turn sessions (emulated provider continuity) ---
+#
+# SPIKE NOTE (2026-10-28): the OpenAI-compatible images API used by
+# ``scripts/gen-image`` (``client.images.generate`` / ``client.images.edit``,
+# plus the hand-rolled ``edit_images_indexed`` POST to ``/images/edits``)
+# exposes no session/conversation/continuation parameter, and
+# ``scripts/gen-image`` accepts no ``--session-id`` flag. So there is no
+# provider session to plumb: continuity is emulated by auto-carrying ordered
+# ``-i`` references from prior turns of the same session. Turn records keep
+# a ``provider_session`` field (always None on this branch) so a future
+# provider session id can slot in without changing the UI or publish path.
+
+SESSION_ID_RE = NAME_RE
+UPLOAD_MAX_BYTES = 8 * 1024 * 1024
+UPLOAD_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
+SESSION_CONTEXT_MAX = 10
+
+
+def _normalize_turn(entry: object) -> dict:
+    if not isinstance(entry, dict):
+        raise StoreError("each turn must be a mapping")
+    try:
+        seq = int(entry.get("seq", 0))
+    except (TypeError, ValueError):
+        raise StoreError("each turn must have an integer seq")
+    if seq <= 0:
+        raise StoreError("each turn must have a positive integer seq")
+    return {
+        "seq": seq,
+        "prompt": entry.get("prompt") or "",
+        "full_prompt_sent": entry.get("full_prompt_sent") or "",
+        "references": validate_references(entry.get("references")),
+        "num": entry.get("num"),
+        "provider_session": entry.get("provider_session"),
+        "status": entry.get("status"),
+        "cost_total": entry.get("cost_total"),
+        "outputs": [_normalize_output(o) for o in (entry.get("outputs") or [])],
+    }
+
+
+def _normalize_session(sid: str, raw: object) -> dict:
+    if not isinstance(raw, dict):
+        raise StoreError(f"session {sid!r} must be a mapping")
+    return {
+        "id": sid,
+        "asset_name": raw.get("asset_name") or "",
+        "title": raw.get("title") or "",
+        "created": raw.get("created") or "",
+        "turns": [_normalize_turn(t) for t in (raw.get("turns") or [])],
+    }
+
+
+def load_sessions(path: Path = SESSIONS_PATH) -> tuple[dict, str]:
+    """Return (sessions, header) keyed by session id."""
+    data, header = _load_yaml(path)
+    raw = data.get("sessions") or {}
+    if not isinstance(raw, dict):
+        raise StoreError("sessions file 'sessions' must be a mapping")
+    sessions = {}
+    for sid, entry in raw.items():
+        if not isinstance(sid, str) or not SESSION_ID_RE.match(sid):
+            raise StoreError(f"invalid session id: {sid!r}")
+        sessions[sid] = _normalize_session(sid, entry)
+    return sessions, header
+
+
+def save_sessions(sessions: dict, header: str, path: Path = SESSIONS_PATH) -> None:
+    _save_yaml(path, {"sessions": sessions}, header)
+
+
+def create_session(sessions: dict, sid: str, asset_name: str,
+                   title: str = "", created: str = "") -> dict:
+    """Create an empty session. Raises StoreError on bad/duplicate id."""
+    _check_name("session", sid)
+    if sid in sessions:
+        raise StoreError(f"session {sid!r} already exists")
+    if not (asset_name or "").strip():
+        raise StoreError("session needs an asset name")
+    session = {
+        "id": sid,
+        "asset_name": asset_name.strip(),
+        "title": title or "",
+        "created": created or "",
+        "turns": [],
+    }
+    sessions[sid] = session
+    return session
+
+
+def get_session(sessions: dict, sid: str) -> dict:
+    try:
+        return sessions[sid]
+    except KeyError:
+        raise StoreError(f"session {sid!r} does not exist")
+
+
+def add_turn(sessions: dict, sid: str, prompt: str,
+             references: object, num: int) -> dict:
+    """Append a pending turn to a session; caller fills outputs on completion."""
+    session = get_session(sessions, sid)
+    if not (prompt or "").strip():
+        raise StoreError("turn prompt must not be empty")
+    cleaned_refs = validate_references(references)
+    turn = {
+        "seq": len(session["turns"]) + 1,
+        "prompt": prompt,
+        "full_prompt_sent": "",
+        "references": cleaned_refs,
+        "num": num,
+        "provider_session": None,
+        "status": None,
+        "cost_total": None,
+        "outputs": [],
+    }
+    session["turns"].append(turn)
+    return turn
+
+
+def record_turn_outputs(sessions: dict, sid: str, seq: int,
+                        outputs_info: list, total_usd: object,
+                        full_prompt_sent: str = "") -> dict:
+    """Attach completed outputs to a pending turn; marks it completed."""
+    session = get_session(sessions, sid)
+    turn = next((t for t in session["turns"] if t["seq"] == seq), None)
+    if turn is None:
+        raise StoreError(f"turn {seq!r} does not exist in session {sid!r}")
+    for info in outputs_info:
+        turn["outputs"].append({
+            "key": info["key"],
+            "path": info["path"],
+            "estimated_usd": info.get("estimated_usd"),
+            "original_path": info.get("original_path"),
+            "requested_width": info.get("requested_width"),
+            "requested_height": info.get("requested_height"),
+            "raw_width": info.get("raw_width"),
+            "raw_height": info.get("raw_height"),
+        })
+    turn["status"] = "completed"
+    turn["cost_total"] = total_usd
+    if full_prompt_sent:
+        turn["full_prompt_sent"] = full_prompt_sent
+    return turn
+
+
+def mark_turn_failed(sessions: dict, sid: str, seq: int) -> None:
+    session = get_session(sessions, sid)
+    turn = next((t for t in session["turns"] if t["seq"] == seq), None)
+    if turn is None:
+        raise StoreError(f"turn {seq!r} does not exist in session {sid!r}")
+    turn["status"] = "failed"
+
+
+def session_output_keys(session: dict) -> list:
+    """All output keys in a session, oldest turn first."""
+    keys = []
+    for turn in session.get("turns") or []:
+        for output in turn.get("outputs") or []:
+            keys.append(output["key"])
+    return keys
+
+
+def find_session_output(sessions: dict, sid: str, output_key: str) -> dict:
+    """Return the output record for a key in a session; raises StoreError."""
+    session = get_session(sessions, sid)
+    for turn in session.get("turns") or []:
+        for output in turn.get("outputs") or []:
+            if output.get("key") == output_key:
+                return output
+    raise StoreError(f"output {output_key!r} not found in session {sid!r}")
+
+
+def session_context_refs(session: dict, judgements: dict | None = None,
+                         limit: int = SESSION_CONTEXT_MAX) -> list:
+    """Auto-carry context for the next turn: preferred first, newest first.
+
+    Collects output filenames (``<key>.png``) from all completed turns,
+    newest turn first; outputs marked preferred in ``judgements`` sort ahead
+    of the rest within that newest-first order. Dedupes and caps at
+    ``limit`` (default 10, matching the reference cap).
+    """
+    judgements = judgements or {}
+    ordered: list = []
+    for turn in reversed(session.get("turns") or []):
+        for output in reversed(turn.get("outputs") or []):
+            ordered.append(output["key"])
+    preferred = [k for k in ordered if (judgements.get(k) or {}).get("preferred")]
+    rest = [k for k in ordered if k not in preferred]
+    keys = (preferred + rest)[:limit]
+    return [k + ".png" for k in keys]
+
+
+def publish_slug(sid: str, seq: int) -> str:
+    """Derive a manifest-safe version slug for a published turn output."""
+    slug = f"{sid}-t{seq}".strip()
+    if not SESSION_ID_RE.match(slug):
+        slug = "s-" + re.sub(r"[^A-Za-z0-9_-]", "-", slug).strip("-") or "s-published"
+    return slug
+
+
+def validate_upload(filename: object, size: int) -> str:
+    """Validate an upload's name and byte size; return the cleaned basename."""
+    if not isinstance(filename, str) or not filename.strip():
+        raise StoreError("upload needs a filename")
+    base = Path(filename.strip()).name
+    if not base or base in (".", ".."):
+        raise StoreError(f"invalid upload filename: {filename!r}")
+    if "." not in base or Path(base).suffix.lower() not in UPLOAD_EXTENSIONS:
+        raise StoreError(
+            f"upload {base!r} must be one of: {', '.join(sorted(UPLOAD_EXTENSIONS))}")
+    if not isinstance(size, int) or size <= 0:
+        raise StoreError("upload is empty")
+    if size > UPLOAD_MAX_BYTES:
+        raise StoreError(
+            f"upload is {size} bytes; the limit is {UPLOAD_MAX_BYTES} bytes")
+    return base

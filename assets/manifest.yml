@@ -15,230 +15,270 @@ assets:
     width: 512
     height: 512
     versions:
-    - slug: init
-      desc: ''
-      prompt: Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
-        style, single square tile filling the frame, no text
-      parent: null
-      status: completed
-      width: null
-      height: null
-      references: []
-      outputs:
-      - key: floor_default-init-20261027-151142
-        path: assets/outputs/floor_default-init-20261027-151142.png
-        estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-init-20261027-151142-orig.png
-        requested_width: 512
-        requested_height: 512
-        raw_width: 1600
-        raw_height: 1600
-    - slug: clean-stone
-      desc: 'Our previous attempt had a few issues, the stone has break patterns and
-        tiled assets this will be very messy looking. W
-
-        The border around the tile will mess things up.'
-      prompt: Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
-        style, single square tile filling the frame, no text
-      parent: init
-      status: completed
-      width: null
-      height: null
-      references: []
-      outputs:
-      - key: floor_default-clean-stone-20261027-161114
-        path: assets/outputs/floor_default-clean-stone-20261027-161114.png
-        estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-clean-stone-20261027-161114-orig.png
-        requested_width: 512
-        requested_height: 512
-        raw_width: 1600
-        raw_height: 1600
-    - slug: no-round-corners
-      desc: 'Prior run had corners, lets hope we get rid of those.
-
-        The only thing is we aren''t brining the previous judgements, so I''m not
-        sure if out iteration process it broken. If we can always feed the last image
-        you think it would be editing from there.'
-      prompt: Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
-        style, single square tile filling the frame, no text
-      parent: clean-stone
-      status: completed
-      width: null
-      height: null
-      references: []
-      outputs:
-      - key: floor_default-no-round-corners-20261027-161327
-        path: assets/outputs/floor_default-no-round-corners-20261027-161327.png
-        estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-no-round-corners-20261027-161327-orig.png
-        requested_width: 512
-        requested_height: 512
-        raw_width: 1600
-        raw_height: 1600
-    - slug: smooth-stone
-      desc: We want to correct the defects from prior.
-      prompt: 'Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
-        style, single square tile filling the frame, no text
-
-        Constraints from parent judgement: It does not pass, it has rounded corners
-        still with background, it has cracks, it has moss, so it fails on these points.'
-      parent: no-round-corners
-      status: completed
-      width: null
-      height: null
-      references: []
-      outputs:
-      - key: floor_default-smooth-stone-20261027-165323
-        path: assets/outputs/floor_default-smooth-stone-20261027-165323.png
-        estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-smooth-stone-20261027-165323-orig.png
-        requested_width: 512
-        requested_height: 512
-        raw_width: 1600
-        raw_height: 1600
-    - slug: refined-background
-      desc: Very close to correct was the last one but dealing corners was not correct.
-      prompt: 'Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
-        style, single square tile filling the frame, no text
-
-        Constraints from parent judgement: It does not pass, it has rounded corners
-        still with background, it has cracks, it has moss, so it fails on these points.
-
-        Constraints from parent judgement: Very close to good, but it still has a
-        white frame in the very absolute corners, so we can have rounding effect without
-        actually having white background but you''d fill those corners in with something
-        like ground.'
-      parent: smooth-stone
-      status: completed
-      width: null
-      height: null
-      references: []
-      outputs:
-      - key: floor_default-refined-background-20261027-165701
-        path: assets/outputs/floor_default-refined-background-20261027-165701.png
-        estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-refined-background-20261027-165701-orig.png
-        requested_width: 512
-        requested_height: 512
-        raw_width: 1600
-        raw_height: 1600
-    - slug: multi-ref-image
-      desc: Now that we can reference multiple images we can provide clearer generation
-        instructions.
-      prompt: 'Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
-        style, single square tile filling the frame, no text
-
-        Constraints from parent judgement: It does not pass, it has rounded corners
-        still with background, it has cracks, it has moss, so it fails on these points.
-
-
-        Image floor_default-refined-background-20261027-165701: While the dirt covers
-        up the corners, it simply is exposing to much corner.
-
-        Image floor_default-smooth-stone-20261027-165323: This image is nearly perfect
-        but there are tiny white corners, and if that had ground that would fix our
-        issue.
-
-
-        Constraints: texture must fill the entire frame edge to edge with no margin/border;
-        sharp square 90-degree corners, no rounding/bevel
-
-
-        Judged notes: "Very close to good, but it still has a white frame in the very
-        absolute corners, so we can have rounding effect without actually having white
-        background but you''d fill those corners in with something like ground." (floor_default-smooth-stone-20261027-165323)'
+    - slug: s20261028-130134-t6
+      desc: Published from session s20261028-130134 turn 6 (floor_default-s20261028-130134-t6-20261028-133940-5)
+      prompt: 'Image floor_default-s20261028-130134-t5-20261028-133639-3.png: make
+        corners sharp, no rounding.'
       parent: null
       status: completed
       width: null
       height: null
       references:
-      - floor_default-refined-background-20261027-165701.png
-      - floor_default-smooth-stone-20261027-165323.png
+      - floor_default-s20261028-130134-t5-20261028-133639-3.png
       outputs:
-      - key: floor_default-multi-ref-image-20261027-175930-1
-        path: assets/outputs/floor_default-multi-ref-image-20261027-175930-1.png
+      - key: floor_default-s20261028-130134-t6-20261028-133940-5
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-5.png
         estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-multi-ref-image-20261027-175930-1-orig.png
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-5-orig.png
         requested_width: 512
         requested_height: 512
         raw_width: 1600
         raw_height: 1600
-      - key: floor_default-multi-ref-image-20261027-175930-2
-        path: assets/outputs/floor_default-multi-ref-image-20261027-175930-2.png
-        estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-multi-ref-image-20261027-175930-2-orig.png
-        requested_width: 512
-        requested_height: 512
-        raw_width: 1600
-        raw_height: 1600
-      - key: floor_default-multi-ref-image-20261027-175930-3
-        path: assets/outputs/floor_default-multi-ref-image-20261027-175930-3.png
-        estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-multi-ref-image-20261027-175930-3-orig.png
-        requested_width: 512
-        requested_height: 512
-        raw_width: 1600
-        raw_height: 1600
-      - key: floor_default-multi-ref-image-20261027-175930-4
-        path: assets/outputs/floor_default-multi-ref-image-20261027-175930-4.png
-        estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-multi-ref-image-20261027-175930-4-orig.png
-        requested_width: 512
-        requested_height: 512
-        raw_width: 1600
-        raw_height: 1600
-    - slug: best-attempt
-      desc: I want to see if I can bring in reference image with information to better
-        generate the ideal output.
-      prompt: 'Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
-        style, single square tile filling the frame, no text.
+    - slug: s20261028-134541-t5
+      desc: Published from session s20261028-134541 turn 5 (jolly-s20261028-134541-t5-20261028-135611-3)
+      prompt: 'Image jolly-s20261028-134541-t4-20261028-135349-6.png: The character
+        is in frame, but the background is not solid  green-key-background #00FF00
 
+        Image jolly-s20261028-134541-t4-20261028-135349-1.png: The character is in
+        frame, but the background is not solid  green-key-background #00FF00
 
-        Constraints from parent judgement: It does not pass, it has rounded corners
-        still with background, it has cracks, it has moss, so it fails on these points.'
+        Image jolly-s20261028-134541-t3-20261028-135126-6.png: This image has the
+        green-key-background that we want. the character is perfectly in frame but
+        its not stylized as PC-98'
+      parent: s20261028-130134-t6
+      status: completed
+      width: null
+      height: null
+      references:
+      - jolly-s20261028-134541-t4-20261028-135349-6.png
+      - jolly-s20261028-134541-t4-20261028-135349-1.png
+      - jolly-s20261028-134541-t3-20261028-135126-6.png
+      outputs:
+      - key: jolly-s20261028-134541-t5-20261028-135611-3
+        path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  jolly:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261028-134541-t5
+      desc: Published from session s20261028-134541 turn 5 (jolly-s20261028-134541-t5-20261028-135611-3)
+      prompt: 'Image jolly-s20261028-134541-t4-20261028-135349-6.png: The character
+        is in frame, but the background is not solid  green-key-background #00FF00
+
+        Image jolly-s20261028-134541-t4-20261028-135349-1.png: The character is in
+        frame, but the background is not solid  green-key-background #00FF00
+
+        Image jolly-s20261028-134541-t3-20261028-135126-6.png: This image has the
+        green-key-background that we want. the character is perfectly in frame but
+        its not stylized as PC-98'
       parent: null
       status: completed
       width: null
       height: null
       references:
-      - floor_default-refined-background-20261027-165701.png
-      - floor_default-smooth-stone-20261027-165323.png
-      - floor_default-no-round-corners-20261027-161327.png
+      - jolly-s20261028-134541-t4-20261028-135349-6.png
+      - jolly-s20261028-134541-t4-20261028-135349-1.png
+      - jolly-s20261028-134541-t3-20261028-135126-6.png
       outputs:
-      - key: floor_default-best-attempt-20261027-195828-1
-        path: assets/outputs/floor_default-best-attempt-20261027-195828-1.png
+      - key: jolly-s20261028-134541-t5-20261028-135611-3
+        path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-3.png
         estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-best-attempt-20261027-195828-1-orig.png
+        original_path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-3-orig.png
         requested_width: 512
         requested_height: 512
         raw_width: 1600
         raw_height: 1600
-      - key: floor_default-best-attempt-20261027-195828-2
-        path: assets/outputs/floor_default-best-attempt-20261027-195828-2.png
+  key:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261028-135901-t3
+      desc: Published from session s20261028-135901 turn 3 (key-s20261028-135901-t3-20261028-140820-8)
+      prompt: 'Image key-s20261028-135901-t2-20261028-140600-6.png: This key is perfect
+        shape and detail.  Please stylize as a PC-98 game graphics, preserve the solid
+        green background.'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references:
+      - key-s20261028-135901-t2-20261028-140600-6.png
+      outputs:
+      - key: key-s20261028-135901-t3-20261028-140820-8
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-8.png
         estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-best-attempt-20261027-195828-2-orig.png
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-8-orig.png
         requested_width: 512
         requested_height: 512
         raw_width: 1600
         raw_height: 1600
-      - key: floor_default-best-attempt-20261027-195828-3
-        path: assets/outputs/floor_default-best-attempt-20261027-195828-3.png
+  wall:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261028-141040-t4
+      desc: Published from session s20261028-141040 turn 4 (wall-s20261028-141040-t4-20261028-141836-9)
+      prompt: 'Image wall-s20261028-141040-t3-20261028-141544-9.png: we lost the bevel,
+        and its not edge-to-edge, its not bleed-to-bleed, we have a big white space
+        around the image which is not idea.
+
+        Image wall-s20261028-141040-t2-20261028-141338-6.png: This image had the ideal
+        beveling but does not have sharp corrners.'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references:
+      - wall-s20261028-141040-t3-20261028-141544-9.png
+      - wall-s20261028-141040-t2-20261028-141338-6.png
+      outputs:
+      - key: wall-s20261028-141040-t4-20261028-141836-9
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-9.png
         estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-best-attempt-20261027-195828-3-orig.png
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-9-orig.png
         requested_width: 512
         requested_height: 512
         raw_width: 1600
         raw_height: 1600
-      - key: floor_default-best-attempt-20261027-195828-4
-        path: assets/outputs/floor_default-best-attempt-20261027-195828-4.png
+    - slug: s20261028-141040-t5
+      desc: Published from session s20261028-141040 turn 5 (wall-s20261028-141040-t5-20261028-142220-10)
+      prompt: 'Image wall-s20261028-141040-t4-20261028-141836-9.png: This image is
+        ideal we just need it to overall be a darker gray.'
+      parent: s20261028-141040-t4
+      status: completed
+      width: null
+      height: null
+      references:
+      - wall-s20261028-141040-t4-20261028-141836-9.png
+      outputs:
+      - key: wall-s20261028-141040-t5-20261028-142220-10
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-10.png
         estimated_usd: '0.01'
-        original_path: assets/outputs/floor_default-best-attempt-20261027-195828-4-orig.png
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-10-orig.png
         requested_width: 512
         requested_height: 512
         raw_width: 1600
         raw_height: 1600
-  clean-lottery:
+    - slug: s20261028-142528-t4
+      desc: Published from session s20261028-142528 turn 4 (wall_keyhole-s20261028-142528-t4-20261028-143358-1)
+      prompt: 'Image wall_keyhole-s20261028-142528-t3-20261028-143152-9.png: remove
+        the shadow that appear under the faceplate'
+      parent: s20261028-141040-t5
+      status: completed
+      width: null
+      height: null
+      references:
+      - wall_keyhole-s20261028-142528-t3-20261028-143152-10.png
+      - wall_keyhole-s20261028-142528-t3-20261028-143152-9.png
+      outputs:
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-1
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  wall_keyhole:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261028-142528-t4
+      desc: Published from session s20261028-142528 turn 4 (wall_keyhole-s20261028-142528-t4-20261028-143358-1)
+      prompt: 'Image wall_keyhole-s20261028-142528-t3-20261028-143152-9.png: remove
+        the shadow that appear under the faceplate'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references:
+      - wall_keyhole-s20261028-142528-t3-20261028-143152-10.png
+      - wall_keyhole-s20261028-142528-t3-20261028-143152-9.png
+      outputs:
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-1
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  portal:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261028-143648-t2
+      desc: Published from session s20261028-143648 turn 2 (portal-s20261028-143648-t2-20261028-143854-1)
+      prompt: 'Image portal-s20261028-143648-t1-20261028-143718-6.png: the portal
+        swirl is a good we just need it to fill the whole frame with no brick border
+        around it.'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references:
+      - portal-s20261028-143648-t1-20261028-143718-6.png
+      outputs:
+      - key: portal-s20261028-143648-t2-20261028-143854-1
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  orb:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261028-144823-t2
+      desc: Published from session s20261028-144823 turn 2 (orb-s20261028-144823-t2-20261028-145137-1)
+      prompt: 'Image orb-s20261028-144823-t1-20261028-144934-9.png: remove the shadow
+        under orb'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references:
+      - orb-s20261028-144823-t1-20261028-144934-9.png
+      outputs:
+      - key: orb-s20261028-144823-t2-20261028-145137-1
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - slug: s20261028-145752-t5
+      desc: Published from session s20261028-145752 turn 5 (gate-s20261028-145752-t5-20261028-150755-1)
+      prompt: 'Image gate-s20261028-145752-t4-20261028-150533-10.png: the gate should
+        fill the entire image.
+
+        The gate should not have white space around it, it needs to perfectly fill
+        the entire image to the edge.'
+      parent: s20261028-144823-t2
+      status: completed
+      width: null
+      height: null
+      references:
+      - gate-s20261028-145752-t4-20261028-150533-10.png
+      outputs:
+      - key: gate-s20261028-145752-t5-20261028-150755-1
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  gate:
     width: 512
     height: 512
     versions: []

@@ -1,0 +1,8 @@
+__pycache__/
+node_modules/
+assets/outputs/
+tools/static/level-sprites/
+tools/static/levels/
+screenshots/
+.worktrees/
+sessions/

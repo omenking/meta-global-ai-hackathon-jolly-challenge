@@ -76,7 +76,10 @@
   .warn { font-size: 12px; color: #8a5a00; margin-top: 4px; }
   .ref { display: flex; align-items: center; gap: 6px; font-size: 12px; }
   .ref-thumb { width: 48px; height: 48px; object-fit: cover;
-               border: 1px solid #ccc; }
+               border: 1px solid #ccc; position: relative; }
+  .ref .ref-thumb:hover { transform: scale(5); transform-origin: left center;
+               z-index: 30; box-shadow: 0 2px 8px rgba(0,0,0,.3);
+               background: #fff; }
   .tile3 { display: grid; grid-template-columns: repeat(3, 1fr);
            width: 288px; max-width: 100%; border: 1px solid #999;
            margin: 6px 0; line-height: 0; background: #fff; }
@@ -120,6 +123,53 @@
   .err { color: #a00; font-size: 12px; margin-top: 6px; min-height: 16px; }
   .back { font-size: 12px; display: inline-block; margin-bottom: 8px; }
   .muted { font-size: 12px; color: #666; }
+  .turn { border: 1px solid #ddd; border-radius: 6px; padding: 8px;
+         margin-bottom: 10px; background: #fff; }
+  .turn-head { font-size: 12px; color: #444; margin-bottom: 4px; }
+  .ctx-chip { display: inline-block; font-size: 11px; background: #eef3fa;
+             border: 1px solid #c9d8ec; border-radius: 10px; padding: 1px 8px;
+             margin: 2px 4px 2px 0; }
+  .tray { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
+  .tray-item { border: 1px solid #ccc; border-radius: 4px; padding: 4px;
+              font-size: 11px; background: #fafafa; width: 132px; }
+  .tray-item img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+                 border: 1px solid #ddd; background: #fff; }
+  .tray-item .key { word-break: break-all; margin: 4px 0; }
+  button.copy-btn { padding: 2px 8px; margin-top: 4px; font-size: 11px;
+                   background: #666; }
+  .composer { border-top: 1px solid #ddd; margin-top: 10px; padding-top: 8px; }
+  .pub-row { display: flex; gap: 6px; align-items: center; margin-top: 6px;
+            font-size: 12px; }
+  .pub-row input { flex: 1; }
+  .ses-img-wrap { position: relative; }
+  .ses-img-wrap .tile-tip { display: none; position: absolute; left: 50%;
+             top: 100%; transform: translateX(-50%); z-index: 40;
+             background: #fff; border: 1px solid #999; padding: 4px;
+             margin-top: 4px; }
+  .ses-img-wrap:hover .tile-tip { display: block; }
+  .tile4 { display: grid; grid-template-columns: repeat(4, 1fr);
+           width: 320px; max-width: 70vw; line-height: 0; background: #fff; }
+  .tile4 img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+             border: none; }
+  .ref-cards { display: grid; grid-template-columns: repeat(4, 1fr);
+             gap: 8px; margin: 6px 0; }
+  @media (max-width: 900px) { .ref-cards { grid-template-columns: repeat(2, 1fr); } }
+  .ref-card { border: 1px solid #ccc; border-radius: 4px; padding: 6px;
+             background: #fafafa; font-size: 11px; }
+  .ref-card img { width: 100%; height: auto; aspect-ratio: 1; object-fit: contain;
+             display: block; border: 1px solid #ddd; background: #fff; }
+  .ref-card img.ref-thumb { max-width: 255px; }
+  .ref-card .pv-links { display: flex; gap: 10px; margin-top: 4px; }
+  .ref-card .pv-link { color: #2f6fbb; text-decoration: underline; cursor: default; }
+  .ref-card .zoom, .ref-card .pv-tile { display: none; position: fixed; left: 50%;
+             top: 50%; transform: translate(-50%, -50%); max-width: 70vw;
+             max-height: 70vh; background: #fff; border: 1px solid #999;
+             padding: 4px; z-index: 50; pointer-events: none; }
+  .ref-card .zoom { width: auto; height: auto; object-fit: contain; }
+  .ref-card .pv-tile .tile4 img { object-fit: cover; border: none; }
+  .ref-card .pv-link:hover .zoom, .ref-card .pv-link:hover .pv-tile { display: block; }
+  .ref-card .key { word-break: break-all; margin: 4px 0; }
+  .ref-card textarea { min-height: 44px; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -129,6 +179,7 @@
     <p id="summary">loading…</p>
   </div>
   <nav>
+    <a href="/">All tools</a>
     <a href="/assets">Assets</a>
     <button id="go-new">New asset</button>
   </nav>
@@ -194,6 +245,15 @@
             <a id="ws-edit-asset" href="#"><button class="secondary small">Edit asset</button></a>
             <a id="ws-new-version" href="#"><button class="secondary small">New version</button></a>
           </div>
+        </div>
+        <div class="pane-head">
+          <h2>Sessions (multi-turn)</h2>
+          <button id="ws-new-session" class="secondary small" type="button">New session</button>
+        </div>
+        <div id="ws-sessions-error" class="err"></div>
+        <ul id="ws-sessions" class="clean"></ul>
+        <div class="pane-head" style="margin-top:12px">
+          <h2>Published versions</h2>
         </div>
         <div id="versions"></div>
       </section>
@@ -316,6 +376,47 @@
       </div>
     </section>
   </div>
+  <div id="view-session" class="view view-fluid" style="display:none">
+    <div class="ws-grid">
+      <section>
+        <div class="pane-head">
+          <h2>Context tray</h2>
+        </div>
+        <p class="muted">Uploads + published outputs. Copy a name, then paste it into the prompt box.</p>
+        <label>Upload context image (png/jpg/webp, ≤8 MB)
+          <input type="file" id="ses-upload" accept=".png,.jpg,.jpeg,.webp">
+        </label>
+        <div id="ses-upload-error" class="err"></div>
+        <div id="ses-tray" class="tray"></div>
+      </section>
+      <div>
+      <section>
+        <a class="back" id="ses-back" href="/assets">← Back to asset</a>
+        <h2 id="ses-title">Session</h2>
+        <p id="ses-sub" class="muted"></p>
+        <div class="pub-row">
+          <label for="ses-publish-asset" class="muted">Publish to asset</label>
+          <input type="text" id="ses-publish-asset">
+        </div>
+        <div id="ses-error" class="err"></div>
+        <div id="ses-thread"></div>
+        <div class="composer">
+          <label>Next turn — short delta instruction (context is carried automatically)
+            <textarea id="ses-prompt" placeholder="e.g. remove the cracks, keep the stone color"></textarea>
+          </label>
+          <div id="ses-refs"></div>
+          <label class="check"><input type="checkbox" id="ses-fresh"> Fresh text-only (send no references)</label>
+          <div class="row">
+            <div><label>Images (1–10) <input type="number" id="ses-num" min="1" max="10" step="1" value="1"></label></div>
+          </div>
+          <div id="ses-mode" class="mode"></div>
+          <button id="ses-run">Run turn</button>
+          <div id="ses-result"></div>
+        </div>
+      </section>
+      </div>
+    </div>
+  </div>
   <div id="view-404" class="view view-fluid" style="display:none">
     <section>
       <h2>Not found</h2>
@@ -329,6 +430,7 @@
 "use strict";
 const $ = id => document.getElementById(id);
 let assets = [], curAsset = null, curVersion = null, pendingRefs = null;
+let curSessionId = null, sesData = null, sesUploads = [];
 
 function assetByName(name) { return assets.find(a => a.name === name) || null; }
 function versionBySlug(asset, slug) {
@@ -369,7 +471,7 @@ async function api(method, path, body) {
 async function refresh() {
   const data = await api("GET", "/api/assets");
   assets = data.assets;
-  $("summary").textContent = assets.length + " asset(s). Lottery runs 1–10; spend is recorded in Cost Center.";
+  $("summary").textContent = assets.length + " asset(s). Sessions iterate multi-turn; lottery runs 1–10; spend is recorded in Cost Center.";
   if (curAsset) curAsset = assetByName(curAsset.name);
   if (curAsset && curVersion) curVersion = versionBySlug(curAsset, curVersion.slug);
   route();
@@ -417,6 +519,7 @@ function route() {
   const p = location.pathname;
   const q = new URLSearchParams(location.search);
   let m;
+  curSessionId = null;
   if (p === "/" || p === "/assets") {
     curAsset = null; curVersion = null;
     renderHome();
@@ -474,6 +577,15 @@ function route() {
     show("view-asset-edit");
     return;
   }
+  if ((m = p.match(/^\/assets\/([^/]+)\/sessions\/([^/]+)$/))) {
+    const a = assetByName(decodeURIComponent(m[1]));
+    if (!a) { notFound("No asset named", decodeURIComponent(m[1])); return; }
+    curAsset = a; curVersion = null;
+    curSessionId = decodeURIComponent(m[2]);
+    renderSession().catch(e => status(e.message, "err"));
+    show("view-session");
+    return;
+  }
   if ((m = p.match(/^\/assets\/([^/]+)$/))) {
     const a = assetByName(decodeURIComponent(m[1]));
     if (!a) { notFound("No asset named", decodeURIComponent(m[1])); return; }
@@ -507,6 +619,33 @@ function versionJudgeHref(name, slug, outputKey) {
   if (outputKey) u += "?output=" + encodeURIComponent(outputKey);
   return u;
 }
+function sessionHref(name, sid) {
+  return assetHref(name) + "/sessions/" + encodeURIComponent(sid);
+}
+
+function copyName(text, btn) {
+  const done = () => {
+    if (btn) {
+      const old = btn.textContent;
+      btn.textContent = "Copied";
+      setTimeout(() => { btn.textContent = old; }, 1200);
+    } else {
+      status("copied " + text, "ok");
+    }
+  };
+  const fallback = () => {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    done();
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(text).then(done, fallback);
+  else fallback();
+}
 
 function renderWorkspace() {
   $("ws-title").textContent = curAsset.name;
@@ -526,6 +665,30 @@ function renderWorkspace() {
     ul.appendChild(li);
   }
   renderVersions();
+  loadWsSessions();
+}
+
+async function loadWsSessions() {
+  const box = $("ws-sessions");
+  box.innerHTML = "";
+  $("ws-sessions-error").textContent = "";
+  try {
+    const data = await api("GET", "/api/sessions?asset=" + encodeURIComponent(curAsset.name));
+    if (!data.sessions.length) {
+      box.innerHTML = '<li class="asset">No sessions yet — start one to iterate multi-turn.</li>';
+      return;
+    }
+    for (const s of data.sessions) {
+      const li = document.createElement("li");
+      li.className = "asset";
+      const link = document.createElement("a");
+      link.href = sessionHref(curAsset.name, s.id);
+      link.textContent = s.id + (s.title ? " — " + s.title : "") +
+        " (" + s.turns.length + " turn" + (s.turns.length === 1 ? "" : "s") + ")";
+      li.appendChild(link);
+      box.appendChild(li);
+    }
+  } catch (e) { $("ws-sessions-error").textContent = e.message; }
 }
 
 function badge(v) {
@@ -1123,7 +1286,379 @@ async function saveJudgement() {
   });
 }
 
+function sesNum() {
+  const n = parseInt(($("ses-num") && $("ses-num").value) || "1", 10);
+  return n;
+}
+
+function sesTickedRefs() {
+  return [...document.querySelectorAll("#ses-refs input:checked")].map(i => i.value);
+}
+
+async function renderSession() {
+  const sid = curSessionId;
+  $("ses-back").href = assetHref(curAsset.name);
+  $("ses-error").textContent = "";
+  $("ses-result").innerHTML = "";
+  const [sess, ups] = await Promise.all([
+    api("GET", "/api/sessions/" + encodeURIComponent(sid)),
+    api("GET", "/api/uploads"),
+  ]);
+  sesData = sess;
+  sesUploads = ups.uploads || [];
+  if ($("ses-publish-asset") && !$("ses-publish-asset").value)
+    $("ses-publish-asset").value = sess.asset_name;
+  $("ses-title").textContent = "Session " + sess.id;
+  $("ses-sub").textContent = "Asset " + sess.asset_name + " · " +
+    sess.turns.length + " turn" + (sess.turns.length === 1 ? "" : "s") +
+    " · context auto-carries (preferred first, newest first, up to 10)";
+  renderSesTray();
+  renderSesThread();
+  renderSesRefs();
+  updateSesMode();
+}
+
+function renderSesTray() {
+  const box = $("ses-tray");
+  box.innerHTML = "";
+  const items = [];
+  for (const u of sesUploads)
+    items.push({file: u.file, url: u.url, label: "upload"});
+  const asset = assetByName(sesData.asset_name);
+  if (asset) {
+    for (const v of asset.versions)
+      for (const o of v.outputs)
+        items.push({file: o.key + ".png", url: toServedUrl(o.path),
+                    label: "published: " + v.slug});
+  }
+  if (!items.length) {
+    box.innerHTML = '<div class="muted">Nothing here yet — upload an image above.</div>';
+    return;
+  }
+  for (const it of items) {
+    const card = document.createElement("div");
+    card.className = "tray-item";
+    const im = document.createElement("img");
+    im.src = it.url;
+    im.alt = "";
+    card.appendChild(im);
+    const key = document.createElement("div");
+    key.className = "key";
+    key.textContent = it.file + " (" + it.label + ")";
+    card.appendChild(key);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy-btn";
+    btn.textContent = "Copy name";
+    btn.onclick = () => copyName(it.file, btn);
+    card.appendChild(btn);
+    box.appendChild(card);
+  }
+}
+
+function turnBadge(t) {
+  const s = t.status || (t.outputs.length ? "completed" : "not run");
+  return '<span class="badge ' + s + '">' + s + "</span>";
+}
+
+function renderSesThread() {
+  const box = $("ses-thread");
+  box.innerHTML = "";
+  if (!sesData.turns.length) {
+    box.innerHTML = '<div class="muted">No turns yet — describe the first image below. The first turn is text-only by definition.</div>';
+    return;
+  }
+  sesData.turns.forEach((t, idx) => {
+    const div = document.createElement("div");
+    div.className = "turn";
+    const head = document.createElement("div");
+    head.className = "turn-head";
+    head.innerHTML = "<strong>Turn " + t.seq + "</strong> " + turnBadge(t) +
+      (t.cost_total ? ' <span class="cost">~$' + escapeHtml(t.cost_total) + "</span>" : "");
+    div.appendChild(head);
+    const p = document.createElement("div");
+    p.className = "prompt";
+    p.textContent = t.prompt;
+    div.appendChild(p);
+    if ((t.references || []).length) {
+      const ctx = document.createElement("div");
+      for (const r of t.references) {
+        const chip = document.createElement("span");
+        chip.className = "ctx-chip";
+        chip.textContent = r;
+        ctx.appendChild(chip);
+      }
+      div.appendChild(ctx);
+    } else if (idx > 0) {
+      const none = document.createElement("div");
+      none.className = "muted";
+      none.textContent = "text-only turn (no references sent)";
+      div.appendChild(none);
+    }
+    if ((t.outputs || []).length) {
+      const grid = document.createElement("div");
+      grid.className = "lot-grid";
+      for (const o of t.outputs) {
+        const cell = document.createElement("div");
+        cell.className = "lot-cell";
+        const wrap = document.createElement("div");
+        wrap.className = "ses-img-wrap";
+        const im = document.createElement("img");
+        im.src = toServedUrl(o.path);
+        im.alt = "";
+        wrap.appendChild(im);
+        const tip = document.createElement("div");
+        tip.className = "tile-tip";
+        const tile = document.createElement("div");
+        tile.className = "tile4";
+        for (let i = 0; i < 16; i++) {
+          const t4 = document.createElement("img");
+          t4.src = im.src;
+          t4.alt = "";
+          tile.appendChild(t4);
+        }
+        tip.appendChild(tile);
+        const cap = document.createElement("div");
+        cap.className = "muted";
+        cap.textContent = "4×4 tiled — check seams and edge fill";
+        tip.appendChild(cap);
+        wrap.appendChild(tip);
+        cell.appendChild(wrap);
+        const key = document.createElement("div");
+        key.className = "key";
+        key.textContent = o.key;
+        cell.appendChild(key);
+        if (o.estimated_usd) {
+          const cost = document.createElement("div");
+          cost.className = "cost";
+          cost.textContent = "~$" + o.estimated_usd;
+          cell.appendChild(cost);
+        }
+        const copy = document.createElement("button");
+        copy.type = "button";
+        copy.className = "copy-btn";
+        copy.textContent = "Copy name";
+        copy.onclick = () => copyName(o.key + ".png", copy);
+        cell.appendChild(copy);
+        const pub = document.createElement("button");
+        pub.type = "button";
+        pub.className = "small";
+        pub.textContent = "Publish";
+        pub.onclick = () => publishSesOutput(o.key, pub);
+        cell.appendChild(pub);
+        grid.appendChild(cell);
+      }
+      div.appendChild(grid);
+    }
+    box.appendChild(div);
+  });
+}
+
+async function publishSesOutput(key, btn) {
+  const target = ($("ses-publish-asset") || {}).value || sesData.asset_name;
+  if (btn) btn.disabled = true;
+  try {
+    const res = await api("POST",
+      "/api/sessions/" + encodeURIComponent(curSessionId) + "/publish",
+      {output_key: key, asset_name: target});
+    status("published " + key + " as " + target + "/" + res.version.slug, "ok");
+    await refresh();
+  } catch (e) { status(e.message, "err"); if (btn) btn.disabled = false; }
+}
+
+function renderSesRefs() {
+  const box = $("ses-refs");
+  box.innerHTML = "<label>References — leave everything unticked to auto-carry session context, or tick cards to send only those instead</label>";
+  const reviews = {};
+  for (const t of (sesData.turns || []))
+    for (const o of (t.outputs || []))
+      reviews[o.key] = o.human_review || "";
+  const rows = [];
+  for (const t of (sesData.turns || []).slice().reverse())
+    for (const o of (t.outputs || []).slice().reverse())
+      rows.push({file: o.key + ".png", url: toServedUrl(o.path),
+                 label: "turn " + t.seq + " · " + o.key,
+                 review: reviews[o.key] || ""});
+  for (const u of sesUploads)
+    rows.push({file: u.file, url: u.url, label: "upload", review: ""});
+  if (!rows.length) {
+    box.innerHTML += '<div class="ref">no session images yet — first turn runs text-only</div>';
+    return;
+  }
+  const grid = document.createElement("div");
+  grid.className = "ref-cards";
+  for (const row of rows) {
+    const card = document.createElement("div");
+    card.className = "ref-card";
+    const lab = document.createElement("label");
+    lab.className = "check";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.value = row.file;
+    input.onchange = updateSesMode;
+    lab.appendChild(input);
+    lab.appendChild(document.createTextNode(" Use as reference"));
+    card.appendChild(lab);
+    const im = document.createElement("img");
+    im.className = "ref-thumb";
+    im.src = row.url;
+    im.alt = "";
+    card.appendChild(im);
+    // Previews open only while their link is hovered, so the judgement box stays usable.
+    const links = document.createElement("div");
+    links.className = "pv-links";
+    const hoverLink = document.createElement("span");
+    hoverLink.className = "pv-link";
+    hoverLink.textContent = "Hover preview";
+    const zoom = document.createElement("img");
+    zoom.className = "zoom";
+    zoom.src = row.url;
+    zoom.alt = "";
+    hoverLink.appendChild(zoom);
+    links.appendChild(hoverLink);
+    const tileLink = document.createElement("span");
+    tileLink.className = "pv-link";
+    tileLink.textContent = "Tile preview";
+    const tip = document.createElement("div");
+    tip.className = "pv-tile";
+    const tile = document.createElement("div");
+    tile.className = "tile4";
+    for (let i = 0; i < 16; i++) {
+      const t4 = document.createElement("img");
+      t4.src = row.url;
+      t4.alt = "";
+      tile.appendChild(t4);
+    }
+    tip.appendChild(tile);
+    tileLink.appendChild(tip);
+    links.appendChild(tileLink);
+    card.appendChild(links);
+    const key = document.createElement("div");
+    key.className = "key";
+    key.textContent = row.label;
+    card.appendChild(key);
+    const note = document.createElement("textarea");
+    note.placeholder = "judgement for this reference";
+    note.value = row.review;
+    card.appendChild(note);
+    const add = document.createElement("button");
+    add.type = "button";
+    add.className = "secondary small";
+    add.textContent = "Add to prompt";
+    add.onclick = () => addRefToPrompt(row.file, add);
+    card.appendChild(add);
+    grid.appendChild(card);
+  }
+  box.appendChild(grid);
+}
+
+async function addRefToPrompt(file, btn) {
+  const card = btn.closest(".ref-card");
+  const tick = card && card.querySelector("input[type=checkbox]");
+  if (tick) tick.checked = true;
+  const note = card && card.querySelector("textarea");
+  const text = note ? note.value.trim() : "";
+  if (text) {
+    const p = $("ses-prompt");
+    const line = "Image " + file + ": " + text;
+    p.value = p.value.trimEnd() ? p.value.trimEnd() + "\n" + line : line;
+    try {
+      await api("PUT", "/api/judgements/" + encodeURIComponent(file.replace(/\.[^.]+$/, "")), {
+        human_review: text,
+      });
+      status("added " + file + " to prompt", "ok");
+    } catch (e) { status(e.message, "err"); }
+  } else {
+    status("ticked " + file + " (no judgement written)", "ok");
+  }
+  updateSesMode();
+}
+
+function updateSesMode() {
+  const n = sesNum();
+  const fresh = $("ses-fresh") && $("ses-fresh").checked;
+  const ticked = sesTickedRefs();
+  const mode = $("ses-mode");
+  const btn = $("ses-run");
+  let t;
+  if (fresh) {
+    t = "Mode: fresh text-only — no references sent, even with session history.";
+  } else if (ticked.length) {
+    t = "Mode: image edit (" + ticked.length + " reference" +
+      (ticked.length > 1 ? "s" : "") + " explicitly ticked) — imperative prompt works best.";
+  } else if ((sesData.turns || []).length) {
+    t = "Mode: auto-carry — prior session outputs are sent newest-first (preferred first, up to 10). Tick boxes to override, or fresh for text-only.";
+  } else {
+    t = "Mode: text-only generation — first turn has no history to carry.";
+  }
+  if (Number.isInteger(n) && n >= 1 && n <= 10)
+    t += " Lottery: " + n + " image" + (n > 1 ? "s" : "") + " in one call (~$" + (n * 0.01).toFixed(2) + ").";
+  const blockedNum = !(Number.isInteger(n) && n >= 1 && n <= 10);
+  const blockedRefs = ticked.length > 10;
+  const blockedPrompt = !(($("ses-prompt") || {}).value || "").trim();
+  if (blockedNum) t += " Blocked: N must be an integer 1–10.";
+  if (blockedRefs) t += " Blocked: at most 10 reference images (untick " + (ticked.length - 10) + ").";
+  if (blockedPrompt) t += " Write the turn instruction first.";
+  mode.textContent = t;
+  btn.disabled = !!(blockedNum || blockedRefs || blockedPrompt);
+}
+
 $("go-new").onclick = () => nav("/assets/new");
+
+$("ws-new-session").onclick = async () => {
+  try {
+    $("ws-sessions-error").textContent = "";
+    const res = await api("POST", "/api/sessions", {asset: curAsset.name});
+    status("session " + res.id + " started", "ok");
+    await refresh();
+    nav(sessionHref(curAsset.name, res.id));
+  } catch (e) { $("ws-sessions-error").textContent = e.message; status(e.message, "err"); }
+};
+
+$("ses-prompt").addEventListener("input", updateSesMode);
+$("ses-num").addEventListener("input", updateSesMode);
+$("ses-fresh").addEventListener("change", updateSesMode);
+
+$("ses-upload").addEventListener("change", async () => {
+  const file = ($("ses-upload").files || [])[0];
+  if (!file) return;
+  $("ses-upload-error").textContent = "";
+  try {
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("could not read file"));
+      reader.readAsDataURL(file);
+    });
+    const b64 = String(dataUrl).split(",", 2)[1] || "";
+    await api("POST", "/api/uploads", {filename: file.name, data_b64: b64});
+    $("ses-upload").value = "";
+    status("uploaded " + file.name, "ok");
+    await renderSession();
+  } catch (e) { $("ses-upload-error").textContent = e.message; status(e.message, "err"); }
+});
+
+$("ses-run").onclick = async () => {
+  const btn = $("ses-run");
+  const n = sesNum();
+  const prompt = ($("ses-prompt").value || "").trim();
+  if (!prompt) { updateSesMode(); return; }
+  const fresh = $("ses-fresh").checked;
+  const ticked = sesTickedRefs();
+  const refs = fresh ? [] : (ticked.length ? ticked : null);
+  btn.disabled = true;
+  status("running turn (" + n + " image" + (n > 1 ? "s" : "") + ")… one run at a time; spend is recorded in Cost Center");
+  $("ses-result").innerHTML = "";
+  $("ses-error").textContent = "";
+  try {
+    await api("POST", "/api/sessions/" + encodeURIComponent(curSessionId) + "/turns",
+      {prompt, references: refs, num: n});
+    $("ses-prompt").value = "";
+    $("ses-fresh").checked = false;
+    status("turn done — judge below, then run the next turn or publish", "ok");
+    await refresh();
+  } catch (e) { $("ses-error").textContent = e.message; status(e.message, "err"); btn.disabled = false; updateSesMode(); }
+};
 
 $("add-asset").onclick = async () => {
   try {

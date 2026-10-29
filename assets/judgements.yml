@@ -4,32 +4,96 @@
 # floor_default-init-[hash]:
 #  human_review: |
 #    yada yada
-floor_default-init-20261027-151142:
-  human_review: 'For a floor tile, it must cover the entire image, it can''t a white
-    background order around it or it will produce a seamless image.
-
-    The stone should have no cracks, and now moss or weathering.'
-floor_default-clean-stone-20261027-161114:
-  human_review: the rounder corners with the white background will show up in tiling
-    so they should be not be rounded.
-floor_default-no-round-corners-20261027-161327:
-  human_review: It does not pass, it has rounded corners still with background, it
-    has cracks, it has moss, so it fails on these points.
-  checklist:
-    covers_frame: false
-    square_corners: false
-    no_cracks: false
-    no_weathering: false
-    seamless_3x3: false
-  preferred: false
-floor_default-smooth-stone-20261027-165323:
-  human_review: Very close to good, but it still has a white frame in the very absolute
-    corners, so we can have rounding effect without actually having white background
-    but you'd fill those corners in with something like ground.
-  checklist:
-    covers_frame: false
-    square_corners: false
-    no_cracks: true
-    no_weathering: true
-    seamless_3x3: true
-  preferred: true
+floor_default-s20261028-130134-t1-20261028-130219-6:
+  human_review: This is our ideal tile for colour and texture and border, but it has
+    tiny green splotches and cracks. And it has little white corners outside the border
+    which we want to fill with dirty.
+floor_default-s20261028-130134-t3-20261028-131601-10:
+  human_review: wrong colour, should not have splots, should not have white corners.
+floor_default-s20261028-130134-t3-20261028-131601-8:
+  human_review: clean tile, but very flat, no texture whatsoever, still has tiny white
+    corners outside the border.
+floor_default-s20261028-130134-t3-20261028-131601-5:
+  human_review: Still has whitecorners it adds ground corners but they are inside
+    the broder, the whitecorners are outside of the border and that was what suppose
+    to be filled in with dirt,
+floor_default-s20261028-130134-t4-20261028-133452-10:
+  human_review: ground corners should be very very tiny.
+floor_default-s20261028-130134-t4-20261028-133452-9:
+  human_review: ground corners should be very very tiny,
+floor_default-s20261028-130134-t4-20261028-133452-8:
+  human_review: ground corners should be very very tiny,
+floor_default-s20261028-130134-t4-20261028-133452-7:
+  human_review: ground corners should be very very tiny,
+floor_default-s20261028-130134-t5-20261028-133639-3:
+  human_review: make corners sharp, no rounding.
+jolly-s20261028-134541-t1-20261028-134712-10:
+  human_review: 'the background is suppose to be key-green, meaning a solid green
+    color of #00FF00 not literally holding a key.'
+jolly-s20261028-134541-t2-20261028-134915-2:
+  human_review: The background is correct as a single solid color, jolly the character
+    in the center is suppose to fill the entire frame not have space round them.
+jolly-s20261028-134541-t3-20261028-135126-3:
+  human_review: stylize the character image to look like to look a PC-98 gam graphics.
+jolly-s20261028-134541-t4-20261028-135349-6:
+  human_review: 'The character is in frame, but the background is not solid  green-key-background
+    #00FF00'
+jolly-s20261028-134541-t4-20261028-135349-1:
+  human_review: 'The character is in frame, but the background is not solid  green-key-background
+    #00FF00'
+jolly-s20261028-134541-t3-20261028-135126-6:
+  human_review: This image has the green-key-background that we want. the character
+    is perfectly in frame but its not stylized as PC-98
+key-s20261028-135901-t1-20261028-140024-1:
+  human_review: The overall key shape is correct. We don't want key made out of puzzle
+    pieces, we were describing the use-case and you took that literally to mean puzzles.
+key-s20261028-135901-t2-20261028-140600-6:
+  human_review: This key is perfect shape and detail.  Please stylize as a PC-98 game
+    graphics, preserve the solid green background.
+wall-s20261028-141040-t1-20261028-141057-4:
+  human_review: This block had a bevel which is a good start, but we need a much stronger
+    bevel, we need the cracks removed.
+wall-s20261028-141040-t2-20261028-141338-9:
+  human_review: corners should be sharp, end-to-end, bleed-to-blend, no rounding corners
+    and showing white space.
+wall-s20261028-141040-t3-20261028-141544-9:
+  human_review: we lost the bevel, and its not edge-to-edge, its not bleed-to-bleed,
+    we have a big white space around the image which is not idea.
+wall-s20261028-141040-t2-20261028-141338-6:
+  human_review: This image had the ideal beveling but does not have sharp corrners.
+wall-s20261028-141040-t4-20261028-141836-9:
+  human_review: This image is ideal we just need it to overall be a darker gray.
+uploads-20261028-142532-wall-s20261028-141040-t5-20261028-142220-10:
+  human_review: We want to use this wall tile for our game, but we need to modify
+    it to have a keyhole.
+wall_keyhole-s20261028-142528-t1-20261028-142650-10:
+  human_review: they key plate is center but its way too small, it should take up
+    half of the size of the middle of the image.
+wall_keyhole-s20261028-142528-t1-20261028-142650-9:
+  human_review: The key plate is too low.
+wall_keyhole-s20261028-142528-t1-20261028-142650-8:
+  human_review: This has the best keyplate shape.
+wall_keyhole-s20261028-142528-t2-20261028-143038-7:
+  human_review: make the key hold plate larger, and get rid of the shadow under the
+    keyplate.
+wall_keyhole-s20261028-142528-t3-20261028-143152-9:
+  human_review: remove the shadow that appear under the faceplate
+portal-s20261028-143648-t1-20261028-143718-6:
+  human_review: the portal swirl is a good we just need it to fill the whole frame
+    with no brick border around it.
+portal-s20261028-143648-t2-20261028-143854-9:
+  human_review: can we create a more simplified warp style
+uploads-20261028-144827-orb:
+  human_review: this is the orb we want to have in our image.
+orb-s20261028-144823-t1-20261028-144934-9:
+  human_review: remove the shadow under orb
+gate-s20261028-145752-t1-20261028-145805-3:
+  human_review: We just want the gate, and it should be edge to edge to the image.
+gate-s20261028-145752-t2-20261028-150113-4:
+  human_review: remove the cog at the top, remove the green foilage, and teh gate
+    should go all the way to the top of the iamge.
+gate-s20261028-145752-t3-20261028-150246-10:
+  human_review: the gate should fill the whole image, remove the white space around
+    the gate.
+gate-s20261028-145752-t4-20261028-150533-10:
+  human_review: the gate should fill the entire image.

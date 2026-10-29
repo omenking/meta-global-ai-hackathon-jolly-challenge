@@ -144,3 +144,59 @@ sudo apt update
 sudo apt install -y ffmpeg
 ```
 
+## Level Preview Tool
+
+We had built an asset design tool, and our first implementation did not see good results because we were treating prompting like eariler generative models trying to single shot its generation.  We did try an iterative approach in the first prototype by carrying over reference images and their judgement but we didn't have the whole chain of context.
+
+So after understanding how modern image generation works, we changed the asset design tool to mirror "sessions" similar to how meta's image playground works, but make it easier to reference prior generated assets.
+
+Since the cost of assets is 1 cent we and there's no additional cost to have input images, we were generating quite often 10 images at a time from the lottery and promoting images.
+
+Because of our cost constraint we did not use AI to create the prompts, it may have been more cost effective and fewer iterations to let Spark generate the prompts, but we did not explore that throughly as our daily spend was mostly building out the tool.
+
+Spark xhigh struggled with UI fixes, and so we broke our rules of only using spark and tested out Muse Wonder at low and medium, and it was very cost effective and worked well.
+
+So I suspect Muse Wonder at its lower effots can fill the opus gap.
+
+We were able to get quality images through iteration.
+
+However the stylization is not consistent.
+
+We found out that Muse Image 1.0 is very literal. So its very hard to prompt directly, and honestly folks you should use Spark or Wonder low to help create the prompts.
+
+But with correct prompting Muse Image 1.0 can be as good or better tha GPT Image 2.5
+![](../scratchpad/asset-design-tool.jpg)
+
+
+
+## Muse Playground Full Reference Image
+
+What thing I did try way taking the Chip's Challenge original level screenshot and providing it to Muse Image in playground and providing Jolly, and it was able to produce a consistent level screenshot. 
+
+So probably  if I have budget later on, I should revisit trying to create a "reference screenshot" and extrating those indiviual graphics. It did struggle with walls. But I think we can correct with another reference image from level designer.
+
+![](./chip-challenge.jpg)
+
+As you can see it struggled understanding the walls:
+![](../scratchpad/screenshot-test/001.png)
+![](../scratchpad/screenshot-test/002.png)
+![](../scratchpad/screenshot-test/003.png)
+![](../scratchpad/screenshot-test/004.png)
+
+We did find whole level screenshot later on:
+
+![](./chips-first-level.png)
+So maybe it would have done better with the entire one fed.
+
+## Level Preview Tool
+
+Just so we can see the level we create another tool called level-preview-tool.
+
+We used Muse Spark Vision to recreate the level.
+
+We are using chrome-headless browser so it can take screenshot of the level-preview-design and and so Muse Code can interate and make improvements.
+
+![](../scratchpad/chip1-compare-20261028-201906.png)
+
+It is using Pixijs a simple game engine for now.
+The final game we might upgrade the game engine.

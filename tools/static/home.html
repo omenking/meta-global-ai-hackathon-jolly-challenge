@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jolly Tools</title>
+<link rel="icon" href="data:,">
+<style>
+  body { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+         margin: 0; color: #1c1c1c; background: #f4f4f4; font-size: 14px; }
+  header { background: #2b2b2b; color: #fff; padding: 10px 16px; }
+  header h1 { font-size: 16px; margin: 0; font-weight: 600; }
+  header p { margin: 2px 0 0; font-size: 12px; color: #bbb; }
+  main { padding: 16px; max-width: 720px; margin: 0 auto; }
+  section { background: #fff; border: 1px solid #ddd; border-radius: 6px;
+            padding: 12px 14px; margin-bottom: 12px; }
+  h2 { font-size: 13px; margin: 0 0 8px; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { padding: 8px 0; border-top: 1px solid #eee; }
+  li:first-child { border-top: none; }
+  li a { font-size: 15px; font-weight: 600; color: #2f6fbb; }
+  .desc { color: #555; font-size: 13px; margin-top: 2px; }
+  .soon { color: #666; font-size: 12px; font-weight: 400; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Jolly Tools</h1>
+  <p>Local tools for the Chip's Challenge clone. Everything runs from this one server.</p>
+</header>
+<main>
+  <section>
+    <h2>Tools</h2>
+    <ul>
+      <li>
+        <a href="/static/project-manager.html">Project Manager</a>
+        <div class="desc">Feature and task board for the game engine: list, kanban, comments, and feature review.</div>
+      </li>
+      <li>
+        <a href="/assets">Asset Design Tool</a>
+        <div class="desc">Iterate on generated tile art: versions, lottery runs, sessions, and judging.</div>
+      </li>
+      <li>
+        <a href="/static/level-preview.html">Level Preview</a>
+        <div class="desc">Render a level layout (rows plus legend) with its sprites. Add <code>?level=chip1</code> to pick a level.</div>
+      </li>
+    </ul>
+  </section>
+  <section>
+    <h2>Game</h2>
+    <ul>
+      <li>
+        <a href="/static/project-manager.html#/feature/game-shell">Game shell</a>
+        <span class="soon">— not built yet</span>
+        <div class="desc">The playable game is the <code>game-shell</code> feature on the board. Until it lands, use Level Preview above to look at levels.</div>
+      </li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

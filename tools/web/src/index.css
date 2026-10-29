@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+
+html { font-size: 18px; }
+:root { color-scheme: light; }
+.dark { color-scheme: dark; }
+
+body { margin: 0; }
+
+.pm-scroll::-webkit-scrollbar { height: 8px; width: 8px; }
+.pm-scroll::-webkit-scrollbar-thumb { background: #c4c4c4; border-radius: 4px; }

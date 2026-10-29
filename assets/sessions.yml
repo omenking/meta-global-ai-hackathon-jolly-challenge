@@ -1,0 +1,3093 @@
+sessions:
+  s20261028-130134:
+    id: s20261028-130134
+    asset_name: floor_default
+    title: ''
+    created: '2026-10-28T13:01:34'
+    turns:
+    - seq: 1
+      prompt: Top-down 2D puzzle-game floor tile, light gray stone, flat clean game-art
+        style, single square tile filling the frame, no text
+      full_prompt_sent: Top-down 2D puzzle-game floor tile, light gray stone, flat
+        clean game-art style, single square tile filling the frame, no text
+      references: []
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: floor_default-s20261028-130134-t1-20261028-130219-1
+        path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t1-20261028-130219-2
+        path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t1-20261028-130219-3
+        path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t1-20261028-130219-4
+        path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t1-20261028-130219-5
+        path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t1-20261028-130219-6
+        path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t1-20261028-130219-7
+        path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t1-20261028-130219-8
+        path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t1-20261028-130219-9
+        path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t1-20261028-130219-10
+        path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t1-20261028-130219-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 2
+      prompt: remove cracks, and bigger splots. the white corners should be filled
+        in with a neutral ground colour
+      full_prompt_sent: remove cracks, and bigger splots. the white corners should
+        be filled in with a neutral ground colour
+      references:
+      - floor_default-s20261028-130134-t1-20261028-130219-6.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: floor_default-s20261028-130134-t2-20261028-131148-1
+        path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t2-20261028-131148-2
+        path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t2-20261028-131148-3
+        path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t2-20261028-131148-4
+        path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t2-20261028-131148-5
+        path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t2-20261028-131148-6
+        path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t2-20261028-131148-7
+        path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t2-20261028-131148-8
+        path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t2-20261028-131148-9
+        path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t2-20261028-131148-10
+        path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t2-20261028-131148-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 3
+      prompt: remove cracks, remove splots. the white corners should be filled in
+        with a neutral ground colour without increasing the area they cover.
+      full_prompt_sent: remove cracks, remove splots. the white corners should be
+        filled in with a neutral ground colour without increasing the area they cover.
+      references:
+      - floor_default-s20261028-130134-t1-20261028-130219-6.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: floor_default-s20261028-130134-t3-20261028-131601-1
+        path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t3-20261028-131601-2
+        path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t3-20261028-131601-3
+        path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t3-20261028-131601-4
+        path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t3-20261028-131601-5
+        path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t3-20261028-131601-6
+        path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t3-20261028-131601-7
+        path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t3-20261028-131601-8
+        path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t3-20261028-131601-9
+        path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t3-20261028-131601-10
+        path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t3-20261028-131601-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 4
+      prompt: 'Image floor_default-s20261028-130134-t3-20261028-131601-10.png: wrong
+        colour, should not have splots, should not have white corners.
+
+        Image floor_default-s20261028-130134-t3-20261028-131601-8.png: clean tile,
+        but very flat, no texture whatsoever, still has tiny white corners outside
+        the border.
+
+        Image floor_default-s20261028-130134-t3-20261028-131601-5.png: Still has whitecorners
+        it adds ground corners but they are inside the broder, the whitecorners are
+        outside of the border and that was what suppose to be filled in with dirt,
+
+        Image floor_default-s20261028-130134-t1-20261028-130219-6.png: This is our
+        ideal tile for colour and texture and border, but it has tiny green splotches
+        and cracks. And it has little white corners outside the border which we want
+        to fill with dirty.'
+      full_prompt_sent: 'Image floor_default-s20261028-130134-t3-20261028-131601-10.png:
+        wrong colour, should not have splots, should not have white corners.
+
+        Image floor_default-s20261028-130134-t3-20261028-131601-8.png: clean tile,
+        but very flat, no texture whatsoever, still has tiny white corners outside
+        the border.
+
+        Image floor_default-s20261028-130134-t3-20261028-131601-5.png: Still has whitecorners
+        it adds ground corners but they are inside the broder, the whitecorners are
+        outside of the border and that was what suppose to be filled in with dirt,
+
+        Image floor_default-s20261028-130134-t1-20261028-130219-6.png: This is our
+        ideal tile for colour and texture and border, but it has tiny green splotches
+        and cracks. And it has little white corners outside the border which we want
+        to fill with dirty.'
+      references:
+      - floor_default-s20261028-130134-t3-20261028-131601-10.png
+      - floor_default-s20261028-130134-t3-20261028-131601-8.png
+      - floor_default-s20261028-130134-t3-20261028-131601-5.png
+      - floor_default-s20261028-130134-t1-20261028-130219-6.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: floor_default-s20261028-130134-t4-20261028-133452-1
+        path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t4-20261028-133452-2
+        path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t4-20261028-133452-3
+        path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t4-20261028-133452-4
+        path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t4-20261028-133452-5
+        path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t4-20261028-133452-6
+        path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t4-20261028-133452-7
+        path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t4-20261028-133452-8
+        path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t4-20261028-133452-9
+        path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t4-20261028-133452-10
+        path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t4-20261028-133452-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 5
+      prompt: 'Image floor_default-s20261028-130134-t4-20261028-133452-10.png: ground
+        corners should be very very tiny.
+
+        Image floor_default-s20261028-130134-t4-20261028-133452-9.png: ground corners
+        should be very very tiny,
+
+        Image floor_default-s20261028-130134-t4-20261028-133452-8.png: ground corners
+        should be very very tiny,
+
+        Image floor_default-s20261028-130134-t4-20261028-133452-7.png: ground corners
+        should be very very tiny,'
+      full_prompt_sent: 'Image floor_default-s20261028-130134-t4-20261028-133452-10.png:
+        ground corners should be very very tiny.
+
+        Image floor_default-s20261028-130134-t4-20261028-133452-9.png: ground corners
+        should be very very tiny,
+
+        Image floor_default-s20261028-130134-t4-20261028-133452-8.png: ground corners
+        should be very very tiny,
+
+        Image floor_default-s20261028-130134-t4-20261028-133452-7.png: ground corners
+        should be very very tiny,'
+      references:
+      - floor_default-s20261028-130134-t4-20261028-133452-10.png
+      - floor_default-s20261028-130134-t4-20261028-133452-9.png
+      - floor_default-s20261028-130134-t4-20261028-133452-8.png
+      - floor_default-s20261028-130134-t4-20261028-133452-7.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: floor_default-s20261028-130134-t5-20261028-133639-1
+        path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t5-20261028-133639-2
+        path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t5-20261028-133639-3
+        path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t5-20261028-133639-4
+        path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t5-20261028-133639-5
+        path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t5-20261028-133639-6
+        path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t5-20261028-133639-7
+        path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t5-20261028-133639-8
+        path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t5-20261028-133639-9
+        path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t5-20261028-133639-10
+        path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t5-20261028-133639-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 6
+      prompt: 'Image floor_default-s20261028-130134-t5-20261028-133639-3.png: make
+        corners sharp, no rounding.'
+      full_prompt_sent: 'Image floor_default-s20261028-130134-t5-20261028-133639-3.png:
+        make corners sharp, no rounding.'
+      references:
+      - floor_default-s20261028-130134-t5-20261028-133639-3.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: floor_default-s20261028-130134-t6-20261028-133940-1
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t6-20261028-133940-2
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t6-20261028-133940-3
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t6-20261028-133940-4
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t6-20261028-133940-5
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t6-20261028-133940-6
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t6-20261028-133940-7
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t6-20261028-133940-8
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t6-20261028-133940-9
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: floor_default-s20261028-130134-t6-20261028-133940-10
+        path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/floor_default-s20261028-130134-t6-20261028-133940-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  s20261028-134541:
+    id: s20261028-134541
+    asset_name: jolly
+    title: ''
+    created: '2026-10-28T13:45:41'
+    turns:
+    - seq: 1
+      prompt: The is an image of jolly, can you add a green key and can you stylize
+        jolly to look like a character for a windows 15 puzzle game but keep it still
+        high-fi, you need to fill jolly in the whole tile.
+      full_prompt_sent: The is an image of jolly, can you add a green key and can
+        you stylize jolly to look like a character for a windows 15 puzzle game but
+        keep it still high-fi, you need to fill jolly in the whole tile.
+      references:
+      - uploads-20261028-134552-muse_mascot_jolly_by_cassiemunoz_dmvztvk-pre.jpg
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: jolly-s20261028-134541-t1-20261028-134712-1
+        path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t1-20261028-134712-2
+        path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t1-20261028-134712-3
+        path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t1-20261028-134712-4
+        path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t1-20261028-134712-5
+        path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t1-20261028-134712-6
+        path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t1-20261028-134712-7
+        path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t1-20261028-134712-8
+        path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t1-20261028-134712-9
+        path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t1-20261028-134712-10
+        path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t1-20261028-134712-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 2
+      prompt: 'Image jolly-s20261028-134541-t1-20261028-134712-10.png: the background
+        is suppose to be key-green, meaning a solid green color of #00FF00 not literally
+        holding a key.'
+      full_prompt_sent: 'Image jolly-s20261028-134541-t1-20261028-134712-10.png: the
+        background is suppose to be key-green, meaning a solid green color of #00FF00
+        not literally holding a key.'
+      references:
+      - jolly-s20261028-134541-t1-20261028-134712-10.png
+      num: 6
+      provider_session: null
+      status: completed
+      cost_total: '0.06'
+      outputs:
+      - key: jolly-s20261028-134541-t2-20261028-134915-1
+        path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t2-20261028-134915-2
+        path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t2-20261028-134915-3
+        path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t2-20261028-134915-4
+        path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t2-20261028-134915-5
+        path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t2-20261028-134915-6
+        path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t2-20261028-134915-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 3
+      prompt: 'Image jolly-s20261028-134541-t2-20261028-134915-2.png: The background
+        is correct as a single solid color, jolly the character in the center is suppose
+        to fill the entire frame not have space round them.'
+      full_prompt_sent: 'Image jolly-s20261028-134541-t2-20261028-134915-2.png: The
+        background is correct as a single solid color, jolly the character in the
+        center is suppose to fill the entire frame not have space round them.'
+      references:
+      - jolly-s20261028-134541-t2-20261028-134915-2.png
+      num: 6
+      provider_session: null
+      status: completed
+      cost_total: '0.06'
+      outputs:
+      - key: jolly-s20261028-134541-t3-20261028-135126-1
+        path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t3-20261028-135126-2
+        path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t3-20261028-135126-3
+        path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t3-20261028-135126-4
+        path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t3-20261028-135126-5
+        path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t3-20261028-135126-6
+        path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t3-20261028-135126-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 4
+      prompt: 'Image jolly-s20261028-134541-t3-20261028-135126-3.png: stylize the
+        character image to look like to look a PC-98 gam graphics.'
+      full_prompt_sent: 'Image jolly-s20261028-134541-t3-20261028-135126-3.png: stylize
+        the character image to look like to look a PC-98 gam graphics.'
+      references:
+      - jolly-s20261028-134541-t3-20261028-135126-3.png
+      num: 6
+      provider_session: null
+      status: completed
+      cost_total: '0.06'
+      outputs:
+      - key: jolly-s20261028-134541-t4-20261028-135349-1
+        path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t4-20261028-135349-2
+        path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t4-20261028-135349-3
+        path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t4-20261028-135349-4
+        path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t4-20261028-135349-5
+        path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t4-20261028-135349-6
+        path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t4-20261028-135349-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 5
+      prompt: 'Image jolly-s20261028-134541-t4-20261028-135349-6.png: The character
+        is in frame, but the background is not solid  green-key-background #00FF00
+
+        Image jolly-s20261028-134541-t4-20261028-135349-1.png: The character is in
+        frame, but the background is not solid  green-key-background #00FF00
+
+        Image jolly-s20261028-134541-t3-20261028-135126-6.png: This image has the
+        green-key-background that we want. the character is perfectly in frame but
+        its not stylized as PC-98'
+      full_prompt_sent: 'Image jolly-s20261028-134541-t4-20261028-135349-6.png: The
+        character is in frame, but the background is not solid  green-key-background
+        #00FF00
+
+        Image jolly-s20261028-134541-t4-20261028-135349-1.png: The character is in
+        frame, but the background is not solid  green-key-background #00FF00
+
+        Image jolly-s20261028-134541-t3-20261028-135126-6.png: This image has the
+        green-key-background that we want. the character is perfectly in frame but
+        its not stylized as PC-98'
+      references:
+      - jolly-s20261028-134541-t4-20261028-135349-6.png
+      - jolly-s20261028-134541-t4-20261028-135349-1.png
+      - jolly-s20261028-134541-t3-20261028-135126-6.png
+      num: 6
+      provider_session: null
+      status: completed
+      cost_total: '0.06'
+      outputs:
+      - key: jolly-s20261028-134541-t5-20261028-135611-1
+        path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t5-20261028-135611-2
+        path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t5-20261028-135611-3
+        path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t5-20261028-135611-4
+        path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t5-20261028-135611-5
+        path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-s20261028-134541-t5-20261028-135611-6
+        path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-s20261028-134541-t5-20261028-135611-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  s20261028-135901:
+    id: s20261028-135901
+    asset_name: key
+    title: ''
+    created: '2026-10-28T13:59:01'
+    turns:
+    - seq: 1
+      prompt: 'green solid background #00FF00. Create an image of a key for a puzzle
+        based tile game, they key need to fill whole frame edge-to-edge.'
+      full_prompt_sent: 'green solid background #00FF00. Create an image of a key
+        for a puzzle based tile game, they key need to fill whole frame edge-to-edge.'
+      references: []
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: key-s20261028-135901-t1-20261028-140024-1
+        path: assets/outputs/key-s20261028-135901-t1-20261028-140024-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t1-20261028-140024-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t1-20261028-140024-2
+        path: assets/outputs/key-s20261028-135901-t1-20261028-140024-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t1-20261028-140024-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t1-20261028-140024-3
+        path: assets/outputs/key-s20261028-135901-t1-20261028-140024-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t1-20261028-140024-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t1-20261028-140024-4
+        path: assets/outputs/key-s20261028-135901-t1-20261028-140024-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t1-20261028-140024-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t1-20261028-140024-5
+        path: assets/outputs/key-s20261028-135901-t1-20261028-140024-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t1-20261028-140024-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t1-20261028-140024-6
+        path: assets/outputs/key-s20261028-135901-t1-20261028-140024-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t1-20261028-140024-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t1-20261028-140024-7
+        path: assets/outputs/key-s20261028-135901-t1-20261028-140024-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t1-20261028-140024-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t1-20261028-140024-8
+        path: assets/outputs/key-s20261028-135901-t1-20261028-140024-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t1-20261028-140024-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t1-20261028-140024-9
+        path: assets/outputs/key-s20261028-135901-t1-20261028-140024-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t1-20261028-140024-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t1-20261028-140024-10
+        path: assets/outputs/key-s20261028-135901-t1-20261028-140024-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t1-20261028-140024-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 2
+      prompt: 'Image key-s20261028-135901-t1-20261028-140024-1.png: The overall key
+        shape is correct. We don''t want key made out of puzzle pieces, we were describing
+        the use-case and you took that literally to mean puzzles.
+
+        Key should be one solid key, not puzzle pieces.'
+      full_prompt_sent: 'Image key-s20261028-135901-t1-20261028-140024-1.png: The
+        overall key shape is correct. We don''t want key made out of puzzle pieces,
+        we were describing the use-case and you took that literally to mean puzzles.
+
+        Key should be one solid key, not puzzle pieces.'
+      references:
+      - key-s20261028-135901-t1-20261028-140024-1.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: key-s20261028-135901-t2-20261028-140600-1
+        path: assets/outputs/key-s20261028-135901-t2-20261028-140600-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t2-20261028-140600-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t2-20261028-140600-2
+        path: assets/outputs/key-s20261028-135901-t2-20261028-140600-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t2-20261028-140600-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t2-20261028-140600-3
+        path: assets/outputs/key-s20261028-135901-t2-20261028-140600-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t2-20261028-140600-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t2-20261028-140600-4
+        path: assets/outputs/key-s20261028-135901-t2-20261028-140600-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t2-20261028-140600-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t2-20261028-140600-5
+        path: assets/outputs/key-s20261028-135901-t2-20261028-140600-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t2-20261028-140600-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t2-20261028-140600-6
+        path: assets/outputs/key-s20261028-135901-t2-20261028-140600-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t2-20261028-140600-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t2-20261028-140600-7
+        path: assets/outputs/key-s20261028-135901-t2-20261028-140600-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t2-20261028-140600-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t2-20261028-140600-8
+        path: assets/outputs/key-s20261028-135901-t2-20261028-140600-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t2-20261028-140600-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t2-20261028-140600-9
+        path: assets/outputs/key-s20261028-135901-t2-20261028-140600-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t2-20261028-140600-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t2-20261028-140600-10
+        path: assets/outputs/key-s20261028-135901-t2-20261028-140600-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t2-20261028-140600-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 3
+      prompt: 'Image key-s20261028-135901-t2-20261028-140600-6.png: This key is perfect
+        shape and detail.  Please stylize as a PC-98 game graphics, preserve the solid
+        green background.'
+      full_prompt_sent: 'Image key-s20261028-135901-t2-20261028-140600-6.png: This
+        key is perfect shape and detail.  Please stylize as a PC-98 game graphics,
+        preserve the solid green background.'
+      references:
+      - key-s20261028-135901-t2-20261028-140600-6.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: key-s20261028-135901-t3-20261028-140820-1
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t3-20261028-140820-2
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t3-20261028-140820-3
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t3-20261028-140820-4
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t3-20261028-140820-5
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t3-20261028-140820-6
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t3-20261028-140820-7
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t3-20261028-140820-8
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t3-20261028-140820-9
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: key-s20261028-135901-t3-20261028-140820-10
+        path: assets/outputs/key-s20261028-135901-t3-20261028-140820-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/key-s20261028-135901-t3-20261028-140820-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  s20261028-141008:
+    id: s20261028-141008
+    asset_name: wall
+    title: ''
+    created: '2026-10-28T14:10:08'
+    turns: []
+  s20261028-141040:
+    id: s20261028-141040
+    asset_name: wall
+    title: ''
+    created: '2026-10-28T14:10:40'
+    turns:
+    - seq: 1
+      prompt: Top-down 2D puzzle-game wall tile, light gray stone, flat clean game-art
+        style, single square tile filling the frame, no text
+      full_prompt_sent: Top-down 2D puzzle-game wall tile, light gray stone, flat
+        clean game-art style, single square tile filling the frame, no text
+      references: []
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: wall-s20261028-141040-t1-20261028-141057-1
+        path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t1-20261028-141057-2
+        path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t1-20261028-141057-3
+        path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t1-20261028-141057-4
+        path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t1-20261028-141057-5
+        path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t1-20261028-141057-6
+        path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t1-20261028-141057-7
+        path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t1-20261028-141057-8
+        path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t1-20261028-141057-9
+        path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t1-20261028-141057-10
+        path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t1-20261028-141057-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 2
+      prompt: 'Image wall-s20261028-141040-t1-20261028-141057-4.png: This block had
+        a bevel which is a good start, but we need a much stronger bevel, we need
+        the cracks removed.'
+      full_prompt_sent: 'Image wall-s20261028-141040-t1-20261028-141057-4.png: This
+        block had a bevel which is a good start, but we need a much stronger bevel,
+        we need the cracks removed.'
+      references:
+      - wall-s20261028-141040-t1-20261028-141057-4.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: wall-s20261028-141040-t2-20261028-141338-1
+        path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t2-20261028-141338-2
+        path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t2-20261028-141338-3
+        path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t2-20261028-141338-4
+        path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t2-20261028-141338-5
+        path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t2-20261028-141338-6
+        path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t2-20261028-141338-7
+        path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t2-20261028-141338-8
+        path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t2-20261028-141338-9
+        path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t2-20261028-141338-10
+        path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t2-20261028-141338-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 3
+      prompt: 'Image wall-s20261028-141040-t2-20261028-141338-9.png: corners should
+        be sharp, end-to-end, bleed-to-blend, no rounding corners and showing white
+        space.'
+      full_prompt_sent: 'Image wall-s20261028-141040-t2-20261028-141338-9.png: corners
+        should be sharp, end-to-end, bleed-to-blend, no rounding corners and showing
+        white space.'
+      references:
+      - wall-s20261028-141040-t2-20261028-141338-9.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: wall-s20261028-141040-t3-20261028-141544-1
+        path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t3-20261028-141544-2
+        path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t3-20261028-141544-3
+        path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t3-20261028-141544-4
+        path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t3-20261028-141544-5
+        path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t3-20261028-141544-6
+        path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t3-20261028-141544-7
+        path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t3-20261028-141544-8
+        path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t3-20261028-141544-9
+        path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t3-20261028-141544-10
+        path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t3-20261028-141544-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 4
+      prompt: 'Image wall-s20261028-141040-t3-20261028-141544-9.png: we lost the bevel,
+        and its not edge-to-edge, its not bleed-to-bleed, we have a big white space
+        around the image which is not idea.
+
+        Image wall-s20261028-141040-t2-20261028-141338-6.png: This image had the ideal
+        beveling but does not have sharp corrners.'
+      full_prompt_sent: 'Image wall-s20261028-141040-t3-20261028-141544-9.png: we
+        lost the bevel, and its not edge-to-edge, its not bleed-to-bleed, we have
+        a big white space around the image which is not idea.
+
+        Image wall-s20261028-141040-t2-20261028-141338-6.png: This image had the ideal
+        beveling but does not have sharp corrners.'
+      references:
+      - wall-s20261028-141040-t3-20261028-141544-9.png
+      - wall-s20261028-141040-t2-20261028-141338-6.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: wall-s20261028-141040-t4-20261028-141836-1
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t4-20261028-141836-2
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t4-20261028-141836-3
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t4-20261028-141836-4
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t4-20261028-141836-5
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t4-20261028-141836-6
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t4-20261028-141836-7
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t4-20261028-141836-8
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t4-20261028-141836-9
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t4-20261028-141836-10
+        path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t4-20261028-141836-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 5
+      prompt: 'Image wall-s20261028-141040-t4-20261028-141836-9.png: This image is
+        ideal we just need it to overall be a darker gray.'
+      full_prompt_sent: 'Image wall-s20261028-141040-t4-20261028-141836-9.png: This
+        image is ideal we just need it to overall be a darker gray.'
+      references:
+      - wall-s20261028-141040-t4-20261028-141836-9.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: wall-s20261028-141040-t5-20261028-142220-1
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t5-20261028-142220-2
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t5-20261028-142220-3
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t5-20261028-142220-4
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t5-20261028-142220-5
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t5-20261028-142220-6
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t5-20261028-142220-7
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t5-20261028-142220-8
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t5-20261028-142220-9
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall-s20261028-141040-t5-20261028-142220-10
+        path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall-s20261028-141040-t5-20261028-142220-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  s20261028-142528:
+    id: s20261028-142528
+    asset_name: wall_keyhole
+    title: ''
+    created: '2026-10-28T14:25:28'
+    turns:
+    - seq: 1
+      prompt: 'Image uploads-20261028-142532-wall-s20261028-141040-t5-20261028-142220-10.png:
+        We want to use this wall tile for our game, but we need to modify it to have
+        a keyhole.
+
+
+        They keyhole has a gold plate and a black keyhole.'
+      full_prompt_sent: 'Image uploads-20261028-142532-wall-s20261028-141040-t5-20261028-142220-10.png:
+        We want to use this wall tile for our game, but we need to modify it to have
+        a keyhole.
+
+
+        They keyhole has a gold plate and a black keyhole.'
+      references:
+      - uploads-20261028-142532-wall-s20261028-141040-t5-20261028-142220-10.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: wall_keyhole-s20261028-142528-t1-20261028-142650-1
+        path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t1-20261028-142650-2
+        path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t1-20261028-142650-3
+        path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t1-20261028-142650-4
+        path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t1-20261028-142650-5
+        path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t1-20261028-142650-6
+        path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t1-20261028-142650-7
+        path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t1-20261028-142650-8
+        path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t1-20261028-142650-9
+        path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t1-20261028-142650-10
+        path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t1-20261028-142650-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 2
+      prompt: 'Image wall_keyhole-s20261028-142528-t1-20261028-142650-10.png: they
+        key plate is center but its way too small, it should take up half of the size
+        of the middle of the image.
+
+        Image wall_keyhole-s20261028-142528-t1-20261028-142650-9.png: The key plate
+        is too low.
+
+        Image wall_keyhole-s20261028-142528-t1-20261028-142650-8.png: This has the
+        best keyplate shape.'
+      full_prompt_sent: 'Image wall_keyhole-s20261028-142528-t1-20261028-142650-10.png:
+        they key plate is center but its way too small, it should take up half of
+        the size of the middle of the image.
+
+        Image wall_keyhole-s20261028-142528-t1-20261028-142650-9.png: The key plate
+        is too low.
+
+        Image wall_keyhole-s20261028-142528-t1-20261028-142650-8.png: This has the
+        best keyplate shape.'
+      references:
+      - wall_keyhole-s20261028-142528-t1-20261028-142650-10.png
+      - wall_keyhole-s20261028-142528-t1-20261028-142650-9.png
+      - wall_keyhole-s20261028-142528-t1-20261028-142650-8.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: wall_keyhole-s20261028-142528-t2-20261028-143038-1
+        path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t2-20261028-143038-2
+        path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t2-20261028-143038-3
+        path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t2-20261028-143038-4
+        path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t2-20261028-143038-5
+        path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t2-20261028-143038-6
+        path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t2-20261028-143038-7
+        path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t2-20261028-143038-8
+        path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t2-20261028-143038-9
+        path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t2-20261028-143038-10
+        path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t2-20261028-143038-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 3
+      prompt: 'Image wall_keyhole-s20261028-142528-t2-20261028-143038-7.png: make
+        the key hold plate larger, and get rid of the shadow under the keyplate.'
+      full_prompt_sent: 'Image wall_keyhole-s20261028-142528-t2-20261028-143038-7.png:
+        make the key hold plate larger, and get rid of the shadow under the keyplate.'
+      references:
+      - wall_keyhole-s20261028-142528-t2-20261028-143038-7.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: wall_keyhole-s20261028-142528-t3-20261028-143152-1
+        path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t3-20261028-143152-2
+        path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t3-20261028-143152-3
+        path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t3-20261028-143152-4
+        path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t3-20261028-143152-5
+        path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t3-20261028-143152-6
+        path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t3-20261028-143152-7
+        path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t3-20261028-143152-8
+        path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t3-20261028-143152-9
+        path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t3-20261028-143152-10
+        path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t3-20261028-143152-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 4
+      prompt: 'Image wall_keyhole-s20261028-142528-t3-20261028-143152-9.png: remove
+        the shadow that appear under the faceplate'
+      full_prompt_sent: 'Image wall_keyhole-s20261028-142528-t3-20261028-143152-9.png:
+        remove the shadow that appear under the faceplate'
+      references:
+      - wall_keyhole-s20261028-142528-t3-20261028-143152-10.png
+      - wall_keyhole-s20261028-142528-t3-20261028-143152-9.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-1
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-2
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-3
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-4
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-5
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-6
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-7
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-8
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-9
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: wall_keyhole-s20261028-142528-t4-20261028-143358-10
+        path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/wall_keyhole-s20261028-142528-t4-20261028-143358-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  s20261028-143648:
+    id: s20261028-143648
+    asset_name: portal
+    title: ''
+    created: '2026-10-28T14:36:48'
+    turns:
+    - seq: 1
+      prompt: Top-down 2D puzzle-game warp portal tile, flat clean game-art style,
+        single square tile filling the frame, no text
+      full_prompt_sent: Top-down 2D puzzle-game warp portal tile, flat clean game-art
+        style, single square tile filling the frame, no text
+      references: []
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: portal-s20261028-143648-t1-20261028-143718-1
+        path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t1-20261028-143718-2
+        path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t1-20261028-143718-3
+        path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t1-20261028-143718-4
+        path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t1-20261028-143718-5
+        path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t1-20261028-143718-6
+        path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t1-20261028-143718-7
+        path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t1-20261028-143718-8
+        path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t1-20261028-143718-9
+        path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t1-20261028-143718-10
+        path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t1-20261028-143718-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 2
+      prompt: 'Image portal-s20261028-143648-t1-20261028-143718-6.png: the portal
+        swirl is a good we just need it to fill the whole frame with no brick border
+        around it.'
+      full_prompt_sent: 'Image portal-s20261028-143648-t1-20261028-143718-6.png: the
+        portal swirl is a good we just need it to fill the whole frame with no brick
+        border around it.'
+      references:
+      - portal-s20261028-143648-t1-20261028-143718-6.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: portal-s20261028-143648-t2-20261028-143854-1
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t2-20261028-143854-2
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t2-20261028-143854-3
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t2-20261028-143854-4
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t2-20261028-143854-5
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t2-20261028-143854-6
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t2-20261028-143854-7
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t2-20261028-143854-8
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t2-20261028-143854-9
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t2-20261028-143854-10
+        path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t2-20261028-143854-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 3
+      prompt: 'Image portal-s20261028-143648-t2-20261028-143854-9.png: can we create
+        a more simplified warp style'
+      full_prompt_sent: 'Image portal-s20261028-143648-t2-20261028-143854-9.png: can
+        we create a more simplified warp style'
+      references:
+      - portal-s20261028-143648-t2-20261028-143854-9.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: portal-s20261028-143648-t3-20261028-144416-1
+        path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t3-20261028-144416-2
+        path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t3-20261028-144416-3
+        path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t3-20261028-144416-4
+        path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t3-20261028-144416-5
+        path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t3-20261028-144416-6
+        path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t3-20261028-144416-7
+        path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t3-20261028-144416-8
+        path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t3-20261028-144416-9
+        path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: portal-s20261028-143648-t3-20261028-144416-10
+        path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/portal-s20261028-143648-t3-20261028-144416-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  s20261028-144823:
+    id: s20261028-144823
+    asset_name: orb
+    title: ''
+    created: '2026-10-28T14:48:23'
+    turns:
+    - seq: 1
+      prompt: 'Top-down 2D puzzle-game, orb, flat clean game-art style, single square
+        tile filling the frame, no text, green solid background #00FF00
+
+        Image uploads-20261028-144827-orb.jpg: this is the orb we want to have in
+        our image.'
+      full_prompt_sent: 'Top-down 2D puzzle-game, orb, flat clean game-art style,
+        single square tile filling the frame, no text, green solid background #00FF00
+
+        Image uploads-20261028-144827-orb.jpg: this is the orb we want to have in
+        our image.'
+      references:
+      - uploads-20261028-144827-orb.jpg
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: orb-s20261028-144823-t1-20261028-144934-1
+        path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t1-20261028-144934-2
+        path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t1-20261028-144934-3
+        path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t1-20261028-144934-4
+        path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t1-20261028-144934-5
+        path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t1-20261028-144934-6
+        path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t1-20261028-144934-7
+        path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t1-20261028-144934-8
+        path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t1-20261028-144934-9
+        path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t1-20261028-144934-10
+        path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t1-20261028-144934-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 2
+      prompt: 'Image orb-s20261028-144823-t1-20261028-144934-9.png: remove the shadow
+        under orb'
+      full_prompt_sent: 'Image orb-s20261028-144823-t1-20261028-144934-9.png: remove
+        the shadow under orb'
+      references:
+      - orb-s20261028-144823-t1-20261028-144934-9.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: orb-s20261028-144823-t2-20261028-145137-1
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t2-20261028-145137-2
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t2-20261028-145137-3
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t2-20261028-145137-4
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t2-20261028-145137-5
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t2-20261028-145137-6
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t2-20261028-145137-7
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t2-20261028-145137-8
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t2-20261028-145137-9
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: orb-s20261028-144823-t2-20261028-145137-10
+        path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/orb-s20261028-144823-t2-20261028-145137-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  s20261028-145752:
+    id: s20261028-145752
+    asset_name: gate
+    title: ''
+    created: '2026-10-28T14:57:52'
+    turns:
+    - seq: 1
+      prompt: Top-down 2D puzzle-game gate, flat clean game-art style, single square
+        tile filling the frame, no text
+      full_prompt_sent: Top-down 2D puzzle-game gate, flat clean game-art style, single
+        square tile filling the frame, no text
+      references: []
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: gate-s20261028-145752-t1-20261028-145805-1
+        path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t1-20261028-145805-2
+        path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t1-20261028-145805-3
+        path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t1-20261028-145805-4
+        path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t1-20261028-145805-5
+        path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t1-20261028-145805-6
+        path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t1-20261028-145805-7
+        path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t1-20261028-145805-8
+        path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t1-20261028-145805-9
+        path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t1-20261028-145805-10
+        path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t1-20261028-145805-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 2
+      prompt: 'Image gate-s20261028-145752-t1-20261028-145805-3.png: We just want
+        the gate, and it should be edge to edge to the image.'
+      full_prompt_sent: 'Image gate-s20261028-145752-t1-20261028-145805-3.png: We
+        just want the gate, and it should be edge to edge to the image.'
+      references:
+      - gate-s20261028-145752-t1-20261028-145805-3.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: gate-s20261028-145752-t2-20261028-150113-1
+        path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t2-20261028-150113-2
+        path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t2-20261028-150113-3
+        path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t2-20261028-150113-4
+        path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t2-20261028-150113-5
+        path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t2-20261028-150113-6
+        path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t2-20261028-150113-7
+        path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t2-20261028-150113-8
+        path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t2-20261028-150113-9
+        path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t2-20261028-150113-10
+        path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t2-20261028-150113-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 3
+      prompt: 'Image gate-s20261028-145752-t2-20261028-150113-4.png: remove the cog
+        at the top, remove the green foilage, and teh gate should go all the way to
+        the top of the iamge.'
+      full_prompt_sent: 'Image gate-s20261028-145752-t2-20261028-150113-4.png: remove
+        the cog at the top, remove the green foilage, and teh gate should go all the
+        way to the top of the iamge.'
+      references:
+      - gate-s20261028-145752-t2-20261028-150113-4.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: gate-s20261028-145752-t3-20261028-150246-1
+        path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t3-20261028-150246-2
+        path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t3-20261028-150246-3
+        path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t3-20261028-150246-4
+        path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t3-20261028-150246-5
+        path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t3-20261028-150246-6
+        path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t3-20261028-150246-7
+        path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t3-20261028-150246-8
+        path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t3-20261028-150246-9
+        path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t3-20261028-150246-10
+        path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t3-20261028-150246-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 4
+      prompt: 'Image gate-s20261028-145752-t3-20261028-150246-10.png: the gate should
+        fill the whole image, remove the white space around the gate.'
+      full_prompt_sent: 'Image gate-s20261028-145752-t3-20261028-150246-10.png: the
+        gate should fill the whole image, remove the white space around the gate.'
+      references:
+      - gate-s20261028-145752-t3-20261028-150246-10.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: gate-s20261028-145752-t4-20261028-150533-1
+        path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t4-20261028-150533-2
+        path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t4-20261028-150533-3
+        path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t4-20261028-150533-4
+        path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t4-20261028-150533-5
+        path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t4-20261028-150533-6
+        path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t4-20261028-150533-7
+        path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t4-20261028-150533-8
+        path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t4-20261028-150533-9
+        path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t4-20261028-150533-10
+        path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t4-20261028-150533-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 5
+      prompt: 'Image gate-s20261028-145752-t4-20261028-150533-10.png: the gate should
+        fill the entire image.
+
+        The gate should not have white space around it, it needs to perfectly fill
+        the entire image to the edge.'
+      full_prompt_sent: 'Image gate-s20261028-145752-t4-20261028-150533-10.png: the
+        gate should fill the entire image.
+
+        The gate should not have white space around it, it needs to perfectly fill
+        the entire image to the edge.'
+      references:
+      - gate-s20261028-145752-t4-20261028-150533-10.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: gate-s20261028-145752-t5-20261028-150755-1
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t5-20261028-150755-2
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t5-20261028-150755-3
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t5-20261028-150755-4
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t5-20261028-150755-5
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t5-20261028-150755-6
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t5-20261028-150755-7
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t5-20261028-150755-8
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t5-20261028-150755-9
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: gate-s20261028-145752-t5-20261028-150755-10
+        path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/gate-s20261028-145752-t5-20261028-150755-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600

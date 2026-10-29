@@ -10,12 +10,16 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from asset_store import (StoreError, add_version, build_prompt_draft,
-                         create_asset, load_judgements, load_manifest,
-                         lottery_keys, normalize_run_count, save_judgement,
-                         save_judgements, save_manifest, split_cost_per_output,
-                         update_version, validate_references,
-                         validate_run_not_noop)
+from asset_store import (StoreError, add_turn, add_version,
+                         build_prompt_draft, create_asset, create_session,
+                         get_session, load_sessions, load_judgements,
+                         load_manifest, lottery_keys, mark_turn_failed,
+                         normalize_run_count, publish_slug,
+                         record_turn_outputs, save_judgement, save_judgements,
+                         save_manifest, save_sessions, session_context_refs,
+                         split_cost_per_output, update_version,
+                         validate_references, validate_run_not_noop,
+                         validate_upload)
 
 
 class JudgementTest(unittest.TestCase):
@@ -218,6 +222,123 @@ class PromptDraftTest(unittest.TestCase):
         draft = build_prompt_draft("tile", "still framed", {"no_cracks": False})
         self.assertIn("no cracks", draft)
         self.assertIn('Parent noted: "still framed"', draft)
+
+
+class SessionStoreTest(unittest.TestCase):
+    def _sessions(self):
+        sessions = {}
+        create_session(sessions, "s1", "tile", title="try cracks")
+        return sessions
+
+    def test_create_rejects_bad_and_duplicate_ids(self):
+        sessions = {}
+        with self.assertRaises(StoreError):
+            create_session(sessions, "bad id!", "tile")
+        with self.assertRaises(StoreError):
+            create_session(sessions, "s1", "")
+        create_session(sessions, "s1", "tile")
+        with self.assertRaises(StoreError):
+            create_session(sessions, "s1", "tile")
+
+    def test_get_missing_raises(self):
+        with self.assertRaises(StoreError):
+            get_session({}, "nope")
+
+    def test_add_turn_sequences_and_validates(self):
+        sessions = self._sessions()
+        t1 = add_turn(sessions, "s1", "first delta", [], 1)
+        t2 = add_turn(sessions, "s1", "second delta", ["a.png"], 2)
+        self.assertEqual((t1["seq"], t2["seq"]), (1, 2))
+        self.assertIsNone(t1["status"])
+        self.assertIsNone(t1["provider_session"])
+        with self.assertRaises(StoreError):
+            add_turn(sessions, "s1", "   ", [], 1)
+        with self.assertRaises(StoreError):
+            add_turn(sessions, "s1", "x", [f"a-{i}.png" for i in range(11)], 1)
+
+    def test_record_and_fail_turn(self):
+        sessions = self._sessions()
+        add_turn(sessions, "s1", "delta", [], 2)
+        info = [{"key": "k1", "path": "assets/outputs/k1.png"},
+                {"key": "k2", "path": "assets/outputs/k2.png"}]
+        turn = record_turn_outputs(sessions, "s1", 1, info, "0.02",
+                                   full_prompt_sent="delta")
+        self.assertEqual(turn["status"], "completed")
+        self.assertEqual(turn["cost_total"], "0.02")
+        self.assertEqual(turn["full_prompt_sent"], "delta")
+        self.assertEqual([o["key"] for o in turn["outputs"]], ["k1", "k2"])
+        add_turn(sessions, "s1", "next", [], 1)
+        mark_turn_failed(sessions, "s1", 2)
+        self.assertEqual(sessions["s1"]["turns"][1]["status"], "failed")
+        with self.assertRaises(StoreError):
+            record_turn_outputs(sessions, "s1", 9, [], None)
+
+    def test_sessions_survive_save_load(self):
+        sessions = self._sessions()
+        add_turn(sessions, "s1", "delta", [], 1)
+        record_turn_outputs(sessions, "s1", 1,
+                            [{"key": "k1", "path": "assets/outputs/k1.png"}],
+                            "0.01", full_prompt_sent="delta")
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "sessions.yml"
+            save_sessions(sessions, "", path)
+            loaded, _ = load_sessions(path)
+        self.assertEqual(loaded["s1"]["turns"][0]["outputs"][0]["key"], "k1")
+        self.assertEqual(loaded["s1"]["turns"][0]["full_prompt_sent"], "delta")
+
+
+class SessionContextTest(unittest.TestCase):
+    def _session(self):
+        return {"turns": [
+            {"outputs": [{"key": "a"}, {"key": "b"}]},
+            {"outputs": [{"key": "c"}]},
+        ]}
+
+    def test_empty_session_carries_nothing(self):
+        self.assertEqual(session_context_refs({"turns": []}), [])
+
+    def test_newest_first_order(self):
+        self.assertEqual(session_context_refs(self._session()),
+                         ["c.png", "b.png", "a.png"])
+
+    def test_preferred_sorts_first(self):
+        judgements = {"a": {"preferred": True}}
+        self.assertEqual(session_context_refs(self._session(), judgements)[0],
+                         "a.png")
+
+    def test_cap_respected(self):
+        session = {"turns": [{"outputs": [{"key": f"k{i}"} for i in range(12)]}]}
+        self.assertEqual(len(session_context_refs(session)), 10)
+
+
+class PublishSlugTest(unittest.TestCase):
+    def test_slug_shape(self):
+        slug = publish_slug("s20261028-120000", 2)
+        self.assertEqual(slug, "s20261028-120000-t2")
+
+    def test_slug_sanitizes_weird_ids(self):
+        slug = publish_slug("weird id", 1)
+        self.assertRegex(slug, r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
+
+
+class UploadValidationTest(unittest.TestCase):
+    def test_good_names_accepted(self):
+        self.assertEqual(validate_upload("ref.png", 10), "ref.png")
+        self.assertEqual(validate_upload("a/b.JPG", 10), "b.JPG")
+
+    def test_bad_extension_rejected(self):
+        with self.assertRaises(StoreError):
+            validate_upload("notes.txt", 10)
+
+    def test_empty_and_oversized_rejected(self):
+        with self.assertRaises(StoreError):
+            validate_upload("a.png", 0)
+        with self.assertRaises(StoreError):
+            validate_upload("a.png", 8 * 1024 * 1024 + 1)
+
+    def test_blank_name_rejected(self):
+        with self.assertRaises(StoreError):
+            validate_upload("   ", 10)
 
 
 if __name__ == "__main__":

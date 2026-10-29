@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Level Preview</title>
+<link rel="icon" href="data:,">
+<style>
+  body { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+         margin: 0; color: #1c1c1c; background: #f4f4f4; font-size: 14px; }
+  header { background: #2b2b2b; color: #fff; padding: 10px 16px; }
+  header h1 { font-size: 16px; margin: 0; font-weight: 600; }
+  header p { margin: 2px 0 0; font-size: 12px; color: #bbb; }
+  header code { color: #ffd9a0; }
+  main { display: flex; gap: 16px; padding: 16px; align-items: flex-start;
+         flex-wrap: wrap; }
+  #stage { background: #111; border: 1px solid #999; line-height: 0; }
+  #panel { background: #fff; border: 1px solid #ddd; border-radius: 6px;
+           padding: 12px 14px; min-width: 240px; max-width: 320px; }
+  #panel h2 { font-size: 13px; margin: 0 0 8px; }
+  #panel dl { margin: 0 0 12px; display: grid;
+              grid-template-columns: auto 1fr; gap: 2px 10px; }
+  #panel dt { color: #666; }
+  #panel dd { margin: 0; overflow-wrap: anywhere; }
+  #panel .row { margin: 8px 0; }
+  #panel label { display: block; margin: 4px 0; }
+  #panel .placeholder { color: #9a6200; font-weight: 600; }
+  #error { display: none; background: #fdecea; border: 1px solid #c00;
+           border-radius: 6px; padding: 12px 14px; margin: 16px; }
+  button { font-size: 13px; padding: 4px 10px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Level Preview</h1>
+  <p id="subtitle">loading&hellip;</p>
+</header>
+<div id="error" role="alert"></div>
+<main>
+  <div id="stage"></div>
+  <div id="panel">
+    <h2>Tile inspector</h2>
+    <dl>
+      <dt>Cell</dt><dd id="ins-cell">&mdash;</dd>
+      <dt>Char</dt><dd id="ins-char">&mdash;</dd>
+      <dt>Label</dt><dd id="ins-label">&mdash;</dd>
+      <dt>Sprite</dt><dd id="ins-sprite">&mdash;</dd>
+      <dt>Status</dt><dd id="ins-status">&mdash;</dd>
+    </dl>
+    <h2>View</h2>
+    <div class="row">
+      <label title="Show the panel and header; press d to bring them back when hidden"><input type="checkbox" id="opt-debug" checked> Debug</label>
+      <label><input type="checkbox" id="opt-coords" checked> Coordinates</label>
+      <label><input type="checkbox" id="opt-grid" checked> Grid lines</label>
+      <label><input type="checkbox" id="opt-marks" checked> Placeholder marks</label>
+    </div>
+    <h2>Placeholder tint</h2>
+    <div class="row">
+      <label>Experiment tint (placeholder tiles only)
+        <input type="color" id="opt-tint" value="#ffffff"></label>
+      <button id="opt-tint-reset" type="button">Reset tint</button>
+    </div>
+    <h2>Export</h2>
+    <div class="row">
+      <button id="opt-export" type="button">Export board PNG</button>
+    </div>
+  </div>
+</main>
+<script src="vendor/pixi.min.js"></script>
+<script>
+(async function () {
+  'use strict';
+  const errorBox = document.getElementById('error');
+  function fail(msg) {
+    errorBox.style.display = 'block';
+    errorBox.textContent = msg;
+    document.getElementById('subtitle').textContent = 'failed to load';
+  }
+  if (!window.PIXI) { fail('PixiJS failed to load (vendor/pixi.min.js).'); return; }
+
+  const params = new URLSearchParams(location.search);
+  const levelName = (params.get('level') || 'chip1').replace(/[^a-zA-Z0-9_-]/g, '');
+  let level;
+  try {
+    const res = await fetch('levels/' + levelName + '.json');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    level = await res.json();
+  } catch (err) {
+    fail('Could not load levels/' + levelName + '.json: ' + err.message +
+      '. Run tools/prep_level_sprites.sh first.');
+    return;
+  }
+  const rows = level.rows, legend = level.legend, TILE = level.tile || 64;
+  const COLS = rows[0].length, ROWS = rows.length;
+
+  const spriteNames = new Set();
+  for (const key of Object.keys(legend)) {
+    const e = legend[key];
+    if (e.base) spriteNames.add(e.base);
+    if (e.sprite) spriteNames.add(e.sprite);
+  }
+  const textures = {};
+  const missing = new Set();
+  await Promise.all([...spriteNames].map(async (name) => {
+    try {
+      textures[name] = await PIXI.Assets.load('level-sprites/' + name);
+    } catch (err) {
+      missing.add(name);
+    }
+  }));
+
+  const app = new PIXI.Application();
+  await app.init({ width: COLS * TILE, height: ROWS * TILE, background: '#111' });
+  document.getElementById('stage').appendChild(app.canvas);
+  const scale = TILE / 512;
+
+  const board = new PIXI.Container();
+  const overlay = new PIXI.Container();
+  app.stage.addChild(board, overlay);
+
+  // Magenta fallback so a missing sprite is loud, never silent.
+  function fallbackTile(gx, gy, ch) {
+    const g = new PIXI.Graphics();
+    g.rect(gx * TILE, gy * TILE, TILE, TILE).fill(0xff00ff);
+    const t = new PIXI.Text({
+      text: ch, style: { fontSize: 28, fill: 0x000000, fontWeight: 'bold' } });
+    t.anchor.set(0.5);
+    t.position.set(gx * TILE + TILE / 2, gy * TILE + TILE / 2);
+    board.addChild(g, t);
+  }
+  function drawSprite(name, gx, gy) {
+    const tex = textures[name];
+    if (!tex) return false;
+    const s = new PIXI.Sprite(tex);
+    s.scale.set(scale);
+    s.position.set(gx * TILE, gy * TILE);
+    board.addChild(s);
+    return s;
+  }
+
+  const placeholderSprites = [];
+  const coordLayer = new PIXI.Container();
+  const gridLayer = new PIXI.Container();
+  const markLayer = new PIXI.Container();
+  overlay.addChild(coordLayer, gridLayer, markLayer);
+
+  const grid = new PIXI.Graphics();
+  for (let x = 0; x <= COLS; x++) {
+    grid.moveTo(x * TILE + 0.5, 0).lineTo(x * TILE + 0.5, ROWS * TILE);
+  }
+  for (let y = 0; y <= ROWS; y++) {
+    grid.moveTo(0, y * TILE + 0.5).lineTo(COLS * TILE, y * TILE + 0.5);
+  }
+  grid.stroke({ width: 1, color: 0x666666, alpha: 0.8 });
+  gridLayer.addChild(grid);
+
+  for (let gy = 0; gy < ROWS; gy++) {
+    for (let gx = 0; gx < COLS; gx++) {
+      const ch = rows[gy][gx];
+      const e = legend[ch];
+      if (!e) { fallbackTile(gx, gy, ch); continue; }
+      if (e.base) {
+        if (!drawSprite(e.base, gx, gy)) { fallbackTile(gx, gy, ch); continue; }
+      }
+      if (e.sprite) {
+        const s = drawSprite(e.sprite, gx, gy);
+        if (s === false) { fallbackTile(gx, gy, ch); continue; }
+        if (e.placeholder) placeholderSprites.push(s);
+      } else if (e.text) {
+        const t = new PIXI.Text({
+          text: e.text,
+          style: { fontSize: 40, fill: 0xffd21f, fontWeight: 'bold',
+                   stroke: { color: 0x111111, width: 5 } } });
+        t.anchor.set(0.5);
+        t.position.set(gx * TILE + TILE / 2, gy * TILE + TILE / 2);
+        board.addChild(t);
+      } else if (!e.base) {
+        fallbackTile(gx, gy, ch); continue;
+      }
+      if (e.placeholder) {
+        const dot = new PIXI.Graphics();
+        dot.circle(gx * TILE + TILE - 8, gy * TILE + 8, 5).fill(0xffa500);
+        markLayer.addChild(dot);
+      }
+      const c = new PIXI.Text({
+        text: gx + ',' + gy,
+        style: { fontSize: 10, fill: 0xffffff,
+                 stroke: { color: 0x000000, width: 3 } } });
+      c.position.set(gx * TILE + 3, gy * TILE + 2);
+      coordLayer.addChild(c);
+    }
+  }
+
+  const hl = new PIXI.Graphics();
+  overlay.addChild(hl);
+  function highlight(gx, gy) {
+    hl.clear();
+    if (gx < 0) return;
+    hl.rect(gx * TILE + 1, gy * TILE + 1, TILE - 2, TILE - 2)
+      .stroke({ width: 2, color: 0x00c8ff });
+  }
+  const ins = {
+    cell: document.getElementById('ins-cell'),
+    char: document.getElementById('ins-char'),
+    label: document.getElementById('ins-label'),
+    sprite: document.getElementById('ins-sprite'),
+    status: document.getElementById('ins-status'),
+  };
+  function inspect(gx, gy, pinned) {
+    if (gx < 0 || gy < 0 || gx >= COLS || gy >= ROWS) return;
+    const ch = rows[gy][gx];
+    const e = legend[ch] || {};
+    highlight(gx, gy);
+    ins.cell.textContent = gx + ', ' + gy + (pinned ? ' (pinned)' : '');
+    ins.char.textContent = JSON.stringify(ch);
+    ins.label.textContent = e.label || 'UNKNOWN (not in legend)';
+    ins.sprite.textContent = [e.base, e.sprite].filter(Boolean).join(' + ') ||
+      (e.text ? 'text overlay ' + JSON.stringify(e.text) : 'none');
+    const miss = [e.base, e.sprite].filter(Boolean).filter((n) => missing.has(n));
+    ins.status.innerHTML = miss.length
+      ? 'MISSING: ' + miss.join(', ')
+      : (e.placeholder
+        ? '<span class="placeholder">PLACEHOLDER art</span>'
+        : 'final art');
+  }
+  let pinned = null;
+  app.canvas.addEventListener('pointermove', (ev) => {
+    if (pinned) return;
+    const r = app.canvas.getBoundingClientRect();
+    inspect(Math.floor((ev.clientX - r.left) / TILE),
+            Math.floor((ev.clientY - r.top) / TILE), false);
+  });
+  app.canvas.addEventListener('pointerleave', () => {
+    if (!pinned) { highlight(-1, -1); }
+  });
+  app.canvas.addEventListener('click', (ev) => {
+    const r = app.canvas.getBoundingClientRect();
+    pinned = [Math.floor((ev.clientX - r.left) / TILE),
+              Math.floor((ev.clientY - r.top) / TILE)];
+    inspect(pinned[0], pinned[1], true);
+  });
+
+  const headerEl = document.querySelector('header');
+  const panelEl = document.getElementById('panel');
+  const debugBox = document.getElementById('opt-debug');
+  function setDebug(show) {
+    debugBox.checked = show;
+    headerEl.style.display = show ? '' : 'none';
+    panelEl.style.display = show ? '' : 'none';
+  }
+  debugBox.addEventListener('change', () => setDebug(debugBox.checked));
+  document.addEventListener('keydown', (ev) => {
+    if ((ev.key === 'd' || ev.key === 'D') &&
+        !/INPUT|TEXTAREA/.test(ev.target.tagName)) {
+      setDebug(!debugBox.checked);
+    }
+  });
+  document.getElementById('opt-coords').addEventListener('change', (ev) => {
+    coordLayer.visible = ev.target.checked;
+  });
+  document.getElementById('opt-grid').addEventListener('change', (ev) => {
+    gridLayer.visible = ev.target.checked;
+  });
+  document.getElementById('opt-marks').addEventListener('change', (ev) => {
+    markLayer.visible = ev.target.checked;
+  });
+  const tintInput = document.getElementById('opt-tint');
+  tintInput.addEventListener('input', () => {
+    const v = parseInt(tintInput.value.slice(1), 16);
+    for (const s of placeholderSprites) s.tint = v;
+  });
+  document.getElementById('opt-tint-reset').addEventListener('click', () => {
+    tintInput.value = '#ffffff';
+    for (const s of placeholderSprites) s.tint = 0xffffff;
+  });
+
+  document.getElementById('subtitle').textContent =
+    'level ' + levelName + ' (' + COLS + 'x' + ROWS + ', source: ' +
+    (level.source || 'unknown') + ') — ' + spriteNames.size + ' sprites' +
+    (missing.size ? ', ' + missing.size + ' MISSING' : ', none missing');
+
+  document.body.dataset.ready = levelName;
+  document.title = 'ready:' + levelName + ' — Level Preview';
+
+  document.getElementById('opt-export').addEventListener('click', () => {
+    app.renderer.render(app.stage);
+    app.canvas.toBlob((blob) => {
+      if (!blob) { fail('Export failed: empty image.'); return; }
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = levelName + '-board.png';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    }, 'image/png');
+  });
+})();
+</script>
+</body>
+</html>

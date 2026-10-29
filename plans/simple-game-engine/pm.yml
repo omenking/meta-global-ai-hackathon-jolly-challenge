@@ -1,0 +1,981 @@
+# Project manager store — owned by tools/server.py; never hand-edit.
+# Board state lives here on main and is written only through the API.
+# YAML chosen per plan decision 1; SQLite is the fallback behind pm_store.
+features:
+- id: game-shell
+  title: Game shell and deterministic core
+  summary: A playable game page with a deterministic step function and session recording
+    from the first build.
+  status: proposed
+  priority: urgent
+  requires: []
+  spec:
+    goal: 'Provide the game page that every later mechanic plugs into. The engine
+      step function is pure and deterministic: given the initial level plus the ordered,
+      timestamped input log, the same run always produces the same states. The timer
+      is a real counting clock reproduced in replay from recorded t_ms timestamps,
+      never from unrecorded wall-clock reads.'
+    user_story: '**As a** player
+
+      **I want** to open the game, pick a level, and play
+
+      **So that** later mechanics have a deterministic, recordable home.'
+    use_case: Player opens the game URL, chooses a level or Test Level from the game
+      menu, and plays with the keyboard. Every play is recorded as a JSONL session
+      from the first playable build.
+    behavior: '- Given a level file, when the game loads, then it renders that level.
+
+      - Given the same initial level and the same timestamped input log, when the
+      log is replayed, then the same states result.
+
+      - Every play writes a JSONL session (header, steps, end) labelled by creator.'
+    edge_cases: '- Timer at any step is a function of recorded elapsed time (t_ms
+      since session start).
+
+      - Rendering is a view of state, never a driver of it.'
+    ui_feedback: '- Game menus list levels and Test Levels with a start action.
+
+      - Debug readout shows the last registered input.'
+    assets_needed: '- Sprites: reuse level-preview sprites from tools/static/level-sprites.
+
+      - Level JSON: existing levels/*.json format (rows + legend).'
+    acceptance: '- [ ] game.html renders a chosen level.
+
+      - [ ] Same log replays to the same states.
+
+      - [ ] Every play writes a JSONL session.
+
+      - [ ] A Test Level can be launched from the game menu.'
+    out_of_scope: '- Movement, timer-loss, keys, orbs and warp mechanics (later features).
+
+      - Procedural level generation.'
+    open_questions: '- Session file layout is fixed by the project-manager plan (header/steps/end/annotations).'
+    testing: 'Needs a mechanics playground: reuse — the game menu must launch Test
+      Levels; no dedicated room for this feature itself. Verification should record
+      play sessions for replay.'
+  branch: feat/game-shell
+  worktree: .worktrees/game-shell
+  test_level: null
+  review:
+    decision: pending
+    by: null
+    at: null
+  merged: null
+  sessions: []
+  archived: false
+  created: '2026-10-29T14:58:52'
+  updated: '2026-10-29T14:58:52'
+  comments: []
+  tasks:
+  - id: scaffold-game-page
+    feature_id: game-shell
+    title: Scaffold game.html extending the level preview
+    description: ''
+    acceptance: game.html renders a chosen level (rows + legend) in the browser.
+    status: proposed
+    priority: urgent
+    requires: []
+    order: 0
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: deterministic-core
+    feature_id: game-shell
+    title: 'Deterministic state core: pure step function'
+    description: ''
+    acceptance: Same initial level + timestamped input log always replays to the same
+      states; timer derived from recorded t_ms (real counting clock).
+    status: proposed
+    priority: urgent
+    requires: []
+    order: 1
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: session-recording
+    feature_id: game-shell
+    title: Session recording from the first playable build
+    description: ''
+    acceptance: Every play writes its JSONL header + steps + end line; no session
+      is ever unrecorded.
+    status: proposed
+    priority: urgent
+    requires: []
+    order: 2
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: game-menus
+    feature_id: game-shell
+    title: 'Game menus: level and Test Level selection'
+    description: ''
+    acceptance: A playground/Test Level can be launched from inside the game menu.
+    status: proposed
+    priority: urgent
+    requires: []
+    order: 3
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: keyboard-input
+    feature_id: game-shell
+    title: Keyboard input scaffold
+    description: ''
+    acceptance: WASD/arrow input is registered and visible in the debug readout.
+    status: proposed
+    priority: urgent
+    requires: []
+    order: 4
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+- id: player-movement
+  title: Player movement and collision
+  summary: Move Jolly one tile per keypress with wall, lock and gate collision.
+  status: proposed
+  priority: urgent
+  requires:
+  - game-shell
+  spec:
+    goal: Let the player move around a level one tile at a time. Movement is the first
+      mechanic built on the deterministic core, so its sessions become the first replayable
+      evidence.
+    user_story: '**As a** player
+
+      **I want** to move Jolly with WASD or arrow keys
+
+      **So that** I can explore the level and reach keys, orbs and the gate.'
+    use_case: Player presses a direction key; Jolly moves one tile if the target is
+      walkable floor, otherwise stays. The sprite follows the state position.
+    behavior: '- Given floor ahead, when the player presses a direction, then Jolly
+      moves one tile.
+
+      - Given a wall, lock or gate ahead, when the player presses toward it, then
+      Jolly does not move.'
+    edge_cases: '- Only floor is walkable in this feature; keys/orbs/gate behaviour
+      arrives in later features.
+
+      - Movement is one tile per keypress, recorded as a timestamped input.'
+    ui_feedback: '- Player sprite renders at the state position after each step.'
+    assets_needed: '- Sprites: jolly.png on floor_default.png.
+
+      - Level JSON: a Test Level empty room.'
+    acceptance: '- [ ] Empty-room Test Level loads with Jolly placed.
+
+      - [ ] One tile per keypress on floor only.
+
+      - [ ] Walls block movement.
+
+      - [ ] Sprite matches state position.
+
+      - [ ] Recorded session replays to the same end state.'
+    out_of_scope: '- Picking up keys/orbs, opening locks/gates (later features).'
+    open_questions: '- None.'
+    testing: 'Needs a mechanics playground: new — an empty-room Test Level (movement-room).
+      Verification should record play sessions for replay.'
+  branch: feat/player-movement
+  worktree: .worktrees/player-movement
+  test_level: movement-room
+  review:
+    decision: pending
+    by: null
+    at: null
+  merged: null
+  sessions: []
+  archived: false
+  created: '2026-10-29T14:58:52'
+  updated: '2026-10-29T14:58:52'
+  comments: []
+  tasks:
+  - id: movement-test-level
+    feature_id: player-movement
+    title: 'Test Level: empty room'
+    description: ''
+    acceptance: Empty-room Test Level loads and Jolly is placed.
+    status: proposed
+    priority: urgent
+    requires: []
+    order: 0
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: move-one-tile
+    feature_id: player-movement
+    title: Move one tile per keypress
+    description: ''
+    acceptance: Each keypress moves Jolly exactly one tile on floor.
+    status: proposed
+    priority: urgent
+    requires: []
+    order: 1
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: collision
+    feature_id: player-movement
+    title: Wall, lock and gate collision
+    description: ''
+    acceptance: Pressing into a wall, lock or closed gate does not move Jolly.
+    status: proposed
+    priority: urgent
+    requires: []
+    order: 2
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: sprite-follows-state
+    feature_id: player-movement
+    title: Player sprite follows state
+    description: ''
+    acceptance: Rendered sprite position always matches the state position.
+    status: proposed
+    priority: urgent
+    requires: []
+    order: 3
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+- id: session-logs-replay
+  title: Session logs, replay and forks
+  summary: Find, annotate, replay and fork recorded play sessions from the game UI.
+  status: proposed
+  priority: high
+  requires:
+  - player-movement
+  spec:
+    goal: 'Make recorded sessions reviewable: a reviewer can find a session in seconds,
+      replay it to pinpoint where something went wrong, and fork a new playable session
+      from any replay point. Built immediately after player-movement so every later
+      feature''s playtest evidence is a replayable session, not just screenshots.'
+    user_story: '**As a** reviewer
+
+      **I want** to find, replay and fork a recorded session
+
+      **So that** I can pinpoint the exact failing move instead of guessing from a
+      still image.'
+    use_case: 'Reviewer opens the Sessions menu, filters to the session, opens it
+      (or follows a ?replay=<id>&t=<seconds> deep link — time-based per NQ30), watches
+      the replay with speed controls (1x, 2x, 5x, 10x; NQ29: no idle-gap compression
+      so the countdown timer reads exactly), and forks from the paused point to try
+      a different action.'
+    behavior: '- Given the Sessions menu, when filtering by level, creator, feature,
+      date, result or annotation labels, then the named session is findable in seconds.
+
+      - Given a replay, when it plays, then inputs play back at their recorded t_ms
+      spacing (viewer speed 1x/2x/5x/10x, pause/step/scrub) and the per-step readout
+      shows step, position, inventory, orbs left, timer and the input.
+
+      - Given a paused replay, when the reviewer forks, then a new playable session
+      starts from that state; its header keeps the original created_by and adds forked_by,
+      forked_from and fork_step.
+
+      - Given a session, when a note or label is added afterwards, then it is appended
+      as an annotation line; replay ignores annotations. Labels are free-form lowercase
+      (NQ28), with failed and bug as suggested starters.
+
+      - Given a replay under a different level/engine version than recorded, then
+      the UI warns instead of diverging silently.'
+    edge_cases: '- Deep links are time-based: ?replay=<session-id>&t=<seconds> lands
+      on that moment (step index is derived from t_ms).
+
+      - Annotations are append-only; a correction is a new line.
+
+      - Only the game loop is deterministic; level generation happens outside it (NQ26).'
+    ui_feedback: '- Sessions menu with filters and a replay bar (play/pause, step,
+      scrubber, speed).
+
+      - Per-step state readout (step, position, inventory, orbs, timer, input).'
+    assets_needed: '- No new sprites.
+
+      - Session JSONL files under sessions/ (gitignored).'
+    acceptance: '- [ ] A named session is findable in seconds via filters.
+
+      - [ ] Notes/labels can be added after play without touching recorded steps.
+
+      - [ ] Replay with a t-based deep link lands on the exact moment; record-then-replay
+      reaches the same end state.
+
+      - [ ] Fork from a replay point is playable and keeps the original created_by.
+
+      - [ ] Version mismatch warns.'
+    out_of_scope: '- Spawning board tasks from a bug-labelled session (linking in
+      a comment is enough for v1).'
+    open_questions: '- Replay speed set is 1x/2x/5x/10x (NQ29); no idle-gap compression.'
+    testing: 'Needs a mechanics playground: none — verified against recorded sessions
+      of the movement-room Test Level. Verification records its own sessions.'
+  branch: feat/session-logs-replay
+  worktree: .worktrees/session-logs-replay
+  test_level: null
+  review:
+    decision: pending
+    by: null
+    at: null
+  merged: null
+  sessions: []
+  archived: false
+  created: '2026-10-29T14:58:52'
+  updated: '2026-10-29T14:58:52'
+  comments: []
+  tasks:
+  - id: sessions-menu
+    feature_id: session-logs-replay
+    title: Sessions menu in the game UI
+    description: ''
+    acceptance: Sessions list/filter by level, creator, feature, date, result and
+      labels finds a named session in seconds.
+    status: proposed
+    priority: high
+    requires: []
+    order: 0
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: annotate-session
+    feature_id: session-logs-replay
+    title: Annotate a session after play
+    description: ''
+    acceptance: Notes and labels (e.g. failed, bug) append to the session JSONL without
+      touching recorded steps.
+    status: proposed
+    priority: high
+    requires: []
+    order: 1
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: replay-player
+    feature_id: session-logs-replay
+    title: Replay player with deep links
+    description: ''
+    acceptance: Play/pause, step, scrub and speeds 1x/2x/5x/10x; ?replay=<id>&t=<seconds>
+      lands on the exact moment with a per-step state readout.
+    status: proposed
+    priority: high
+    requires: []
+    order: 2
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: fork-from-replay
+    feature_id: session-logs-replay
+    title: Fork from any replay step
+    description: ''
+    acceptance: Forked session keeps the original created_by and adds forked_by/forked_from/fork_step,
+      playable from that state.
+    status: proposed
+    priority: high
+    requires: []
+    order: 3
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: version-mismatch-warning
+    feature_id: session-logs-replay
+    title: Version-mismatch warning
+    description: ''
+    acceptance: Replaying under a different level/engine than recorded warns instead
+      of diverging silently.
+    status: proposed
+    priority: high
+    requires: []
+    order: 4
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+- id: level-timer
+  title: Level timer and restart
+  summary: A real counting countdown that ends the run at zero, with restart.
+  status: proposed
+  priority: high
+  requires:
+  - game-shell
+  spec:
+    goal: 'Give each level a time limit. The countdown is a real counting clock: it
+      counts down in real time while playing, and every input is recorded with its
+      elapsed time, so the timer value at any step is a function of the session log.'
+    user_story: '**As a** player
+
+      **I want** a visible countdown and a restart key
+
+      **So that** levels have pressure and a failed run is one keypress to retry.'
+    use_case: The HUD timer ticks down from the level limit. At zero the run is lost
+      with a message. Pressing R (or the restart button) restores position, orbs,
+      keys and timer.
+    behavior: '- Given a running level, when time passes, then the countdown decreases
+      in real time.
+
+      - Given the timer reaches zero, then the run ends as lost with a message.
+
+      - Given R or the restart button, then position, orbs, keys and timer are restored.'
+    edge_cases: '- Timer value at any replay step comes from recorded t_ms, never
+      unrecorded wall-clock reads.
+
+      - Restart starts a new recorded session.'
+    ui_feedback: '- HUD countdown display; loss message; restart button.'
+    assets_needed: '- Level JSON: a per-level time limit.'
+    acceptance: '- [ ] Countdown ticks from the level limit.
+
+      - [ ] Expiry ends the run with a message.
+
+      - [ ] Restart restores position/orbs/keys/timer.
+
+      - [ ] A timeout loss replays as a loss at the same moment.'
+    out_of_scope: '- Pause behaviour (not specified; out of scope until asked).'
+    open_questions: '- None.'
+    testing: 'Needs a mechanics playground: none — verified in any level; a short-limit
+      test level may be added by the implementing task if useful. Verification should
+      record play sessions for replay.'
+  branch: feat/level-timer
+  worktree: .worktrees/level-timer
+  test_level: null
+  review:
+    decision: pending
+    by: null
+    at: null
+  merged: null
+  sessions: []
+  archived: false
+  created: '2026-10-29T14:58:52'
+  updated: '2026-10-29T14:58:52'
+  comments: []
+  tasks:
+  - id: countdown
+    feature_id: level-timer
+    title: Countdown from level limit
+    description: ''
+    acceptance: HUD timer counts down in real time from the level limit.
+    status: proposed
+    priority: high
+    requires: []
+    order: 0
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: lose-at-zero
+    feature_id: level-timer
+    title: Lose at zero with message
+    description: ''
+    acceptance: Timer expiry ends the run as lost and shows a message.
+    status: proposed
+    priority: high
+    requires: []
+    order: 1
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: restart
+    feature_id: level-timer
+    title: Restart with R and button
+    description: ''
+    acceptance: R and the restart button restore position, orbs, keys and timer.
+    status: proposed
+    priority: high
+    requires: []
+    order: 2
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+- id: keys-and-locks
+  title: Keys and locks
+  summary: Pick up coloured keys into 8 inventory slots; matching locks dissolve and
+    consume the key.
+  status: proposed
+  priority: high
+  requires:
+  - player-movement
+  spec:
+    goal: Add coloured keys and matching lock blocks, the core gating mechanic beside
+      orbs. Keys occupy the player's 8 inventory slots; pressing against a matching
+      lock consumes one key and dissolves the lock.
+    user_story: '**As a** player
+
+      **I want** to pick up keys and open matching locks
+
+      **So that** I can open paths that were blocked.'
+    use_case: Player walks onto a key and it enters the first free inventory slot.
+      Pressing against a lock of the same colour consumes one matching key and the
+      lock dissolves. A wrong-colour lock does nothing.
+    behavior: '- Given a key tile, when the player walks onto it, then the key enters
+      the first free of 8 slots.
+
+      - Given a full inventory (8 keys), when the player walks onto a 9th key, then
+      the key stays on the floor.
+
+      - Given a matching lock, when the player presses against it holding that colour,
+      then one key is consumed and the lock dissolves.
+
+      - Given a wrong-colour lock, when the player presses against it, then nothing
+      happens.'
+    edge_cases: '- Inventory holds at most 8 keys.
+
+      - Lock colour must match key colour exactly.
+
+      - Dissolved locks become walkable floor.'
+    ui_feedback: '- Inventory slots (8) in the HUD; key and lock sprites per colour.'
+    assets_needed: '- Sprites: key_<colour>.png and wall_keyhole_<colour>.png (placeholders
+      exist in chip1 legend).
+
+      - Level JSON: keys-room Test Level.'
+    acceptance: '- [ ] Key pickup fills the first free slot.
+
+      - [ ] 9th key stays when full.
+
+      - [ ] Matching lock consumes the key and dissolves.
+
+      - [ ] Wrong-colour lock does nothing.
+
+      - [ ] Recorded session replays to the same end state.'
+    out_of_scope: '- Non-key inventory items.'
+    open_questions: '- None.'
+    testing: 'Needs a mechanics playground: new — a keys-room Test Level with keys,
+      locks and an orb. Verification should record play sessions for replay.'
+  branch: feat/keys-and-locks
+  worktree: .worktrees/keys-and-locks
+  test_level: keys-room
+  review:
+    decision: pending
+    by: null
+    at: null
+  merged: null
+  sessions: []
+  archived: false
+  created: '2026-10-29T14:58:52'
+  updated: '2026-10-29T14:58:52'
+  comments: []
+  tasks:
+  - id: keys-test-level
+    feature_id: keys-and-locks
+    title: 'Test Level: room with keys, locks and an orb'
+    description: ''
+    acceptance: Keys-room Test Level places keys, locks and an orb; all tiles are
+      placed and readable.
+    status: proposed
+    priority: high
+    requires: []
+    order: 0
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: key-pickup
+    feature_id: keys-and-locks
+    title: Walk onto key to pick it up
+    description: ''
+    acceptance: Walking onto a key puts it in the first free of 8 inventory slots.
+    status: proposed
+    priority: high
+    requires: []
+    order: 1
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: inventory-full
+    feature_id: keys-and-locks
+    title: Inventory full behaviour
+    description: ''
+    acceptance: With 8 keys held, a 9th key stays on the floor.
+    status: proposed
+    priority: high
+    requires: []
+    order: 2
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: matching-lock
+    feature_id: keys-and-locks
+    title: Matching lock press
+    description: ''
+    acceptance: Pressing a matching lock consumes one key and the lock dissolves.
+    status: proposed
+    priority: high
+    requires: []
+    order: 3
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: wrong-colour-lock
+    feature_id: keys-and-locks
+    title: Wrong-colour lock press
+    description: ''
+    acceptance: Pressing a lock without its colour does nothing.
+    status: proposed
+    priority: high
+    requires: []
+    order: 4
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+- id: orbs-and-gate
+  title: Orbs and gate
+  summary: Collect all orbs to open the gate that blocks the warp.
+  status: proposed
+  priority: high
+  requires:
+  - player-movement
+  spec:
+    goal: Add orbs and the gate. Orbs never enter the inventory; each one decrements
+      the orbs-left counter. The gate blocks like a wall until the counter reaches
+      zero, then it opens.
+    user_story: '**As a** player
+
+      **I want** collecting every orb to open the gate
+
+      **So that** I can reach the warp and finish the level.'
+    use_case: Player walks onto orbs; the orbs-left counter decrements. The gate is
+      shut and blocks movement while orbs remain. At zero orbs the gate opens and
+      becomes passable.
+    behavior: '- Given an orb, when the player walks onto it, then orbs-left decrements
+      (not inventory).
+
+      - Given orbs remaining, when the player presses the gate, then it blocks like
+      a wall.
+
+      - Given zero orbs left, then the gate opens, is passable, and its state/sprite
+      changes.'
+    edge_cases: '- Orbs are not inventory items.
+
+      - Gate state is part of deterministic state and replays exactly.'
+    ui_feedback: '- Orbs-left counter in the HUD; gate open/shut sprites.'
+    assets_needed: '- Sprites: orb.png, gate.png.
+
+      - Level JSON: orbs-room Test Level.'
+    acceptance: '- [ ] Orb pickup decrements orbs-left only.
+
+      - [ ] Gate blocks while orbs remain.
+
+      - [ ] Gate opens and is passable at zero.
+
+      - [ ] Recorded session replays to the same end state.'
+    out_of_scope: '- Warp progression itself (warp-and-levels feature).'
+    open_questions: '- None.'
+    testing: 'Needs a mechanics playground: new — an orbs-room Test Level with a gated
+      portal and orbs. Verification should record play sessions for replay.'
+  branch: feat/orbs-and-gate
+  worktree: .worktrees/orbs-and-gate
+  test_level: orbs-room
+  review:
+    decision: pending
+    by: null
+    at: null
+  merged: null
+  sessions: []
+  archived: false
+  created: '2026-10-29T14:58:52'
+  updated: '2026-10-29T14:58:52'
+  comments: []
+  tasks:
+  - id: orbs-test-level
+    feature_id: orbs-and-gate
+    title: 'Test Level: gated portal with orbs'
+    description: ''
+    acceptance: Orbs-room Test Level places a gated portal with orbs; the gate is
+      shut at start.
+    status: proposed
+    priority: high
+    requires: []
+    order: 0
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: orb-pickup
+    feature_id: orbs-and-gate
+    title: Walk onto orb
+    description: ''
+    acceptance: Walking onto an orb decrements orbs-left and does not use inventory.
+    status: proposed
+    priority: high
+    requires: []
+    order: 1
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: gate-blocks
+    feature_id: orbs-and-gate
+    title: Gate shut while orbs remain
+    description: ''
+    acceptance: The shut gate blocks movement like a wall.
+    status: proposed
+    priority: high
+    requires: []
+    order: 2
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: gate-opens
+    feature_id: orbs-and-gate
+    title: Gate opens at zero orbs
+    description: ''
+    acceptance: At zero orbs the gate opens, is passable, and state/sprites change.
+    status: proposed
+    priority: high
+    requires: []
+    order: 3
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+- id: warp-and-levels
+  title: Warp and level progression
+  summary: Stepping on the warp behind the open gate loads the next level.
+  status: proposed
+  priority: medium
+  requires:
+  - orbs-and-gate
+  spec:
+    goal: 'Complete the level loop: the warp tile behind the gate takes the player
+      to the next level, and progression state tracks the current level.'
+    user_story: '**As a** player
+
+      **I want** finishing a level to load the next one
+
+      **So that** I can progress through the level set.'
+    use_case: Player collects all orbs, the gate opens, the player steps on the warp,
+      and the next level loads with the level counter advanced.
+    behavior: '- Given an open gate, when the player steps on the warp, then the next
+      level loads.
+
+      - Given progression, then the current-level counter advances.'
+    edge_cases: '- Warp is only reachable behind the gate (gate rules from orbs-and-gate).
+
+      - Last-level behaviour follows the open question below until resolved.'
+    ui_feedback: '- Current-level display advances; next level renders.'
+    assets_needed: '- Level JSON: an ordered level list.'
+    acceptance: '- [ ] Warp behind the gate loads the next level.
+
+      - [ ] Level counter advances.'
+    out_of_scope: '- Level select beyond the game menu basics.'
+    open_questions: '- What happens after the last level: loop, win screen, or back
+      to menu? Resolve during implementation and record the choice here.'
+    testing: 'Needs a mechanics playground: reuse — the orbs-room Test Level plus
+      a second level to warp into. Verification should record play sessions for replay.'
+  branch: feat/warp-and-levels
+  worktree: .worktrees/warp-and-levels
+  test_level: null
+  review:
+    decision: pending
+    by: null
+    at: null
+  merged: null
+  sessions: []
+  archived: false
+  created: '2026-10-29T14:58:52'
+  updated: '2026-10-29T14:58:52'
+  comments: []
+  tasks:
+  - id: warp-loads-next
+    feature_id: warp-and-levels
+    title: Step on warp behind gate
+    description: ''
+    acceptance: Stepping on the warp behind the open gate loads the next level.
+    status: proposed
+    priority: medium
+    requires: []
+    order: 0
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: progression-state
+    feature_id: warp-and-levels
+    title: Progression state
+    description: ''
+    acceptance: Level counter advances; last-level behaviour follows the recorded
+      open-question decision.
+    status: proposed
+    priority: medium
+    requires: []
+    order: 1
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+- id: hud
+  title: 'HUD: timer, orbs, level and inventory'
+  summary: Live heads-up display per the full-level UI reference.
+  status: proposed
+  priority: medium
+  requires:
+  - game-shell
+  spec:
+    goal: 'Show the player the state that matters: countdown timer, orbs left, current
+      level, and the 8-slot inventory, live from game state, per scratchpad/full-level-ui.png.'
+    user_story: '**As a** player
+
+      **I want** to see the timer, orbs left, level and my keys
+
+      **So that** I always know my progress and what I am carrying.'
+    use_case: 'The HUD renders four readouts from state on every step: timer, orbs-left,
+      current level, and 8 inventory slots showing held keys.'
+    behavior: '- Given any state change, when it renders, then timer, orbs-left, level
+      and inventory all match state.'
+    edge_cases: '- Inventory shows at most 8 slots.
+
+      - HUD is a view of state; it never drives state.'
+    ui_feedback: '- Four HUD elements per scratchpad/full-level-ui.png.'
+    assets_needed: '- Sprites: key colour icons for inventory slots.'
+    acceptance: '- [ ] Timer display is live from state.
+
+      - [ ] Orbs-left display is live from state.
+
+      - [ ] Current-level display is live from state.
+
+      - [ ] Inventory shows held keys in 8 slots.'
+    out_of_scope: '- Score, lives or other HUD elements not in the reference.'
+    open_questions: '- None.'
+    testing: 'Needs a mechanics playground: none — verified in any level against state.
+      Verification may record sessions; screenshots are the primary evidence.'
+  branch: feat/hud
+  worktree: .worktrees/hud
+  test_level: null
+  review:
+    decision: pending
+    by: null
+    at: null
+  merged: null
+  sessions: []
+  archived: false
+  created: '2026-10-29T14:58:52'
+  updated: '2026-10-29T14:58:52'
+  comments: []
+  tasks:
+  - id: hud-timer
+    feature_id: hud
+    title: Timer display
+    description: ''
+    acceptance: HUD timer shows the live countdown from state.
+    status: proposed
+    priority: medium
+    requires: []
+    order: 0
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: hud-orbs
+    feature_id: hud
+    title: Orbs-left display
+    description: ''
+    acceptance: HUD shows the live orbs-left count from state.
+    status: proposed
+    priority: medium
+    requires: []
+    order: 1
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: hud-level
+    feature_id: hud
+    title: Current-level display
+    description: ''
+    acceptance: HUD shows the current level from state.
+    status: proposed
+    priority: medium
+    requires: []
+    order: 2
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
+  - id: hud-inventory
+    feature_id: hud
+    title: Inventory display (8 slots)
+    description: ''
+    acceptance: HUD shows held keys in 8 slots, live from state, per the full-level
+      UI reference.
+    status: proposed
+    priority: medium
+    requires: []
+    order: 3
+    kind: work
+    commit: null
+    archived: false
+    created: '2026-10-29T14:58:52'
+    updated: '2026-10-29T14:58:52'
+    comments: []
