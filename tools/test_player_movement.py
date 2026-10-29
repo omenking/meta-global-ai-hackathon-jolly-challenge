@@ -80,6 +80,69 @@ class MoveOneTileTests(unittest.TestCase):
                          self.result["steps"] + 1)
 
 
+COLLISION_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+function attempt(rows, input) {
+  const lvl = { name: 't', rows, legend: level.legend };
+  const s0 = core.initialState(lvl, 't');
+  const s1 = core.step(s0, { t_ms: 100, input });
+  return { from: s0.player, to: s1.player, steps: s1.steps };
+}
+const blockers = {};
+for (const ch of ['#', 'G', 'B', 'E', 'R', 'Y', '*', 'b', 'g', 'r', 'y', 'X', '?']) {
+  blockers[ch] = attempt(['###', '#P' + ch, '###'], 'right');
+}
+// Walls of the movement room: up, up (second hits border), then around.
+let s = core.initialState(level, 'movement-room');
+const wallPath = [];
+for (const [i, input] of ['up', 'up', 'left', 'left', 'left'].entries()) {
+  s = core.step(s, { t_ms: (i + 1) * 100, input });
+  wallPath.push({ ...s.player });
+}
+// Off-grid blocks, floor and the start tile do not.
+const open = { name: 't', rows: ['P.'], legend: level.legend };
+let o = core.initialState(open, 't');
+const offGrid = [];
+for (const [i, input] of ['left', 'right', 'right', 'left'].entries()) {
+  o = core.step(o, { t_ms: (i + 1) * 100, input });
+  offGrid.push({ ...o.player });
+}
+console.log(JSON.stringify({ blockers, wallPath, offGrid,
+  walkable: { floor: core.isWalkable(['.'], 0, 0),
+              start: core.isWalkable(['P'], 0, 0),
+              wall: core.isWalkable(['#'], 0, 0),
+              gate: core.isWalkable(['G'], 0, 0) } }));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class CollisionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.result = run_core(COLLISION_SCRIPT)
+
+    def test_wall_lock_and_gate_block(self):
+        for ch, r in self.result["blockers"].items():
+            self.assertEqual(r["to"], r["from"], f"tile {ch!r} must block")
+            self.assertEqual(r["steps"], 1)
+
+    def test_movement_room_walls_block(self):
+        self.assertEqual(self.result["wallPath"], [
+            {"x": 2, "y": 1}, {"x": 2, "y": 1},
+            {"x": 1, "y": 1}, {"x": 1, "y": 1}, {"x": 1, "y": 1},
+        ])
+
+    def test_off_grid_blocks_and_start_tile_is_walkable(self):
+        self.assertEqual(self.result["offGrid"], [
+            {"x": 0, "y": 0}, {"x": 1, "y": 0},
+            {"x": 1, "y": 0}, {"x": 0, "y": 0},
+        ])
+        self.assertEqual(self.result["walkable"],
+                         {"floor": True, "start": True,
+                          "wall": False, "gate": False})
+
+
 @unittest.skipUnless(shutil.which("node"), "node not available")
 class MovementRoomTests(unittest.TestCase):
     def test_movement_room_is_valid_empty_room(self):
