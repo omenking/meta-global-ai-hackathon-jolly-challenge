@@ -247,6 +247,7 @@
   const startedAt = performance.now();
   document.addEventListener('keydown', (ev) => {
     if (/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
+    if (window.__replayActive) return;
     const input = window.GameCore.inputForKey(ev.key);
     if (!input) return;
     ev.preventDefault();

@@ -57,6 +57,7 @@
         });
       },
       isEnded: function () { return ended; },
+      getLines: function () { return lines.slice(); },
       toJSONL: function () {
         return lines.map((l) => JSON.stringify(l)).join('\n') + '\n';
       },
