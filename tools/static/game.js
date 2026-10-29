@@ -12,6 +12,8 @@
   if (!window.PIXI) { fail('PixiJS failed to load (vendor/pixi.min.js).'); return; }
 
   const params = new URLSearchParams(location.search);
+  const embed = params.get('embed') === '1';
+  if (embed) document.body.classList.add('embed');
   const levelName = (params.get('level') || 'test-room').replace(/[^a-zA-Z0-9_-]/g, '');
 
   // Game menu: only Test Levels are offered for test play (review
@@ -88,11 +90,19 @@
   }));
 
   const app = new PIXI.Application();
-  await app.init({ width: COLS * TILE, height: ROWS * TILE, background: '#111' });
+  await app.init({ width: embed ? window.innerWidth : COLS * TILE,
+    height: embed ? window.innerHeight : ROWS * TILE, background: '#111' });
   document.getElementById('stage').appendChild(app.canvas);
   const scale = TILE / 512;
   const board = new PIXI.Container();
   app.stage.addChild(board);
+  if (embed) {
+    const fit = Math.min(window.innerWidth / (COLS * TILE),
+      window.innerHeight / (ROWS * TILE));
+    board.scale.set(fit);
+    board.position.set((window.innerWidth - COLS * TILE * fit) / 2,
+      (window.innerHeight - ROWS * TILE * fit) / 2);
+  }
 
   function fallbackTile(gx, gy, ch) {
     const g = new PIXI.Graphics();
@@ -383,7 +393,24 @@
       params.get('t') === null ? undefined : Number(params.get('t')));
   }
 
+  async function forkFromReplay() {
+    if (!replayId) { fail('Load a session replay before forking.'); return null; }
+    const newId = 'game-' + levelName + '-fork' + replayIndex + '-' +
+      Math.random().toString(36).slice(2, 8);
+    const res = await fetch('/api/game/sessions/' + encodeURIComponent(replayId) + '/fork', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fork_step: replayIndex, forked_by: actor, id: newId }) });
+    if (!res.ok) { fail('Fork failed'); return null; }
+    return newId;
+  }
   window.__game = {
+    loadReplay: loadReplay, playReplay: playReplay, pauseReplay: pauseReplay,
+    showReplay: showReplay, forkFromReplay: forkFromReplay,
+    getReplay: () => ({ id: replayId, index: replayIndex,
+      steps: replayStates ? replayStates.length - 1 : 0,
+      active: replayStates !== null,
+      readout: document.getElementById('replay-readout').textContent,
+      warning: document.getElementById('replay-warning').textContent }),
     getState: () => state,
     getPlayerSpritePos: () => playerSprite
       ? { x: playerSprite.position.x, y: playerSprite.position.y }

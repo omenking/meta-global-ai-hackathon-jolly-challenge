@@ -832,7 +832,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self._serve_file(target)
             if parts[:1] == ["api"]:
                 return _send(self, 404, {"error": "not found"})
-            if parts and parts[0] == "pm":
+            if parts and parts[0] in ("pm", "game"):
                 app_index = STATIC_DIR / "app" / "index.html"
                 if app_index.is_file():
                     return self._serve_file(app_index)

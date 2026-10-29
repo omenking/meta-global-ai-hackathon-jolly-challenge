@@ -26,6 +26,11 @@
   #error { display: none; background: #fdecea; border: 1px solid #c00;
            border-radius: 6px; padding: 12px 14px; margin: 16px; }
   button, select { font-size: 13px; padding: 4px 10px; }
+  body.embed { overflow: hidden; background: #111; }
+  body.embed header, body.embed #panel { display: none; }
+  body.embed main { padding: 0; }
+  body.embed #stage { border: 0; width: 100vw; height: 100vh; }
+  body.embed #stage canvas { width: 100% !important; height: 100% !important; display: block; }
 </style>
 </head>
 <body>
