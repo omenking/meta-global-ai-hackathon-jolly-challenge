@@ -94,9 +94,12 @@ class TaskTest(unittest.TestCase):
     def test_move_and_claim(self):
         data = _data()
         create_task(data, "game-shell", "t1", "One")
+        # Tasks have no in_review stage: the agent saying done means done.
         moved = move_task(data, "game-shell", "t1", "in_review", order=5)
-        self.assertEqual(moved["status"], "in_review")
+        self.assertEqual(moved["status"], "completed")
         self.assertEqual(moved["order"], 5)
+        moved = move_task(data, "game-shell", "t1", "completed")
+        self.assertEqual(moved["status"], "completed")
         claim_task(data, "game-shell", "t1")
         with self.assertRaises(StoreError):
             claim_task(data, "game-shell", "t1")
@@ -160,10 +163,25 @@ class ReviewAndSessionTest(unittest.TestCase):
         # approved_for_merge must NOT complete the feature.
         self.assertNotEqual(f["status"], "completed")
 
+    def test_stored_in_review_task_loads_as_completed(self):
+        data = _data()
+        create_task(data, "game-shell", "t1", "One")
+        get_feature(data, "game-shell")["tasks"][0]["status"] = "completed"
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "pm.yml"
+            save_pm(data, "", path)
+            text = path.read_text(encoding="utf-8").replace(
+                "status: completed", "status: in_review", 1)
+            path.write_text(text, encoding="utf-8")
+            loaded, _ = load_pm(path)
+        self.assertEqual(loaded["features"][0]["tasks"][0]["status"], "completed")
+
     def test_merge_completes(self):
         data = _data()
         create_task(data, "game-shell", "t1", "One")
         update_task(data, "game-shell", "t1", {"status": "in_review"})
+        self.assertEqual(get_feature(data, "game-shell")["tasks"][0]["status"],
+                         "completed")
         f = record_merge(data, "game-shell", "abc123")
         self.assertEqual(f["status"], "completed")
         self.assertEqual(f["merged"]["commit"], "abc123")

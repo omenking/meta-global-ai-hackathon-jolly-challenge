@@ -81,7 +81,8 @@ down into **Tasks**, the small units that get picked up, dragged across
 the board, and commented on. The feature — rolled up in the UI with its
 tasks, comments, screenshots and linked play sessions — is the review
 unit (our "PR"; there are no GitHub PRs). The human approves a feature,
-playtests it from the review page, then clicks **Approve for merge**;
+playtests it and reviews it on the feature page (there is no separate
+review page), then clicks **Approve for merge**;
 Muse Code performs the merge and only then does the feature become
 `completed`.
 

@@ -1,7 +1,7 @@
 ---
 title: Game shell and deterministic core
 summary: A playable game page with a deterministic step function and session recording from the first build.
-status: proposed
+status: completed
 priority: urgent
 requires:
   []
@@ -74,29 +74,154 @@ Needs a mechanics playground: reuse — the game menu must launch Test Levels; n
 
 ### game-shell/scaffold-game-page — Scaffold game.html extending the level preview
 
-- Status: `proposed` · Priority: `urgent` · Kind: `work`
+- Status: `completed` · Priority: `urgent` · Kind: `work` · Commit: `0085d35`
 - Acceptance: game.html renders a chosen level (rows + legend) in the browser.
 
 ### game-shell/deterministic-core — Deterministic state core: pure step function
 
-- Status: `proposed` · Priority: `urgent` · Kind: `work`
+- Status: `completed` · Priority: `urgent` · Kind: `work` · Commit: `083abe3`
 - Acceptance: Same initial level + timestamped input log always replays to the same states; timer derived from recorded t_ms (real counting clock).
 
 ### game-shell/session-recording — Session recording from the first playable build
 
-- Status: `proposed` · Priority: `urgent` · Kind: `work`
+- Status: `completed` · Priority: `urgent` · Kind: `work` · Commit: `30f155c`
 - Acceptance: Every play writes its JSONL header + steps + end line; no session is ever unrecorded.
 
 ### game-shell/game-menus — Game menus: level and Test Level selection
 
-- Status: `proposed` · Priority: `urgent` · Kind: `work`
+- Status: `completed` · Priority: `urgent` · Kind: `work` · Commit: `b235422`
 - Acceptance: A playground/Test Level can be launched from inside the game menu.
 
 ### game-shell/keyboard-input — Keyboard input scaffold
 
-- Status: `proposed` · Priority: `urgent` · Kind: `work`
+- Status: `completed` · Priority: `urgent` · Kind: `work` · Commit: `69ff92b`
 - Acceptance: WASD/arrow input is registered and visible in the debug readout.
+- Evidence: `screenshots/features/game-shell/20261029-155009-chip1-latest.png`
+- Evidence: `screenshots/features/game-shell/20261029-155009-test-room-latest.png`
+- Session: `game-chip1-20261029194950-sin94p` (chip1, agent, quit)
+- Session: `game-test-room-20261029194951-849sva` (test-room, agent, quit)
+
+### game-shell/review-fixes-1 — Review fixes: test-room-only test play, gate in room, Request-changes feedback
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes` · Commit: `7ccdc4e`
+- Description: Human review 2026-10-29: (1) test play opens the full chip1 level instead of the minimal 7x6 test room (player, orb, open gate); make the test room the only level the game menu/default shows, preserve chip1 elsewhere (levels/ file + level preview). (2) Pressing Request changes appeared to do nothing (it recorded twice, duplicate comments): give the Review page visible confirmation and prevent duplicate submission. Earlier note: base game hard to judge until movement exists — move on to later features after this.
+- Acceptance: Game opens test-room by default and menu offers only the test room; chip1 preserved outside the game menu; test-room contains player+orb+gate; Review Request changes shows confirmation, clears comment, and cannot double-submit.
+- Evidence: `screenshots/features/game-shell/20261029-160630-test-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-10-29T15:50:20 · agent · on `game-shell`
+
+Ready for review: Game shell and deterministic core (5/5 tasks in review)
+
+Tasks:
+- game-shell/scaffold-game-page: Scaffold game.html — in_review, commit 0085d35 — game.html renders chosen level
+- game-shell/deterministic-core: Pure step function — in_review, commit 083abe3 — same log replays to same states, timer from recorded t_ms
+- game-shell/session-recording: JSONL recording — in_review, commit 30f155c — header/steps/end from first build, no unrecorded play
+- game-shell/game-menus: Level/Test Level menus — in_review, commit b235422 — test-room launched from game menu
+- game-shell/keyboard-input: WASD/arrows debug — in_review, commit 69ff92b — replay digest match in browser play
+
+Evidence:
+- Screenshots: attached (chip1 + test-room game captures)
+- Sessions: game-chip1-20261029194950-sin94p (chip1, agent, quit), game-test-room-20261029194951-849sva (test-room, agent, quit) — preserved at sessions/features/game-shell/
+- Tests: full repo suite 89 ok (python3 -m unittest discover -s tools); game suites 19 ok
+
+Playtest:
+- Worktree: .worktrees/game-shell
+- Start: cd .worktrees/game-shell && python3 tools/server.py --port 8333 — board server stays on 8322
+- Game: http://127.0.0.1:8333/static/game.html — open chip1 or the Test Level test-room from the game menu; WASD/arrows register in debug readout, Replay log verifies determinism.
+- Evidence: `screenshots/features/game-shell/20261029-155009-chip1-latest.png`
+- Evidence: `screenshots/features/game-shell/20261029-155009-test-room-latest.png`
+- Session: `game-chip1-20261029194950-sin94p` (chip1, agent, quit)
+
+### 2026-10-29T15:59:51 · human · on `game-shell`
+
+Right now its hard to tell if the base game is working correctly. We really need to implement basic features live movement. So we'll move onto other features. until then.
+
+### 2026-10-29T16:02:32 · human · on `game-shell`
+
+I can see in the screenshot a simple test room, but I also our full level. When I go and test play. I am getting the full level and now that minimal level that had just the orb, open gate and the player in the  7x6 room. We should see that as the only level, we can preserve the original level somwhere else.
+
+### 2026-10-29T16:02:43 · human · on `game-shell`
+
+I can see in the screenshot a simple test room, but I also our full level. When I go and test play. I am getting the full level and now that minimal level that had just the orb, open gate and the player in the  7x6 room. We should see that as the only level, we can preserve the original level somwhere else.
+
+### 2026-10-29T16:06:38 · agent · on `game-shell`
+
+Ready for re-review: Game shell and deterministic core (6/6 tasks in review, incl. review-fixes-1 commit 7ccdc4e)
+
+Fixes since last review:
+- Test play opens only the 7x6 test room (player, orb, gate); full chip1 level preserved in levels/ + Level Preview, out of the game menu.
+- Request changes now visibly confirms recording and prevents duplicate submits (PM bundle rebuilt; note the live board at 8322 still runs the pre-fix bundle until this branch merges — the button did record, it just gave no feedback).
+- Earlier note acknowledged: base game stays a shell until player-movement; that is the next feature after this merges.
+
+Evidence: new test-room screenshot attached; full repo suite 93 tests ok; browser play verified on worktree build (default test-room, replay digest match, session JSONL written).
+
+Playtest:
+- Start: cd .worktrees/game-shell && python3 tools/server.py --port 8333
+- Game: http://127.0.0.1:8333/static/game.html — opens test-room; only Test Levels in the menu.
+- Evidence: `screenshots/features/game-shell/20261029-160630-test-room-latest.png`
+
+### 2026-10-29T16:14:54 · human · on `game-shell`
+
+Its good now!
+
+### 2026-10-29T16:22:15 · agent · on `game-shell`
+
+Merged to main as b1e2520 (merge --no-ff of feat/game-shell, 6 task commits preserved). Verified on merged main: game + PM suites 43 ok; full suite 93 with only the pre-existing playwright-missing error in test_level_capture (also failing before the merge). Game smoke on merged main: /static/game.html 200, /api/game/levels lists chip1 + test-room.
+
+### 2026-10-29T15:45:05 · agent · on `game-shell/scaffold-game-page`
+
+Starting: scaffold tools/static/game.html extending level-preview.html, reusing level JSON (rows+legend) and level-sprites. Verify: unit tests + run game on spare port, screenshot chosen level.
+
+### 2026-10-29T15:46:21 · agent · on `game-shell/scaffold-game-page`
+
+Done: tools/static/game.html + game.js render a chosen level (rows+legend, level-sprites, Pixi) with body[data-ready] for capture. Commit 0085d35. Tests: python -m unittest tools.test_game_page — 3 ok. Playable screenshot evidence in final roll-up.
+
+### 2026-10-29T15:46:21 · agent · on `game-shell/deterministic-core`
+
+Starting: pure step function in tools/static/game-core.js (UMD, Node-testable); state advances only via step(state,input{t_ms}); timer = recorded t_ms elapsed; replay(level,log) reproduces states. Verify: node-driven unittest for determinism/purity/timer.
+
+### 2026-10-29T15:46:54 · agent · on `game-shell/deterministic-core`
+
+Done: tools/static/game-core.js pure step(state,input{t_ms}) + replay + stateDigest; timer=recorded t_ms elapsed (counting clock), backwards t_ms rejected. Wired into game.js debug readout. Commit 083abe3. Tests: python -m unittest tools.test_game_core tools.test_game_page — 8 ok (same-log replay identical, step purity).
+
+### 2026-10-29T15:46:54 · agent · on `game-shell/session-recording`
+
+Starting: JSONL session recorder (header/steps/end per PM plan layout) in game-session.js + POST /api/game/sessions writer in tools/game_sessions.py; recording starts on level load, flushes on every step, ends on End/pagehide. Verify: unittest for file layout + server round-trip.
+
+### 2026-10-29T15:47:40 · agent · on `game-shell/session-recording`
+
+Done: game-session.js recorder (header/steps/end layout from PM plan) + tools/game_sessions.py validated atomic writer + POST /api/game/sessions. Recording starts on load, flushes each step, ends on End button/pagehide. Commit 30f155c. Tests: python -m unittest tools.test_game_sessions tools.test_game_core tools.test_game_page — 12 ok.
+
+### 2026-10-29T15:47:40 · agent · on `game-shell/game-menus`
+
+Starting: GET /api/game/levels(+id) listing levels/ with test flag, levels/test-room.json Test Level, game menu (Levels + Test Levels selects + Start) in game.html/game.js. Verify: unittest + launch test-room from menu in browser check.
+
+### 2026-10-29T15:48:30 · agent · on `game-shell/game-menus`
+
+Done: GET /api/game/levels + /api/game/levels/<id> (tools/game_levels.py), levels/test-room.json Test Level, prep script stages all levels, game menu Levels/Test Levels selects + Start in game.html/game.js. Commit b235422. Tests: python -m unittest tools.test_game_menus (+prior suites) — 17 ok.
+
+### 2026-10-29T15:48:30 · agent · on `game-shell/keyboard-input`
+
+Starting: WASD/arrow keydown -> GameCore.inputForKey -> pure step with recorded t_ms, visible in debug readout (last input), recorded as session step; Replay button replays the log and compares state digest. Verify: node/unittest mapping + browser play check.
+
+### 2026-10-29T15:50:15 · agent · on `game-shell/keyboard-input`
+
+Done: WASD/arrows via GameCore.inputForKey -> pure step with recorded t_ms, Last input in debug readout, Replay log button compares digest. Commit 69ff92b. Tests: tools.test_game_input + all game suites ok; full repo suite 89 ok (python3). Browser play (headless, worktree port 8333): pressed w/right/s/a, dbg-input=left @ t_ms 601, replay match c51a8425 (4 inputs), no console errors; session JSONL header/steps/end written for chip1 and test-room.
+- Evidence: `screenshots/features/game-shell/20261029-155009-chip1-latest.png`
+- Evidence: `screenshots/features/game-shell/20261029-155009-test-room-latest.png`
+- Session: `game-chip1-20261029194950-sin94p` (chip1, agent, quit)
+- Session: `game-test-room-20261029194951-849sva` (test-room, agent, quit)
+
+### 2026-10-29T16:03:41 · agent · on `game-shell/review-fixes-1`
+
+Starting: review-fixes-1 in existing .worktrees/game-shell. Fix game default/menu to test-room only (chip1 preserved in levels/ + preview), add gate to test-room, fix Review page feedback/dup-submit in tools/web/src/App.jsx and rebuild bundle. Verify: focused tests fail-first, browser test play, review-action UI check.
+
+### 2026-10-29T16:06:38 · agent · on `game-shell/review-fixes-1`
+
+Done (commit 7ccdc4e):
+1. Test play now shows only the test room: game default level is test-room, the game menu offers only Test Levels (no chip1 choice). Test room is 7x6 with player, orb and gate. The full chip1 level is preserved in levels/chip1.json and the Level Preview (explicit ?level=chip1 still loads it).
+2. Request changes feedback: it had actually recorded (decision changes_requested, 16:02) but showed nothing, causing a duplicate press/comment. Review page now shows a Recorded: confirmation, clears the comment box, and disables both buttons after recording. PM web bundle rebuilt.
+Tests: focused tests failed before/fixed after; full repo suite 93 ok (python3). Browser: default game loads test-room, menu=[test-room], keys+replay match, no console errors; Review page probe on the worktree build: POST 200, notice visible, textarea cleared.
+- Evidence: `screenshots/features/game-shell/20261029-160630-test-room-latest.png`

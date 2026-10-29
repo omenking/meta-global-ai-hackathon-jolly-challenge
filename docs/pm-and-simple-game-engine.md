@@ -20,3 +20,7 @@ The UI was becoming an issues so we looked for a component UI and added HeroUI
 I rediscovered that muse-wonder-1.0 is avaible as an API and so I have started using wonder more generously. This would have save us so much trouble if I realized this sooner.
 
 As using Spark was not efficent in many cases for UI development.
+
+## Big Open Question
+
+Should we allow feature development and task development to be driven by Spark or Wonder?

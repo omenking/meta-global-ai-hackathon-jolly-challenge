@@ -31,6 +31,15 @@ SESSIONS_ROOT = Path(__file__).resolve().parent.parent / "sessions"
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
 STATUSES = ("proposed", "approved", "in_progress", "in_review",
             "completed", "blocked", "abandoned")
+# Tasks are agent-managed: when the agent says a task is done it is done
+# (the human inspects task-level code directly), so tasks have no
+# in_review stage. in_review remains a feature-only status.
+TASK_STATUSES = tuple(s for s in STATUSES if s != "in_review")
+
+
+def _task_status(value: object) -> str:
+    status = _check_status(value)
+    return "completed" if status == "in_review" else status
 PRIORITIES = ("low", "medium", "high", "urgent")
 AUTHORS = ("human", "agent")
 REVIEW_DECISIONS = ("pending", "changes_requested", "approved_for_merge")
@@ -201,7 +210,7 @@ def _normalize_task(entry: object, feature_id: str) -> dict:
     title = entry.get("title") or ""
     if not isinstance(title, str) or not title.strip():
         raise StoreError(f"task {tid!r} title must not be empty")
-    status = _check_status(entry.get("status") or "proposed")
+    status = _task_status(entry.get("status") or "proposed")
     priority = _check_priority(entry.get("priority") or "medium")
     kind = entry.get("kind") or "work"
     if kind not in TASK_KINDS:
@@ -564,7 +573,7 @@ def update_task(data: dict, fid: str, tid: str, fields: dict) -> dict:
                 raise StoreError("task title must not be empty")
             task["title"] = value.strip()
         elif key == "status":
-            task["status"] = _check_status(value)
+            task["status"] = _task_status(value)
         elif key == "priority":
             task["priority"] = _check_priority(value)
         elif key == "requires":
@@ -600,7 +609,7 @@ def move_task(data: dict, fid: str, tid: str, status: str,
     """Set a task's status and (optionally) its order among siblings."""
     feature = get_feature(data, fid)
     task = get_task(feature, tid)
-    task["status"] = _check_status(status)
+    task["status"] = _task_status(status)
     if order is not None:
         try:
             task["order"] = int(order)  # type: ignore[arg-type]
@@ -758,7 +767,7 @@ def record_merge(data: dict, fid: str, commit: str) -> dict:
     feature["merged"] = {"commit": str(commit).strip(), "at": _now()}
     feature["status"] = "completed"
     for t in feature["tasks"]:
-        if not t.get("archived") and t["status"] == "in_review":
+        if not t.get("archived") and t["status"] in ("in_review", "in_progress"):
             t["status"] = "completed"
             _touch(t)
     _touch(feature)

@@ -3,6 +3,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { api, evidenceUrl, PM } from './api.js';
 
 const STATUSES = ['proposed', 'approved', 'in_progress', 'in_review', 'completed', 'blocked', 'abandoned'];
+// Tasks are agent-managed and have no in_review stage: done means completed.
+// Legacy stored in_review tasks display as completed.
+const TASK_STATUSES = STATUSES.filter((s) => s !== 'in_review');
+export const taskStatus = (t) => (t.status === 'in_review' ? 'completed' : t.status);
 const PRIORITIES = ['low', 'medium', 'high', 'urgent'];
 const SPEC_KEYS = [
   ['goal', 'Goal'], ['user_story', 'User Story'], ['use_case', 'High-Level Use Case'],
@@ -39,7 +43,8 @@ function parseRoute(pathname) {
   if (parts[1] === 'features' && parts[2]) {
     const fid = parts[2];
     if (parts[3] === 'edit') return { view: 'feature-edit', fid };
-    if (parts[3] === 'review') return { view: 'review', fid };
+    // Review lives on the feature page; old /review links land there.
+    if (parts[3] === 'review') return { view: 'feature-show', fid };
     if (parts[3] === 'tasks' && parts[4] === 'new') return { view: 'task-new', fid };
     if (parts[3] === 'tasks' && parts[4] && parts[5] === 'edit') {
       return { view: 'task-edit', fid, tid: parts[4] };
@@ -55,6 +60,9 @@ export const taskPath = (fid, tid) => `${featurePath(fid)}/tasks/${encodeURIComp
 
 function StatusChip({ status }) {
   return <Chip color={STATUS_COLOR[status] || 'default'} variant="soft">{status}</Chip>;
+}
+function TaskStatusChip({ task }) {
+  return <StatusChip status={taskStatus(task)} />;
 }
 function PriorityChip({ priority }) {
   return <Chip color={PRIORITY_COLOR[priority] || 'default'} variant="soft">{priority}</Chip>;
@@ -293,7 +301,6 @@ function FeatureCard({ feature, showArchived }) {
         <span className="flex-1" />
         <Button size="md" variant="outline" onPress={() => navigate(featurePath(feature.id))}>View</Button>
         <Button size="md" variant="outline" onPress={() => navigate(`${featurePath(feature.id)}/edit`)}>Edit</Button>
-        <Button size="md" variant="outline" onPress={() => navigate(`${featurePath(feature.id)}/review`)}>Review</Button>
       </div>
       <p className="mt-1 text-base text-neutral-600 dark:text-neutral-300">{feature.summary}</p>
       <p className="text-sm text-neutral-500">
@@ -305,7 +312,7 @@ function FeatureCard({ feature, showArchived }) {
         {tasks.map((t) => (
           <div key={t.id} className="flex flex-wrap items-center gap-2 py-2">
             <a className="text-base hover:underline" {...linkProps(taskPath(feature.id, t.id))}>{t.title}</a>
-            <StatusChip status={t.status} />
+            <TaskStatusChip task={t} />
             <PriorityChip priority={t.priority} />
             <span className="text-sm text-neutral-500">
               {feature.id}/{t.id}{t.commit ? ` · ${t.commit}` : ''}{t.archived ? ' · archived' : ''}
@@ -343,12 +350,12 @@ function Board({ features, showArchived, featureFilter, setFeatureFilter, reload
         </Field>
       </div>
       <div className="pm-scroll grid auto-cols-[240px] grid-flow-col gap-3 overflow-x-auto pb-2">
-        {STATUSES.map((status) => {
+        {TASK_STATUSES.map((status) => {
           const cards = [];
           for (const f of features) {
             if (featureFilter && f.id !== featureFilter) continue;
             for (const t of sortTasks(f.tasks)) {
-              if (t.status !== status) continue;
+              if (taskStatus(t) !== status) continue;
               if (!showArchived && t.archived) continue;
               cards.push({ f, t });
             }
@@ -386,7 +393,7 @@ function Board({ features, showArchived, featureFilter, setFeatureFilter, reload
 
 function SpecShow({ spec }) {
   return (
-    <div className="space-y-3">
+    <div className="grid gap-3 lg:grid-cols-2">
       {SPEC_KEYS.map(([key, title]) => (
         <section key={key} className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
           <h3 className="text-lg font-semibold">{title}</h3>
@@ -399,11 +406,113 @@ function SpecShow({ spec }) {
   );
 }
 
+function collectEvidence(feature) {
+  const gallery = [];
+  const sessions = [];
+  const collect = (c) => {
+    for (const a of c.attachments || []) if (!gallery.includes(a)) gallery.push(a);
+    for (const s of c.session_refs || []) sessions.push(s);
+  };
+  (feature.comments || []).forEach(collect);
+  (feature.tasks || []).forEach((t) => (t.comments || []).forEach(collect));
+  (feature.sessions || []).forEach((s) => sessions.push(s));
+  return { gallery, sessions };
+}
+
+function ReviewPanel({ feature, reload, setError }) {
+  const [comment, setComment] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState('');
+  const decision = feature.review?.decision || 'pending';
+  async function review(dec) {
+    if (dec === 'changes_requested' && !comment.trim()) {
+      setError('Request changes requires a comment.'); return;
+    }
+    setBusy(true); setNotice('');
+    try {
+      await api('POST', `${PM}/features/${encodeURIComponent(feature.id)}/review`,
+        { decision: dec, by: 'human', comment });
+      setComment('');
+      setNotice(dec === 'approved_for_merge'
+        ? 'Recorded: approved for merge. The agent merges; only then completed.'
+        : 'Recorded: changes requested. The feature is back in progress.');
+      await reload();
+    } catch (e) { setError(e.message); } finally { setBusy(false); }
+  }
+  return (
+    <Card className="space-y-3 p-5">
+      <h2 className="text-lg font-semibold">Review</h2>
+      <p className="text-base text-neutral-600 dark:text-neutral-300">
+        Decision: <strong>{decision}</strong>
+        {decision === 'approved_for_merge' && ' — approved, awaiting agent merge'}
+      </p>
+      {notice && <p className="rounded border border-emerald-300 bg-emerald-50 p-3 text-base text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200" role="status">{notice}</p>}
+      <Field label="Comment (required for Request changes)">
+        <textarea className={inputCls} rows={3} value={comment}
+          onChange={(e) => setComment(e.target.value)} />
+      </Field>
+      <div className="flex flex-wrap gap-2">
+        <Button size="md" variant="danger" isPending={busy} isDisabled={busy || !!notice}
+          onPress={() => review('changes_requested')}>Request changes</Button>
+        <Button size="md" isPending={busy} isDisabled={busy || !!notice}
+          onPress={() => review('approved_for_merge')}>Approve for merge</Button>
+      </div>
+      <p className="text-sm text-neutral-500">
+        Tasks are agent-managed: done tasks are completed as the agent reports
+        them, so inspect task code/commits above. Approving only records the
+        decision; the agent merges and only then the feature is completed.
+      </p>
+    </Card>
+  );
+}
+
+function EvidencePanel({ feature }) {
+  const { gallery, sessions } = collectEvidence(feature);
+  const wt = feature.worktree || `.worktrees/${feature.id}`;
+  return (
+    <Card className="space-y-3 p-5">
+      <h2 className="text-lg font-semibold">Evidence &amp; playtest</h2>
+      <div>
+        <h3 className="text-base font-semibold">Screenshots</h3>
+        {gallery.length ? (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {gallery.map((a) => (
+              <a key={a} href={evidenceUrl(a)} target="_blank" rel="noreferrer">
+                <img className="h-28 w-44 rounded border object-cover" src={evidenceUrl(a)} alt={a} />
+              </a>
+            ))}
+          </div>
+        ) : <p className="text-base text-neutral-500">No screenshot evidence yet.</p>}
+      </div>
+      <div>
+        <h3 className="text-base font-semibold">Linked sessions</h3>
+        {sessions.length ? sessions.map((s, i) => (
+          <p key={i} className="text-base text-neutral-600 dark:text-neutral-300">
+            Session {s.id} · level {s.level} · creator {s.created_by} · result {s.result}
+            {s.path ? ` · ${s.path}` : ''}
+          </p>
+        )) : <p className="text-base text-neutral-500">No linked sessions yet.</p>}
+      </div>
+      <div>
+        <h3 className="text-base font-semibold">Playtest</h3>
+        <p className="text-base text-neutral-600 dark:text-neutral-300">
+          Test Level: {feature.test_level || '—'} (start it from the game menu in the
+          worktree build; the manager never starts levels). Worktree: {wt} ·
+          branch: {feature.branch || `feat/${feature.id}`}
+        </p>
+        <pre className="mt-2 overflow-x-auto rounded bg-neutral-900 p-3 text-sm text-emerald-200">
+{`cd ${wt} && python tools/server.py --port 8323
+Then open http://127.0.0.1:8323/pm/features/${feature.id} and start Test Level ${feature.test_level || '<test_level>'} from the game menu.`}
+        </pre>
+      </div>
+    </Card>
+  );
+}
+
 function FeatureShow({ feature, reload, setError }) {
   return (
     <div className="space-y-4">
-      <PageLinks items={[['← Board list', '/pm'], ['Kanban', '/pm/board'],
-        ['Review', `${featurePath(feature.id)}/review`]]} />
+      <PageLinks items={[['← Board list', '/pm'], ['Kanban', '/pm/board']]} />
       <Card className="p-5">
         <div className="flex flex-wrap items-start gap-3">
           <div className="min-w-60 flex-1">
@@ -427,49 +536,61 @@ function FeatureShow({ feature, reload, setError }) {
           {feature.archived && <Chip variant="soft">archived</Chip>}
           <Progress progress={feature.progress} />
         </div>
-        <dl className="mt-4 grid gap-x-6 gap-y-2 text-base sm:grid-cols-2">
-          <div><dt className="font-semibold">Feature id</dt><dd>{feature.id}</dd></div>
-          <div><dt className="font-semibold">Test level</dt><dd>{feature.test_level || '—'}</dd></div>
-          <div><dt className="font-semibold">Requires</dt><dd>{(feature.requires || []).join(', ') || '—'}</dd></div>
-          <div><dt className="font-semibold">Unblocks</dt><dd>{(feature.unblocks || []).join(', ') || '—'}</dd></div>
-          <div><dt className="font-semibold">Branch</dt><dd>{feature.branch || '—'}</dd></div>
-          <div><dt className="font-semibold">Worktree</dt><dd>{feature.worktree || '—'}</dd></div>
-          <div><dt className="font-semibold">Review decision</dt><dd>{feature.review?.decision || 'pending'}</dd></div>
-          <div><dt className="font-semibold">Merged</dt><dd>{feature.merged ? `${feature.merged.commit} · ${feature.merged.at}` : '—'}</dd></div>
-        </dl>
       </Card>
 
-      <Card className="p-5">
-        <div className="flex items-center gap-2">
-          <h2 className="flex-1 text-xl font-semibold">Tasks</h2>
-          <Button size="md" variant="outline" onPress={() => navigate(`${featurePath(feature.id)}/tasks/new`)}>New task</Button>
-        </div>
-        <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
-          {sortTasks(feature.tasks).map((t) => (
-            <div key={t.id} className="flex flex-wrap items-center gap-2 py-2.5">
-              <a className="text-base font-medium hover:underline" {...linkProps(taskPath(feature.id, t.id))}>{t.title}</a>
-              <StatusChip status={t.status} />
-              <PriorityChip priority={t.priority} />
-              {t.kind === 'review-fixes' && <Chip variant="soft">review-fixes</Chip>}
-              <span className="text-sm text-neutral-500">
-                {t.id}{t.commit ? ` · ${t.commit}` : ''}{t.archived ? ' · archived' : ''}
-              </span>
-              <span className="flex-1" />
-              <Button size="md" variant="outline" onPress={() => navigate(`${taskPath(feature.id, t.id)}/edit`)}>Edit</Button>
+      <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_400px]">
+        <div className="min-w-0 space-y-4">
+          <Card className="p-5">
+            <div className="flex items-center gap-2">
+              <h2 className="flex-1 text-xl font-semibold">Tasks</h2>
+              <Button size="md" variant="outline" onPress={() => navigate(`${featurePath(feature.id)}/tasks/new`)}>New task</Button>
             </div>
-          ))}
-          {!feature.tasks?.length && <p className="py-2 text-base text-neutral-500">No tasks yet.</p>}
+            <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
+              {sortTasks(feature.tasks).map((t) => (
+                <div key={t.id} className="flex flex-wrap items-center gap-2 py-2.5">
+                  <a className="text-base font-medium hover:underline" {...linkProps(taskPath(feature.id, t.id))}>{t.title}</a>
+                  <TaskStatusChip task={t} />
+                  <PriorityChip priority={t.priority} />
+                  {t.kind === 'review-fixes' && <Chip variant="soft">review-fixes</Chip>}
+                  <span className="text-sm text-neutral-500">
+                    {t.id}{t.commit ? ` · ${t.commit}` : ''}{t.archived ? ' · archived' : ''}
+                  </span>
+                  <span className="flex-1" />
+                  <Button size="md" variant="outline" onPress={() => navigate(`${taskPath(feature.id, t.id)}/edit`)}>Edit</Button>
+                </div>
+              ))}
+              {!feature.tasks?.length && <p className="py-2 text-base text-neutral-500">No tasks yet.</p>}
+            </div>
+          </Card>
+
+          <div>
+            <h2 className="mb-3 text-xl font-semibold">Specification</h2>
+            <SpecShow spec={feature.spec} />
+          </div>
+
+          <div>
+            <h2 className="mb-3 text-xl font-semibold">Comments</h2>
+            <Comments feature={feature} task={null} reload={reload} />
+          </div>
         </div>
-      </Card>
 
-      <div>
-        <h2 className="mb-3 text-xl font-semibold">Specification</h2>
-        <SpecShow spec={feature.spec} />
-      </div>
-
-      <div>
-        <h2 className="mb-3 text-xl font-semibold">Comments</h2>
-        <Comments feature={feature} task={null} reload={reload} />
+        <div className="space-y-4 xl:sticky xl:top-20">
+          <ReviewPanel feature={feature} reload={reload} setError={setError} />
+          <EvidencePanel feature={feature} />
+          <Card className="p-5">
+            <h2 className="text-lg font-semibold">Details</h2>
+            <dl className="mt-2 grid gap-x-4 gap-y-2 text-base sm:grid-cols-2 xl:grid-cols-1">
+              <div><dt className="font-semibold">Feature id</dt><dd>{feature.id}</dd></div>
+              <div><dt className="font-semibold">Test level</dt><dd>{feature.test_level || '—'}</dd></div>
+              <div><dt className="font-semibold">Requires</dt><dd>{(feature.requires || []).join(', ') || '—'}</dd></div>
+              <div><dt className="font-semibold">Unblocks</dt><dd>{(feature.unblocks || []).join(', ') || '—'}</dd></div>
+              <div><dt className="font-semibold">Branch</dt><dd>{feature.branch || '—'}</dd></div>
+              <div><dt className="font-semibold">Worktree</dt><dd>{feature.worktree || '—'}</dd></div>
+              <div><dt className="font-semibold">Review decision</dt><dd>{feature.review?.decision || 'pending'}</dd></div>
+              <div><dt className="font-semibold">Merged</dt><dd>{feature.merged ? `${feature.merged.commit} · ${feature.merged.at}` : '—'}</dd></div>
+            </dl>
+          </Card>
+        </div>
       </div>
     </div>
   );
@@ -593,7 +714,7 @@ function TaskShow({ feature, task, reload, setError }) {
           </div>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <StatusChip status={task.status} />
+          <TaskStatusChip task={task} />
           <PriorityChip priority={task.priority} />
           {task.kind === 'review-fixes' && <Chip variant="soft">review-fixes</Chip>}
           {task.archived && <Chip variant="soft">archived</Chip>}
@@ -620,7 +741,7 @@ function TaskShow({ feature, task, reload, setError }) {
 function TaskEdit({ feature, task, reload, setError }) {
   const [form, setForm] = useState({
     title: task.title, description: task.description || '',
-    acceptance: task.acceptance || '', status: task.status, priority: task.priority,
+    acceptance: task.acceptance || '', status: taskStatus(task), priority: task.priority,
   });
   const [busy, setBusy] = useState(false);
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
@@ -634,7 +755,7 @@ function TaskEdit({ feature, task, reload, setError }) {
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Status">
             <select className={inputCls} value={form.status} onChange={set('status')}>
-              {STATUSES.map((s) => <option key={s}>{s}</option>)}
+              {TASK_STATUSES.map((s) => <option key={s}>{s}</option>)}
             </select>
           </Field>
           <Field label="Priority">
@@ -696,127 +817,6 @@ function TaskNew({ feature, reload, setError }) {
   );
 }
 
-function Review({ feature, reload, setError }) {
-  const [comment, setComment] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [reviewNotice, setReviewNotice] = useState('');
-  const gallery = [];
-  const sessions = [];
-  const collect = (c) => {
-    for (const a of c.attachments || []) if (!gallery.includes(a)) gallery.push(a);
-    for (const s of c.session_refs || []) sessions.push(s);
-  };
-  (feature.comments || []).forEach(collect);
-  (feature.tasks || []).forEach((t) => (t.comments || []).forEach(collect));
-  (feature.sessions || []).forEach((s) => sessions.push(s));
-  const decision = feature.review?.decision || 'pending';
-  const wt = feature.worktree || `.worktrees/${feature.id}`;
-  async function review(dec) {
-    if (dec === 'changes_requested' && !comment.trim()) {
-      setError('Request changes requires a comment.'); return;
-    }
-    setBusy(true);
-    try {
-      await api('POST', `${PM}/features/${encodeURIComponent(feature.id)}/review`,
-        { decision: dec, by: 'human', comment });
-      setComment('');
-      setReviewNotice(dec === 'changes_requested'
-        ? 'Recorded: changes requested. The agent will pick this up as a review-fixes task.'
-        : 'Recorded: approved for merge. The agent will merge promptly.');
-      await reload();
-    } catch (e) { setError(e.message); } finally { setBusy(false); }
-  }
-  return (
-    <div className="space-y-4">
-      <PageLinks items={[['← Board list', '/pm'], ['Feature', featurePath(feature.id)]]} />
-      <Card className="space-y-4 p-5">
-        <div className="flex flex-wrap items-center gap-2">
-          <h1 className="text-2xl font-semibold">Review: {feature.title}</h1>
-          <StatusChip status={feature.status} /><PriorityChip priority={feature.priority} />
-          <Progress progress={feature.progress} />
-        </div>
-        <p className="text-base text-neutral-600 dark:text-neutral-300">
-          Review decision: <strong>{decision}</strong>
-          {decision === 'approved_for_merge' && ' — approved, awaiting agent merge'}
-        </p>
-        <div>
-          <h2 className="text-lg font-semibold">Tasks</h2>
-          <div className="mt-1 divide-y divide-neutral-100 dark:divide-neutral-800">
-            {sortTasks(feature.tasks).map((t) => (
-              <div key={t.id} className="flex flex-wrap items-center gap-2 py-2">
-                <a className="text-base hover:underline" {...linkProps(taskPath(feature.id, t.id))}>{t.title}</a>
-                <StatusChip status={t.status} />
-                <span className="text-sm text-neutral-500">{t.id}{t.commit ? ` · ${t.commit}` : ''}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold">Screenshot gallery</h2>
-          {gallery.length ? (
-            <div className="mt-2 flex flex-wrap gap-2">
-              {gallery.map((a) => (
-                <a key={a} href={evidenceUrl(a)} target="_blank" rel="noreferrer">
-                  <img className="h-40 w-60 rounded border object-cover" src={evidenceUrl(a)} alt={a} />
-                </a>
-              ))}
-            </div>
-          ) : <p className="text-base text-neutral-500">No screenshot evidence yet.</p>}
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold">Linked sessions</h2>
-          {sessions.length ? sessions.map((s, i) => (
-            <p key={i} className="text-base text-neutral-600 dark:text-neutral-300">
-              Session {s.id} · level {s.level} · creator {s.created_by} · result {s.result}
-              {s.path ? ` · ${s.path}` : ''}
-            </p>
-          )) : <p className="text-base text-neutral-500">No linked sessions yet.</p>}
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold">Playtest</h2>
-          <p className="text-base text-neutral-600 dark:text-neutral-300">
-            Test Level: {feature.test_level || '—'} (start it from the game menu in the
-            worktree build; the manager never starts levels). Worktree: {wt} ·
-            branch: {feature.branch || `feat/${feature.id}`}
-          </p>
-          <pre className="mt-2 overflow-x-auto rounded bg-neutral-900 p-3 text-sm text-emerald-200">
-{`cd ${wt} && python tools/server.py --port 8323
-Then open http://127.0.0.1:8323/pm/features/${feature.id} and start Test Level ${feature.test_level || '<test_level>'} from the game menu.`}
-          </pre>
-        </div>
-      </Card>
-      <Card className="space-y-3 p-5">
-        <h2 className="text-lg font-semibold">Human review actions</h2>
-        <Field label="Comment (required for Request changes)">
-          <textarea className={inputCls} rows={4} value={comment}
-            onChange={(e) => setComment(e.target.value)} />
-        </Field>
-        {reviewNotice && (
-          <p role="status" className="rounded border border-emerald-300 bg-emerald-50 p-3 text-base text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">
-            {reviewNotice}
-          </p>
-        )}
-        <div className="flex flex-wrap gap-2">
-          <Button size="md" variant="danger" isPending={busy}
-            isDisabled={busy || !!reviewNotice}
-            onPress={() => review('changes_requested')}>Request changes</Button>
-          <Button size="md" isPending={busy}
-            isDisabled={busy || !!reviewNotice}
-            onPress={() => review('approved_for_merge')}>Approve for merge</Button>
-        </div>
-        <p className="text-sm text-neutral-500">
-          Approve for merge only records the decision; the agent merges promptly
-          and only then does the feature become completed.
-        </p>
-      </Card>
-      <div>
-        <h2 className="mb-3 text-xl font-semibold">Comments</h2>
-        <Comments feature={feature} task={null} reload={reload} />
-      </div>
-    </div>
-  );
-}
-
 function Pm({ route, features, reload, setError }) {
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -832,7 +832,7 @@ function Pm({ route, features, reload, setError }) {
   const visible = useMemo(() => features.filter((f) => {
     if (!showArchived && f.archived) return false;
     if (statusFilter && f.status !== statusFilter
-      && !(f.tasks || []).some((t) => t.status === statusFilter)) return false;
+      && !(f.tasks || []).some((t) => taskStatus(t) === statusFilter)) return false;
     if (!query) return true;
     const q = query.toLowerCase();
     return f.id.toLowerCase().includes(q) || f.title.toLowerCase().includes(q)
@@ -842,7 +842,7 @@ function Pm({ route, features, reload, setError }) {
   if (route.view === 'feature-new') {
     return <FeatureNew reload={reload} setError={setError} />;
   }
-  if (['feature-show', 'feature-edit', 'review', 'task-new',
+  if (['feature-show', 'feature-edit', 'task-new',
     'task-show', 'task-edit'].includes(route.view)) {
     const f = features.find((x) => x.id === route.fid);
     if (!f) {
@@ -855,7 +855,6 @@ function Pm({ route, features, reload, setError }) {
     }
     if (route.view === 'feature-show') return <FeatureShow feature={f} reload={reload} setError={setError} />;
     if (route.view === 'feature-edit') return <FeatureEdit feature={f} reload={reload} setError={setError} />;
-    if (route.view === 'review') return <Review feature={f} reload={reload} setError={setError} />;
     if (route.view === 'task-new') return <TaskNew feature={f} reload={reload} setError={setError} />;
     const task = (f.tasks || []).find((t) => t.id === route.tid);
     if (!task) {

@@ -28,8 +28,13 @@ different directory, move that one folder; this contract file does not move.
   claim the first task) → `in_progress` → (all tasks evidenced) →
   `in_review` → human **Approve for merge** or **Request changes** →
   you merge promptly → `completed`. Task lifecycle: `proposed` →
-  `approved` → `in_progress` → `in_review` → (feature merge) →
-  `completed`; `blocked` / `abandoned` are side states.
+  `approved` → `in_progress` → `completed`; `blocked` / `abandoned`
+  are side states. Tasks have no `in_review` stage: they are
+  agent-managed, so when you report a task done it is `completed`
+  (posting `in_review` is stored as `completed`). The human inspects
+  task-level code and commits directly; only the feature sits in
+  `in_review`. Review happens on the feature page
+  (`/pm/features/<feature-id>`) — there is no separate review page.
 - Deep links into a replay are time-based: `?replay=<session-id>&t=<seconds>`
   (the step index is derived from the recorded `t_ms`).
 
@@ -57,7 +62,7 @@ curl -s $B/features/<feature-id>/rollup                # review roll-up
 curl -s -X POST $B/features/<fid>/tasks/<tid>/claim -H 'Content-Type: application/json' \
   -d '{"author":"agent","body":"Starting: <plan>. Verify: <how>."}'
 curl -s -X POST $B/features/<fid>/tasks/<tid>/move -H 'Content-Type: application/json' \
-  -d '{"status":"in_review"}'
+  -d '{"status":"completed"}'
 curl -s -X POST $B/features/<fid>/tasks/<tid>/comments -H 'Content-Type: application/json' \
   -d '{"author":"agent","body":"...","attachments":["screenshots/features/<fid>/x.png"],"session_refs":[{"id":"s1","path":"sessions/...","level":"chip1","created_by":"agent","result":"won"}]}'
 curl -s -X POST $B/features/<fid>/comments -H 'Content-Type: application/json' \
@@ -118,12 +123,12 @@ read-only in the UI; never try to edit or delete them.
    git -C .worktrees/<feature-id> commit -m "<feature-id>/<task-id>: <summary>"
    ```
 
-   Then `POST .../move` to `in_review` (or include the status in your
+   Then `POST .../move` to `completed` (or include the status in your
    completion update) with a comment: what changed, the commit hash,
    exact test evidence, attached proof. If blocked instead: move to
    `blocked`, comment what is needed, tell the human in chat, and leave
    the worktree in place.
-6. **Roll up for review.** When all of a feature's tasks are `in_review`,
+6. **Roll up for review.** When all of a feature's tasks are `completed`,
    set the feature `in_review` (`PUT /api/pm/features/<id>`) and post a
    feature-level agent comment using the template below. Starting the
    Test Level itself happens in the game's own menu; your comment only
@@ -148,13 +153,13 @@ read-only in the UI; never try to edit or delete them.
 ## Feature roll-up comment template (step 6)
 
 ```markdown
-Ready for review: <feature title> (<n>/<m> tasks in review)
+Ready for review: <feature title> (<n>/<m> tasks completed)
 
 Tasks:
 - <feature>/<task>: <title> — <status>, commit `<hash>` — <one-line result>
 
 Evidence:
-- Screenshots: <attached; gallery on the review page>
+- Screenshots: <attached; gallery on the feature page>
 - Sessions: <id> (<level>, <created_by>, <result>) — replay: <game-url>?replay=<id>&t=<seconds>
 
 Playtest:
