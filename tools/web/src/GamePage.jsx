@@ -30,6 +30,7 @@ export default function GamePage() {
   const [selected, setSelected] = useState(params.get('replay') || '');
   const [replay, setReplay] = useState(null);
   const [live, setLive] = useState(null);
+  const [clock, setClock] = useState(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [inspectorOpen, setInspectorOpen] = useState(
     () => window.innerWidth >= 1100);
@@ -71,7 +72,8 @@ export default function GamePage() {
       if (!g) return;
       if (g.getReplay) setReplay(g.getReplay());
       if (g.getState) { try { setLive(g.getState()); } catch (e) { /* mid-navigation */ } }
-    }, 300);
+      if (g.getClock) { try { setClock(g.getClock()); } catch (e) { /* mid-navigation */ } }
+    }, 100);
     return () => clearInterval(id);
   }, [game]);
 
@@ -260,7 +262,7 @@ export default function GamePage() {
         <div className="relative min-w-24 flex-1 pt-1">
           <input type="range" aria-label="Timeline" className="w-full" min="0"
             max={active ? replay.duration_ms / 1000 : 0} step="0.01"
-            value={active && live ? live.t_ms / 1000 : 0} disabled={!active}
+            value={active ? (replay.playing ? replay.playhead_ms / 1000 : (live ? live.t_ms / 1000 : 0)) : 0} disabled={!active}
             onChange={(e) => { const g = game(); if (g) g.seekTime(Number(e.target.value)); }} />
           {active && replay.duration_ms > 0 && (
             <div className="pointer-events-none absolute inset-x-0 top-0 h-2" aria-hidden="true">
@@ -274,7 +276,7 @@ export default function GamePage() {
         </div>
         <span className="text-[13px] [font-variant-numeric:tabular-nums]">{active ? 'Step ' + replay.index + '/' + replay.steps : 'Step —'}</span>
         <span className="text-[13px] [font-variant-numeric:tabular-nums]">{active && live ? fmtClock(live.t_ms / 1000) + ' / ' + fmtClock(replay.duration_ms / 1000) : ''}</span>
-        <span className={chip} title="Countdown from max time">{active && live ? '⏱ ' + fmtLeft(live.time_left_s) + ' / ' + fmtClock(live.time_limit_s) : '⏱ —'}</span>
+        <span className={chip} title="Countdown from max time">{active && live ? '⏱ ' + fmtLeft(Math.max(0, live.time_limit_s - (replay.playing ? replay.playhead_ms / 1000 : live.elapsed_s))) + ' / ' + fmtClock(live.time_limit_s) : (clock ? '⏱ ' + fmtLeft(clock.time_left_s) + ' / ' + fmtClock(clock.time_limit_s) : '⏱ —')}</span>
         <select aria-label="Speed" className="rounded border border-neutral-700 bg-neutral-900 px-2 py-1 text-[13px]"
           value={speed} onChange={(e) => { setSpeed(e.target.value); const g = game(); if (g && g.setReplaySpeed) g.setReplaySpeed(e.target.value); }}>
           <option value="1">1x</option><option value="2">2x</option><option value="5">5x</option><option value="10">10x</option>

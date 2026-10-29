@@ -56,6 +56,12 @@ class GameOverlayTests(unittest.TestCase):
         html = (ROOT / "tools/static/game.html").read_text()
         self.assertNotIn("100% !important", html)
 
+    def test_smooth_playback_and_running_timer(self):
+        self.assertIn("requestAnimationFrame(loop)", self.game_js)
+        self.assertIn("playhead_ms", self.game_js + self.page)
+        self.assertIn("hudTimer", self.game_js)
+        self.assertIn("getClock", self.game_js)
+
     def test_timeline_is_time_based_with_step_markers(self):
         self.assertIn("seekTime", self.page + self.game_js)
         self.assertIn("step_times", self.page)

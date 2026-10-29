@@ -167,6 +167,21 @@
   }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
+  // Visible in-game countdown timer (HUD on the stage, not the board,
+  // so it stays put at any board scale). Runs from session start.
+  const hudTimer = new PIXI.Text({ text: '2:00', style: {
+    fontSize: 28, fill: 0xffffff, fontWeight: 'bold',
+    stroke: { color: 0x111111, width: 5 } } });
+  hudTimer.position.set(12, 8);
+  app.stage.addChild(hudTimer);
+  function fmtHud(totalSeconds) {
+    const v = Math.max(0, Math.floor(totalSeconds));
+    return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0');
+  }
+  function drawHud(elapsedS, limitS) {
+    hudTimer.text = limitS === null ? fmtHud(elapsedS)
+      : fmtHud(limitS - elapsedS);
+  }
   function renderState() {
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
@@ -183,6 +198,7 @@
     document.getElementById('dbg-digest').textContent =
       window.GameCore.stateDigest(state);
     document.getElementById('dbg-state').textContent = JSON.stringify(state);
+    drawHud(state.elapsed_s, state.time_limit_s);
   }
   renderState();
 
@@ -267,6 +283,16 @@
   const forkBaseMs = forkSeed
     ? (window.GameReplay.stepsOf(forkSeed.records).slice(-1)[0] || { t_ms: 0 }).t_ms
     : 0;
+  (function clockLoop() {
+    if (!window.__replayActive) {
+      const elapsed = forkBaseMs / 1000 +
+        (performance.now() - startedAt) / 1000;
+      drawHud(elapsed, state.time_limit_s);
+      const dbg = document.getElementById('dbg-timer');
+      if (dbg) dbg.textContent = elapsed.toFixed(1) + 's (live clock)';
+    }
+    requestAnimationFrame(clockLoop);
+  })();
   document.addEventListener('keydown', (ev) => {
     if (/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
     if (window.__replayActive) {
@@ -309,23 +335,47 @@
       ' — deep link ?replay=' + replayId + '&t=' + (r.t_ms / 1000);
     document.getElementById('replay-scrub').max = String(replayStates.length - 1);
     document.getElementById('replay-scrub').value = String(replayIndex);
+    playheadMs = replayStates[replayIndex].t_ms;
   }
+  // Continuous time playback: a playhead advances with the wall
+  // clock (scaled by viewer speed); steps land exactly at their
+  // recorded t_ms and the sprite interpolates between tiles, so
+  // time — and the timeline — moves smoothly, not step-by-step.
+  let playheadMs = 0, lastFrameTs = 0;
   function pauseReplay() {
-    if (replayTimer) { clearTimeout(replayTimer); replayTimer = null; }
+    if (replayTimer) { cancelAnimationFrame(replayTimer); replayTimer = null; }
+    renderState();
   }
   let replaySpeed = 1;
   function playReplay() {
     pauseReplay();
-    if (replayStates && replayIndex >= replayStates.length - 1) showReplay(0);
-    const speed = replaySpeed;
-    const tick = () => {
-      if (!replayStates || replayIndex >= replayStates.length - 1) { pauseReplay(); return; }
-      const next = replayIndex + 1;
-      replayTimer = setTimeout(() => { showReplay(next); tick(); },
-        window.GameReplay.delayMs(
-          window.__replayRecords || [], next, speed));
+    if (!replayStates) return;
+    if (replayIndex >= replayStates.length - 1) showReplay(0);
+    playheadMs = replayStates[replayIndex].t_ms;
+    lastFrameTs = performance.now();
+    const loop = (ts) => {
+      if (!replayStates) { replayTimer = null; return; }
+      playheadMs += (ts - lastFrameTs) * replaySpeed;
+      lastFrameTs = ts;
+      while (replayIndex < replayStates.length - 1 &&
+             replayStates[replayIndex + 1].t_ms <= playheadMs) {
+        showReplay(replayIndex + 1);
+      }
+      const cur = replayStates[replayIndex];
+      const nxt = replayStates[replayIndex + 1];
+      if (playerSprite && nxt && nxt.t_ms > cur.t_ms) {
+        const f = Math.min(1, Math.max(0,
+          (playheadMs - cur.t_ms) / (nxt.t_ms - cur.t_ms)));
+        playerSprite.position.set(
+          (cur.player.x + (nxt.player.x - cur.player.x) * f) * TILE,
+          (cur.player.y + (nxt.player.y - cur.player.y) * f) * TILE);
+      }
+      drawHud(cur.elapsed_s + (playheadMs - cur.t_ms) / 1000, cur.time_limit_s);
+      if (replayIndex >= replayStates.length - 1 &&
+          playheadMs >= cur.t_ms) { pauseReplay(); return; }
+      replayTimer = requestAnimationFrame(loop);
     };
-    tick();
+    replayTimer = requestAnimationFrame(loop);
   }
   async function loadReplay(id, tSeconds) {
     const res = await fetch('/api/game/sessions/' + encodeURIComponent(id));
@@ -425,7 +475,8 @@
     showReplay: showReplay, forkFromReplay: forkFromReplay,
     togglePlay: () => { if (replayTimer) pauseReplay(); else playReplay(); },
     seekTime: (seconds) => { if (window.__replayRecords) { pauseReplay(); showReplay(window.GameReplay.stepIndexAtTime(window.__replayRecords, seconds)); } },
-    getReplay: () => ({ playing: replayTimer !== null, id: replayId, index: replayIndex,
+    getClock: () => ({ elapsed_s: forkBaseMs / 1000 + (performance.now() - startedAt) / 1000, time_limit_s: state.time_limit_s, time_left_s: Math.max(0, state.time_limit_s - (forkBaseMs / 1000 + (performance.now() - startedAt) / 1000)) }),
+    getReplay: () => ({ playing: replayTimer !== null, playhead_ms: playheadMs, id: replayId, index: replayIndex,
       duration_ms: window.__replayRecords ? (window.GameReplay.stepsOf(window.__replayRecords).slice(-1)[0] || { t_ms: 0 }).t_ms : 0,
       step_times: window.__replayRecords ? window.GameReplay.stepsOf(window.__replayRecords).map((s) => s.t_ms) : [],
       steps: replayStates ? replayStates.length - 1 : 0,
