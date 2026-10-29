@@ -56,6 +56,10 @@ class GameOverlayTests(unittest.TestCase):
         html = (ROOT / "tools/static/game.html").read_text()
         self.assertNotIn("100% !important", html)
 
+    def test_board_gets_space_at_narrow_windows(self):
+        self.assertIn("innerWidth >= 1100", self.page)
+        self.assertIn("min(300px,34vw)", self.page)
+
     def test_filters_and_diagnostics_disclosed(self):
         self.assertIn("More filters", self.page)
         self.assertIn("Diagnostics", self.page)

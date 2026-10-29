@@ -21,7 +21,8 @@ export default function GamePage() {
   const [replay, setReplay] = useState(null);
   const [live, setLive] = useState(null);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [inspectorOpen, setInspectorOpen] = useState(true);
+  const [inspectorOpen, setInspectorOpen] = useState(
+    () => window.innerWidth >= 1100);
   const [hideEmpty, setHideEmpty] = useState(true);
   const [q, setQ] = useState('');
   const [label, setLabel] = useState('');
@@ -39,6 +40,11 @@ export default function GamePage() {
     (params.get('t') ? '&t=' + encodeURIComponent(params.get('t')) : '') +
     (params.get('fork') ? '&fork=' + encodeURIComponent(params.get('fork')) : '');
 
+  useEffect(() => {
+    const onResize = () => { if (window.innerWidth < 900) setInspectorOpen(false); };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
   const game = useCallback(() => frameRef.current && frameRef.current.contentWindow &&
     frameRef.current.contentWindow.__game, []);
   const current = sessions.find((s) => s.id === selected) || null;
@@ -114,7 +120,7 @@ export default function GamePage() {
 
   return (
     <div className="flex h-screen flex-col bg-neutral-950 text-neutral-100">
-      <header className="flex h-11 shrink-0 items-center gap-2 border-b border-neutral-800 px-3">
+      <header className="flex h-11 shrink-0 items-center gap-2 overflow-hidden whitespace-nowrap border-b border-neutral-800 px-3">
         <button type="button" className={btn} aria-expanded={pickerOpen}
           onClick={() => setPickerOpen(!pickerOpen)}>Sessions</button>
         <select aria-label="Level" className="rounded border border-neutral-700 bg-neutral-900 px-2 py-1 text-[13px]"
@@ -151,7 +157,7 @@ export default function GamePage() {
       )}
       <div className="flex min-h-0 flex-1">
         {pickerOpen && (
-          <aside aria-label="Session picker" className="flex w-80 shrink-0 flex-col gap-2 overflow-y-auto border-r border-neutral-800 p-3">
+          <aside aria-label="Session picker" className="flex w-[min(320px,38vw)] shrink-0 flex-col gap-2 overflow-y-auto border-r border-neutral-800 p-3">
             <input className={input} placeholder="Search session id" aria-label="Search session id"
               value={q} onChange={(e) => setQ(e.target.value)} />
             <input className={input} placeholder="Label (e.g. bug)" aria-label="Label filter"
@@ -195,7 +201,7 @@ export default function GamePage() {
             className="absolute inset-0 h-full w-full border-0" style={{ width: '100%', height: '100%' }} />
         </main>
         {inspectorOpen && (
-          <aside aria-label="Step inspector" className="flex w-[300px] shrink-0 flex-col gap-3 overflow-y-auto border-l border-neutral-800 p-3">
+          <aside aria-label="Step inspector" className="flex w-[min(300px,34vw)] shrink-0 flex-col gap-3 overflow-y-auto border-l border-neutral-800 p-3">
             <h2 className="text-[13px] font-semibold tracking-wide text-neutral-300">STEP INSPECTOR</h2>
             {active && live ? (
               <>
