@@ -699,6 +699,7 @@ function TaskNew({ feature, reload, setError }) {
 function Review({ feature, reload, setError }) {
   const [comment, setComment] = useState('');
   const [busy, setBusy] = useState(false);
+  const [reviewNotice, setReviewNotice] = useState('');
   const gallery = [];
   const sessions = [];
   const collect = (c) => {
@@ -718,6 +719,10 @@ function Review({ feature, reload, setError }) {
     try {
       await api('POST', `${PM}/features/${encodeURIComponent(feature.id)}/review`,
         { decision: dec, by: 'human', comment });
+      setComment('');
+      setReviewNotice(dec === 'changes_requested'
+        ? 'Recorded: changes requested. The agent will pick this up as a review-fixes task.'
+        : 'Recorded: approved for merge. The agent will merge promptly.');
       await reload();
     } catch (e) { setError(e.message); } finally { setBusy(false); }
   }
@@ -786,10 +791,17 @@ Then open http://127.0.0.1:8323/pm/features/${feature.id} and start Test Level $
           <textarea className={inputCls} rows={4} value={comment}
             onChange={(e) => setComment(e.target.value)} />
         </Field>
+        {reviewNotice && (
+          <p role="status" className="rounded border border-emerald-300 bg-emerald-50 p-3 text-base text-emerald-900 dark:border-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">
+            {reviewNotice}
+          </p>
+        )}
         <div className="flex flex-wrap gap-2">
           <Button size="md" variant="danger" isPending={busy}
+            isDisabled={busy || !!reviewNotice}
             onPress={() => review('changes_requested')}>Request changes</Button>
           <Button size="md" isPending={busy}
+            isDisabled={busy || !!reviewNotice}
             onPress={() => review('approved_for_merge')}>Approve for merge</Button>
         </div>
         <p className="text-sm text-neutral-500">

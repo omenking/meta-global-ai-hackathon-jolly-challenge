@@ -62,5 +62,5 @@ green 90
 blue 165
 VARIANTS
 
-cp "$ROOT/levels/chip1.json" "$LVL/chip1.json"
+cp "$ROOT/levels/"*.json "$LVL/"
 echo "wrote $(ls "$OUT" | wc -l) sprites to $OUT"
