@@ -262,7 +262,14 @@
     : 0;
   document.addEventListener('keydown', (ev) => {
     if (/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
-    if (window.__replayActive) return;
+    if (window.__replayActive) {
+      if (ev.key === ' ') { ev.preventDefault(); if (replayTimer) pauseReplay(); else playReplay(); }
+      else if (ev.key === 'ArrowLeft') { ev.preventDefault(); pauseReplay(); showReplay(replayIndex - (ev.shiftKey ? 10 : 1)); }
+      else if (ev.key === 'ArrowRight') { ev.preventDefault(); pauseReplay(); showReplay(replayIndex + (ev.shiftKey ? 10 : 1)); }
+      else if (ev.key === 'Home') { ev.preventDefault(); showReplay(0); }
+      else if (ev.key === 'End') { ev.preventDefault(); showReplay(1e9); }
+      return;
+    }
     const input = window.GameCore.inputForKey(ev.key);
     if (!input) return;
     ev.preventDefault();
@@ -409,7 +416,8 @@
     loadReplay: loadReplay, playReplay: playReplay, pauseReplay: pauseReplay,
     setReplaySpeed: (s) => { replaySpeed = Number(s) || 1; },
     showReplay: showReplay, forkFromReplay: forkFromReplay,
-    getReplay: () => ({ id: replayId, index: replayIndex,
+    togglePlay: () => { if (replayTimer) pauseReplay(); else playReplay(); },
+    getReplay: () => ({ playing: replayTimer !== null, id: replayId, index: replayIndex,
       steps: replayStates ? replayStates.length - 1 : 0,
       active: replayStates !== null,
       readout: document.getElementById('replay-readout').textContent,

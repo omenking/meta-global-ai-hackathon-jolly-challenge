@@ -858,7 +858,7 @@ class Handler(BaseHTTPRequestHandler):
                 rec = game_sessions.append_annotation(
                     pm_store.SESSIONS_ROOT, sid,
                     body.get("author", "human"), body.get("body", ""),
-                    labels=body.get("labels"))
+                    labels=body.get("labels"), step=body.get("step"))
                 return _send(self, 201, rec)
             if len(parts) == 5 and parts[:3] == ["api", "game", "sessions"] and parts[4] == "fork":
                 sid = urllib.parse.unquote(parts[3])

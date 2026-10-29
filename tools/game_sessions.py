@@ -203,7 +203,8 @@ def list_sessions(root: Path, level=None, creator=None, feature=None,
 
 
 def append_annotation(root: Path, session_id: str, author: str,
-                      body: str = "", labels=None, at: str = None) -> dict:
+                      body: str = "", labels=None, at: str = None,
+                      step=None) -> dict:
     if author not in ("human", "agent"):
         raise SessionError("annotation author must be 'human' or 'agent'")
     if not isinstance(body, str):
@@ -213,9 +214,11 @@ def append_annotation(root: Path, session_id: str, author: str,
         raise SessionError("annotation needs a note or at least one label")
     path = find_session_path(root, session_id)
     parse_session(path.read_text(encoding="utf-8"))
+    if step is not None and (not isinstance(step, int) or step < 0):
+        raise SessionError("annotation step must be a non-negative integer")
     rec = {"type": "annotation", "author": author,
            "at": at or _dt.datetime.now(_dt.timezone.utc).isoformat(),
-           "body": body.strip(), "labels": labs}
+           "body": body.strip(), "labels": labs, "step": step}
     with open(path, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(rec) + "\n")
     return rec
