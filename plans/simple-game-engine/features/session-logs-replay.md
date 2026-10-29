@@ -1,7 +1,7 @@
 ---
 title: Session logs, replay and forks
 summary: Find, annotate, replay and fork recorded play sessions from the game UI.
-status: proposed
+status: completed
 priority: high
 requires:
   - ./player-movement.md
@@ -75,29 +75,358 @@ Needs a mechanics playground: none — verified against recorded sessions of the
 
 ### session-logs-replay/sessions-menu — Sessions menu in the game UI
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Sessions list/filter by level, creator, feature, date, result and labels finds a named session in seconds.
+- Evidence: `screenshots/features/session-logs-replay/20261029-165435-movement-room-20261029-205258.png`
+- Session: `game-movement-room-fork4-z7zat3` (movement-room, agent, quit)
 
 ### session-logs-replay/annotate-session — Annotate a session after play
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Notes and labels (e.g. failed, bug) append to the session JSONL without touching recorded steps.
 
 ### session-logs-replay/replay-player — Replay player with deep links
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Play/pause, step, scrub and speeds 1x/2x/5x/10x; ?replay=<id>&t=<seconds> lands on the exact moment with a per-step state readout.
+- Evidence: `screenshots/features/session-logs-replay/20261029-165435-replay-movement-room-latest.png`
 
 ### session-logs-replay/fork-from-replay — Fork from any replay step
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Forked session keeps the original created_by and adds forked_by/forked_from/fork_step, playable from that state.
 
 ### session-logs-replay/version-mismatch-warning — Version-mismatch warning
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Replaying under a different level/engine than recorded warns instead of diverging silently.
+
+### session-logs-replay/review-fixes-1 — Fullscreen canvas with HeroUI overlay UI
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Review feedback: side panel runs off page, too many search filters, UI hard to use. Restructure: game canvas fills webpage, Game header on top, outside-game UI is React HeroUI overlay (fixed, higher z-index, collapsed by default, own scroll, non-blocking). Sessions auto-narrow to selected level; search+label visible, rest collapsed.
+- Acceptance: /game renders canvas 100% of page with header; HeroUI overlay collapsed by default, expands without blocking canvas, scrolls internally; sessions default to current level with search+label and collapsed extra filters; replay/fork/annotate still work.
+- Evidence: `screenshots/features/session-logs-replay/20261029-170710-overlay-game-latest.png`
+
+### session-logs-replay/review-fixes-2 — Keep overlay UI out of the board area
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Screenshot review: header overlays top board row; bottom replay card covers centre-bottom tiles even with no replay loaded.
+- Acceptance: Header occupies layout space (no board overlap); replay bar hidden until a replay is active and then slim single-row; collapsed Sessions button stays clear of tiles.
+- Evidence: `screenshots/features/session-logs-replay/20261029-170710-overlay-game-latest.png`
+
+### session-logs-replay/review-fixes-3 — Make current session, length and annotate obvious; fix playback
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Human feedback: cannot tell which session is loaded, no session playback, cannot see steps/length at a glance in session column, annotate is at bottom of panel and confusing. Also: comment with screenshots when fixing.
+- Acceptance: Panel shows current session at top with steps/duration/readout and annotate directly under it; list items show steps and duration; Play advances replay; fixing comments carry screenshot attachments.
+- Evidence: `screenshots/features/session-logs-replay/20261029-171810-rf3-panel-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-171810-rf3-collapsed-latest.png`
+
+### session-logs-replay/review-fixes-4 — Replace HeroUI outer UI with Leva GUI
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Human direction: use pmndrs/leva GUI for outer UI; HeroUI overlay not working well. Replace HeroUI panel/footer controls with Leva panel (level, sessions, playback, annotate, filters). Keep fullscreen canvas, deterministic core and session APIs unchanged.
+- Acceptance: /game outer UI is Leva: load a session, see current/length, play/step/scrub at speeds, fork, annotate, filter; canvas stays fullscreen and playable; screenshots attached to fixing comments.
+- Evidence: `screenshots/features/session-logs-replay/20261029-173547-leva-panel-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-173548-leva-collapsed-latest.png`
+
+### session-logs-replay/review-fixes-5 — Operator redesign: viewport, inspector, unified timeline
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Replace Leva outer UI with operator layout: context bar, unobstructed viewport, step inspector with annotate/fork at step, session picker list, one unified transport timeline. Preserve __game replay APIs, keyboard, session/filter APIs.
+- Acceptance: No UI over tiles; one playback bar; current session/step/state obvious; annotate records step; filters/diagnostics disclosed; browser screenshots critiqued and attached to fixing comments.
+- Evidence: `screenshots/features/session-logs-replay/20261029-175827-operator-replay-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-175827-operator-picker-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-175827-operator-narrow-latest.png`
+
+### session-logs-replay/review-fixes-6 — Screenshot button in game header
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes`
+- Description: Human request: button in /game header captures entire browser window view and dumps it to a subfolder in screenshots/ for easy sharing.
+- Acceptance: Header Screenshot button saves a full-viewport PNG of the current game view (level/session/step preserved) into screenshots/game/ and reports the saved path in the UI.
+- Evidence: `screenshots/features/session-logs-replay/20261029-181207-screenshot-button-latest.png`
+
+### session-logs-replay/review-fixes-7 — Keep game aspect ratio on window resize
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Human screenshot shows canvas stretching tiles/Jolly when window resizes. Embed canvas CSS stretches Pixi to container and fit is computed once.
+- Acceptance: Board keeps level aspect ratio (letterboxed, centred) at any window size and refits live on resize; screenshot at a wide window shows square tiles.
+- Evidence: `screenshots/features/session-logs-replay/20261029-181531-aspect-wide-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-181531-aspect-resized-latest.png`
+
+### session-logs-replay/review-fixes-8 — Canvas fills as much window as possible at correct ratio
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Human: after aspect fix the canvas does not fill the entire screen / seems to have a minimum size. Board must stay ratioed but take as much window space as possible at any size.
+- Acceptance: At wide, tall and small windows the board is as large as its aspect allows inside the viewport area, with no fixed/minimum board size; screenshots attached.
+- Evidence: `screenshots/features/session-logs-replay/20261029-183813-fill-tall-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-183813-fill-small-latest.png`
+
+### session-logs-replay/review-fixes-9 — Time-based timeline with step markers and countdown timer
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Human: timeline is step-based and annoying; make it time-based with step markers, keep step back/forward. Time counts down from timer; no level timer exists so fixed 2min default, scoped by its max.
+- Acceptance: Timeline scrubs by time with a marker per step; step buttons unchanged; countdown shows mm:ss from max (level time_limit or 120s default); screenshots attached.
+- Evidence: `screenshots/features/session-logs-replay/20261029-184856-time-timeline-latest.png`
+
+### session-logs-replay/review-fixes-10 — Smooth time playback and visible running timer
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Human: timeline playback jumps step-to-step not smooth time; no visible in-game timer; timer only moves on first move. Playback must be continuous time (playhead), timer visible in game and runs from session start, not only on moves.
+- Acceptance: Replay playhead advances continuously (timeline + countdown smooth, sprite interpolates between steps); live HUD timer visible in canvas counting down from session start before any move; step buttons/seek unchanged; screenshots attached.
+- Evidence: `screenshots/features/session-logs-replay/20261029-185449-smooth-live-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-185449-smooth-replay-latest.png`
+
+### session-logs-replay/defer-session-until-move — Do not create session until first move
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Human: refreshes create many empty sessions; timer started before moving. Session file and session clock must start on first move only.
+- Acceptance: Reloading /game without moving creates no session file; first move creates it and timer starts then.
+- Evidence: `screenshots/features/session-logs-replay/20261029-190034-three-fix-latest.png`
+
+### session-logs-replay/playback-markers-sprite — Fix timeline markers and player movement in playback
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Human: playback markers are not in correct place and player slides slowly instead of moving correctly. Markers must align with playhead/thumb; player snaps at recorded step times while time/timeline stay continuous.
+- Acceptance: At a known step time the thumb/playhead aligns with that step marker; sprite is on a tile (not sliding between tiles) during playback; screenshots attached.
+- Evidence: `screenshots/features/session-logs-replay/20261029-190034-three-fix-latest.png`
+
+### session-logs-replay/play-pause-toggle — Play button must pause when clicked again
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Human: clicking Play again during playback does not pause. One toggle button must reliably pause/resume.
+- Acceptance: During playback clicking the toggle pauses (playhead stops, label flips); clicking again resumes; browser verified.
+- Evidence: `screenshots/features/session-logs-replay/20261029-190034-three-fix-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-10-29T16:54:50 · agent · on `session-logs-replay`
+
+Ready for review: Session logs, replay and forks (5/5 tasks completed)
+
+Tasks:
+- session-logs-replay/sessions-menu: Sessions menu in the game UI — completed, commit bef415d — list/filter by level/creator/feature/date/result/labels
+- session-logs-replay/annotate-session: Annotate a session after play — completed, commit 93588a0 — append-only annotations, steps untouched
+- session-logs-replay/replay-player: Replay player with deep links — completed, commit e542566 — t=1 lands step 4 (t_ms 957), speeds 1x/2x/5x/10x, per-step readout
+- session-logs-replay/fork-from-replay: Fork from any replay step — completed, commits be353cb + 73dd43b — keeps created_by, adds forked_by/forked_from/fork_step; new moves continue recorded t_ms
+- session-logs-replay/version-mismatch-warning: Version-mismatch warning — completed, commit 421e678 — level hash/engine/commit mismatch warns in UI and API
+
+Evidence:
+- Screenshots: attached (game + replay deep-link views)
+- Sessions: game-movement-room-fork4-z7zat3 (movement-room, agent, fork of game-movement-room-20261029203449-mbaf5c at step 4) — replay: http://127.0.0.1:8341/static/game.html?replay=game-movement-room-20261029203449-mbaf5c&t=1
+- Tests: tools.test_session_replay + game suites 39 ok; full suite 112 ran with only the 2 pre-existing test_pm_review_ui failures (also failing on untouched main)
+
+Playtest:
+- Worktree: .worktrees/session-logs-replay
+- Start: cd .worktrees/session-logs-replay && python tools/server.py --port 8341 — board server stays on 8322
+- Game: http://127.0.0.1:8341/static/game.html — pick movement-room, use Sessions menu / Replay / Fork from here; deep link above lands at t=1s
+- Evidence: `screenshots/features/session-logs-replay/20261029-165435-movement-room-20261029-205258.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-165435-replay-movement-room-latest.png`
+- Session: `game-movement-room-fork4-z7zat3` (movement-room, agent, quit)
+
+### 2026-10-29T17:07:21 · agent · on `session-logs-replay`
+
+Ready for re-review: fullscreen canvas + HeroUI overlay (review-fixes-1, commit 82f50a7)
+
+Fix: game at http://127.0.0.1:8341/game — canvas fills the page, header on top, Sessions panel collapsed by default (fixed, own scroll), sessions auto-filter to the selected level, replay bar along the bottom. Standalone vanilla page still at /static/game.html.
+
+Evidence: overlay screenshot attached; full suite 116 tests, only the 2 pre-existing pm-review-ui failures remain.
+
+### 2026-10-29T17:18:18 · agent · on `session-logs-replay`
+
+Ready for re-review: current session, lengths, annotate and playback (review-fixes-3, commit 0450777). Screenshots attached: expanded panel with Current session block and collapsed clean board. Play at http://127.0.0.1:8341/game — open Sessions, pick the mbaf5c recording, press Play in the Current session block.
+- Evidence: `screenshots/features/session-logs-replay/20261029-171810-rf3-panel-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-171810-rf3-collapsed-latest.png`
+
+### 2026-10-29T17:35:57 · agent · on `session-logs-replay`
+
+Ready for re-review: Leva GUI outer UI (review-fixes-4, commit d3ceee4). Screenshots attached: Leva panel expanded with Current session, and collapsed panel over a clear board. Play at http://127.0.0.1:8341/game — click the Leva title bar arrow to expand, pick a Session, press Play.
+- Evidence: `screenshots/features/session-logs-replay/20261029-173547-leva-panel-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-173548-leva-collapsed-latest.png`
+
+### 2026-10-29T17:52:31 · human · on `session-logs-replay`
+
+Redesign request (captured from chat): the replay/session debugging UI is an operator tool, not a marketing dashboard, settings panel, or Leva-style parameter editor. Redesign with interface-design and ux-usability-foundations skills (install from skills.sh): primary workflows are select session, replay/pause, scrub/step, inspect state at step, annotate a step, fork from that step. Requirements: unobstructed game viewport, one unified playback timeline/control bar, compact readable step inspector beside the game, current session/step/playback state/actions obvious, infrequently used filtering/diagnostics hidden until needed, preserve replay functionality and keyboard usability. Analyze existing screenshots/components and propose information architecture before code changes; inspect browser screenshots and critique before finishing.
+
+### 2026-10-29T17:58:37 · agent · on `session-logs-replay`
+
+Ready for re-review: operator redesign (review-fixes-5, commit 743f37f). Screenshots attached: replay with step inspector, session picker, narrow window. Play at http://127.0.0.1:8341/game — pick a session from Sessions, use the single bottom timeline, annotate/fork from the inspector at the shown step.
+- Evidence: `screenshots/features/session-logs-replay/20261029-175827-operator-replay-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-175827-operator-picker-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-175827-operator-narrow-latest.png`
+
+### 2026-10-29T19:15:42 · human · on `session-logs-replay`
+
+All good.
+
+### 2026-10-29T19:17:23 · agent · on `session-logs-replay`
+
+Merged to main as b4a0ca2 (merge --no-ff of feat/session-logs-replay, 18 task commits preserved). Verified on merged main: full suite 123 tests with only the 2 pre-existing test_pm_review_ui failures (also failing on untouched base); game smoke: merged server /game 200 and sessions API answering. Play at http://127.0.0.1:8351/game (merged main server).
+
+### 2026-10-29T16:50:15 · agent · on `session-logs-replay/sessions-menu`
+
+Starting: sessions list/filter API + Sessions menu in game UI. Verify: unit tests + browser filter on movement-room sessions.
+
+### 2026-10-29T16:54:42 · agent · on `session-logs-replay/sessions-menu`
+
+Done: GET /api/game/sessions list/filter (level, creator, feature, date, result, label, q) + Sessions menu in game UI. Commit bef415d (shared backend file also carries later helpers). Tests: test_session_replay list/filter ok; browser list populated.
+- Evidence: `screenshots/features/session-logs-replay/20261029-165435-movement-room-20261029-205258.png`
+- Session: `game-movement-room-fork4-z7zat3` (movement-room, agent, quit)
+
+### 2026-10-29T16:51:59 · agent · on `session-logs-replay/annotate-session`
+
+Starting: implementing as part of session logs/replay/forks. Verify: tools/test_session_replay.py + browser play.
+
+### 2026-10-29T16:54:42 · agent · on `session-logs-replay/annotate-session`
+
+Done: POST /api/game/sessions/<id>/annotations appends annotation line only; labels free-form lowercase (bug/failed starters), replay ignores annotations. Commit 93588a0. Verified via API: annotate then ?label=bug filter finds it.
+
+### 2026-10-29T16:51:59 · agent · on `session-logs-replay/replay-player`
+
+Starting: implementing as part of session logs/replay/forks. Verify: tools/test_session_replay.py + browser play.
+
+### 2026-10-29T16:54:42 · agent · on `session-logs-replay/replay-player`
+
+Done: replay player play/pause/step/scrub, speeds 1x/2x/5x/10x from recorded t_ms (no gap compression), per-step readout, ?replay=<id>&t=<seconds> via stepIndexAtTime. Commit e542566. Browser: t=1 lands step 4 pos 4,2 t_ms 957; record-then-replay digest matches in tests.
+- Evidence: `screenshots/features/session-logs-replay/20261029-165435-replay-movement-room-latest.png`
+
+### 2026-10-29T16:51:59 · agent · on `session-logs-replay/fork-from-replay`
+
+Starting: implementing as part of session logs/replay/forks. Verify: tools/test_session_replay.py + browser play.
+
+### 2026-10-29T16:54:42 · agent · on `session-logs-replay/fork-from-replay`
+
+Done: POST fork + Fork from here; header keeps created_by, adds forked_by/forked_from/fork_step, playable via ?fork=<id>. Commits be353cb + 73dd43b (t_ms clock continues after fork). Browser: fork at step 4, move right to 5,2 at t_ms 1838.
+
+### 2026-10-29T16:51:59 · agent · on `session-logs-replay/version-mismatch-warning`
+
+Starting: implementing as part of session logs/replay/forks. Verify: tools/test_session_replay.py + browser play.
+
+### 2026-10-29T16:54:42 · agent · on `session-logs-replay/version-mismatch-warning`
+
+Done: GameReplay.warnings + API warnings; engine_version game-core-1 in headers. Level hash/engine/commit mismatch warns, missing engine version warns. Commit 421e678. Browser: old session shows no-engine-version warning.
+
+### 2026-10-29T17:04:54 · agent · on `session-logs-replay/review-fixes-1`
+
+Starting: fullscreen canvas embed mode + React HeroUI overlay at /game (collapsed fixed panel, level-automatic sessions). Verify: build, unit tests, browser play at 8341.
+
+### 2026-10-29T17:07:21 · agent · on `session-logs-replay/review-fixes-1`
+
+Done: /game is fullscreen canvas (100% page, embed mode) with Game header and React HeroUI overlay. Overlay wrappers pointer-events-none so play is never blocked; side panel fixed z-50, collapsed by default, internal overflow-y-auto scroll. Sessions auto-narrow to current level (no level search field); search+label visible, creator/feature/date/result under More filters. Replay bar at bottom driven via exposed __game API. Commit 82f50a7. Tests: test_game_overlay 4 ok (failed 4/4 before fix); full suite 116 with only 2 pre-existing pm_review_ui failures. Browser: canvas 1200x800, panel collapsed, deep link step 4 readout in bottom bar.
+- Evidence: `screenshots/features/session-logs-replay/20261029-170710-overlay-game-latest.png`
+
+### 2026-10-29T17:09:22 · agent · on `session-logs-replay/review-fixes-2`
+
+Starting: header in flow, replay bar only when active. Verify: screenshot + browser readout check.
+
+### 2026-10-29T17:11:10 · agent · on `session-logs-replay/review-fixes-2`
+
+Done: answered screenshot self-check — yes, UI was in the way (header over top row, replay card over centre-bottom tiles). Fixed: header now in layout flow, replay controls in slim footer strip below the board (hint text when no replay), whole board visible in both screenshots. Commits be82ab8 + footer follow-up. Tests: test_game_overlay 5 ok incl test_ui_stays_out_of_the_board.
+- Evidence: `screenshots/features/session-logs-replay/20261029-170710-overlay-game-latest.png`
+
+### 2026-10-29T17:15:59 · agent · on `session-logs-replay/review-fixes-3`
+
+Starting: diagnose playback, restructure panel around current session, add steps/duration to list. Verify: browser playback test + screenshots attached to fixing comments.
+
+### 2026-10-29T17:18:18 · agent · on `session-logs-replay/review-fixes-3`
+
+Done (screenshots attached): Current session block at top of panel shows loaded id, steps, duration, creator, result and step x/y with playback + Annotate this session directly underneath. List items show steps and duration at a glance. Playback: Play now restarts at step 0 when at the end and 1x/2x/5x/10x speed selector is in the current block — browser verified step 0 to 6 after Play. Commit 0450777.
+- Evidence: `screenshots/features/session-logs-replay/20261029-171810-rf3-panel-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-171810-rf3-collapsed-latest.png`
+
+### 2026-10-29T17:29:40 · agent · on `session-logs-replay/review-fixes-4`
+
+Starting: install leva, replace GamePage HeroUI chrome with Leva controls. Verify: build, tests, browser playback + screenshots on fixing comments.
+
+### 2026-10-29T17:35:57 · agent · on `session-logs-replay/review-fixes-4`
+
+Done (screenshots attached): outer UI is now Leva (pmndrs/leva 0.10.1) instead of HeroUI. Canvas fullscreen; Leva panel top-right collapsed by default. Folders: Game (Level, Session picker with steps/duration in labels, Current, Status), Playback (Scrub, Speed 1/2/5/10, Play/Pause/Step/Fork), Annotate (Note/Labels/Add), Filters. Browser verified: expand panel, Play step 0 to 6, Current shows 6 steps 1.207s quit. Commit d3ceee4. Full suite 118, only 2 pre-existing failures.
+- Evidence: `screenshots/features/session-logs-replay/20261029-173547-leva-panel-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-173548-leva-collapsed-latest.png`
+
+### 2026-10-29T17:55:12 · agent · on `session-logs-replay/review-fixes-5`
+
+Starting: operator redesign per approved IA (context bar, viewport, inspector, unified transport, picker). Skills interface-design + ux-usability-foundations installed and loaded. Verify: tests, browser critique loop with screenshots attached.
+
+### 2026-10-29T17:58:37 · agent · on `session-logs-replay/review-fixes-5`
+
+Done (screenshots attached: replay inspector, session picker, narrow window). Operator layout replaces Leva: context bar (session, steps, duration, creator, result), unobstructed viewport, STEP INSPECTOR with Annotate this step + Fork from step, one unified transport timeline. Annotate now records step (verified persisted step:2); Play/Pause/Step keyboard Space/arrows/Shift/Home/End works in parent and iframe. Skills interface-design + ux-usability-foundations installed from skills.sh and loaded; no IA change resulted. Commit 743f37f. Full suite 117, only 2 pre-existing pm-review-ui failures.
+- Evidence: `screenshots/features/session-logs-replay/20261029-175827-operator-replay-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-175827-operator-picker-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-175827-operator-narrow-latest.png`
+
+### 2026-10-29T18:06:48 · agent · on `session-logs-replay/review-fixes-6`
+
+Starting: POST /api/game/screenshot using existing Playwright capture tooling, saved to screenshots/game/. Verify: click button in browser, view saved PNG.
+
+### 2026-10-29T18:12:24 · agent · on `session-logs-replay/review-fixes-6`
+
+Done (screenshot attached): Screenshot button in /game header posts current level/session/step to POST /api/game/screenshot; server captures full viewport via existing Playwright tooling into screenshots/game/<timestamp>-<level>.png, UI reports saved path and opens the image. Browser verified: status Screenshot saved: screenshots/game/20261029-181152-movement-room.png. Commit c5bcb48.
+- Evidence: `screenshots/features/session-logs-replay/20261029-181207-screenshot-button-latest.png`
+
+### 2026-10-29T18:14:21 · agent · on `session-logs-replay/review-fixes-7`
+
+Starting: remove CSS stretch, renderer resize + fit/centre on resize in embed mode. Verify: wide-window screenshot shows square tiles.
+
+### 2026-10-29T18:15:46 · agent · on `session-logs-replay/review-fixes-7`
+
+Done (screenshots attached): embed canvas no longer CSS-stretched; board scales to fit and centres (letterbox) via fitBoard on load and window resize. Verified at users 1002x748 window (square tiles) and after live resize to 700x900 (square, centred). Commit 9ad4f09.
+- Evidence: `screenshots/features/session-logs-replay/20261029-181531-aspect-wide-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-181531-aspect-resized-latest.png`
+
+### 2026-10-29T18:36:42 · agent · on `session-logs-replay/review-fixes-8`
+
+Starting: measure board coverage at several window sizes, fix fill. Verify: screenshots at wide/tall/small attached.
+
+### 2026-10-29T18:38:28 · agent · on `session-logs-replay/review-fixes-8`
+
+Done (screenshots attached): side columns no longer starve the board. Inspector starts open only at >=1100px window, auto-collapses under 900px, column widths flexible min(300px,34vw). Board now takes full viewport width at 600px window (was 300px) and fills height at 800px, always at board aspect. Commit 78eae73.
+- Evidence: `screenshots/features/session-logs-replay/20261029-183813-fill-tall-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-183813-fill-small-latest.png`
+
+### 2026-10-29T18:46:47 · agent · on `session-logs-replay/review-fixes-9`
+
+Starting: default 120s countdown in core, time timeline + step markers + seekTime. Verify: tests + browser screenshots.
+
+### 2026-10-29T18:49:07 · agent · on `session-logs-replay/review-fixes-9`
+
+Done (screenshot attached): timeline is time-based (0 to session duration) with a tick marker per step; seekTime lands step 4 at t=1.0s; Step back/forward kept. Countdown: fixed 2min default in core (level time_limit overrides), footer/inspector show mm:ss counting down scoped by max (1:59 / 2:00 at step 4). Commit a9a4958; core countdown test drives real JS (120 -> 90 after 30s).
+- Evidence: `screenshots/features/session-logs-replay/20261029-184856-time-timeline-latest.png`
+
+### 2026-10-29T18:53:12 · agent · on `session-logs-replay/review-fixes-10`
+
+Starting: rAF playhead playback with sprite interpolation, live session clock + Pixi HUD timer, getClock for React. Verify: browser timing probe + screenshots.
+
+### 2026-10-29T18:55:00 · agent · on `session-logs-replay/review-fixes-10`
+
+Done (screenshots attached): playback is now a continuous rAF playhead (samples +~120ms per 120ms, steps land at recorded t_ms, sprite interpolates between tiles); HUD countdown timer inside the canvas runs from session start (118.18s -> 117.07s left with zero moves) and footer timer mirrors it. Commit ff1a1ca.
+- Evidence: `screenshots/features/session-logs-replay/20261029-185449-smooth-live-latest.png`
+- Evidence: `screenshots/features/session-logs-replay/20261029-185449-smooth-replay-latest.png`
+
+### 2026-10-29T18:58:02 · agent · on `session-logs-replay/defer-session-until-move`
+
+Starting: reproduce, fix, browser verify with screenshots on completion comment.
+
+### 2026-10-29T19:00:47 · agent · on `session-logs-replay/defer-session-until-move`
+
+Done (screenshot attached): Recorder is lazy (ensureRecorder on first applyStep); no file on load/refresh, clock starts at first move. Browser: idle 2.5s sessions 97->97 and clock not started at 120s; after 1 move 98 and started. Commit 82e21b7.
+- Evidence: `screenshots/features/session-logs-replay/20261029-190034-three-fix-latest.png`
+
+### 2026-10-29T18:58:02 · agent · on `session-logs-replay/playback-markers-sprite`
+
+Starting: reproduce, fix, browser verify with screenshots on completion comment.
+
+### 2026-10-29T19:00:47 · agent · on `session-logs-replay/playback-markers-sprite`
+
+Done (screenshot attached): Sprite interpolation removed (snaps on tile at recorded t_ms, verified sprite exactly at tile 4,2 mid-play); timeline is a custom track where markers, progress and thumb share one coordinate system so ticks align with the playhead. Commit 82e21b7.
+- Evidence: `screenshots/features/session-logs-replay/20261029-190034-three-fix-latest.png`
+
+### 2026-10-29T18:58:02 · agent · on `session-logs-replay/play-pause-toggle`
+
+Starting: reproduce, fix, browser verify with screenshots on completion comment.
+
+### 2026-10-29T19:00:47 · agent · on `session-logs-replay/play-pause-toggle`
+
+Done (screenshot attached): Reproduced first: footer toggle did pause in current build, but resume lost sub-step playhead and Space on a focused button could double-toggle. Fixed both: playhead preserved on resume, button blurs after click, Space ignored from buttons. Browser: pause holds playhead 737==737, resume plays. Commit 82e21b7.
+- Evidence: `screenshots/features/session-logs-replay/20261029-190034-three-fix-latest.png`
