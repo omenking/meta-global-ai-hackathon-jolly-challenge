@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game</title>
+<link rel="icon" href="data:,">
+<style>
+  body { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+         margin: 0; color: #1c1c1c; background: #f4f4f4; font-size: 14px; }
+  header { background: #2b2b2b; color: #fff; padding: 10px 16px; }
+  header h1 { font-size: 16px; margin: 0; font-weight: 600; }
+  header p { margin: 2px 0 0; font-size: 12px; color: #bbb; }
+  main { display: flex; gap: 16px; padding: 16px; align-items: flex-start;
+         flex-wrap: wrap; }
+  #stage { background: #111; border: 1px solid #999; line-height: 0; }
+  #panel { background: #fff; border: 1px solid #ddd; border-radius: 6px;
+           padding: 12px 14px; min-width: 260px; max-width: 340px; }
+  #panel h2 { font-size: 13px; margin: 0 0 8px; }
+  #panel dl { margin: 0 0 12px; display: grid;
+              grid-template-columns: auto 1fr; gap: 2px 10px; }
+  #panel dt { color: #666; }
+  #panel dd { margin: 0; overflow-wrap: anywhere; }
+  #panel .row { margin: 8px 0; }
+  #panel label { display: block; margin: 4px 0; }
+  #error { display: none; background: #fdecea; border: 1px solid #c00;
+           border-radius: 6px; padding: 12px 14px; margin: 16px; }
+  button, select { font-size: 13px; padding: 4px 10px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Game</h1>
+  <p id="subtitle">loading&hellip;</p>
+</header>
+<div id="error" role="alert"></div>
+<main>
+  <div id="stage"></div>
+  <div id="panel">
+    <h2>Debug</h2>
+    <dl>
+      <dt>Level</dt><dd id="dbg-level">&mdash;</dd>
+      <dt>State</dt><dd id="dbg-state">&mdash;</dd>
+    </dl>
+  </div>
+</main>
+<script src="vendor/pixi.min.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
