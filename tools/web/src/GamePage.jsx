@@ -167,9 +167,10 @@ export default function GamePage() {
             </Card>
           )}
         </div>
-      {replay && replay.active && (
-        <div className="pointer-events-auto absolute inset-x-0 bottom-3 z-40 mx-auto w-fit max-w-[96%]">
-          <Card className="flex flex-nowrap items-center gap-2 overflow-x-auto px-3 py-2">
+      </div>
+      <footer className="flex h-12 items-center justify-center bg-neutral-950 px-3">
+        {replay && replay.active ? (
+          <div className="flex max-w-full flex-nowrap items-center gap-2 overflow-x-auto rounded-lg bg-white px-3 py-1.5 dark:bg-neutral-900">
             <Button size="sm" onPress={() => { const g = game(); if (g) g.playReplay(); }}>Play</Button>
             <Button size="sm" variant="outline" onPress={() => { const g = game(); if (g) g.pauseReplay(); }}>Pause</Button>
             <Button size="sm" variant="outline" onPress={() => { const g = game(); if (g && replay) g.showReplay(replay.index - 1); }}>Step back</Button>
@@ -180,10 +181,11 @@ export default function GamePage() {
             <Button size="sm" onPress={fork}>Fork from here</Button>
             <span className="whitespace-nowrap text-sm">{replay.readout}</span>
             {replay.warning ? <span className="whitespace-nowrap text-sm text-amber-600">{replay.warning}</span> : null}
-          </Card>
-        </div>
-      )}
-      </div>
+          </div>
+        ) : (
+          <span className="text-sm text-neutral-400">Open Sessions to pick a recording — the replay bar appears here.</span>
+        )}
+      </footer>
     </div>
   );
 }
