@@ -13,6 +13,39 @@
 
   const params = new URLSearchParams(location.search);
   const levelName = (params.get('level') || 'chip1').replace(/[^a-zA-Z0-9_-]/g, '');
+
+  // Game menu: levels and Test Levels come from the server listing;
+  // Start launches the chosen one inside the game (same page, new
+  // ?level=), which also starts its session recording.
+  (async function fillMenu() {
+    const levelSel = document.getElementById('menu-level');
+    const testSel = document.getElementById('menu-test-level');
+    function add(sel, item) {
+      const o = document.createElement('option');
+      o.value = item.id; o.textContent = item.name || item.id;
+      if (item.id === levelName) o.selected = true;
+      sel.appendChild(o);
+    }
+    try {
+      const res = await fetch('/api/game/levels');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      for (const item of data.levels || []) {
+        add(item.test ? testSel : levelSel, item);
+      }
+    } catch (err) {
+      add(levelSel, { id: 'chip1', name: 'chip1' });
+    }
+    let menuChoice = levelName;
+    levelSel.addEventListener('change', () => { menuChoice = levelSel.value; });
+    testSel.addEventListener('change', () => { menuChoice = testSel.value; });
+    document.getElementById('btn-start-level').addEventListener('click', () => {
+      const chosen = menuChoice || levelSel.value || testSel.value || 'chip1';
+      const next = new URLSearchParams(params);
+      next.set('level', chosen);
+      location.search = '?' + next.toString();
+    });
+  })();
   let level;
   try {
     const res = await fetch('levels/' + levelName + '.json');
