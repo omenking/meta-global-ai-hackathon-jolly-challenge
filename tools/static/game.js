@@ -92,13 +92,35 @@
     }
   }
 
+  // Deterministic core: state comes from GameCore only; the board
+  // above is a view of the level, this marker is a view of state.
+  let state = window.GameCore.initialState(level, levelName);
+  const marker = new PIXI.Graphics();
+  board.addChild(marker);
+  function renderState() {
+    marker.clear();
+    marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
+      TILE - 4, TILE - 4).stroke({ width: 3, color: 0x00c8ff });
+    document.getElementById('dbg-player').textContent =
+      state.player.x + ', ' + state.player.y;
+    document.getElementById('dbg-steps').textContent = String(state.steps);
+    document.getElementById('dbg-timer').textContent =
+      state.elapsed_s.toFixed(1) + 's (t_ms ' + state.t_ms + ')';
+    document.getElementById('dbg-digest').textContent =
+      window.GameCore.stateDigest(state);
+    document.getElementById('dbg-state').textContent = JSON.stringify(state);
+  }
+  renderState();
+  window.__game = {
+    getState: () => state,
+    applyStep: (input) => { state = window.GameCore.step(state, input); renderState(); },
+  };
+
   document.getElementById('subtitle').textContent =
     'level ' + levelName + ' (' + COLS + 'x' + ROWS + ', source: ' +
     (level.source || 'unknown') + ') — ' + spriteNames.size + ' sprites' +
     (missing.size ? ', ' + missing.size + ' MISSING' : ', none missing');
   document.getElementById('dbg-level').textContent = levelName;
-  document.getElementById('dbg-state').textContent =
-    COLS + 'x' + ROWS + ' rendered';
 
   document.body.dataset.ready = levelName;
   document.title = 'ready:' + levelName + ' — Game';
