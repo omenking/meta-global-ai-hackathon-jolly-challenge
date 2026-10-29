@@ -25,23 +25,22 @@ class GameOverlayTests(unittest.TestCase):
     def test_canvas_fills_page_and_overlay_does_not_block(self):
         self.assertIn("embed=1", self.page)
         self.assertIn("100%", self.page)
-        self.assertIn("pointer-events-none", self.page)
-        self.assertIn("pointer-events-auto", self.page)
+        self.assertIn("from 'leva'", self.page)
         self.assertIn("embed", self.game_js)
 
     def test_panel_collapsed_fixed_with_own_scroll(self):
         self.assertIn("useState(true)", self.page)  # collapsed by default
-        self.assertIn("overflow-y-auto", self.page)
-        self.assertIn("z-50", self.page)
+        self.assertIn("<Leva", self.page)
+        self.assertIn("useControls", self.page)
 
     def test_ui_stays_out_of_the_board(self):
-        # Header takes layout space (not an overlay) and the replay
-        # bar exists only while a replay is active.
-        self.assertIn("h-screen flex-col", self.page)
-        self.assertIn("replay && replay.active", self.page)
+        # The Leva panel is collapsed by default so the board is
+        # clear; playback lives inside the panel, not over tiles.
+        self.assertIn("panelCollapsed", self.page)
+        self.assertIn("'Playback'", self.page)
 
     def test_current_session_block_and_list_lengths(self):
-        for marker in ("Current session", "Annotate this session",
+        for marker in ("Current", "Annotate",
                        "steps", "duration_s"):
             self.assertIn(marker, self.page)
         game_sessions = (ROOT / "tools/game_sessions.py").read_text()
@@ -53,7 +52,7 @@ class GameOverlayTests(unittest.TestCase):
         # Level comes from the game, not a free-text search field.
         self.assertIn("level", self.page)
         self.assertNotIn('id="filter-level"', self.page)
-        self.assertIn("More filters", self.page)
+        self.assertIn("Filters", self.page)
 
 
 if __name__ == "__main__":
