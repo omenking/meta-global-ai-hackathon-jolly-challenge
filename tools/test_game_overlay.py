@@ -34,6 +34,12 @@ class GameOverlayTests(unittest.TestCase):
         self.assertIn("overflow-y-auto", self.page)
         self.assertIn("z-50", self.page)
 
+    def test_ui_stays_out_of_the_board(self):
+        # Header takes layout space (not an overlay) and the replay
+        # bar exists only while a replay is active.
+        self.assertIn("h-screen flex-col", self.page)
+        self.assertIn("replay && replay.active", self.page)
+
     def test_sessions_narrow_to_current_level(self):
         # Level comes from the game, not a free-text search field.
         self.assertIn("level", self.page)

@@ -90,11 +90,8 @@ export default function GamePage() {
   const inputCls = 'w-full rounded-md border border-neutral-300 bg-white px-2 py-1.5 text-sm dark:border-neutral-700 dark:bg-neutral-900';
 
   return (
-    <div className="fixed inset-0 bg-neutral-950">
-      <iframe ref={frameRef} title="Game" src={frameSrc}
-        className="h-full w-full border-0" style={{ width: '100%', height: '100%' }} />
-      <div className="pointer-events-none absolute inset-0 z-40 flex flex-col">
-        <header className="pointer-events-auto flex items-center gap-2 bg-neutral-900/90 px-4 py-2 text-white">
+    <div className="flex h-screen flex-col bg-neutral-950">
+      <header className="flex items-center gap-2 bg-neutral-900 px-4 py-2 text-white">
           <span className="text-base font-semibold">Game</span>
           <select aria-label="Test Level" className="rounded bg-neutral-800 px-2 py-1 text-sm"
             value={level} onChange={(e) => {
@@ -108,8 +105,11 @@ export default function GamePage() {
           <a className="text-sm text-neutral-300 hover:underline" href="/pm">Project Manager</a>
           <a className="text-sm text-neutral-300 hover:underline"
             href={'/static/game.html?level=' + encodeURIComponent(level)}>Standalone game page</a>
-        </header>
-        <div className="flex flex-1 items-start justify-end p-3">
+      </header>
+      <div className="relative min-h-0 flex-1">
+        <iframe ref={frameRef} title="Game" src={frameSrc}
+          className="absolute inset-0 h-full w-full border-0" style={{ width: '100%', height: '100%' }} />
+        <div className="pointer-events-none absolute inset-0 z-40 flex items-start justify-end p-3">
           {collapsed ? (
             <Button className="pointer-events-auto" size="md"
               onPress={() => setCollapsed(false)}>Sessions</Button>
@@ -167,8 +167,9 @@ export default function GamePage() {
             </Card>
           )}
         </div>
-        <div className="pointer-events-auto mx-auto mb-3 w-auto max-w-full">
-          <Card className="flex flex-wrap items-center gap-2 px-3 py-2">
+      {replay && replay.active && (
+        <div className="pointer-events-auto absolute inset-x-0 bottom-3 z-40 mx-auto w-fit max-w-[96%]">
+          <Card className="flex flex-nowrap items-center gap-2 overflow-x-auto px-3 py-2">
             <Button size="sm" onPress={() => { const g = game(); if (g) g.playReplay(); }}>Play</Button>
             <Button size="sm" variant="outline" onPress={() => { const g = game(); if (g) g.pauseReplay(); }}>Pause</Button>
             <Button size="sm" variant="outline" onPress={() => { const g = game(); if (g && replay) g.showReplay(replay.index - 1); }}>Step back</Button>
@@ -177,10 +178,11 @@ export default function GamePage() {
               max={replay ? replay.steps : 0} value={replay ? replay.index : 0}
               onChange={(e) => { const g = game(); if (g) g.showReplay(Number(e.target.value)); }} />
             <Button size="sm" onPress={fork}>Fork from here</Button>
-            <span className="text-sm">{replay && replay.active ? replay.readout : 'Pick a session to replay it here.'}</span>
-            {replay && replay.warning ? <span className="text-sm text-amber-600">{replay.warning}</span> : null}
+            <span className="whitespace-nowrap text-sm">{replay.readout}</span>
+            {replay.warning ? <span className="whitespace-nowrap text-sm text-amber-600">{replay.warning}</span> : null}
           </Card>
         </div>
+      )}
       </div>
     </div>
   );
