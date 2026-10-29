@@ -143,6 +143,23 @@ class CollisionTests(unittest.TestCase):
                           "wall": False, "gate": False})
 
 
+class SpriteFollowsStateTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.js = (ROOT / "tools" / "static" / "game.js").read_text(
+            encoding="utf-8")
+
+    def test_player_sprite_repositioned_from_state(self):
+        self.assertIn("textures['jolly.png']", self.js)
+        self.assertIn("playerSprite.position.set(state.player.x * TILE",
+                      self.js)
+        self.assertIn("getPlayerSpritePos", self.js)
+
+    def test_start_tile_not_drawn_as_static_sprite(self):
+        # The static board must not leave a second Jolly at the start.
+        self.assertIn("e.sprite && ch !== 'P'", self.js)
+
+
 @unittest.skipUnless(shutil.which("node"), "node not available")
 class MovementRoomTests(unittest.TestCase):
     def test_movement_room_is_valid_empty_room(self):
