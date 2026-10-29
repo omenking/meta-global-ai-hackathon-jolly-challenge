@@ -56,6 +56,11 @@ class GameOverlayTests(unittest.TestCase):
         html = (ROOT / "tools/static/game.html").read_text()
         self.assertNotIn("100% !important", html)
 
+    def test_timeline_is_time_based_with_step_markers(self):
+        self.assertIn("seekTime", self.page + self.game_js)
+        self.assertIn("step_times", self.page)
+        self.assertIn("fmtClock", self.page)
+
     def test_board_gets_space_at_narrow_windows(self):
         self.assertIn("innerWidth >= 1100", self.page)
         self.assertIn("min(300px,34vw)", self.page)

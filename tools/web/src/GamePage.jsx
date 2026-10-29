@@ -11,6 +11,16 @@ const btn = 'rounded border border-neutral-700 bg-neutral-800 px-2.5 py-1 text-[
 const btnPrimary = btn + ' border-sky-700 bg-sky-800 hover:bg-sky-700';
 const input = 'w-full rounded border border-neutral-700 bg-neutral-900 px-2 py-1 text-[13px] text-neutral-100 placeholder:text-neutral-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400';
 const chip = 'rounded bg-neutral-800 px-1.5 py-0.5 text-[11px] text-neutral-300';
+function fmtClock(s) {
+  if (s === null || s === undefined || isNaN(s)) return '—';
+  const v = Math.max(0, Math.round(s));
+  return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0');
+}
+function fmtLeft(s) {
+  if (s === null || s === undefined || isNaN(s)) return '—';
+  const v = Math.max(0, Math.floor(s));
+  return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0');
+}
 
 export default function GamePage() {
   const params = new URLSearchParams(location.search);
@@ -214,7 +224,7 @@ export default function GamePage() {
                   <dt className="text-neutral-400">Position</dt><dd>{live.player.x}, {live.player.y}</dd>
                   <dt className="text-neutral-400">Inventory</dt><dd>[]</dd>
                   <dt className="text-neutral-400">Orbs left</dt><dd>{orbs}</dd>
-                  <dt className="text-neutral-400">Timer</dt><dd>{live.time_left_s === null ? live.elapsed_s + 's elapsed' : live.time_left_s + 's left'}</dd>
+                  <dt className="text-neutral-400">Timer</dt><dd>{fmtLeft(live.time_left_s)} left of {fmtClock(live.time_limit_s)}</dd>
                   <dt className="text-neutral-400">State</dt><dd>{replay.playing ? 'playing' : 'paused'}</dd>
                 </dl>
                 <details>
@@ -247,10 +257,24 @@ export default function GamePage() {
         <button type="button" className={btn} disabled={!active}
           onClick={() => { const g = game(); if (g) { g.pauseReplay(); g.showReplay(replay.index + 1); } }}>Step forward</button>
         <span className="text-[12px] text-neutral-400">{active ? (replay.playing ? 'playing' : 'paused') : 'no replay'}</span>
-        <input type="range" aria-label="Timeline" className="min-w-24 flex-1" min="0"
-          max={active ? replay.steps : 0} value={active ? replay.index : 0} disabled={!active}
-          onChange={(e) => { const g = game(); if (g) { g.pauseReplay(); g.showReplay(Number(e.target.value)); } }} />
+        <div className="relative min-w-24 flex-1 pt-1">
+          <input type="range" aria-label="Timeline" className="w-full" min="0"
+            max={active ? replay.duration_ms / 1000 : 0} step="0.01"
+            value={active && live ? live.t_ms / 1000 : 0} disabled={!active}
+            onChange={(e) => { const g = game(); if (g) g.seekTime(Number(e.target.value)); }} />
+          {active && replay.duration_ms > 0 && (
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-2" aria-hidden="true">
+              {replay.step_times.map((ms, i) => (
+                <span key={i} title={'Step ' + (i + 1)}
+                  className="absolute top-0 h-2 w-px bg-sky-300/80"
+                  style={{ left: (ms / replay.duration_ms * 100) + '%' }} />
+              ))}
+            </div>
+          )}
+        </div>
         <span className="text-[13px] [font-variant-numeric:tabular-nums]">{active ? 'Step ' + replay.index + '/' + replay.steps : 'Step —'}</span>
+        <span className="text-[13px] [font-variant-numeric:tabular-nums]">{active && live ? fmtClock(live.t_ms / 1000) + ' / ' + fmtClock(replay.duration_ms / 1000) : ''}</span>
+        <span className={chip} title="Countdown from max time">{active && live ? '⏱ ' + fmtLeft(live.time_left_s) + ' / ' + fmtClock(live.time_limit_s) : '⏱ —'}</span>
         <select aria-label="Speed" className="rounded border border-neutral-700 bg-neutral-900 px-2 py-1 text-[13px]"
           value={speed} onChange={(e) => { setSpeed(e.target.value); const g = game(); if (g && g.setReplaySpeed) g.setReplaySpeed(e.target.value); }}>
           <option value="1">1x</option><option value="2">2x</option><option value="5">5x</option><option value="10">10x</option>
