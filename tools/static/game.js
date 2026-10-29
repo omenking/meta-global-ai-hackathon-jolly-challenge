@@ -110,7 +110,7 @@
       if (e.base) {
         if (!drawSprite(e.base, gx, gy)) { fallbackTile(gx, gy, ch); continue; }
       }
-      if (e.sprite) {
+      if (e.sprite && ch !== 'P') {
         if (drawSprite(e.sprite, gx, gy) === false) fallbackTile(gx, gy, ch);
       } else if (e.text) {
         const t = new PIXI.Text({
@@ -127,11 +127,23 @@
   }
 
   // Deterministic core: state comes from GameCore only; the board
-  // above is a view of the level, this marker is a view of state.
+  // above is a view of the level (floor under the start tile), and
+  // the player sprite + marker below are a view of state — they are
+  // repositioned from state.player on every step.
   let state = window.GameCore.initialState(level, levelName);
+  let playerSprite = null;
+  if (textures['jolly.png']) {
+    playerSprite = new PIXI.Sprite(textures['jolly.png']);
+    playerSprite.scale.set(scale);
+    board.addChild(playerSprite);
+  }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
   function renderState() {
+    if (playerSprite) {
+      playerSprite.position.set(state.player.x * TILE,
+        state.player.y * TILE);
+    }
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
       TILE - 4, TILE - 4).stroke({ width: 3, color: 0x00c8ff });
@@ -203,9 +215,9 @@
     flushSession(false);
   }
 
-  // Keyboard scaffold: WASD/arrows register an input, advance the
-  // pure step function with the recorded elapsed t_ms, and show in
-  // the debug readout. Movement itself is a later feature.
+  // Keyboard: WASD/arrows register an input, advance the pure step
+  // function (which moves the player one tile on floor) with the
+  // recorded elapsed t_ms, and show in the debug readout.
   const startedAt = performance.now();
   document.addEventListener('keydown', (ev) => {
     if (/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
@@ -226,6 +238,9 @@
 
   window.__game = {
     getState: () => state,
+    getPlayerSpritePos: () => playerSprite
+      ? { x: playerSprite.position.x, y: playerSprite.position.y }
+      : null,
     sessionId: sessionId,
     endSession: endSession,
     applyStep: applyStep,
