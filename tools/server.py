@@ -801,6 +801,9 @@ class Handler(BaseHTTPRequestHandler):
                 records = game_sessions.read_session(
                     pm_store.SESSIONS_ROOT, urllib.parse.unquote(parts[3]))
                 return _send(self, 200, {"records": records,
+                                         "warnings": game_sessions.version_warnings(
+                                             records[0],
+                                             engine_version=game_sessions.ENGINE_VERSION),
                                          "summary": game_sessions.summarize(records)})
             if parts == ["api", "pm", "features"]:
                 with STATE_LOCK:
