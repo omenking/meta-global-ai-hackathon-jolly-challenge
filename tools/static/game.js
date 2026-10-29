@@ -245,13 +245,18 @@
   // function (which moves the player one tile on floor) with the
   // recorded elapsed t_ms, and show in the debug readout.
   const startedAt = performance.now();
+  // Forked sessions continue the recorded clock: new inputs must carry
+  // t_ms at or after the last forked step, never a restarted clock.
+  const forkBaseMs = forkSeed
+    ? (window.GameReplay.stepsOf(forkSeed.records).slice(-1)[0] || { t_ms: 0 }).t_ms
+    : 0;
   document.addEventListener('keydown', (ev) => {
     if (/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
     if (window.__replayActive) return;
     const input = window.GameCore.inputForKey(ev.key);
     if (!input) return;
     ev.preventDefault();
-    applyStep({ t_ms: Math.round(performance.now() - startedAt), input: input });
+    applyStep({ t_ms: forkBaseMs + Math.round(performance.now() - startedAt), input: input });
   });
   document.getElementById('btn-replay').addEventListener('click', () => {
     const states = window.GameCore.replay(level, levelName, inputLog);
