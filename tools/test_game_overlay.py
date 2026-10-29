@@ -40,6 +40,15 @@ class GameOverlayTests(unittest.TestCase):
         self.assertIn("h-screen flex-col", self.page)
         self.assertIn("replay && replay.active", self.page)
 
+    def test_current_session_block_and_list_lengths(self):
+        for marker in ("Current session", "Annotate this session",
+                       "steps", "duration_s"):
+            self.assertIn(marker, self.page)
+        game_sessions = (ROOT / "tools/game_sessions.py").read_text()
+        self.assertIn('"duration_s"', game_sessions)
+        game_js = (ROOT / "tools/static/game.js").read_text()
+        self.assertIn("setReplaySpeed", game_js)
+
     def test_sessions_narrow_to_current_level(self):
         # Level comes from the game, not a free-text search field.
         self.assertIn("level", self.page)

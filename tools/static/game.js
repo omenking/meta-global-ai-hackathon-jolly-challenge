@@ -299,9 +299,11 @@
   function pauseReplay() {
     if (replayTimer) { clearTimeout(replayTimer); replayTimer = null; }
   }
+  let replaySpeed = 1;
   function playReplay() {
     pauseReplay();
-    const speed = Number(document.getElementById('replay-speed').value || 1);
+    if (replayStates && replayIndex >= replayStates.length - 1) showReplay(0);
+    const speed = replaySpeed;
     const tick = () => {
       if (!replayStates || replayIndex >= replayStates.length - 1) { pauseReplay(); return; }
       const next = replayIndex + 1;
@@ -405,6 +407,7 @@
   }
   window.__game = {
     loadReplay: loadReplay, playReplay: playReplay, pauseReplay: pauseReplay,
+    setReplaySpeed: (s) => { replaySpeed = Number(s) || 1; },
     showReplay: showReplay, forkFromReplay: forkFromReplay,
     getReplay: () => ({ id: replayId, index: replayIndex,
       steps: replayStates ? replayStates.length - 1 : 0,

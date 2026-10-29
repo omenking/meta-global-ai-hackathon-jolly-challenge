@@ -150,6 +150,7 @@ def summarize(records: list, path: str = "") -> dict:
         "labels": labels_of(records), "level": header.get("level"),
         "feature": header.get("feature"), "task": header.get("task"),
         "result": end.get("result"), "steps": len(steps),
+        "duration_s": round(steps[-1]["t_ms"] / 1000, 3) if steps else 0,
         "forked_by": header.get("forked_by"),
         "forked_from": header.get("forked_from"),
         "fork_step": header.get("fork_step"), "path": path,
