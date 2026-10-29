@@ -203,9 +203,9 @@
     flushSession(false);
   }
 
-  // Keyboard scaffold: WASD/arrows register an input, advance the
-  // pure step function with the recorded elapsed t_ms, and show in
-  // the debug readout. Movement itself is a later feature.
+  // Keyboard: WASD/arrows register an input, advance the pure step
+  // function (which moves the player one tile on floor) with the
+  // recorded elapsed t_ms, and show in the debug readout.
   const startedAt = performance.now();
   document.addEventListener('keydown', (ev) => {
     if (/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;

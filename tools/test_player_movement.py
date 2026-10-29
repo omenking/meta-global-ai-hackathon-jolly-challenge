@@ -26,6 +26,60 @@ def run_core(script):
     return json.loads(out.stdout.strip().splitlines()[-1])
 
 
+MOVE_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+const seq = ['right', 'right', 'down', 'left', 'up'];
+let state = core.initialState(level, 'movement-room');
+const start = { ...state.player };
+const path = [start];
+seq.forEach((input, i) => {
+  state = core.step(state, { t_ms: (i + 1) * 100, input });
+  path.push({ ...state.player });
+});
+const back = core.step(state, { t_ms: 600, input: 'left' });
+// Non-direction input registers but does not move.
+const idle = core.step(state, { t_ms: 700, input: null });
+const replayed = core.replay(level, 'movement-room',
+  seq.map((input, i) => ({ t_ms: (i + 1) * 100, input })));
+console.log(JSON.stringify({
+  start, path, final: state.player, steps: state.steps,
+  idle: idle.player, idleSteps: idle.steps,
+  replayFinal: replayed[replayed.length - 1].player,
+  replayDigest: core.stateDigest(replayed[replayed.length - 1]),
+  liveDigest: core.stateDigest(state),
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class MoveOneTileTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.result = run_core(MOVE_SCRIPT)
+
+    def test_starts_at_player_tile(self):
+        self.assertEqual(self.result["start"], {"x": 2, "y": 2})
+
+    def test_each_keypress_moves_exactly_one_tile_on_floor(self):
+        path = self.result["path"]
+        self.assertEqual(path, [
+            {"x": 2, "y": 2}, {"x": 3, "y": 2}, {"x": 4, "y": 2},
+            {"x": 4, "y": 3}, {"x": 3, "y": 3}, {"x": 3, "y": 2},
+        ])
+        for a, b in zip(path, path[1:]):
+            self.assertEqual(abs(a["x"] - b["x"]) + abs(a["y"] - b["y"]), 1)
+
+    def test_recorded_session_replays_to_same_end_state(self):
+        self.assertEqual(self.result["replayFinal"], self.result["final"])
+        self.assertEqual(self.result["replayDigest"], self.result["liveDigest"])
+
+    def test_non_direction_input_does_not_move(self):
+        self.assertEqual(self.result["idle"], self.result["final"])
+        self.assertEqual(self.result["idleSteps"],
+                         self.result["steps"] + 1)
+
+
 @unittest.skipUnless(shutil.which("node"), "node not available")
 class MovementRoomTests(unittest.TestCase):
     def test_movement_room_is_valid_empty_room(self):
