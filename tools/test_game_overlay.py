@@ -50,6 +50,12 @@ class GameOverlayTests(unittest.TestCase):
         self.assertTrue(helper.is_file())
         self.assertIn("screenshot", helper.read_text().lower())
 
+    def test_embed_keeps_aspect_ratio_on_resize(self):
+        self.assertIn("fitBoard", self.game_js)
+        self.assertIn("resize", self.game_js)
+        html = (ROOT / "tools/static/game.html").read_text()
+        self.assertNotIn("100% !important", html)
+
     def test_filters_and_diagnostics_disclosed(self):
         self.assertIn("More filters", self.page)
         self.assertIn("Diagnostics", self.page)

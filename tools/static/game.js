@@ -96,13 +96,20 @@
   const scale = TILE / 512;
   const board = new PIXI.Container();
   app.stage.addChild(board);
-  if (embed) {
+  // Embed: keep the board's true aspect ratio at any window size —
+  // scale to fit and centre (letterbox), refitting on resize. The
+  // canvas is never CSS-stretched to the container.
+  function fitBoard() {
+    if (!embed) return;
+    app.renderer.resize(window.innerWidth, window.innerHeight);
     const fit = Math.min(window.innerWidth / (COLS * TILE),
       window.innerHeight / (ROWS * TILE));
     board.scale.set(fit);
     board.position.set((window.innerWidth - COLS * TILE * fit) / 2,
       (window.innerHeight - ROWS * TILE * fit) / 2);
   }
+  fitBoard();
+  if (embed) window.addEventListener('resize', fitBoard);
 
   function fallbackTile(gx, gy, ch) {
     const g = new PIXI.Graphics();
