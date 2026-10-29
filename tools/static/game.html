@@ -59,11 +59,45 @@
       <button id="btn-replay" type="button">Replay log</button>
       <button id="btn-end-session" type="button">End session</button>
     </div>
+    <h2>Sessions</h2>
+    <div class="row">
+      <label>Search id <input id="filter-q" type="text" size="18"></label>
+      <label>Level <input id="filter-level" type="text" size="12"></label>
+      <label>Creator <select id="filter-creator"><option value="">any</option><option>human</option><option>agent</option></select></label>
+      <label>Feature <input id="filter-feature" type="text" size="12"></label>
+      <label>Date <input id="filter-date" type="date"></label>
+      <label>Result <input id="filter-result" type="text" size="8"></label>
+      <label>Label <input id="filter-label" type="text" size="8"></label>
+      <button id="btn-filter-sessions" type="button">Filter sessions</button>
+    </div>
+    <ul id="sessions-list"></ul>
+    <div id="replay-warning" role="alert" style="display:none;background:#fff3cd;border:1px solid #c90;padding:6px"></div>
+    <h2>Replay</h2>
+    <dl>
+      <dt>Replay step</dt><dd id="replay-readout">&mdash;</dd>
+    </dl>
+    <div class="row">
+      <button id="btn-replay-play" type="button">Play</button>
+      <button id="btn-replay-pause" type="button">Pause</button>
+      <button id="btn-step-back" type="button">Step back</button>
+      <button id="btn-step-fwd" type="button">Step forward</button>
+      <label>Speed <select id="replay-speed"><option>1</option><option>2</option><option>5</option><option>10</option></select></label>
+      <input id="replay-scrub" type="range" min="0" max="0" value="0">
+      <button id="btn-fork" type="button">Fork from here</button>
+    </div>
+    <h2>Annotate</h2>
+    <div class="row">
+      <label>Note <input id="annotate-body" type="text" size="24"></label>
+      <label>Labels <input id="annotate-labels" type="text" size="14" placeholder="bug, failed"></label>
+      <button id="btn-annotate" type="button">Add annotation</button>
+      <span id="annotate-status"></span>
+    </div>
   </div>
 </main>
 <script src="vendor/pixi.min.js"></script>
 <script src="game-core.js"></script>
 <script src="game-session.js"></script>
+<script src="game-replay.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

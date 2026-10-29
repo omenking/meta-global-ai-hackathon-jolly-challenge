@@ -236,6 +236,121 @@
         : 'MISMATCH replay ' + finalDigest + ' vs live ' + liveDigest;
   });
 
+  // --- Sessions menu, replay player, annotations, forks ---
+  let replayId = null, replayStates = null, replayIndex = 0, replayTimer = null;
+  const actor = params.get('creator') === 'agent' ? 'agent' : 'human';
+  function replayActive() { return replayStates !== null; }
+  function showReplay(index) {
+    if (!replayStates) return;
+    replayIndex = Math.max(0, Math.min(index, replayStates.length - 1));
+    state = replayStates[replayIndex];
+    renderState();
+    const r = window.GameCore.readout(state);
+    document.getElementById('replay-readout').textContent =
+      'step ' + r.step + ' pos ' + r.position.x + ',' + r.position.y +
+      ' inventory ' + JSON.stringify(r.inventory) + ' orbs_left ' + r.orbs_left +
+      ' timer ' + Number(r.timer).toFixed(1) + 's input ' + String(r.input) +
+      ' — deep link ?replay=' + replayId + '&t=' + (r.t_ms / 1000);
+    document.getElementById('replay-scrub').max = String(replayStates.length - 1);
+    document.getElementById('replay-scrub').value = String(replayIndex);
+  }
+  function pauseReplay() {
+    if (replayTimer) { clearTimeout(replayTimer); replayTimer = null; }
+  }
+  function playReplay() {
+    pauseReplay();
+    const speed = Number(document.getElementById('replay-speed').value || 1);
+    const tick = () => {
+      if (!replayStates || replayIndex >= replayStates.length - 1) { pauseReplay(); return; }
+      const next = replayIndex + 1;
+      replayTimer = setTimeout(() => { showReplay(next); tick(); },
+        window.GameReplay.delayMs(
+          window.__replayRecords || [], next, speed));
+    };
+    tick();
+  }
+  async function loadReplay(id, tSeconds) {
+    const res = await fetch('/api/game/sessions/' + encodeURIComponent(id));
+    if (!res.ok) { fail('Could not load session ' + id); return; }
+    const data = await res.json();
+    const header = data.records[0];
+    if (header.level && header.level !== levelName) {
+      const next = new URLSearchParams(params);
+      next.set('level', header.level); next.set('replay', id);
+      if (tSeconds !== undefined) next.set('t', String(tSeconds));
+      location.search = '?' + next.toString(); return;
+    }
+    const warns = window.GameReplay.warnings(header, null,
+      window.GameCore.VERSION, null, window.GameSession.levelHash, level);
+    const warnBox = document.getElementById('replay-warning');
+    warnBox.style.display = warns.length ? 'block' : 'none';
+    warnBox.textContent = warns.join('; ');
+    replayId = id; window.__replayRecords = data.records; window.__replayActive = true;
+    replayStates = window.GameReplay.buildStates(
+      window.GameCore, level, levelName, data.records);
+    const idx = tSeconds === undefined ? 0
+      : window.GameReplay.stepIndexAtTime(data.records, tSeconds);
+    showReplay(idx);
+  }
+  async function refreshSessions() {
+    const q = new URLSearchParams();
+    const map = { 'filter-q': 'q', 'filter-level': 'level',
+      'filter-creator': 'creator', 'filter-feature': 'feature',
+      'filter-date': 'date', 'filter-result': 'result', 'filter-label': 'label' };
+    for (const [el, key] of Object.entries(map)) {
+      const v = document.getElementById(el).value.trim();
+      if (v) q.set(key, v);
+    }
+    const res = await fetch('/api/game/sessions?' + q.toString());
+    const data = await res.json();
+    const list = document.getElementById('sessions-list');
+    list.innerHTML = '';
+    for (const s of data.sessions || []) {
+      const li = document.createElement('li');
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = s.id + ' (' + s.level + ', ' +
+        s.created_by + ', ' + (s.result || 'open') + ')' +
+        (s.labels && s.labels.length ? ' [' + s.labels.join(',') + ']' : '');
+      b.addEventListener('click', () => loadReplay(s.id));
+      li.appendChild(b); list.appendChild(li);
+    }
+  }
+  document.getElementById('btn-filter-sessions').addEventListener('click', refreshSessions);
+  document.getElementById('btn-replay-play').addEventListener('click', playReplay);
+  document.getElementById('btn-replay-pause').addEventListener('click', pauseReplay);
+  document.getElementById('btn-step-back').addEventListener('click', () => { pauseReplay(); showReplay(replayIndex - 1); });
+  document.getElementById('btn-step-fwd').addEventListener('click', () => { pauseReplay(); showReplay(replayIndex + 1); });
+  document.getElementById('replay-scrub').addEventListener('input', (ev) => { pauseReplay(); showReplay(Number(ev.target.value)); });
+  document.getElementById('btn-annotate').addEventListener('click', async () => {
+    const target = replayId || sessionId;
+    const res = await fetch('/api/game/sessions/' + encodeURIComponent(target) + '/annotations', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ author: actor,
+        body: document.getElementById('annotate-body').value,
+        labels: document.getElementById('annotate-labels').value }) });
+    document.getElementById('annotate-status').textContent =
+      res.ok ? 'annotation added to ' + target : 'annotation failed';
+    if (res.ok) refreshSessions();
+  });
+  document.getElementById('btn-fork').addEventListener('click', async () => {
+    if (!replayId) { fail('Load a session replay before forking.'); return; }
+    const newId = 'game-' + levelName + '-fork' + replayIndex + '-' +
+      Math.random().toString(36).slice(2, 8);
+    const res = await fetch('/api/game/sessions/' + encodeURIComponent(replayId) + '/fork', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fork_step: replayIndex, forked_by: actor, id: newId }) });
+    if (!res.ok) { fail('Fork failed'); return; }
+    const next = new URLSearchParams(params);
+    next.set('level', levelName); next.set('fork', newId);
+    next.delete('replay'); next.delete('t');
+    location.search = '?' + next.toString();
+  });
+  refreshSessions();
+  if (params.get('replay')) {
+    loadReplay(params.get('replay'),
+      params.get('t') === null ? undefined : Number(params.get('t')));
+  }
+
   window.__game = {
     getState: () => state,
     getPlayerSpritePos: () => playerSprite

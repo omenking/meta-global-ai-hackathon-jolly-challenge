@@ -788,10 +788,20 @@ class Handler(BaseHTTPRequestHandler):
             if len(parts) == 4 and parts[:3] == ["api", "game", "levels"]:
                 return _send(self, 200, game_levels.load_level(
                     ROOT / "levels", urllib.parse.unquote(parts[3])))
+            if parts == ["api", "game", "sessions"]:
+                q = urllib.parse.parse_qs(parsed.query or "")
+                def _q(k):
+                    return (q.get(k) or [None])[0]
+                return _send(self, 200, {"sessions": game_sessions.list_sessions(
+                    pm_store.SESSIONS_ROOT, level=_q("level"),
+                    creator=_q("creator"), feature=_q("feature"),
+                    date=_q("date"), result=_q("result"), label=_q("label"),
+                    query=_q("q"))})
             if len(parts) == 4 and parts[:3] == ["api", "game", "sessions"]:
                 records = game_sessions.read_session(
                     pm_store.SESSIONS_ROOT, urllib.parse.unquote(parts[3]))
-                return _send(self, 200, {"records": records})
+                return _send(self, 200, {"records": records,
+                                         "summary": game_sessions.summarize(records)})
             if parts == ["api", "pm", "features"]:
                 with STATE_LOCK:
                     payload = [_pm_feature_view(f) for f in STATE.pm["features"]]
@@ -840,6 +850,27 @@ class Handler(BaseHTTPRequestHandler):
                 return _send(self, 201, {
                     "id": body.get("id"),
                     "path": f"sessions/{path.name}"})
+            if len(parts) == 5 and parts[:3] == ["api", "game", "sessions"] and parts[4] == "annotations":
+                sid = urllib.parse.unquote(parts[3])
+                rec = game_sessions.append_annotation(
+                    pm_store.SESSIONS_ROOT, sid,
+                    body.get("author", "human"), body.get("body", ""),
+                    labels=body.get("labels"))
+                return _send(self, 201, rec)
+            if len(parts) == 5 and parts[:3] == ["api", "game", "sessions"] and parts[4] == "fork":
+                sid = urllib.parse.unquote(parts[3])
+                fork_step = body.get("fork_step")
+                if not isinstance(fork_step, int):
+                    raise SessionError("fork needs an integer fork_step")
+                forked_by = body.get("forked_by") or body.get("author") or "human"
+                new_id = body.get("id") or (
+                    sid[:40] + "-fork" + str(fork_step) + "-" +
+                    time.strftime("%H%M%S"))
+                forked = game_sessions.write_fork(
+                    pm_store.SESSIONS_ROOT, sid, fork_step, new_id, forked_by,
+                    created_at=body.get("created_at"))
+                return _send(self, 201, {"id": new_id, "records": forked,
+                                         "summary": game_sessions.summarize(forked)})
             if parts == ["api", "assets"]:
                 with STATE_LOCK:
                     asset = create_asset(STATE.assets, body.get("name", ""),
