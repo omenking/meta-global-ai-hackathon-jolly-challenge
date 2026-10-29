@@ -83,7 +83,20 @@
     return ('0000000' + h.toString(16)).slice(-8);
   }
 
-  const api = { findPlayer, initialState, step, replay, stateDigest };
+  const KEY_INPUTS = {
+    w: 'up', arrowup: 'up',
+    a: 'left', arrowleft: 'left',
+    s: 'down', arrowdown: 'down',
+    d: 'right', arrowright: 'right',
+  };
+
+  function inputForKey(key) {
+    if (typeof key !== 'string') return null;
+    return KEY_INPUTS[key.toLowerCase()] || null;
+  }
+
+  const api = { findPlayer, initialState, step, replay, stateDigest,
+    inputForKey };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

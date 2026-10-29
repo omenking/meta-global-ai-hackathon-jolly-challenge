@@ -191,16 +191,44 @@
     flushSession(true);
   });
 
+  const inputLog = [];
+  function applyStep(input) {
+    state = window.GameCore.step(state, input);
+    inputLog.push({ t_ms: state.t_ms, input: state.last_input });
+    recorder.recordStep(state.steps, state.t_ms, state.last_input);
+    document.getElementById('dbg-input').textContent =
+      String(state.last_input) + ' @ t_ms ' + state.t_ms;
+    renderState();
+    flushSession(false);
+  }
+
+  // Keyboard scaffold: WASD/arrows register an input, advance the
+  // pure step function with the recorded elapsed t_ms, and show in
+  // the debug readout. Movement itself is a later feature.
+  const startedAt = performance.now();
+  document.addEventListener('keydown', (ev) => {
+    if (/INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
+    const input = window.GameCore.inputForKey(ev.key);
+    if (!input) return;
+    ev.preventDefault();
+    applyStep({ t_ms: Math.round(performance.now() - startedAt), input: input });
+  });
+  document.getElementById('btn-replay').addEventListener('click', () => {
+    const states = window.GameCore.replay(level, levelName, inputLog);
+    const finalDigest = window.GameCore.stateDigest(states[states.length - 1]);
+    const liveDigest = window.GameCore.stateDigest(state);
+    document.getElementById('dbg-replay').textContent =
+      finalDigest === liveDigest
+        ? 'match ' + finalDigest + ' (' + inputLog.length + ' inputs)'
+        : 'MISMATCH replay ' + finalDigest + ' vs live ' + liveDigest;
+  });
+
   window.__game = {
     getState: () => state,
     sessionId: sessionId,
     endSession: endSession,
-    applyStep: (input) => {
-      state = window.GameCore.step(state, input);
-      recorder.recordStep(state.steps, state.t_ms, state.last_input);
-      renderState();
-      flushSession(false);
-    },
+    applyStep: applyStep,
+    getLog: () => inputLog.slice(),
   };
 
   document.getElementById('subtitle').textContent =
