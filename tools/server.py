@@ -43,6 +43,8 @@ from asset_store import (SESSION_CONTEXT_MAX, UPLOAD_EXTENSIONS,
                          validate_upload)
 import pm_store
 from pm_store import StoreError as PMStoreError
+import game_sessions
+from game_sessions import SessionError
 
 GEN_SCRIPT = ROOT / "scripts" / "gen-image"
 OUTPUTS_DIR = ROOT / "assets" / "outputs"
@@ -811,7 +813,7 @@ class Handler(BaseHTTPRequestHandler):
                     return self._serve_file(app_index)
                 return self._serve_file(STATIC_DIR / "home.html")
             return self._serve_file(STATIC_DIR / "index.html")
-        except (StoreError, PMStoreError) as exc:
+        except (StoreError, PMStoreError, SessionError) as exc:
             return _send(self, 400, {"error": str(exc)})
 
     def do_POST(self) -> None:
@@ -819,6 +821,13 @@ class Handler(BaseHTTPRequestHandler):
         parts = [p for p in parsed.path.split("/") if p]
         try:
             body = _read_json(self)
+            if parts == ["api", "game", "sessions"]:
+                path = game_sessions.write_session(
+                    pm_store.SESSIONS_ROOT, body.get("id", ""),
+                    body.get("content", ""))
+                return _send(self, 201, {
+                    "id": body.get("id"),
+                    "path": f"sessions/{path.name}"})
             if parts == ["api", "assets"]:
                 with STATE_LOCK:
                     asset = create_asset(STATE.assets, body.get("name", ""),
@@ -1048,7 +1057,7 @@ class Handler(BaseHTTPRequestHandler):
                     STATE.save_pm()
                     return _send(self, 200, _pm_feature_view(feature))
             return _send(self, 404, {"error": "not found"})
-        except (StoreError, PMStoreError) as exc:
+        except (StoreError, PMStoreError, SessionError) as exc:
             return _send(self, 400, {"error": str(exc)})
 
     def do_PUT(self) -> None:
@@ -1166,7 +1175,7 @@ class Handler(BaseHTTPRequestHandler):
                     STATE.save_pm()
                     return _send(self, 200, comment)
             return _send(self, 404, {"error": "not found"})
-        except (StoreError, PMStoreError) as exc:
+        except (StoreError, PMStoreError, SessionError) as exc:
             return _send(self, 400, {"error": str(exc)})
 
     def do_DELETE(self) -> None:
@@ -1221,7 +1230,7 @@ class Handler(BaseHTTPRequestHandler):
                     STATE.save_pm()
                     return _send(self, 200, {"deleted": cid})
             return _send(self, 404, {"error": "not found"})
-        except (StoreError, PMStoreError) as exc:
+        except (StoreError, PMStoreError, SessionError) as exc:
             return _send(self, 400, {"error": str(exc)})
 
 

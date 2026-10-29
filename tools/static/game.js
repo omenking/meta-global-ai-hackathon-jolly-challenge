@@ -111,9 +111,63 @@
     document.getElementById('dbg-state').textContent = JSON.stringify(state);
   }
   renderState();
+
+  // Session recording starts with the playable build: the header is
+  // flushed before any input, every step flushes, and End / pagehide
+  // closes the file — no play is ever unrecorded.
+  const now = new Date();
+  const stamp = now.toISOString().replace(/[^0-9]/g, '').slice(0, 14);
+  const sessionId = 'game-' + levelName + '-' + stamp + '-' +
+    Math.random().toString(36).slice(2, 8);
+  const recorder = window.GameSession.createRecorder({
+    id: sessionId,
+    created_at: now.toISOString(),
+    created_by: params.get('creator') === 'agent' ? 'agent' : 'human',
+    label: params.get('label') || '',
+    level: levelName,
+    level_file: 'levels/' + levelName + '.json',
+    level_data: level,
+    feature: params.get('feature') || null,
+    task: params.get('task') || null,
+  });
+  document.getElementById('dbg-session').textContent =
+    sessionId + ' (' + recorder.header.created_by + ')';
+  function flushSession(beacon) {
+    const payload = JSON.stringify({ id: sessionId, content: recorder.toJSONL() });
+    if (beacon && navigator.sendBeacon) {
+      navigator.sendBeacon('/api/game/sessions',
+        new Blob([payload], { type: 'application/json' }));
+    } else {
+      fetch('/api/game/sessions', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: payload, keepalive: true,
+      }).catch(() => {});
+    }
+  }
+  function endSession(result) {
+    if (recorder.isEnded()) return;
+    recorder.end(result || 'quit', { time_left: state.time_left_s });
+    flushSession(false);
+    document.getElementById('dbg-session').textContent =
+      sessionId + ' — ended (' + (result || 'quit') + ')';
+  }
+  flushSession(false);
+  document.getElementById('btn-end-session').addEventListener('click', () => endSession('quit'));
+  window.addEventListener('pagehide', () => {
+    if (!recorder.isEnded()) { recorder.end('quit', { time_left: state.time_left_s }); }
+    flushSession(true);
+  });
+
   window.__game = {
     getState: () => state,
-    applyStep: (input) => { state = window.GameCore.step(state, input); renderState(); },
+    sessionId: sessionId,
+    endSession: endSession,
+    applyStep: (input) => {
+      state = window.GameCore.step(state, input);
+      recorder.recordStep(state.steps, state.t_ms, state.last_input);
+      renderState();
+      flushSession(false);
+    },
   };
 
   document.getElementById('subtitle').textContent =
