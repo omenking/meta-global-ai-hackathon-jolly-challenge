@@ -163,5 +163,66 @@ class MatchingLockTests(unittest.TestCase):
         self.assertEqual(self.r["lockTile"], ".")
 
 
+WRONG_SCRIPT = r"""
+const core = require(process.argv[1]);
+const COLORS = ['red', 'gold', 'green', 'blue', 'silver'];
+function legendFor(kc, lc) {
+  return { '.': {}, '#': {}, 'P': {},
+    'k': { key_color: kc }, 'L': { lock_color: lc } };
+}
+let violations = 0, checked = 0;
+for (const kc of COLORS) for (const lc of COLORS) {
+  if (kc === lc) continue;
+  checked++;
+  const level = { rows: ['#####', '#PkL#', '#####'],
+    legend: legendFor(kc, lc), time_limit: 120 };
+  let s = core.initialState(level, 'pair-room');
+  s = core.step(s, { t_ms: 100, input: 'right' }); // pick key kc
+  const before = { pos: { ...s.player }, inv: core.readout(s).inventory };
+  s = core.step(s, { t_ms: 200, input: 'right' }); // press lock lc
+  if (s.player.x !== before.pos.x || s.player.y !== before.pos.y ||
+      JSON.stringify(core.readout(s).inventory) !== JSON.stringify(before.inv) ||
+      s.grid[1][3] !== 'L') violations++;
+}
+// No key at all against a lock, in the real keys-room.
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+let s = core.initialState(level, 'keys-room');
+for (let i = 0; i < 4; i++) s = core.step(s, { t_ms: (i + 1) * 100, input: 'right' });
+const noKey = { pos: s.player, tile: s.grid[1][6], inv: core.readout(s).inventory };
+// Full play sequence replays to the same end state.
+let live = core.initialState(level, 'keys-room');
+const seq = ['right','right','right','right','right',
+  'down','down','left','left','down','right','right','right'];
+const log = seq.map((input, i) => ({ t_ms: (i + 1) * 100, input }));
+for (const e of log) live = core.step(live, e);
+const replayed = core.replay(level, 'keys-room', log);
+console.log(JSON.stringify({ violations, checked, noKey,
+  liveInv: core.readout(live).inventory,
+  liveDigest: core.stateDigest(live),
+  replayDigest: core.stateDigest(replayed[replayed.length - 1]) }));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class WrongColourLockTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(WRONG_SCRIPT)
+
+    def test_every_wrong_colour_pairing_does_nothing(self):
+        self.assertEqual(self.r["checked"], 20)
+        self.assertEqual(self.r["violations"], 0)
+
+    def test_lock_stands_until_pressed_with_its_key(self):
+        # After 4 rights the player holds red and stands at (5,1);
+        # the red lock at (6,1) is still shut (the matrix above
+        # covers wrong-colour and the matching test covers opening).
+        self.assertEqual(self.r["noKey"]["tile"], "R")
+        self.assertEqual(self.r["noKey"]["pos"], {"x": 5, "y": 1})
+
+    def test_recorded_sequence_replays_to_same_end_state(self):
+        self.assertEqual(self.r["replayDigest"], self.r["liveDigest"])
+
+
 if __name__ == "__main__":
     unittest.main()
