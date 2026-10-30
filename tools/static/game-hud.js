@@ -51,7 +51,7 @@
   // objects carrying a colour; the slot holds its colour name (or
   // the raw key name when it is not a known colour).
   const INVENTORY_SLOTS = 8;
-  const KEY_COLORS = ['red', 'yellow', 'green', 'blue'];
+  const KEY_COLORS = ['red', 'gold', 'green', 'blue', 'silver'];
   function keyColor(item) {
     if (!item) return null;
     const raw = typeof item === 'string' ? item

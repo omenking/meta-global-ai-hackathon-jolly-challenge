@@ -81,7 +81,7 @@
   }
   spriteNames.add('jolly-fall.png');
   // Key icons for the HUD inventory slots, whatever the level legend.
-  for (const c of ['red', 'yellow', 'green', 'blue']) spriteNames.add('key_' + c + '.png');
+  for (const c of ['red', 'gold', 'green', 'blue', 'silver']) spriteNames.add('key_' + c + '.png');
   spriteNames.add('key.png');
   const textures = {};
   const missing = new Set();
@@ -167,16 +167,25 @@
     return s;
   }
 
+  // Key/lock tiles are dynamic: their sprites follow state.grid
+  // (a picked key or dissolved lock turns to floor in state).
+  const dynamicTiles = [];
   for (let gy = 0; gy < ROWS; gy++) {
     for (let gx = 0; gx < COLS; gx++) {
       const ch = rows[gy][gx];
       const e = legend[ch];
       if (!e) { fallbackTile(gx, gy, ch); continue; }
+      const isDynamic = !!(e.key_color || e.lock_color);
       if (e.base) {
         if (!drawSprite(e.base, gx, gy)) { fallbackTile(gx, gy, ch); continue; }
+      } else if (e.lock_color) {
+        // Floor under a lock, revealed when it dissolves.
+        drawSprite('floor_default.png', gx, gy);
       }
       if (e.sprite && ch !== 'P') {
-        if (drawSprite(e.sprite, gx, gy) === false) fallbackTile(gx, gy, ch);
+        const spr = drawSprite(e.sprite, gx, gy);
+        if (spr === false) fallbackTile(gx, gy, ch);
+        else if (isDynamic && spr) dynamicTiles.push({ x: gx, y: gy, ch: ch, sprite: spr });
       } else if (e.text) {
         const t = new PIXI.Text({
           text: e.text,
@@ -386,6 +395,9 @@
     document.getElementById('dbg-state').textContent = JSON.stringify(state);
     const statusEl = document.getElementById('dbg-status');
     if (statusEl) statusEl.textContent = state.status || 'playing';
+    for (const dt of dynamicTiles) {
+      dt.sprite.visible = !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
+    }
     retryGroup.visible = state.status === 'lost';
     hudValues.orbs = window.GameHud.orbsLeft(state);
     orbsReadout.set(hudValues.orbs);

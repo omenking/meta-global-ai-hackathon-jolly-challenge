@@ -98,18 +98,23 @@ class LevelSpriteTests(unittest.TestCase):
                              f"{name} must stay fully opaque")
 
     def test_color_variants_are_distinct(self):
+        # Real per-colour art (no hue shifting): 5 combos on disk.
         key_hashes = set()
-        for color in ("red", "blue", "green", "yellow"):
+        for color in ("red", "gold", "green", "blue", "silver"):
             data = (SPRITES_DIR / f"key_{color}.png").read_bytes()
             key_hashes.add(hashlib.sha256(data).hexdigest())
-        self.assertEqual(len(key_hashes), 4,
+        self.assertEqual(len(key_hashes), 5,
                          "key color variants must all differ")
         lock_hashes = set()
-        for color in ("red", "blue", "green", "yellow"):
+        for color in ("red", "gold", "green", "blue", "silver"):
             data = (SPRITES_DIR / f"wall_keyhole_{color}.png").read_bytes()
             lock_hashes.add(hashlib.sha256(data).hexdigest())
-        self.assertEqual(len(lock_hashes), 4,
+        self.assertEqual(len(lock_hashes), 5,
                          "lock color variants must all differ")
+        prep = (ROOT / "tools" / "prep_level_sprites.sh").read_text(
+            encoding="utf-8")
+        self.assertIn("lock_and_keys", prep)
+        self.assertNotIn("hue=h=", prep)
 
 
 if __name__ == "__main__":
