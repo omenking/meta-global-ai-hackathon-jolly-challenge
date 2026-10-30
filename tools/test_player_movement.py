@@ -92,8 +92,10 @@ function attempt(rows, input) {
 const blockers = {};
 // '*' and 'G' are no longer unconditional blockers: orbs-and-gate
 // makes '*' collectible and 'G' passable at zero orbs (both states
-// covered by tools/test_orbs_and_gate.py).
-for (const ch of ['#', 'B', 'E', 'R', 'Y', 'b', 'g', 'r', 'y', 'X', '?']) {
+// covered by tools/test_orbs_and_gate.py). 'X' is the warp:
+// warp-and-levels makes stepping onto it win the run (covered by
+// tools/test_warp_and_levels.py).
+for (const ch of ['#', 'B', 'E', 'R', 'Y', 'b', 'g', 'r', 'y', '?']) {
   blockers[ch] = attempt(['###', '#P' + ch, '###'], 'right');
 }
 // Walls of the movement room: up, up (second hits border), then around.

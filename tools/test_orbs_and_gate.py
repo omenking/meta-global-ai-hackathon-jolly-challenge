@@ -190,12 +190,18 @@ const onGate = { pos: { ...s.player }, open: core.readout(s).gate_open,
   gateTile: s.grid[3][5] };
 s = core.step(s, { t_ms: 1300, input: 'down' });
 const pastGate = { ...s.player };
-s = core.step(s, { t_ms: 1400, input: 'down' });
-const atPortal = { pos: { ...s.player }, tile: s.grid[5][5] };
+// Back through the open gate both ways before the final warp:
+// warp-and-levels freezes the run once the portal is stepped on.
+s = core.step(s, { t_ms: 1400, input: 'up' });
 s = core.step(s, { t_ms: 1500, input: 'up' });
-s = core.step(s, { t_ms: 1600, input: 'up' });
 const backThrough = { ...s.player };
-const log = inputs.concat(['down', 'down', 'down', 'up', 'up'])
+s = core.step(s, { t_ms: 1600, input: 'down' });
+s = core.step(s, { t_ms: 1700, input: 'down' });
+s = core.step(s, { t_ms: 1800, input: 'down' });
+const atPortal = { pos: { ...s.player }, tile: s.grid[5][5],
+  status: s.status };
+const log = inputs.concat(
+  ['down', 'down', 'up', 'up', 'down', 'down', 'down'])
   .map((input, i) => ({ t_ms: (i + 1) * 100, input }));
 const replayed = core.replay(level, 'orbs-room', log).slice(-1)[0];
 console.log(JSON.stringify({ startOpen, aboveOpen, onGate, pastGate,
@@ -224,13 +230,16 @@ class GateOpensTests(unittest.TestCase):
         self.assertEqual(self.r["backThrough"], {"x": 5, "y": 2},
                          "open gate must be passable both ways")
 
-    def test_portal_still_blocks_in_this_feature(self):
-        self.assertEqual(self.r["atPortal"]["pos"], {"x": 5, "y": 4})
+    def test_portal_is_the_warp_since_warp_and_levels(self):
+        # Superseded by warp-and-levels: stepping onto the portal
+        # now wins the run (covered in tools/test_warp_and_levels.py).
+        self.assertEqual(self.r["atPortal"]["pos"], {"x": 5, "y": 5})
         self.assertEqual(self.r["atPortal"]["tile"], "X")
+        self.assertEqual(self.r["atPortal"]["status"], "won")
 
     def test_recorded_log_replays_to_same_end_state(self):
         self.assertEqual(self.r["liveDigest"], self.r["replayDigest"])
-        self.assertEqual(self.r["replayPos"], {"x": 5, "y": 2})
+        self.assertEqual(self.r["replayPos"], {"x": 5, "y": 5})
         self.assertTrue(self.r["replayOpen"])
 
     def test_game_renders_open_gate_from_state(self):

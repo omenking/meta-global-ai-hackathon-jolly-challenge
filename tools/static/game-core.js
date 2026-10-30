@@ -12,6 +12,10 @@
 // player stays. Orbs (orbs-and-gate): walking onto an orb collects
 // it — the tile turns to floor and orbs_left decrements; orbs never
 // enter the inventory. The gate stays shut until orbs_left is zero.
+// Warp (warp-and-levels): the portal tile ('X') sits behind the
+// gate; stepping onto it wins the run (status 'won', frozen like a
+// lost run) and state.next_level names the level to load next —
+// null on the last level, where the win ends the run.
 (function (root) {
   'use strict';
 
@@ -42,6 +46,11 @@
   // Orb tiles, as already counted by readout and the HUD.
   function isOrb(ch) {
     return ch === '*' || ch === 'O';
+  }
+
+  // The warp (portal / exit) tile behind the gate.
+  function isWarp(ch) {
+    return ch === 'X';
   }
 
   function countOrbs(grid) {
@@ -91,7 +100,7 @@
   function resolveMove(state, inputName) {
     const stay = { player: { x: state.player.x, y: state.player.y },
       grid: state.grid, inventory: (state.inventory || []).slice(),
-      orbs_left: orbsLeftOf(state) };
+      orbs_left: orbsLeftOf(state), warped: false };
     const delta = DIRECTIONS[inputName];
     if (!delta) return stay;
     const nx = state.player.x + delta.x;
@@ -102,7 +111,16 @@
       // Collecting an orb never touches the inventory.
       return { player: { x: nx, y: ny },
         grid: setTile(state.grid, nx, ny, '.'),
-        inventory: stay.inventory, orbs_left: stay.orbs_left - 1 };
+        inventory: stay.inventory, orbs_left: stay.orbs_left - 1,
+        warped: false };
+    }
+    if (isWarp(ch)) {
+      // Stepping onto the warp wins the run. The tile stays 'X'
+      // (the win is state, not a new tile); the gate in front of
+      // it is what keeps it unreachable while orbs remain.
+      return { player: { x: nx, y: ny }, grid: state.grid,
+        inventory: stay.inventory, orbs_left: stay.orbs_left,
+        warped: true };
     }
     if (ch === 'G') {
       // Shut gate blocks like a wall while orbs remain; at zero it
@@ -110,7 +128,8 @@
       // new tile), so replays reproduce it exactly.
       if (stay.orbs_left > 0) return stay;
       return { player: { x: nx, y: ny }, grid: state.grid,
-        inventory: stay.inventory, orbs_left: stay.orbs_left };
+        inventory: stay.inventory, orbs_left: stay.orbs_left,
+        warped: false };
     }
     const keyColor = (state.key_tiles || {})[ch];
     if (keyColor) {
@@ -120,7 +139,7 @@
       return { player: { x: nx, y: ny },
         grid: setTile(state.grid, nx, ny, '.'),
         inventory: stay.inventory.concat([keyColor]),
-        orbs_left: stay.orbs_left };
+        orbs_left: stay.orbs_left, warped: false };
     }
     const lockColor = (state.lock_tiles || {})[ch];
     if (lockColor) {
@@ -130,11 +149,12 @@
       inv.splice(idx, 1);
       return { player: { x: nx, y: ny },
         grid: setTile(state.grid, nx, ny, '.'), inventory: inv,
-        orbs_left: stay.orbs_left };
+        orbs_left: stay.orbs_left, warped: false };
     }
     if (isWalkable(state.grid, nx, ny)) {
       return { player: { x: nx, y: ny }, grid: state.grid,
-        inventory: stay.inventory, orbs_left: stay.orbs_left };
+        inventory: stay.inventory, orbs_left: stay.orbs_left,
+        warped: false };
     }
     return stay;
   }
@@ -167,6 +187,10 @@
       time_limit_s: limit,
       time_left_s: limit,
       status: 'playing',
+      // Ordered progression: the level JSON may name the next
+      // level in the chain ('next'); absent means last level.
+      next_level: (level && typeof level.next === 'string' && level.next)
+        ? level.next : null,
       last_input: null,
     };
   }
@@ -176,6 +200,10 @@
   // replays as a loss at exactly the same recorded moment.
   function isLost(state) {
     return !!state && state.status === 'lost';
+  }
+
+  function isWon(state) {
+    return !!state && state.status === 'won';
   }
 
   function step(state, input) {
@@ -191,13 +219,18 @@
     const elapsed = input.t_ms / 1000;
     const expired = state.time_limit_s !== null &&
       state.time_limit_s !== undefined && elapsed >= state.time_limit_s;
-    const lost = expired || state.status === 'lost';
-    // No movement on or after expiry, and a lost run stays frozen.
-    const moved = lost
+    // A won run stays won: expiry never flips a finished win.
+    const lost = state.status !== 'won' &&
+      (expired || state.status === 'lost');
+    // No movement on or after expiry, and a finished (lost or won)
+    // run stays frozen.
+    const finished = lost || state.status === 'won';
+    const moved = finished
       ? { player: { x: state.player.x, y: state.player.y },
           grid: state.grid, inventory: (state.inventory || []).slice(),
-          orbs_left: orbsLeftOf(state) }
+          orbs_left: orbsLeftOf(state), warped: false }
       : resolveMove(state, input.input);
+    const won = !lost && (state.status === 'won' || !!moved.warped);
     return {
       level: state.level,
       grid: moved.grid,
@@ -213,7 +246,8 @@
       time_limit_s: state.time_limit_s,
       time_left_s: state.time_limit_s === null
         ? null : Math.max(0, state.time_limit_s - elapsed),
-      status: lost ? 'lost' : 'playing',
+      status: lost ? 'lost' : (won ? 'won' : 'playing'),
+      next_level: state.next_level === undefined ? null : state.next_level,
       last_input: input.input === undefined ? null : input.input,
     };
   }
@@ -257,12 +291,13 @@
       inventory: (state.inventory || []).slice(),
       orbs_left: orbsLeftOf(state), gate_open: orbsLeftOf(state) === 0,
       status: state.status || 'playing',
+      next_level: state.next_level === undefined ? null : state.next_level,
       timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
       time_left_s: state.time_left_s,
       elapsed_s: state.elapsed_s, t_ms: state.t_ms, input: state.last_input };
   }
   const api = { findPlayer, initialState, step, replay, stateDigest,
-    inputForKey, isWalkable, isLost, isOrb, countOrbs, DIRECTIONS, VERSION, readout, DEFAULT_TIME_LIMIT_S };
+    inputForKey, isWalkable, isLost, isWon, isOrb, isWarp, countOrbs, DIRECTIONS, VERSION, readout, DEFAULT_TIME_LIMIT_S };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

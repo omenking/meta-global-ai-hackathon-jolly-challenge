@@ -2,6 +2,8 @@
   "name": "orbs-room",
   "time_limit": 120,
   "test": true,
+  "level_number": 1,
+  "next": "warp-room",
   "source": "orbs-and-gate Test Level: two orbs in the reachable chamber, gate in the divider wall, portal behind the gate",
   "tile": 64,
   "legend": {

@@ -5,6 +5,8 @@
   'use strict';
   const errorBox = document.getElementById('error');
   function fail(msg) {
+    // Never leave an error page hidden under the wipe cover.
+    document.documentElement.classList.remove('wipe-in');
     errorBox.style.display = 'block';
     errorBox.textContent = msg;
     document.getElementById('subtitle').textContent = 'failed to load';
@@ -15,6 +17,27 @@
   const embed = params.get('embed') === '1';
   if (embed) document.body.classList.add('embed');
   const levelName = (params.get('level') || 'test-room').replace(/[^a-zA-Z0-9_-]/g, '');
+
+  // Wipe transition (view only): arriving via a warp starts fully
+  // covered from first paint (html.wipe-in, set by the inline head
+  // script in game.html), then revealWipe() slides the cover away
+  // once this level is ready. Plain loads never cover.
+  const wipeEl = document.getElementById('wipe');
+  const wipeIncoming = params.get('wipe') === '1';
+  function revealWipe() {
+    if (!wipeIncoming) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      // Removing the flag re-enables the CSS transition; the
+      // reveal class then carries the cover off the far edge.
+      document.documentElement.classList.remove('wipe-in');
+      wipeEl.classList.add('reveal');
+      setTimeout(() => {
+        wipeEl.style.transition = 'none';
+        wipeEl.classList.remove('reveal');
+        requestAnimationFrame(() => { wipeEl.style.transition = ''; });
+      }, 500);
+    }));
+  }
 
   // Game menu: only Test Levels are offered for test play (review
   // fix). The full chip1 level is preserved in levels/ and in the
@@ -341,6 +364,27 @@
   retryBtnText.eventMode = 'none';
   retryGroup.addChild(retryBtnText);
   addHudSection(retryGroup, 84);
+  // Win screen (warp-and-levels, last level): stepping on the warp
+  // with no next level wins the run; the message + Play again live
+  // at the foot of the HUD column, never over the board.
+  const winGroup = new PIXI.Container();
+  winGroup.visible = false;
+  const winMsg = new PIXI.Text({ text: 'You win!', style: {
+    fontSize: 20, fill: 0x0a6b00, fontWeight: 'bold' } });
+  winMsg.anchor.set(0.5, 0);
+  winMsg.position.set(HUD_W / 2, 0);
+  winGroup.addChild(winMsg);
+  const winBtnBg = new PIXI.Graphics();
+  winBtnBg.eventMode = 'static';
+  winBtnBg.cursor = 'pointer';
+  winBtnBg.on('pointertap', () => restartLevel());
+  winGroup.addChild(winBtnBg);
+  const winBtnText = new PIXI.Text({ text: 'Play again', style: {
+    fontSize: 19, fill: 0xffffff, fontWeight: 'bold' } });
+  winBtnText.anchor.set(0.5);
+  winBtnText.eventMode = 'none';
+  winGroup.addChild(winBtnText);
+  addHudSection(winGroup, 84);
   function layoutHud() {
     const w = app.renderer.width, h = app.renderer.height;
     hudScale = Math.min(1, h / HUD_H);
@@ -351,6 +395,10 @@
     hudBg.rect(0, 0, 3, h / hudScale).fill(0x8a8a8a);
     let y = 14;
     for (const sec of hudSections) {
+      // Finish sections (retry / win) take column space only while
+      // shown, so the readouts keep their scale on short boards.
+      if ((sec.group === retryGroup || sec.group === winGroup) &&
+          !sec.group.visible) continue;
       sec.group.position.set(0, y);
       y += sec.height + 10;
     }
@@ -358,6 +406,10 @@
     retryBtnBg.roundRect(HUD_W / 2 - 60, 26, 120, 38, 6)
       .fill(0xc00000).stroke({ width: 1, color: 0xffffff });
     retryBtnText.position.set(HUD_W / 2, 45);
+    winBtnBg.clear();
+    winBtnBg.roundRect(HUD_W / 2 - 60, 26, 120, 38, 6)
+      .fill(0x0a6b00).stroke({ width: 1, color: 0xffffff });
+    winBtnText.position.set(HUD_W / 2, 45);
   }
   layoutHud();
   hudReady = true;
@@ -403,6 +455,15 @@
         : !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
     }
     retryGroup.visible = state.status === 'lost';
+    // The HUD win screen is only for the last level; mid-chain a
+    // win shows the level summary (its Next button) instead.
+    winGroup.visible = state.status === 'won' && !state.next_level;
+    const finishKey = (retryGroup.visible ? 'r' : '') +
+      (winGroup.visible ? 'w' : '');
+    if (finishKey !== renderState._finishKey) {
+      renderState._finishKey = finishKey;
+      layoutHud();
+    }
     hudValues.orbs = window.GameHud.orbsLeft(state);
     orbsReadout.set(hudValues.orbs);
     hudValues.level = window.GameHud.levelNumber(level, state.level);
@@ -486,6 +547,7 @@
   // first (as 'lost' if it already expired, else 'quit').
   function restartLevel() {
     if (window.__replayActive) return;
+    hideLevelSummary();
     if (recorder && !recorder.isEnded()) endSession('quit');
     recorder = null;
     forkSeed = null;
@@ -522,13 +584,64 @@
     // End (and flush) a lost run in one write, so the session file
     // cannot land without its lost end line.
     if (state.status === 'lost') endSession('lost');
+    else if (state.status === 'won') {
+      // Warp: close this level's session as won, then show the
+      // centre-screen level summary. Loading the next level is
+      // the summary continue button's job, not this step's.
+      endSession('won');
+      showLevelSummary();
+    }
     else flushSession(false);
+  }
+  // Level summary (centre of the screen): a view of the finished
+  // run's GameCore state, shown only by live play (never replay).
+  const summaryEl = document.getElementById('level-summary');
+  function showLevelSummary() {
+    const total = window.GameCore.countOrbs(level.rows);
+    const left = window.GameCore.readout(state).orbs_left;
+    document.getElementById('summary-level').textContent =
+      window.GameHud.levelNumber(level, state.level) + ' (' + state.level + ')';
+    document.getElementById('summary-orbs').textContent =
+      (total - left) + ' / ' + total;
+    document.getElementById('summary-steps').textContent = String(state.steps);
+    document.getElementById('summary-time').textContent = fmtHud(state.elapsed_s);
+    document.getElementById('summary-time-left').textContent =
+      state.time_left_s === null ? '—' : fmtHud(state.time_left_s);
+    document.getElementById('btn-summary-next').textContent =
+      state.next_level ? 'Next level' : 'Finish';
+    summaryEl.classList.add('open');
+    document.getElementById('btn-summary-next').focus();
+  }
+  function hideLevelSummary() {
+    summaryEl.classList.remove('open');
+  }
+  document.getElementById('btn-summary-next').addEventListener('click', () => {
+    hideLevelSummary();
+    if (state.next_level) wipeToNextLevel(state.next_level);
+    // Last level: dismissing the summary reveals the win screen.
+  });
+  // Sweep the wipe across, then load the next level under the
+  // cover; the new page starts covered and reveals (revealWipe).
+  function wipeToNextLevel(nextId) {
+    wipeEl.classList.add('cover');
+    setTimeout(() => loadNextLevel(nextId, true), 480);
+  }
+  // Load the next level in the progression chain (same page, new
+  // ?level=, fresh session on first move). Replay/fork params do
+  // not carry over; creator/feature/embed do.
+  function loadNextLevel(nextId, withWipe) {
+    const next = new URLSearchParams(params);
+    next.set('level', nextId);
+    next.delete('replay'); next.delete('fork'); next.delete('t');
+    if (withWipe) next.set('wipe', '1'); else next.delete('wipe');
+    location.search = '?' + next.toString();
   }
   // Idle expiry: when the live clock reaches the limit, record the
   // loss as a step at exactly the limit so replay loses at the same
   // recorded moment — never from an unrecorded wall-clock read alone.
   function expireNow() {
-    if (state.status === 'lost' || state.time_limit_s === null ||
+    if (state.status === 'lost' || state.status === 'won' ||
+        state.time_limit_s === null ||
         state.time_limit_s === undefined) return;
     applyStep({ t_ms: Math.round(state.time_limit_s * 1000), input: 'timeout' });
   }
@@ -576,7 +689,7 @@
       restartLevel();
       return;
     }
-    if (state.status === 'lost') return;
+    if (state.status === 'lost' || state.status === 'won') return;
     const input = window.GameCore.inputForKey(ev.key);
     if (!input) return;
     ev.preventDefault();
@@ -650,6 +763,7 @@
     replayTimer = requestAnimationFrame(loop);
   }
   async function loadReplay(id, tSeconds) {
+    hideLevelSummary();
     const res = await fetch('/api/game/sessions/' + encodeURIComponent(id));
     if (!res.ok) { fail('Could not load session ' + id); return; }
     const data = await res.json();
@@ -757,12 +871,25 @@
       readout: document.getElementById('replay-readout').textContent,
       warning: document.getElementById('replay-warning').textContent }),
     getState: () => state,
+    getProgression: () => ({ level: state.level,
+      status: state.status, next_level: state.next_level }),
     getPlayerSpritePos: () => playerSprite
       ? { x: playerSprite.position.x, y: playerSprite.position.y }
       : null,
     getHud: () => ({ timer: hudValues.timer, orbs: hudValues.orbs,
       level: hudValues.level, inventory: hudValues.inventory.slice() }),
     isRetryBarVisible: () => retryGroup.visible,
+    isWinScreenVisible: () => winGroup.visible,
+    isSummaryVisible: () => summaryEl.classList.contains('open'),
+    isWipeCovering: () => wipeEl.classList.contains('cover') ||
+      document.documentElement.classList.contains('wipe-in'),
+    getWipeTransform: () => getComputedStyle(wipeEl).transform,
+    getSummary: () => ({
+      level: document.getElementById('summary-level').textContent,
+      orbs: document.getElementById('summary-orbs').textContent,
+      steps: document.getElementById('summary-steps').textContent,
+      button: document.getElementById('btn-summary-next').textContent,
+    }),
     getPlayerPose: () => (playerSprite && textures['jolly-fall.png'] &&
       playerSprite.texture === textures['jolly-fall.png']) ? 'fallen' : 'normal',
     get sessionId() { return sessionId; },
@@ -779,4 +906,5 @@
 
   document.body.dataset.ready = levelName;
   document.title = 'ready:' + levelName + ' — Game';
+  revealWipe();
 })();
