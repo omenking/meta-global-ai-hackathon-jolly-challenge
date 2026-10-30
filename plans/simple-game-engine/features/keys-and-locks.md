@@ -1,7 +1,7 @@
 ---
 title: Keys and locks
 summary: Pick up coloured keys into 8 inventory slots; matching locks dissolve and consume the key.
-status: proposed
+status: completed
 priority: high
 requires:
   - ./player-movement.md
@@ -33,12 +33,14 @@ Player walks onto a key and it enters the first free inventory slot. Pressing ag
 - Given a full inventory (8 keys), when the player walks onto a 9th key, then the key stays on the floor.
 - Given a matching lock, when the player presses against it holding that colour, then one key is consumed and the lock dissolves.
 - Given a wrong-colour lock, when the player presses against it, then nothing happens.
+- Colours are exactly red, gold, green, blue and silver; a key only opens its own colour lock.
 
 ## Edge Cases & Rules
 
 - Inventory holds at most 8 keys.
 - Lock colour must match key colour exactly.
 - Dissolved locks become walkable floor.
+- Key/lock art is per-colour source art; hue-rotated placeholders are retired.
 
 ## UI / Feedback
 
@@ -46,8 +48,8 @@ Player walks onto a key and it enters the first free inventory slot. Pressing ag
 
 ## Assets & Level Data Needed
 
-- Sprites: key_<colour>.png and wall_keyhole_<colour>.png (placeholders exist in chip1 legend).
-- Level JSON: keys-room Test Level.
+- Sprites (real art, NO colour shifting): 5 key/keylock combos in assets/published/lock_and_keys — key_red/keyhold_red, key_gold/keyhold_gold, key_green/keyhold_green, key_blue/keyhold_blue, key_sliver/keyhold_sliver (silver) — derived by tools/prep_level_sprites.sh to key_<colour>.png and wall_keyhole_<colour>.png for red, gold, green, blue, silver.
+- Level JSON: keys-room Test Level with all 5 keys, matching locks and an orb.
 
 ## Acceptance Criteria
 
@@ -73,29 +75,105 @@ Needs a mechanics playground: new — a keys-room Test Level with keys, locks an
 
 ### keys-and-locks/keys-test-level — Test Level: room with keys, locks and an orb
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Keys-room Test Level places keys, locks and an orb; all tiles are placed and readable.
 
 ### keys-and-locks/key-pickup — Walk onto key to pick it up
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Walking onto a key puts it in the first free of 8 inventory slots.
 
 ### keys-and-locks/inventory-full — Inventory full behaviour
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: With 8 keys held, a 9th key stays on the floor.
 
 ### keys-and-locks/matching-lock — Matching lock press
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Pressing a matching lock consumes one key and the lock dissolves.
 
 ### keys-and-locks/wrong-colour-lock — Wrong-colour lock press
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Pressing a lock without its colour does nothing.
 
 ## Comments
 
-_(no comments yet)_
+### 2026-10-30T14:16:42 · agent · on `keys-and-locks`
+
+Ready for review: Keys and locks (5/5 tasks completed)
+
+Tasks:
+- keys-and-locks/keys-test-level: Test Level: room with keys, locks and an orb — completed, commit `8ef6089` — spec updated: 5 real combos from assets/published/lock_and_keys (red, gold, green, blue, silver; no colour shifting), keys-room with all 5 keys + locks + orb
+- keys-and-locks/key-pickup: Walk onto key to pick it up — completed, commit `b077c0f` — first free slot, tile becomes floor, HUD slot fills
+- keys-and-locks/inventory-full: Inventory full behaviour — completed, commit `19ce2e4` — 9th key stays on the floor at 8 held
+- keys-and-locks/matching-lock: Matching lock press — completed, commit `a4be716` — consumes one key, lock dissolves to floor
+- keys-and-locks/wrong-colour-lock: Wrong-colour lock press — completed, commit `961887c` — all 20 wrong pairings do nothing (tests)
+
+Mechanics are legend-driven (key_color/lock_color in level JSON) in the pure GameCore step; board key/lock sprites re-render from state.grid, readout.inventory feeds the HUD, replay reproduces the same digest.
+
+Evidence:
+- Screenshots: attached — /game operator UI keys-room (all 5 colours), red pickup with HUD slot filled, red lock opened, green lock opened
+- Sessions: game-keys-room-20261030181514-fymycl (keys-room, agent, quit), game-keys-room-20261030181536-tluu27 (keys-room, agent, quit) — preserved at sessions/features/keys-and-locks/ on main
+
+Tests: tools.test_keys_and_locks 12 ok (level, pickup purity, full, matching, 20 wrong pairings, replay digest); full worktree suite 163 tests with only the 2 pre-existing test_pm_review_ui failures. Browser play (headless Chrome, worktree 8347): red key -> HUD [red], red lock consumes and opens; green key -> HUD [green]; wrong-colour press on blue lock: no move/no consume/lock stays; green lock opens; no console errors.
+
+Playtest:
+- Worktree: `.worktrees/keys-and-locks`
+- Start: `cd .worktrees/keys-and-locks && python3 tools/server.py --port 8347` — board server stays on 8322
+- Game: http://127.0.0.1:8347/game — open the Test Level `keys-room` from the game menu; collect each colour key and press its lock (watch INVENTORY in the HUD right column).
+- Evidence: `screenshots/features/keys-and-locks/20261030-141629-game-ui-keys-room-latest.png`
+- Evidence: `screenshots/features/keys-and-locks/20261030-141629-keys-pickup-latest.png`
+- Evidence: `screenshots/features/keys-and-locks/20261030-141629-keys-lock-open-latest.png`
+- Evidence: `screenshots/features/keys-and-locks/20261030-141629-keys-green-lock-open-latest.png`
+- Session: `game-keys-room-20261030181514-fymycl` (keys-room, agent, quit)
+- Session: `game-keys-room-20261030181536-tluu27` (keys-room, agent, quit)
+
+### 2026-10-30T14:18:26 · human · on `keys-and-locks`
+
+good!
+
+### 2026-10-30T14:19:30 · agent · on `keys-and-locks`
+
+Merged to main as ea0e669 (merge --no-ff of feat/keys-and-locks, per-task commits preserved). Verified on merged main: sprites re-derived (21), full suite 163 tests with only the 2 pre-existing test_pm_review_ui failures, game smoke /game and keys-room level JSON 200. Linked sessions preserved at sessions/features/keys-and-locks/ on main before worktree cleanup.
+
+### 2026-10-30T14:08:08 · agent · on `keys-and-locks/keys-test-level`
+
+Starting: use real per-colour art in assets/published/lock_and_keys (5 combos: red, gold, green, blue, silver/sliver; no hue shifting) — prep script derives key_<colour>/wall_keyhole_<colour>; chip1 legend points at real sprites (yellow placeholder becomes gold); new keys-room Test Level with all 5 keys + matching locks + orb. Verify: tools.test_level_sprites updated + tools.test_keys_and_locks, browser screenshot.
+
+### 2026-10-30T14:10:24 · agent · on `keys-and-locks/keys-test-level`
+
+Done: spec updated to 5 real combos (red/gold/green/blue/silver from assets/published/lock_and_keys, no hue shifting; silver files spelled sliver on disk); prep derives key_<colour>/wall_keyhole_<colour> per colour; chip1 legend uses real sprites (yellow placeholder -> gold); new keys-room Test Level with all 5 keys, matching locks, orb. Old stamped key/wall_keyhole published files retired. Commit 8ef6089. Tests: test_keys_and_locks + test_level_sprites + test_game_menus 16 ok; keys-room screenshot captured.
+
+### 2026-10-30T14:10:24 · agent · on `keys-and-locks/key-pickup`
+
+Starting: GameCore step picks up key tiles (legend key_color) into inventory in held order, tile becomes floor; board re-renders key/lock tiles from state grid (sprites hide on pickup/dissolve); readout.inventory returns held keys so HUD slots fill; HUD key preload colours become the 5 real colours. Verify: node tests + browser play in keys-room (HUD inventory fills).
+
+### 2026-10-30T14:12:36 · agent · on `keys-and-locks/key-pickup`
+
+Done: GameCore resolves key tiles from legend key_color; walking onto a key moves the player, appends colour to inventory in held order, tile becomes floor (pure step, replay-safe). Board key/lock sprites are dynamic from state.grid; readout.inventory now returns held keys so HUD slots fill; HUD preload colours are the 5 real colours. Commit b077c0f. Tests: test_keys_and_locks + game_core/hud/level_timer 38 ok.
+
+### 2026-10-30T14:12:36 · agent · on `keys-and-locks/inventory-full`
+
+Starting: cap pickup at 8 — with a full inventory the player does not take (or step onto) a 9th key; it stays on the floor. Verify: node test with a 9-key corridor level + replay digest.
+
+### 2026-10-30T14:13:22 · agent · on `keys-and-locks/inventory-full`
+
+Done: pickup capped at 8 in GameCore.resolveMove — full inventory leaves the 9th key on the floor and the player does not step onto it; replay digest identical in node test. Commit 19ce2e4. Tests: test_keys_and_locks 8 ok.
+
+### 2026-10-30T14:13:22 · agent · on `keys-and-locks/matching-lock`
+
+Starting: pressing a lock whose lock_color matches a held key consumes one such key, the lock tile becomes floor and the player steps in; board lock sprite hides via dynamicTiles (floor drawn beneath). Verify: node tests in keys-room (red key -> red lock) + browser play.
+
+### 2026-10-30T14:14:02 · agent · on `keys-and-locks/matching-lock`
+
+Done: lock press in GameCore.resolveMove — lock_color matching a held key consumes exactly one, lock tile becomes floor, player steps in; board lock sprite hides via dynamicTiles with floor drawn beneath. Commit a4be716. Tests: test_keys_and_locks + player_movement + game_core 26 ok.
+
+### 2026-10-30T14:14:02 · agent · on `keys-and-locks/wrong-colour-lock`
+
+Starting: prove wrong-colour presses do nothing for every colour pairing — no movement, no consumption, lock stays — incl. no-key press and replay digest. Verify: node matrix test in keys-room + synthetic level.
+
+### 2026-10-30T14:14:45 · agent · on `keys-and-locks/wrong-colour-lock`
+
+Done: wrong-colour behaviour locked in by tests — all 20 mismatched colour pairings (5x5 minus matches) leave position, inventory and lock tile unchanged; recorded keys-room sequence replays to the same digest. Behaviour comes from the matching-lock branch (no matching colour in inventory = no-op). Commit 961887c (tests). Tests: test_keys_and_locks 12 ok.
