@@ -341,6 +341,27 @@
   retryBtnText.eventMode = 'none';
   retryGroup.addChild(retryBtnText);
   addHudSection(retryGroup, 84);
+  // Win screen (warp-and-levels, last level): stepping on the warp
+  // with no next level wins the run; the message + Play again live
+  // at the foot of the HUD column, never over the board.
+  const winGroup = new PIXI.Container();
+  winGroup.visible = false;
+  const winMsg = new PIXI.Text({ text: 'You win!', style: {
+    fontSize: 20, fill: 0x0a6b00, fontWeight: 'bold' } });
+  winMsg.anchor.set(0.5, 0);
+  winMsg.position.set(HUD_W / 2, 0);
+  winGroup.addChild(winMsg);
+  const winBtnBg = new PIXI.Graphics();
+  winBtnBg.eventMode = 'static';
+  winBtnBg.cursor = 'pointer';
+  winBtnBg.on('pointertap', () => restartLevel());
+  winGroup.addChild(winBtnBg);
+  const winBtnText = new PIXI.Text({ text: 'Play again', style: {
+    fontSize: 19, fill: 0xffffff, fontWeight: 'bold' } });
+  winBtnText.anchor.set(0.5);
+  winBtnText.eventMode = 'none';
+  winGroup.addChild(winBtnText);
+  addHudSection(winGroup, 84);
   function layoutHud() {
     const w = app.renderer.width, h = app.renderer.height;
     hudScale = Math.min(1, h / HUD_H);
@@ -351,6 +372,10 @@
     hudBg.rect(0, 0, 3, h / hudScale).fill(0x8a8a8a);
     let y = 14;
     for (const sec of hudSections) {
+      // Finish sections (retry / win) take column space only while
+      // shown, so the readouts keep their scale on short boards.
+      if ((sec.group === retryGroup || sec.group === winGroup) &&
+          !sec.group.visible) continue;
       sec.group.position.set(0, y);
       y += sec.height + 10;
     }
@@ -358,6 +383,10 @@
     retryBtnBg.roundRect(HUD_W / 2 - 60, 26, 120, 38, 6)
       .fill(0xc00000).stroke({ width: 1, color: 0xffffff });
     retryBtnText.position.set(HUD_W / 2, 45);
+    winBtnBg.clear();
+    winBtnBg.roundRect(HUD_W / 2 - 60, 26, 120, 38, 6)
+      .fill(0x0a6b00).stroke({ width: 1, color: 0xffffff });
+    winBtnText.position.set(HUD_W / 2, 45);
   }
   layoutHud();
   hudReady = true;
@@ -403,6 +432,13 @@
         : !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
     }
     retryGroup.visible = state.status === 'lost';
+    winGroup.visible = state.status === 'won';
+    const finishKey = (retryGroup.visible ? 'r' : '') +
+      (winGroup.visible ? 'w' : '');
+    if (finishKey !== renderState._finishKey) {
+      renderState._finishKey = finishKey;
+      layoutHud();
+    }
     hudValues.orbs = window.GameHud.orbsLeft(state);
     orbsReadout.set(hudValues.orbs);
     hudValues.level = window.GameHud.levelNumber(level, state.level);
@@ -782,6 +818,7 @@
     getHud: () => ({ timer: hudValues.timer, orbs: hudValues.orbs,
       level: hudValues.level, inventory: hudValues.inventory.slice() }),
     isRetryBarVisible: () => retryGroup.visible,
+    isWinScreenVisible: () => winGroup.visible,
     getPlayerPose: () => (playerSprite && textures['jolly-fall.png'] &&
       playerSprite.texture === textures['jolly-fall.png']) ? 'fallen' : 'normal',
     get sessionId() { return sessionId; },

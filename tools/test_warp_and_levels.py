@@ -176,5 +176,95 @@ class WarpUnreachableBehindShutGateTests(unittest.TestCase):
         self.assertEqual(r["orbs"], 2)
 
 
+HUD_JS = ROOT / "tools" / "static" / "game-hud.js"
+
+# Collect the one orb, pass the open gate, step onto the warp.
+WARP_ROOM_TO_WARP = [
+    'right', 'right', 'right', 'right',  # collect orb at (5,1)
+    'down',                              # (5,2) above the gate
+    'down',                              # (5,3) on the open gate
+    'down',                              # (5,4) past the gate
+    'down',                              # (5,5) onto the warp
+]
+
+LAST_LEVEL_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+const inputs = __INPUTS__;
+let s = core.initialState(level, 'warp-room');
+const startNext = core.readout(s).next_level;
+inputs.forEach((input, i) => { s = core.step(s, { t_ms: (i + 1) * 100, input }); });
+const log = inputs.map((input, i) => ({ t_ms: (i + 1) * 100, input }));
+const replayed = core.replay(level, 'warp-room', log).slice(-1)[0];
+console.log(JSON.stringify({ startNext,
+  end: { pos: { ...s.player }, status: s.status,
+    next: core.readout(s).next_level },
+  liveDigest: core.stateDigest(s),
+  replayDigest: core.stateDigest(replayed) }));
+""".replace("__INPUTS__", json.dumps(WARP_ROOM_TO_WARP))
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class LastLevelWinTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(LAST_LEVEL_SCRIPT, "warp-room")
+
+    def test_last_level_names_no_next_level(self):
+        self.assertIsNone(self.r["startNext"])
+        self.assertIsNone(self.r["end"]["next"])
+
+    def test_warp_on_last_level_wins_without_a_next_level(self):
+        # Recorded decision (feature open question): a win screen,
+        # not a loop or a return to the menu.
+        self.assertEqual(self.r["end"]["pos"], {"x": 5, "y": 5})
+        self.assertEqual(self.r["end"]["status"], "won")
+
+    def test_last_level_win_replays_to_same_state(self):
+        self.assertEqual(self.r["liveDigest"], self.r["replayDigest"])
+
+    def test_game_shows_win_screen_on_won(self):
+        js = (ROOT / "tools" / "static" / "game.js").read_text(
+            encoding="utf-8")
+        self.assertIn("You win!", js)
+        self.assertIn("winGroup.visible = state.status === 'won'", js)
+        self.assertIn("isWinScreenVisible", js)
+
+
+COUNTER_SCRIPT = r"""
+const hud = require(process.argv[1]);
+const core = require(process.argv[2]);
+const orbs = JSON.parse(require('fs').readFileSync(process.argv[3], 'utf8'));
+const warp = JSON.parse(require('fs').readFileSync(process.argv[4], 'utf8'));
+const s1 = core.initialState(orbs, 'orbs-room');
+const s2 = core.initialState(warp, 'warp-room');
+console.log(JSON.stringify({
+  first: hud.levelNumber(orbs, s1.level),
+  second: hud.levelNumber(warp, s2.level),
+  stateLevelNames: [s1.level, s2.level] }));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class LevelCounterTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        out = subprocess.run(
+            ["node", "-e", COUNTER_SCRIPT, str(HUD_JS), str(CORE),
+             str(ROOT / "levels" / "orbs-room.json"),
+             str(ROOT / "levels" / "warp-room.json")],
+            capture_output=True, text=True, check=True)
+        cls.r = json.loads(out.stdout.strip().splitlines()[-1])
+
+    def test_level_counter_advances_across_the_warp(self):
+        self.assertEqual(self.r["first"], 1)
+        self.assertEqual(self.r["second"], 2)
+        self.assertGreater(self.r["second"], self.r["first"])
+
+    def test_counter_comes_from_each_levels_own_state(self):
+        self.assertEqual(self.r["stateLevelNames"],
+                         ["orbs-room", "warp-room"])
+
+
 if __name__ == "__main__":
     unittest.main()
