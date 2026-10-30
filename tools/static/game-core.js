@@ -1,59 +1,25 @@
 // GameCore facade: assembles registry + kernel + packs and keeps the
 // long-standing public API (initialState/step/replay/stateDigest/
 // readout/inputForKey + legacy char helpers for tests and game.js).
-// Mechanics live in packs (Phase 1: built-in registration below;
-// extracted to tools/static/packs/ in Phases 2-3/5). The kernel in
+// Mechanics live in packs under tools/static/packs/ (core-chips,
+// keys-locks, proof-water). The kernel in
 // engine/kernel.js knows no specific tile. State is v2 layered data
 // plus a derived compatibility projection (grid/player/orbs_left/
 // gate_open) computed here, never stored as kernel truth.
 (function (root) {
   'use strict';
-  let Registry, Kernel, KeysPack;
+  let Registry, Kernel, KeysPack, CorePack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
     KeysPack = require('./packs/keys-locks.js');
+    CorePack = require('./packs/core-chips.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
+    CorePack = root.GamePackCoreChips;
   }
 
-  // --- Built-in pack registration (extracted in later phases) ---
-  function registerCorePack(api) {
-    api.defineTile('core:floor', { layer: 'terrain', sprite: 'floor_default.png' });
-    api.defineTile('core:spawn', { layer: 'terrain', sprite: 'floor_default.png' });
-    api.defineTile('core:wall', { layer: 'terrain', sprite: 'wall.png',
-      blocks: function () { return true; } });
-    api.defineTile('core:info', { layer: 'terrain',
-      blocks: function () { return true; } });
-    api.defineTile('core:unknown', { layer: 'terrain',
-      blocks: function () { return true; } });
-    api.defineTile('core:orb', { layer: 'object', sprite: 'orb.png',
-      onEnter: function (state, cell, actor, fx) {
-        fx.push({ type: 'removeObject', x: cell.x, y: cell.y });
-        fx.push({ type: 'incCounter', key: 'core:orbs_left', by: -1 });
-      } });
-    api.defineTile('core:gate', { layer: 'object', sprite: 'gate.png',
-      blocks: function (state) { return (state.counters['core:orbs_left'] || 0) > 0; } });
-    api.defineTile('core:warp', { layer: 'object', sprite: 'portal.png',
-      onEnter: function (state, cell, actor, fx) { fx.push({ type: 'win' }); } });
-    api.onLevelLoad(function (state) {
-      let n = 0;
-      for (const row of state.objects) for (const id of row) if (id === 'core:orb') n++;
-      state.counters['core:orbs_left'] = n;
-    });
-    api.onLevelDefs(function (level, ch, e) {
-      if (!ch) return null;
-      if (ch === '.') return 'core:floor';
-      if (ch === '#') return 'core:wall';
-      if (ch === 'P') return 'core:spawn';
-      if (ch === '*' || ch === 'O') return 'core:orb';
-      if (ch === 'G') return 'core:gate';
-      if (ch === 'X') return 'core:warp';
-      if (ch === '?') return 'core:info';
-      return null;
-    });
-  }
   function createEngine(packRegisters) {
     const registry = Registry.createRegistry();
     for (const fn of packRegisters) registry.registerPack(fn);
@@ -123,7 +89,7 @@
       readout: readout, kernel: kernel, registry: registry };
   }
 
-  const engine = createEngine([registerCorePack, KeysPack]);
+  const engine = createEngine([CorePack, KeysPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -172,7 +138,7 @@
     isWon: isWon, isOrb: isOrb, isWarp: isWarp, countOrbs: countOrbs,
     DIRECTIONS: Kernel.DIRECTIONS, VERSION: VERSION, readout: engine.readout,
     DEFAULT_TIME_LIMIT_S: 120, createEngine: createEngine,
-    registerCorePack: registerCorePack, registerKeysPack: KeysPack,
+    registerCorePack: CorePack, registerKeysPack: KeysPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;

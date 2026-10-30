@@ -159,7 +159,15 @@
         && elapsed >= next.time_limit_s;
       const finished = state.status === 'won' || state.status === 'lost';
       if (finished) return next;
-      if (expired) { next.status = 'lost'; return next; }
+      if (expired) {
+        // Kernel owns the clock only; whether expiry loses is a pack
+        // rule delivered through tick hooks (core pack: lose).
+        const tickFx = [];
+        for (const fn of registry._tickHooks) fn(next, tickFx);
+        const v = applyEffects(next, tickFx);
+        if (v.lose) next.status = 'lost';
+        return next;
+      }
 
       const effects = [];
       const player = next.actors.find((a) => a.id === 'player') || next.actors[0];

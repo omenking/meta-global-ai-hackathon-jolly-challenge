@@ -8,7 +8,9 @@ set -u
 strict=0
 if [ "${1:-}" = "--strict" ]; then strict=1; shift; fi
 if [ "$#" -gt 0 ]; then files="$*"; else
-  files="tools/static/engine/kernel.js tools/static/engine/registry.js tools/static/game-core.js"
+  # Kernel scope only: packs legitimately own mechanic literals, and
+  # game-core.js is a compatibility facade (legacy char helpers).
+  files="tools/static/engine/kernel.js tools/static/engine/registry.js tools/static/engine/camera.js"
 fi
 patterns="isOrb|isWarp|countOrbs|key_color|lock_color|KEY_COLORS|orbs_left|gate_open"
 total=0

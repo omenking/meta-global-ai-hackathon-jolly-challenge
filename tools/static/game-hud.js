@@ -26,9 +26,15 @@
     return Math.floor(Math.max(0, state.time_left_s));
   }
 
-  // Orbs left, counted from the state grid exactly as
-  // GameCore.readout reports it ('*' or 'O' tiles not yet collected).
+  // Orbs left: the core pack counter is the source of truth on v2
+  // states; legacy grid states (tests, forks) fall back to counting
+  // '*' or 'O' tiles not yet collected.
   function orbsLeft(state) {
+    if (state && state.counters
+        && typeof state.counters['core:orbs_left'] === 'number') {
+      return state.counters['core:orbs_left'];
+    }
+    if (state && typeof state.orbs_left === 'number') return state.orbs_left;
     let n = 0;
     for (const row of (state && state.grid) || []) {
       for (const ch of row) if (ch === '*' || ch === 'O') n++;
