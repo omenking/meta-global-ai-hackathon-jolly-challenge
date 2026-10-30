@@ -45,6 +45,42 @@ console.log(JSON.stringify({
 """
 
 
+ICE_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+function play(inputs) {
+  let s = core.initialState(level, 'ice-room');
+  inputs.forEach((input, i) => { s = core.step(s, { t_ms: (i + 1) * 100, input }); });
+  return s;
+}
+// Three rights: the third steps on ice and slides to the first floor.
+const slid = play(['right', 'right', 'right']);
+// Force lane: down then three rights steps onto force, conveyed east.
+const conveyed = play(['down', 'right', 'right', 'right']);
+const won = play(['right', 'right', 'right', 'right', 'right', 'right', 'right', 'right']);
+console.log(JSON.stringify({
+  slid: { ...slid.player }, conveyed: { ...conveyed.player },
+  wonPos: { ...won.player }, wonStatus: won.status,
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class IceForceTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_node(ICE_SCRIPT, "ice-room.json")
+
+    def test_ice_slides_along_entry_direction(self):
+        self.assertEqual(self.r["slid"], {"x": 7, "y": 1})
+
+    def test_force_floor_conveys_east(self):
+        self.assertEqual(self.r["conveyed"], {"x": 8, "y": 2})
+
+    def test_slide_run_reaches_warp(self):
+        self.assertEqual(self.r["wonStatus"], "won")
+
+
 @unittest.skipUnless(shutil.which("node"), "node not available")
 class ButtonsTrapsTests(unittest.TestCase):
     @classmethod

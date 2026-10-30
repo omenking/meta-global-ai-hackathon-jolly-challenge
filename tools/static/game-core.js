@@ -8,7 +8,7 @@
 // gate_open) computed here, never stored as kernel truth.
 (function (root) {
   'use strict';
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, ButtonsPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, ButtonsPack, IcePack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -16,12 +16,14 @@
     CorePack = require('./packs/core-chips.js');
     WaterPack = require('./packs/proof-water.js');
     ButtonsPack = require('./packs/buttons-traps.js');
+    IcePack = require('./packs/ice-force.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
     CorePack = root.GamePackCoreChips;
     WaterPack = root.GamePackProofWater;
     ButtonsPack = root.GamePackButtonsTraps;
+    IcePack = root.GamePackIceForce;
   }
 
   function createEngine(packRegisters) {
@@ -93,7 +95,7 @@
       readout: readout, kernel: kernel, registry: registry };
   }
 
-  const engine = createEngine([CorePack, KeysPack, WaterPack, ButtonsPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, ButtonsPack, IcePack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -144,6 +146,7 @@
     DEFAULT_TIME_LIMIT_S: 120, createEngine: createEngine,
     registerCorePack: CorePack, registerKeysPack: KeysPack,
     registerWaterPack: WaterPack, registerButtonsTrapsPack: ButtonsPack,
+    registerIceForcePack: IcePack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
