@@ -1,7 +1,7 @@
 ---
 title: HUD: timer, orbs, level and inventory
 summary: Live heads-up display per the full-level UI reference.
-status: proposed
+status: completed
 priority: medium
 requires:
   - ./game-shell.md
@@ -67,24 +67,117 @@ Needs a mechanics playground: none — verified in any level against state. Veri
 
 ### hud/hud-timer — Timer display
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Acceptance: HUD timer shows the live countdown from state.
 
 ### hud/hud-orbs — Orbs-left display
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Acceptance: HUD shows the live orbs-left count from state.
 
 ### hud/hud-level — Current-level display
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Acceptance: HUD shows the current level from state.
 
 ### hud/hud-inventory — Inventory display (8 slots)
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Acceptance: HUD shows held keys in 8 slots, live from state, per the full-level UI reference.
+
+### hud/review-fixes-1 — Re-present HUD on latest outer UI (/game operator UI)
+
+- Status: `completed` · Priority: `high` · Kind: `review-fixes`
+- Description: Human: HUD roll-up screenshots show the old standalone game.html debug/replay panel again (the problem fixed in session-logs-replay operator redesign); ensure feat/hud is merged up from main with the latest outer UI; inner GUI is fine.
+- Acceptance: feat/hud contains latest main (merge verified); /game on the worktree build shows the operator outer UI (Sessions picker, STEP INSPECTOR, unified timeline, replay controls) with the HUD column inside the game; board evidence screenshots are replaced with /game captures incl. a replay view; tests still pass.
+- Evidence: `screenshots/features/hud/20261030-134034-game-ui-hud-latest.png`
+- Evidence: `screenshots/features/hud/20261030-134034-game-ui-sessions-latest.png`
+- Evidence: `screenshots/features/hud/20261030-134034-game-ui-replay-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-10-30T13:30:24 · agent · on `hud`
+
+Ready for review: HUD: timer, orbs, level and inventory (4/4 tasks completed)
+
+Tasks:
+- hud/hud-timer: Timer display — completed, commit `ff550c3` — right-hand HUD column replaces top bar; TIME = label + backplate + 3 blue digit sprites live from GameCore time_left
+- hud/hud-orbs: Orbs-left display — completed, commit `6603a99` — ORBS readout live from state grid (matches GameCore.readout orbs_left)
+- hud/hud-level: Current-level display — completed, commit `ab3dd16` — LEVEL readout at column top (chip1 -> 001)
+- hud/hud-inventory: Inventory display (8 slots) — completed, commit `db3028e` — 8 drawn slots (no box asset exists), key colour icons from derived key sprites, live from GameCore.readout inventory
+
+Design: original game's right-side panel instead of a top bar (per human direction). GUI assets in assets/published/gui (digits 0-9, level/time/orbs labels, backplate) chroma-keyed by tools/prep_level_sprites.sh into tools/static/gui-sprites; pure view helpers in tools/static/game-hud.js (digitsFor/timerSeconds/orbsLeft/levelNumber/inventorySlots) — HUD never drives state. Lost retry message + Restart moved to the column foot, board never covered.
+
+Evidence:
+- Screenshots: attached — test-room full HUD (LEVEL 000 / TIME 120 / ORBS 001 / 8 empty slots), timer-room lost (TIME 000, fallen pose, in-column Restart), restarted
+- Sessions: game-test-room-20261030172750-m29o6s (test-room, agent, quit), game-timer-room-20261030172934-gawx6c (timer-room, agent, lost) — preserved at sessions/features/hud/ on main; replay: http://127.0.0.1:8346/static/game.html?level=timer-room&replay=game-timer-room-20261030172934-gawx6c&t=5
+
+Tests: tools.test_hud new (digits/orbs/level/inventory node checks + wiring); full worktree suite 151 tests with only the 2 pre-existing test_pm_review_ui failures (verified identical on untouched main). Browser play (headless Chrome, worktree 8346): moved in test-room (HUD {timer,orbs,level,inventory} via __game.getHud), timer-room expired to lost with retry visible + fallen pose, R restored TIME 005 + normal pose, /game embed shows the same column; no console errors.
+
+Playtest:
+- Worktree: `.worktrees/hud`
+- Start: `cd .worktrees/hud && source .venv/bin/activate && python tools/server.py --port 8346` — board server stays on 8322
+- Game: http://127.0.0.1:8346/game — open a Test Level from the game menu; watch LEVEL/TIME/ORBS digits and INVENTORY slots in the right column; timer-room waits 5s for the lost/Restart state.
+- Evidence: `screenshots/features/hud/20261030-132953-test-room-latest.png`
+- Evidence: `screenshots/features/hud/20261030-132953-timer-lost-latest.png`
+- Evidence: `screenshots/features/hud/20261030-132953-timer-restarted-latest.png`
+- Session: `game-test-room-20261030172750-m29o6s` (test-room, agent, quit)
+- Session: `game-timer-room-20261030172934-gawx6c` (timer-room, agent, lost)
+
+### 2026-10-30T13:40:42 · agent · on `hud`
+
+Correction to the roll-up evidence (review-fixes-1): feat/hud was already merged up from main (merge reports Already up to date; bundle identical to main) — the stale-looking replay panel in my screenshots came from capturing standalone /static/game.html instead of the current /game operator UI. New attached evidence is from http://127.0.0.1:8346/game: operator outer UI (Sessions picker, STEP INSPECTOR, unified timeline) with the HUD column (LEVEL/TIME/ORBS/INVENTORY) inside the game, including a replay of game-timer-room-20261030172934-gawx6c. Inner GUI unchanged. Feature stays in_review for your re-check.
+- Evidence: `screenshots/features/hud/20261030-134034-game-ui-hud-latest.png`
+- Evidence: `screenshots/features/hud/20261030-134034-game-ui-sessions-latest.png`
+- Evidence: `screenshots/features/hud/20261030-134034-game-ui-replay-latest.png`
+
+### 2026-10-30T13:46:39 · human · on `hud`
+
+good for now.
+
+### 2026-10-30T13:48:12 · agent · on `hud`
+
+Merged to main as 474a7eb (merge --no-ff of feat/hud, per-task commits preserved). Verified on merged main: full suite 151 tests with only the 2 pre-existing test_pm_review_ui failures (identical on untouched main), game smoke on the main server: /game, /static/game.html, gui-sprites/digit-1.png and game-hud.js all 200. Linked sessions preserved at sessions/features/hud/ on main before worktree cleanup. Note per human: HUD feature is complete and merged, but the wider game still needs the other proposed features (keys-and-locks, orbs-and-gate, warp-and-levels) before the HUD shows held keys / dropping orb counts in real play; circling back later.
+
+### 2026-10-30T13:20:01 · agent · on `hud/hud-timer`
+
+Starting: right-hand HUD column (per original Chips Challenge side panel, not top bar) using published gui assets — digits 0-9, level/time/orbs labels, backplate for 3-digit boxes, chroma-keyed via prep_level_sprites.sh; TIME readout as 3 digit sprites live from GameCore time_left. Inventory slots drawn in-code (no inventory box asset). Verify: tools.test_hud + tools.test_level_timer under node/python, browser play on worktree spare port with screenshots.
+
+### 2026-10-30T13:23:37 · agent · on `hud/hud-timer`
+
+Done: right-hand HUD column replaces the top bar; TIME readout is label + backplate + 3 blue digit sprites (assets/published/gui chroma-keyed by prep_level_sprites.sh into tools/static/gui-sprites), live from GameCore time_left via GameHud.timerSeconds/digitsFor. Commit ff550c3. Tests: python3 -m unittest tools.test_hud tools.test_level_timer — 19 ok. Browser capture on worktree port 8346 (timer-room shows TIME 005).
+
+### 2026-10-30T13:23:52 · agent · on `hud/hud-orbs`
+
+Starting: ORBS readout (orbs_label + backplate + digits) in the right column under TIME, live from state via GameHud.orbsLeft / GameCore.readout orbs_left. Verify: tools.test_hud node checks against grid counts + browser screenshot on chip1/test levels.
+
+### 2026-10-30T13:25:07 · agent · on `hud/hud-orbs`
+
+Done: ORBS readout (orbs label + backplate + digit sprites) in HUD column, live from state via GameHud.orbsLeft, cross-checked against GameCore.readout orbs_left in node tests. Commit 6603a99. Tests: tools.test_hud + tools.test_level_timer 21 ok.
+
+### 2026-10-30T13:25:07 · agent · on `hud/hud-level`
+
+Starting: LEVEL readout at top of HUD column (level label + backplate + digits), number derived purely from level data/name via GameHud.levelNumber (chip1 -> 001). Verify: tools.test_hud node checks + browser probe of __game.getHud().
+
+### 2026-10-30T13:25:42 · agent · on `hud/hud-level`
+
+Done: LEVEL readout at top of HUD column (level label + backplate + digits), number via GameHud.levelNumber (explicit level_number wins, else trailing digits of level id: chip1 -> 001). Commit ab3dd16. Tests: tools.test_hud + tools.test_level_timer 23 ok.
+
+### 2026-10-30T13:25:42 · agent · on `hud/hud-inventory`
+
+Starting: 8 inventory slots in HUD column foot (no inventory box asset — slots drawn with Pixi Graphics), key colour icons from derived level-sprites key_<colour>.png, live from GameCore.readout inventory via GameHud.inventorySlots (max 8, first-free order preserved). Verify: tools.test_hud node checks incl. >8 clamp + browser probe injecting state via readout path.
+
+### 2026-10-30T13:26:57 · agent · on `hud/hud-inventory`
+
+Done: INVENTORY section at column foot, 8 drawn slots (no box asset exists), held keys show colour icons from derived key_<colour>.png, live from GameCore.readout inventory via GameHud.inventorySlots (max 8, order preserved, padded). Commit db3028e. Tests: tools.test_hud et al 45 ok; screenshot test-room shows LEVEL 000 / TIME 120 / ORBS 001 / 8 empty slots.
+
+### 2026-10-30T13:39:55 · agent · on `hud/review-fixes-1`
+
+Starting: check feat/hud ancestry vs main (local + origin), merge main into the worktree branch if behind, then re-verify and re-shoot evidence on the /game operator UI (not standalone game.html). Inner HUD unchanged.
+
+### 2026-10-30T13:40:42 · agent · on `hud/review-fixes-1`
+
+Done: verified feat/hud is merged up from main — git merge main and git merge origin/main both report Already up to date (branch base ad57fbd == main == origin/main; worktree bundle md5 identical to main checkout). Root cause was my evidence, not the branch: roll-up screenshots were captured from standalone /static/game.html (old debug Sessions/Replay panel), not the current /game operator UI. Re-shot on the worktree build at /game: HUD column inside the operator layout, Sessions picker, STEP INSPECTOR (Step 1/2, inventory/orbs/timer), unified timeline, replay of the lost timer-room session; no console errors. No code commit: no code change was needed — outer UI was already the latest on this branch. Tests: tools.test_hud + test_game_overlay + test_session_replay 29 ok.
+- Evidence: `screenshots/features/hud/20261030-134034-game-ui-hud-latest.png`
+- Evidence: `screenshots/features/hud/20261030-134034-game-ui-sessions-latest.png`
+- Evidence: `screenshots/features/hud/20261030-134034-game-ui-replay-latest.png`
