@@ -103,9 +103,11 @@
     if (e.sprite) spriteNames.add(e.sprite);
   }
   spriteNames.add('jolly-fall.png');
-  // Key icons for the HUD inventory slots, whatever the level legend.
-  for (const c of ['red', 'gold', 'green', 'blue', 'silver']) spriteNames.add('key_' + c + '.png');
-  spriteNames.add('key.png');
+  // Pack-carried assets: loaded packs declare the sprite/icon names
+  // they need (keys, locks, items); no hardcoded colour list here.
+  if (window.GameCore.assetsForLevel) {
+    for (const name of window.GameCore.assetsForLevel(level)) spriteNames.add(name);
+  }
   const textures = {};
   const missing = new Set();
   await Promise.all([...spriteNames].map(async (name) => {
@@ -188,9 +190,17 @@
   if (embed) window.addEventListener('resize', fitBoard);
 
   // Static board + dynamicTiles tracking live in view/board.js.
+  // Tile defs (carrying pack sprites/glyphs) resolve via GameCore.
+  const defMap = window.GameCore.levelDefMap
+    ? window.GameCore.levelDefMap(level) : {};
   const dynamicTiles = window.GameBoardView.createBoardView({
     PIXI: PIXI, board: board, textures: textures, rows: rows,
     legend: legend, TILE: TILE, scale: scale, COLS: COLS, ROWS: ROWS,
+    getDef: function (ch) {
+      const id = defMap[ch];
+      return id && window.GameCore.getTileDef
+        ? window.GameCore.getTileDef(id) : null;
+    },
   }).dynamicTiles;
 
   // Deterministic core: state comes from GameCore only; the board

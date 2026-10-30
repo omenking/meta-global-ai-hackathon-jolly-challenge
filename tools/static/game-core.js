@@ -8,24 +8,18 @@
 // gate_open) computed here, never stored as kernel truth.
 (function (root) {
   'use strict';
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, ButtonsPack, IcePack, MonstersPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
     KeysPack = require('./packs/keys-locks.js');
     CorePack = require('./packs/core-chips.js');
     WaterPack = require('./packs/proof-water.js');
-    ButtonsPack = require('./packs/buttons-traps.js');
-    IcePack = require('./packs/ice-force.js');
-    MonstersPack = require('./packs/monsters.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
     CorePack = root.GamePackCoreChips;
     WaterPack = root.GamePackProofWater;
-    ButtonsPack = root.GamePackButtonsTraps;
-    IcePack = root.GamePackIceForce;
-    MonstersPack = root.GamePackMonsters;
   }
 
   function createEngine(packRegisters) {
@@ -93,11 +87,31 @@
         time_left_s: state.time_left_s, elapsed_s: state.elapsed_s,
         t_ms: state.t_ms, input: state.last_input };
     }
+    // Pack-carried assets: probing a level registers its pack defs,
+    // whose declared sprite/icon names are what the page preloads.
+    function assetsForLevel(level) {
+      try { kernel.initialState(level, (level && level.name) || ''); } catch (e) { /* defs registered before any throw */ }
+      return registry.assetNames();
+    }
+    function levelDefMap(level) {
+      const probe = kernel.initialState(level, (level && level.name) || '');
+      const map = {};
+      const rows = (level && level.rows) || [];
+      for (let y = 0; y < rows.length; y++) {
+        for (let x = 0; x < rows[y].length; x++) {
+          const ch = rows[y][x];
+          if (!map[ch]) map[ch] = probe.objects[y][x] || probe.terrain[y][x];
+        }
+      }
+      return map;
+    }
     return { initialState: initialState, step: step, replay: replay,
-      readout: readout, kernel: kernel, registry: registry };
+      readout: readout, kernel: kernel, registry: registry,
+      assetsForLevel: assetsForLevel, levelDefMap: levelDefMap,
+      getTileDef: function (id) { return registry.getTile(id); } };
   }
 
-  const engine = createEngine([CorePack, KeysPack, WaterPack, ButtonsPack, IcePack, MonstersPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -146,9 +160,10 @@
     isWon: isWon, isOrb: isOrb, isWarp: isWarp, countOrbs: countOrbs,
     DIRECTIONS: Kernel.DIRECTIONS, VERSION: VERSION, readout: engine.readout,
     DEFAULT_TIME_LIMIT_S: 120, createEngine: createEngine,
+    assetsForLevel: engine.assetsForLevel, levelDefMap: engine.levelDefMap,
+    getTileDef: engine.getTileDef,
     registerCorePack: CorePack, registerKeysPack: KeysPack,
-    registerWaterPack: WaterPack, registerButtonsTrapsPack: ButtonsPack,
-    registerIceForcePack: IcePack, registerMonstersPack: MonstersPack,
+    registerWaterPack: WaterPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;

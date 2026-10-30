@@ -7,14 +7,16 @@
 (function (root) {
   'use strict';
   function registerWaterPack(api) {
+    // Glyphs are this pack's assets: levels no longer carry "~"/"F".
+    api.defineAsset('key.png');
     api.defineItem('water:flipper', { icon: 'key.png', readout: 'flipper' });
-    api.defineTile('water:water', { layer: 'terrain',
+    api.defineTile('water:water', { layer: 'terrain', glyph: '~',
       onEnterTerrain: function (state, cell, actor, fx) {
         const has = (state.inventory || []).some((e) => e.item === 'water:flipper');
         if (!has) fx.push({ type: 'lose' });
         return null;
       } });
-    api.defineTile('water:flipper', { layer: 'object',
+    api.defineTile('water:flipper', { layer: 'object', glyph: 'F',
       onEnter: function (state, cell, actor, fx) {
         fx.push({ type: 'giveItem', item: 'water:flipper' });
         fx.push({ type: 'removeObject', x: cell.x, y: cell.y });

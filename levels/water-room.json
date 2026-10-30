@@ -10,8 +10,8 @@
     "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
     "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
     "X": {"label": "warp", "sprite": "portal.png"},
-    "~": {"base": "floor_default.png", "label": "water", "text": "~", "def": "water:water"},
-    "F": {"base": "floor_default.png", "label": "flippers", "text": "F", "def": "water:flipper"}
+    "~": {"base": "floor_default.png", "label": "water", "def": "water:water"},
+    "F": {"base": "floor_default.png", "label": "flippers", "def": "water:flipper"}
   },
   "rows": [
     "###########",

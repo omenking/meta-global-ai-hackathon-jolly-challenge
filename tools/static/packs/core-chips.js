@@ -6,6 +6,9 @@
 (function (root) {
   'use strict';
   function registerCorePack(api) {
+    for (const name of ['floor_default.png', 'wall.png', 'orb.png', 'gate.png', 'portal.png']) {
+      api.defineAsset(name);
+    }
     api.defineTile('core:floor', { layer: 'terrain', sprite: 'floor_default.png' });
     api.defineTile('core:spawn', { layer: 'terrain', sprite: 'floor_default.png' });
     api.defineTile('core:wall', { layer: 'terrain', sprite: 'wall.png',

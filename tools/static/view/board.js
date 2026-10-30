@@ -44,13 +44,18 @@
           // Floor under a lock, revealed when it dissolves.
           drawSprite('floor_default.png', gx, gy);
         }
-        if (e.sprite && ch !== 'P') {
-          const spr = drawSprite(e.sprite, gx, gy);
+        // Sprite/glyph come from the pack tile def when the level
+        // names one (packs carry their assets); legend is fallback.
+        const def = deps.getDef ? deps.getDef(ch) : null;
+        const spriteName = (def && def.sprite) || e.sprite;
+        const glyph = e.text || (def && def.glyph);
+        if (spriteName && ch !== 'P') {
+          const spr = drawSprite(spriteName, gx, gy);
           if (spr === false) fallbackTile(gx, gy, ch);
           else if (isDynamic && spr) dynamicTiles.push({ x: gx, y: gy, ch: ch, sprite: spr });
-        } else if (e.text) {
+        } else if (glyph) {
           const t = new PIXI.Text({
-            text: e.text,
+            text: glyph,
             style: { fontSize: 40, fill: 0xffd21f, fontWeight: 'bold',
                      stroke: { color: 0x111111, width: 5 } } });
           t.anchor.set(0.5);

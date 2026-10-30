@@ -166,7 +166,9 @@ class SpriteFollowsStateTests(unittest.TestCase):
 
     def test_start_tile_not_drawn_as_static_sprite(self):
         # The static board must not leave a second Jolly at the start.
-        self.assertIn("e.sprite && ch !== 'P'", self.js)
+        # Board resolves sprites via pack defs (spriteName) since the
+        # pack-assets change; assertion follows the code.
+        self.assertIn("spriteName && ch !== 'P'", self.js)
 
 
 @unittest.skipUnless(shutil.which("node"), "node not available")

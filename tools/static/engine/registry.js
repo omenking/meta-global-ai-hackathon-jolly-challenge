@@ -5,11 +5,15 @@
 (function (root) {
   'use strict';
   function createRegistry() {
-    const tiles = new Map(), items = new Map();
+    const tiles = new Map(), items = new Map(), assets = new Set();
     const levelDefHooks = [], levelHooks = [], tickHooks = [], controllers = new Map();
     const api = {
       defineTile: function (id, def) { tiles.set(id, Object.assign({ id: id }, def)); },
       defineItem: function (id, def) { items.set(id, Object.assign({ id: id }, def)); },
+      // Packs bring their own assets: sprite/icon file names a pack
+      // needs are declared here so preload/render never hardcode them.
+      defineAsset: function (name) { if (name) assets.add(name); },
+      assetNames: function () { return [...assets]; },
       onLevelDefs: function (fn) { levelDefHooks.push(fn); },
       onLevelLoad: function (fn) { levelHooks.push(fn); },
       onTick: function (fn) { tickHooks.push(fn); },
