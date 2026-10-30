@@ -65,8 +65,16 @@
       elapsed_s: 0,
       time_limit_s: limit,
       time_left_s: limit,
+      status: 'playing',
       last_input: null,
     };
+  }
+
+  // The run is lost the moment recorded elapsed time reaches the
+  // limit. Expiry is a pure function of t_ms, so a timeout loss
+  // replays as a loss at exactly the same recorded moment.
+  function isLost(state) {
+    return !!state && state.status === 'lost';
   }
 
   function step(state, input) {
@@ -80,16 +88,22 @@
       throw new Error('input t_ms must not go backwards');
     }
     const elapsed = input.t_ms / 1000;
+    const expired = state.time_limit_s !== null &&
+      state.time_limit_s !== undefined && elapsed >= state.time_limit_s;
+    const lost = expired || state.status === 'lost';
     return {
       level: state.level,
       grid: state.grid,
-      player: movePlayer(state, input.input),
+      // No movement on or after expiry, and a lost run stays frozen.
+      player: lost ? { x: state.player.x, y: state.player.y }
+        : movePlayer(state, input.input),
       steps: state.steps + 1,
       t_ms: input.t_ms,
       elapsed_s: elapsed,
       time_limit_s: state.time_limit_s,
       time_left_s: state.time_limit_s === null
         ? null : Math.max(0, state.time_limit_s - elapsed),
+      status: lost ? 'lost' : 'playing',
       last_input: input.input === undefined ? null : input.input,
     };
   }
@@ -132,12 +146,13 @@
     let orbs = 0;
     for (const row of state.grid || []) for (const ch of row) if (ch === '*' || ch === 'O') orbs++;
     return { step: state.steps, position: { x: state.player.x, y: state.player.y },
-      inventory: [], orbs_left: orbs,
+      inventory: [], orbs_left: orbs, status: state.status || 'playing',
       timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
+      time_left_s: state.time_left_s,
       elapsed_s: state.elapsed_s, t_ms: state.t_ms, input: state.last_input };
   }
   const api = { findPlayer, initialState, step, replay, stateDigest,
-    inputForKey, isWalkable, DIRECTIONS, VERSION, readout, DEFAULT_TIME_LIMIT_S };
+    inputForKey, isWalkable, isLost, DIRECTIONS, VERSION, readout, DEFAULT_TIME_LIMIT_S };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

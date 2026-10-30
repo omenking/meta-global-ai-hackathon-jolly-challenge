@@ -61,6 +61,7 @@ export default function GamePage() {
   const current = sessions.find((s) => s.id === selected) || null;
   const active = !!(replay && replay.active);
   const orbs = live && live.grid ? live.grid.join('').split('').filter((c) => c === '*' || c === 'O').length : null;
+  const runStatus = (live && live.status) || (clock && clock.status) || 'playing';
 
   useEffect(() => {
     api('GET', '/api/game/levels').then((d) =>
@@ -119,7 +120,13 @@ export default function GamePage() {
     const onKey = (ev) => {
       if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(ev.target.tagName)) return;
       const g = game();
-      if (!g || !replay || !replay.active) return;
+      if (!g) return;
+      if (!replay || !replay.active) {
+        if ((ev.key === 'r' || ev.key === 'R') && g.restart) {
+          ev.preventDefault(); g.restart();
+        }
+        return;
+      }
       if (ev.key === ' ') { ev.preventDefault(); g.togglePlay(); }
       else if (ev.key === 'ArrowLeft') { ev.preventDefault(); g.pauseReplay(); g.showReplay(replay.index - (ev.shiftKey ? 10 : 1)); }
       else if (ev.key === 'ArrowRight') { ev.preventDefault(); g.pauseReplay(); g.showReplay(replay.index + (ev.shiftKey ? 10 : 1)); }
@@ -227,6 +234,7 @@ export default function GamePage() {
                   <dt className="text-neutral-400">Inventory</dt><dd>[]</dd>
                   <dt className="text-neutral-400">Orbs left</dt><dd>{orbs}</dd>
                   <dt className="text-neutral-400">Timer</dt><dd>{fmtLeft(live.time_left_s)} left of {fmtClock(live.time_limit_s)}</dd>
+                  <dt className="text-neutral-400">Run</dt><dd>{runStatus}</dd>
                   <dt className="text-neutral-400">State</dt><dd>{replay.playing ? 'playing' : 'paused'}</dd>
                 </dl>
                 <details>

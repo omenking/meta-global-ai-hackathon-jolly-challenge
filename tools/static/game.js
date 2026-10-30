@@ -79,6 +79,7 @@
     if (e.base) spriteNames.add(e.base);
     if (e.sprite) spriteNames.add(e.sprite);
   }
+  spriteNames.add('jolly-fall.png');
   const textures = {};
   const missing = new Set();
   await Promise.all([...spriteNames].map(async (name) => {
@@ -89,24 +90,31 @@
     }
   }));
 
+  // Compact in-GUI bar above the playzone (like TIME in the
+  // full-level reference): the board never sits under the UI.
+  const HUD_H = 52;
   const app = new PIXI.Application();
   await app.init({ width: embed ? window.innerWidth : COLS * TILE,
-    height: embed ? window.innerHeight : ROWS * TILE, background: '#111' });
+    height: embed ? window.innerHeight : HUD_H + ROWS * TILE, background: '#111' });
   document.getElementById('stage').appendChild(app.canvas);
   const scale = TILE / 512;
   const board = new PIXI.Container();
+  if (!embed) board.position.set(0, HUD_H);
   app.stage.addChild(board);
   // Embed: keep the board's true aspect ratio at any window size —
   // scale to fit and centre (letterbox), refitting on resize. The
   // canvas is never CSS-stretched to the container.
+  let hudReady = false;
   function fitBoard() {
     if (!embed) return;
     app.renderer.resize(window.innerWidth, window.innerHeight);
+    const availH = Math.max(1, window.innerHeight - HUD_H);
     const fit = Math.min(window.innerWidth / (COLS * TILE),
-      window.innerHeight / (ROWS * TILE));
+      availH / (ROWS * TILE));
     board.scale.set(fit);
     board.position.set((window.innerWidth - COLS * TILE * fit) / 2,
-      (window.innerHeight - ROWS * TILE * fit) / 2);
+      HUD_H + (availH - ROWS * TILE * fit) / 2);
+    if (hudReady) layoutHud();
   }
   fitBoard();
   if (embed) window.addEventListener('resize', fitBoard);
@@ -167,25 +175,63 @@
   }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
-  // Visible in-game countdown timer (HUD on the stage, not the board,
-  // so it stays put at any board scale). Runs from session start.
-  const hudTimer = new PIXI.Text({ text: '2:00', style: {
-    fontSize: 28, fill: 0xffffff, fontWeight: 'bold',
-    stroke: { color: 0x111111, width: 5 } } });
-  hudTimer.position.set(12, 8);
-  app.stage.addChild(hudTimer);
+  // Compact bar above the playzone: TIME always; at loss the
+  // retry message and Restart button join it — never over the board.
+  const hudBar = new PIXI.Container();
+  const hudBg = new PIXI.Graphics();
+  hudBar.addChild(hudBg);
+  const hudTimer = new PIXI.Text({ text: 'TIME 2:00', style: {
+    fontSize: 24, fill: 0xffffff, fontWeight: 'bold',
+    stroke: { color: 0x111111, width: 4 } } });
+  hudTimer.position.set(12, 12);
+  hudBar.addChild(hudTimer);
+  const retryGroup = new PIXI.Container();
+  retryGroup.visible = false;
+  const retryMsg = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
+    fontSize: 20, fill: 0xff8080, fontWeight: 'bold' } });
+  retryMsg.anchor.set(1, 0);
+  retryGroup.addChild(retryMsg);
+  const retryBtnBg = new PIXI.Graphics();
+  retryBtnBg.eventMode = 'static';
+  retryBtnBg.cursor = 'pointer';
+  retryBtnBg.on('pointertap', () => restartLevel());
+  retryGroup.addChild(retryBtnBg);
+  const retryBtnText = new PIXI.Text({ text: 'Restart', style: {
+    fontSize: 19, fill: 0xffffff, fontWeight: 'bold' } });
+  retryBtnText.anchor.set(0.5);
+  retryBtnText.eventMode = 'none';
+  retryGroup.addChild(retryBtnText);
+  hudBar.addChild(retryGroup);
+  app.stage.addChild(hudBar);
+  function layoutHud() {
+    const w = app.renderer.width;
+    hudBg.clear();
+    hudBg.rect(0, 0, w, HUD_H).fill(0x181818);
+    hudBg.rect(0, HUD_H - 2, w, 2).fill(0x444444);
+    retryBtnBg.clear();
+    retryBtnBg.roundRect(w - 132, 8, 120, 36, 6)
+      .fill(0xc00000).stroke({ width: 1, color: 0xffffff });
+    retryBtnText.position.set(w - 72, 26);
+    retryMsg.position.set(w - 148, 14);
+  }
+  layoutHud();
+  hudReady = true;
   function fmtHud(totalSeconds) {
     const v = Math.max(0, Math.floor(totalSeconds));
     return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0');
   }
   function drawHud(elapsedS, limitS) {
-    hudTimer.text = limitS === null ? fmtHud(elapsedS)
-      : fmtHud(limitS - elapsedS);
+    hudTimer.text = 'TIME ' + (limitS === null ? fmtHud(elapsedS)
+      : fmtHud(limitS - elapsedS));
   }
   function renderState() {
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
         state.player.y * TILE);
+      // Fallen pose while the run is lost, normal pose otherwise.
+      const pose = state.status === 'lost' && textures['jolly-fall.png']
+        ? textures['jolly-fall.png'] : textures['jolly.png'];
+      if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
@@ -198,6 +244,9 @@
     document.getElementById('dbg-digest').textContent =
       window.GameCore.stateDigest(state);
     document.getElementById('dbg-state').textContent = JSON.stringify(state);
+    const statusEl = document.getElementById('dbg-status');
+    if (statusEl) statusEl.textContent = state.status || 'playing';
+    retryGroup.visible = state.status === 'lost';
     drawHud(state.elapsed_s, state.time_limit_s);
   }
   renderState();
@@ -205,9 +254,9 @@
   // Session recording starts with the playable build: the header is
   // flushed before any input, every step flushes, and End / pagehide
   // closes the file — no play is ever unrecorded.
-  const now = new Date();
+  let now = new Date();
   const stamp = now.toISOString().replace(/[^0-9]/g, '').slice(0, 14);
-  const sessionId = forkSeed ? forkSeed.id :
+  let sessionId = forkSeed ? forkSeed.id :
     'game-' + levelName + '-' + stamp + '-' +
     Math.random().toString(36).slice(2, 8);
   // No session exists until the first move: refreshes and idle
@@ -268,6 +317,28 @@
       sessionId + ' — ended (' + (result || 'quit') + ')';
   }
   document.getElementById('btn-end-session').addEventListener('click', () => endSession('quit'));
+  // Restart: restore the initial state (position, orbs, keys and
+  // timer all live in GameCore.initialState) and start a new
+  // recorded session on the next move. The old session is closed
+  // first (as 'lost' if it already expired, else 'quit').
+  function restartLevel() {
+    if (window.__replayActive) return;
+    if (recorder && !recorder.isEnded()) endSession('quit');
+    recorder = null;
+    forkSeed = null;
+    inputLog.length = 0;
+    now = new Date();
+    sessionId = 'game-' + levelName + '-' +
+      now.toISOString().replace(/[^0-9]/g, '').slice(0, 14) + '-' +
+      Math.random().toString(36).slice(2, 8);
+    sessionStartTs = null;
+    state = window.GameCore.initialState(level, levelName);
+    document.getElementById('dbg-input').textContent = '\u2014';
+    document.getElementById('dbg-replay').textContent = '\u2014';
+    document.getElementById('dbg-session').textContent =
+      'no session yet \u2014 move to start one';
+    renderState();
+  }
   window.addEventListener('pagehide', () => {
     if (!recorder) return;
     if (!recorder.isEnded()) { recorder.end('quit', { time_left: state.time_left_s }); }
@@ -285,7 +356,18 @@
     document.getElementById('dbg-input').textContent =
       String(state.last_input) + ' @ t_ms ' + state.t_ms;
     renderState();
-    flushSession(false);
+    // End (and flush) a lost run in one write, so the session file
+    // cannot land without its lost end line.
+    if (state.status === 'lost') endSession('lost');
+    else flushSession(false);
+  }
+  // Idle expiry: when the live clock reaches the limit, record the
+  // loss as a step at exactly the limit so replay loses at the same
+  // recorded moment — never from an unrecorded wall-clock read alone.
+  function expireNow() {
+    if (state.status === 'lost' || state.time_limit_s === null ||
+        state.time_limit_s === undefined) return;
+    applyStep({ t_ms: Math.round(state.time_limit_s * 1000), input: 'timeout' });
   }
 
   // Keyboard: WASD/arrows register an input, advance the pure step
@@ -308,6 +390,11 @@
       drawHud(elapsed, state.time_limit_s);
       const dbg = document.getElementById('dbg-timer');
       if (dbg) dbg.textContent = elapsed.toFixed(1) + 's (live clock)';
+      if (sessionStartTs !== null && state.status !== 'lost' &&
+          state.time_limit_s !== null && state.time_limit_s !== undefined &&
+          elapsed >= state.time_limit_s) {
+        expireNow();
+      }
     }
     requestAnimationFrame(clockLoop);
   })();
@@ -321,6 +408,12 @@
       else if (ev.key === 'End') { ev.preventDefault(); showReplay(1e9); }
       return;
     }
+    if (ev.key === 'r' || ev.key === 'R') {
+      ev.preventDefault();
+      restartLevel();
+      return;
+    }
+    if (state.status === 'lost') return;
     const input = window.GameCore.inputForKey(ev.key);
     if (!input) return;
     ev.preventDefault();
@@ -491,7 +584,8 @@
     showReplay: showReplay, forkFromReplay: forkFromReplay,
     togglePlay: () => { if (replayTimer) pauseReplay(); else playReplay(); },
     seekTime: (seconds) => { if (window.__replayRecords) { pauseReplay(); showReplay(window.GameReplay.stepIndexAtTime(window.__replayRecords, seconds)); } },
-    getClock: () => ({ started: sessionStartTs !== null, elapsed_s: sessionElapsedMs() / 1000, time_limit_s: state.time_limit_s, time_left_s: Math.max(0, state.time_limit_s - sessionElapsedMs() / 1000) }),
+    getClock: () => ({ started: sessionStartTs !== null, status: state.status, elapsed_s: sessionElapsedMs() / 1000, time_limit_s: state.time_limit_s, time_left_s: Math.max(0, state.time_limit_s - sessionElapsedMs() / 1000) }),
+    restart: restartLevel,
     getReplay: () => ({ playing: replayTimer !== null, playhead_ms: playheadMs, id: replayId, index: replayIndex,
       duration_ms: window.__replayRecords ? (window.GameReplay.stepsOf(window.__replayRecords).slice(-1)[0] || { t_ms: 0 }).t_ms : 0,
       step_times: window.__replayRecords ? window.GameReplay.stepsOf(window.__replayRecords).map((s) => s.t_ms) : [],
@@ -503,7 +597,10 @@
     getPlayerSpritePos: () => playerSprite
       ? { x: playerSprite.position.x, y: playerSprite.position.y }
       : null,
-    sessionId: sessionId,
+    isRetryBarVisible: () => retryGroup.visible,
+    getPlayerPose: () => (playerSprite && textures['jolly-fall.png'] &&
+      playerSprite.texture === textures['jolly-fall.png']) ? 'fallen' : 'normal',
+    get sessionId() { return sessionId; },
     endSession: endSession,
     applyStep: applyStep,
     getLog: () => inputLog.slice(),
