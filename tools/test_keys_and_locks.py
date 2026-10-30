@@ -66,5 +66,44 @@ class KeysRoomLevelTests(unittest.TestCase):
                              / f"{name}.png").is_file(), name)
 
 
+PICKUP_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+let s = core.initialState(level, 'keys-room');
+const start = { ...s.player };
+// right, right onto the red key at (4,1)
+s = core.step(s, { t_ms: 100, input: 'right' });
+s = core.step(s, { t_ms: 200, input: 'right' });
+s = core.step(s, { t_ms: 300, input: 'right' });
+const afterRed = { pos: { ...s.player }, inv: core.readout(s).inventory,
+  tile: s.grid[1][4] };
+// purity: initial state untouched
+const s0 = core.initialState(level, 'keys-room');
+console.log(JSON.stringify({ start, afterRed,
+  freshInv: core.readout(s0).inventory, freshTile: s0.grid[1][4] }));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class KeyPickupTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(PICKUP_SCRIPT)
+
+    def test_walk_onto_key_fills_first_slot(self):
+        self.assertEqual(self.r["afterRed"]["inv"], ["red"])
+        self.assertEqual(self.r["afterRed"]["pos"], {"x": 4, "y": 1})
+        self.assertEqual(self.r["afterRed"]["tile"], ".")
+
+    def test_step_is_pure(self):
+        self.assertEqual(self.r["freshInv"], [])
+        self.assertEqual(self.r["freshTile"], "r")
+
+    def test_game_renders_tiles_from_state(self):
+        js = (ROOT / "tools" / "static" / "game.js").read_text(encoding="utf-8")
+        self.assertIn("dynamicTiles", js)
+        self.assertIn("state.grid", js)
+
+
 if __name__ == "__main__":
     unittest.main()

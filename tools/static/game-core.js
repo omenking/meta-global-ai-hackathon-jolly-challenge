@@ -39,15 +39,61 @@
     return ch === '.' || ch === 'P';
   }
 
-  function movePlayer(state, inputName) {
+  function charAt(grid, x, y) {
+    if (!Array.isArray(grid) || y < 0 || y >= grid.length) return null;
+    const row = grid[y];
+    if (typeof row !== 'string' || x < 0 || x >= row.length) return null;
+    return row[x];
+  }
+
+  function setTile(grid, x, y, ch) {
+    const next = (grid || []).slice();
+    if (y < 0 || y >= next.length) return next;
+    const row = next[y];
+    next[y] = row.slice(0, x) + ch + row.slice(x + 1);
+    return next;
+  }
+
+  // Key/lock colours come from the level legend (key_color /
+  // lock_color per tile char), so mechanics are data-driven.
+  function tileMaps(level) {
+    const keyTiles = {}, lockTiles = {};
+    const legend = (level && level.legend) || {};
+    for (const ch of Object.keys(legend)) {
+      const e = legend[ch] || {};
+      if (e.key_color) keyTiles[ch] = e.key_color;
+      if (e.lock_color) lockTiles[ch] = e.lock_color;
+    }
+    return { keyTiles: keyTiles, lockTiles: lockTiles };
+  }
+
+  // Resolve one directional press into player/grid/inventory.
+  // Walking onto a key moves the player, appends its colour to the
+  // inventory in held order and turns the tile to floor.
+  function resolveMove(state, inputName) {
+    const stay = { player: { x: state.player.x, y: state.player.y },
+      grid: state.grid, inventory: (state.inventory || []).slice() };
     const delta = DIRECTIONS[inputName];
-    if (!delta) return { x: state.player.x, y: state.player.y };
+    if (!delta) return stay;
     const nx = state.player.x + delta.x;
     const ny = state.player.y + delta.y;
-    if (!isWalkable(state.grid, nx, ny)) {
-      return { x: state.player.x, y: state.player.y };
+    const ch = charAt(state.grid, nx, ny);
+    if (ch === null) return stay;
+    const keyColor = (state.key_tiles || {})[ch];
+    if (keyColor) {
+      return { player: { x: nx, y: ny },
+        grid: setTile(state.grid, nx, ny, '.'),
+        inventory: stay.inventory.concat([keyColor]) };
     }
-    return { x: nx, y: ny };
+    if (isWalkable(state.grid, nx, ny)) {
+      return { player: { x: nx, y: ny }, grid: state.grid,
+        inventory: stay.inventory };
+    }
+    return stay;
+  }
+
+  function movePlayer(state, inputName) {
+    return resolveMove(state, inputName).player;
   }
 
   // Countdown timer: scoped by its max time. A level may set
@@ -56,9 +102,13 @@
   function initialState(level, levelName) {
     const limit = (level && typeof level.time_limit === 'number')
       ? level.time_limit : DEFAULT_TIME_LIMIT_S;
+    const maps = tileMaps(level || {});
     return {
       level: levelName || (level && level.name) || '',
       grid: ((level && level.rows) || []).slice(),
+      inventory: [],
+      key_tiles: maps.keyTiles,
+      lock_tiles: maps.lockTiles,
       player: findPlayer(level || {}),
       steps: 0,
       t_ms: 0,
@@ -91,12 +141,18 @@
     const expired = state.time_limit_s !== null &&
       state.time_limit_s !== undefined && elapsed >= state.time_limit_s;
     const lost = expired || state.status === 'lost';
+    // No movement on or after expiry, and a lost run stays frozen.
+    const moved = lost
+      ? { player: { x: state.player.x, y: state.player.y },
+          grid: state.grid, inventory: (state.inventory || []).slice() }
+      : resolveMove(state, input.input);
     return {
       level: state.level,
-      grid: state.grid,
-      // No movement on or after expiry, and a lost run stays frozen.
-      player: lost ? { x: state.player.x, y: state.player.y }
-        : movePlayer(state, input.input),
+      grid: moved.grid,
+      inventory: moved.inventory,
+      key_tiles: state.key_tiles || {},
+      lock_tiles: state.lock_tiles || {},
+      player: moved.player,
       steps: state.steps + 1,
       t_ms: input.t_ms,
       elapsed_s: elapsed,
@@ -146,7 +202,8 @@
     let orbs = 0;
     for (const row of state.grid || []) for (const ch of row) if (ch === '*' || ch === 'O') orbs++;
     return { step: state.steps, position: { x: state.player.x, y: state.player.y },
-      inventory: [], orbs_left: orbs, status: state.status || 'playing',
+      inventory: (state.inventory || []).slice(),
+      orbs_left: orbs, status: state.status || 'playing',
       timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
       time_left_s: state.time_left_s,
       elapsed_s: state.elapsed_s, t_ms: state.t_ms, input: state.last_input };
