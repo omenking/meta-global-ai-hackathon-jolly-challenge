@@ -101,9 +101,11 @@
     function canEnter(state, actor, x, y) {
       if (x < 0 || y < 0 || x >= state.width || y >= state.height) return false;
       const terr = tileAt(state, 'terrain', x, y);
-      if (terr && terr.blocks && terr.blocks(state, { x: x, y: y, def: terr }, actor)) return false;
+      if (terr && terr.blocks && terr.blocks(state,
+        { x: x, y: y, def: terr, meta: cellMeta(state, x, y) }, actor)) return false;
       const obj = tileAt(state, 'objects', x, y);
-      if (obj && obj.blocks && obj.blocks(state, { x: x, y: y, def: obj }, actor)) return false;
+      if (obj && obj.blocks && obj.blocks(state,
+        { x: x, y: y, def: obj, meta: cellMeta(state, x, y) }, actor)) return false;
       return true;
     }
     function applyEffects(state, effects) {
