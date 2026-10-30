@@ -90,24 +90,31 @@
     }
   }));
 
+  // Compact in-GUI bar above the playzone (like TIME in the
+  // full-level reference): the board never sits under the UI.
+  const HUD_H = 52;
   const app = new PIXI.Application();
   await app.init({ width: embed ? window.innerWidth : COLS * TILE,
-    height: embed ? window.innerHeight : ROWS * TILE, background: '#111' });
+    height: embed ? window.innerHeight : HUD_H + ROWS * TILE, background: '#111' });
   document.getElementById('stage').appendChild(app.canvas);
   const scale = TILE / 512;
   const board = new PIXI.Container();
+  if (!embed) board.position.set(0, HUD_H);
   app.stage.addChild(board);
   // Embed: keep the board's true aspect ratio at any window size —
   // scale to fit and centre (letterbox), refitting on resize. The
   // canvas is never CSS-stretched to the container.
+  let hudReady = false;
   function fitBoard() {
     if (!embed) return;
     app.renderer.resize(window.innerWidth, window.innerHeight);
+    const availH = Math.max(1, window.innerHeight - HUD_H);
     const fit = Math.min(window.innerWidth / (COLS * TILE),
-      window.innerHeight / (ROWS * TILE));
+      availH / (ROWS * TILE));
     board.scale.set(fit);
     board.position.set((window.innerWidth - COLS * TILE * fit) / 2,
-      (window.innerHeight - ROWS * TILE * fit) / 2);
+      HUD_H + (availH - ROWS * TILE * fit) / 2);
+    if (hudReady) layoutHud();
   }
   fitBoard();
   if (embed) window.addEventListener('resize', fitBoard);
@@ -168,57 +175,55 @@
   }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
-  // Visible in-game countdown timer (HUD on the stage, not the board,
-  // so it stays put at any board scale). Runs from session start.
-  const hudTimer = new PIXI.Text({ text: '2:00', style: {
-    fontSize: 28, fill: 0xffffff, fontWeight: 'bold',
-    stroke: { color: 0x111111, width: 5 } } });
-  hudTimer.position.set(12, 8);
-  app.stage.addChild(hudTimer);
+  // Compact bar above the playzone: TIME always; at loss the
+  // retry message and Restart button join it — never over the board.
+  const hudBar = new PIXI.Container();
+  const hudBg = new PIXI.Graphics();
+  hudBar.addChild(hudBg);
+  const hudTimer = new PIXI.Text({ text: 'TIME 2:00', style: {
+    fontSize: 24, fill: 0xffffff, fontWeight: 'bold',
+    stroke: { color: 0x111111, width: 4 } } });
+  hudTimer.position.set(12, 12);
+  hudBar.addChild(hudTimer);
+  const retryGroup = new PIXI.Container();
+  retryGroup.visible = false;
+  const retryMsg = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
+    fontSize: 20, fill: 0xff8080, fontWeight: 'bold' } });
+  retryMsg.anchor.set(1, 0);
+  retryGroup.addChild(retryMsg);
+  const retryBtnBg = new PIXI.Graphics();
+  retryBtnBg.eventMode = 'static';
+  retryBtnBg.cursor = 'pointer';
+  retryBtnBg.on('pointertap', () => restartLevel());
+  retryGroup.addChild(retryBtnBg);
+  const retryBtnText = new PIXI.Text({ text: 'Restart', style: {
+    fontSize: 19, fill: 0xffffff, fontWeight: 'bold' } });
+  retryBtnText.anchor.set(0.5);
+  retryBtnText.eventMode = 'none';
+  retryGroup.addChild(retryBtnText);
+  hudBar.addChild(retryGroup);
+  app.stage.addChild(hudBar);
+  function layoutHud() {
+    const w = app.renderer.width;
+    hudBg.clear();
+    hudBg.rect(0, 0, w, HUD_H).fill(0x181818);
+    hudBg.rect(0, HUD_H - 2, w, 2).fill(0x444444);
+    retryBtnBg.clear();
+    retryBtnBg.roundRect(w - 132, 8, 120, 36, 6)
+      .fill(0xc00000).stroke({ width: 1, color: 0xffffff });
+    retryBtnText.position.set(w - 72, 26);
+    retryMsg.position.set(w - 148, 14);
+  }
+  layoutHud();
+  hudReady = true;
   function fmtHud(totalSeconds) {
     const v = Math.max(0, Math.floor(totalSeconds));
     return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0');
   }
   function drawHud(elapsedS, limitS) {
-    hudTimer.text = limitS === null ? fmtHud(elapsedS)
-      : fmtHud(limitS - elapsedS);
+    hudTimer.text = 'TIME ' + (limitS === null ? fmtHud(elapsedS)
+      : fmtHud(limitS - elapsedS));
   }
-  // In-canvas loss overlay: retry message and Restart button live
-  // on the board itself, not in any outside UI.
-  const lostOverlay = new PIXI.Container();
-  lostOverlay.visible = false;
-  {
-    const cx = COLS * TILE / 2, cy = ROWS * TILE / 2;
-    const panel = new PIXI.Graphics();
-    panel.roundRect(cx - 190, cy - 95, 380, 190, 12)
-      .fill({ color: 0x111111, alpha: 0.88 })
-      .stroke({ width: 2, color: 0xc00000 });
-    lostOverlay.addChild(panel);
-    const title = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
-      fontSize: 30, fill: 0xffffff, fontWeight: 'bold' } });
-    title.anchor.set(0.5);
-    title.position.set(cx, cy - 58);
-    lostOverlay.addChild(title);
-    const hint = new PIXI.Text({ text: 'Press R or tap Restart to try again', style: {
-      fontSize: 17, fill: 0xcccccc } });
-    hint.anchor.set(0.5);
-    hint.position.set(cx, cy - 22);
-    lostOverlay.addChild(hint);
-    const btnBg = new PIXI.Graphics();
-    btnBg.roundRect(cx - 70, cy + 12, 140, 44, 8)
-      .fill(0xc00000).stroke({ width: 2, color: 0xffffff });
-    btnBg.eventMode = 'static';
-    btnBg.cursor = 'pointer';
-    btnBg.on('pointertap', () => restartLevel());
-    lostOverlay.addChild(btnBg);
-    const btnText = new PIXI.Text({ text: 'Restart', style: {
-      fontSize: 22, fill: 0xffffff, fontWeight: 'bold' } });
-    btnText.anchor.set(0.5);
-    btnText.position.set(cx, cy + 34);
-    btnText.eventMode = 'none';
-    lostOverlay.addChild(btnText);
-  }
-  board.addChild(lostOverlay);
   function renderState() {
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
@@ -241,7 +246,7 @@
     document.getElementById('dbg-state').textContent = JSON.stringify(state);
     const statusEl = document.getElementById('dbg-status');
     if (statusEl) statusEl.textContent = state.status || 'playing';
-    lostOverlay.visible = state.status === 'lost';
+    retryGroup.visible = state.status === 'lost';
     drawHud(state.elapsed_s, state.time_limit_s);
   }
   renderState();
@@ -592,7 +597,7 @@
     getPlayerSpritePos: () => playerSprite
       ? { x: playerSprite.position.x, y: playerSprite.position.y }
       : null,
-    isLostOverlayVisible: () => lostOverlay.visible,
+    isRetryBarVisible: () => retryGroup.visible,
     getPlayerPose: () => (playerSprite && textures['jolly-fall.png'] &&
       playerSprite.texture === textures['jolly-fall.png']) ? 'fallen' : 'normal',
     get sessionId() { return sessionId; },

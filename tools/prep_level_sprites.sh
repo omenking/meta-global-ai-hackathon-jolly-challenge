@@ -24,9 +24,11 @@ command -v "$FFMPEG" >/dev/null || { echo "ffmpeg not found" >&2; exit 1; }
 mkdir -p "$OUT" "$LVL"
 
 # Newest stamped file wins; lexicographic sort == chronological for this stamp.
+# The stamp must start with a digit: a bare "$1-*" glob would also match
+# longer asset names sharing the prefix (jolly-fall-* as "jolly").
 latest() {
   local match
-  match=$(ls "$SRC/$1"-*.png 2>/dev/null | sort | tail -n 1)
+  match=$(ls "$SRC/$1"-[0-9]*.png 2>/dev/null | sort | tail -n 1)
   [ -n "$match" ] || { echo "no published version of $1 in $SRC" >&2; exit 1; }
   printf '%s' "$match"
 }

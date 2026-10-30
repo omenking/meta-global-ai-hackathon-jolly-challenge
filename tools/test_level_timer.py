@@ -138,7 +138,8 @@ class LoseAtZeroTests(unittest.TestCase):
             encoding="utf-8")
         self.assertNotIn('id="game-message"', html)
         self.assertIn("Time's up", js)
-        self.assertIn("lostOverlay", js)
+        self.assertIn("retryGroup", js)
+        self.assertNotIn("lostOverlay", js)
         self.assertIn("endSession('lost')", js)
         self.assertIn("input: 'timeout'", js)
         self.assertIn('id="dbg-status"', html)
@@ -188,8 +189,9 @@ class RestartTests(unittest.TestCase):
         js = (ROOT / "tools" / "static" / "game.js").read_text(
             encoding="utf-8")
         self.assertNotIn('id="btn-restart"', html)
-        self.assertIn("lostOverlay", js)
+        self.assertIn("retryGroup", js)
         self.assertIn("pointertap", js)
+        self.assertIn("HUD_H", js)
         self.assertIn("restartLevel", js)
         self.assertIn("ev.key === 'r'", js)
         self.assertIn("GameCore.initialState(level, levelName)", js)
@@ -208,6 +210,8 @@ class FallenPoseTests(unittest.TestCase):
         prep = (ROOT / "tools" / "prep_level_sprites.sh").read_text(
             encoding="utf-8")
         self.assertIn("jolly-fall", prep)
+        # The standing sprite must not resolve to jolly-fall-* files.
+        self.assertIn('-[0-9]*.png', prep)
 
     def test_player_sprite_swaps_to_fallen_when_lost(self):
         js = (ROOT / "tools" / "static" / "game.js").read_text(
@@ -227,7 +231,8 @@ class CurrentGameUiTests(unittest.TestCase):
         self.assertNotIn("Time's up", jsx)
         js = (ROOT / "tools" / "static" / "game.js").read_text(
             encoding="utf-8")
-        self.assertIn("lostOverlay", js)
+        self.assertNotIn("lostOverlay", js)
+        self.assertIn("retryGroup", js)
         self.assertIn("Time's up", js)
         self.assertIn("'Restart'", js)
 
