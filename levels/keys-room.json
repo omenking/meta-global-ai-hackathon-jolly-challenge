@@ -1,0 +1,34 @@
+{
+  "name": "keys-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "keys-and-locks Test Level: all 5 key/keylock colours (red, gold, green, blue, silver), matching locks and an orb",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "r": {"base": "floor_default.png", "label": "key red", "sprite": "key_red.png", "key_color": "red"},
+    "d": {"base": "floor_default.png", "label": "key gold", "sprite": "key_gold.png", "key_color": "gold"},
+    "g": {"base": "floor_default.png", "label": "key green", "sprite": "key_green.png", "key_color": "green"},
+    "b": {"base": "floor_default.png", "label": "key blue", "sprite": "key_blue.png", "key_color": "blue"},
+    "s": {"base": "floor_default.png", "label": "key silver", "sprite": "key_silver.png", "key_color": "silver"},
+    "R": {"label": "lock red", "sprite": "wall_keyhole_red.png", "lock_color": "red"},
+    "D": {"label": "lock gold", "sprite": "wall_keyhole_gold.png", "lock_color": "gold"},
+    "N": {"label": "lock green", "sprite": "wall_keyhole_green.png", "lock_color": "green"},
+    "B": {"label": "lock blue", "sprite": "wall_keyhole_blue.png", "lock_color": "blue"},
+    "S": {"label": "lock silver", "sprite": "wall_keyhole_silver.png", "lock_color": "silver"}
+  },
+  "rows": [
+    "#############",
+    "#P..r.R.....#",
+    "#...........#",
+    "#.g..N...*..#",
+    "#.b..B......#",
+    "#.d..D......#",
+    "#.s..S......#",
+    "#...........#",
+    "#############"
+  ]
+}

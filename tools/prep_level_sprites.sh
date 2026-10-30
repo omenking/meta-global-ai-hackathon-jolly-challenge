@@ -34,12 +34,12 @@ latest() {
 }
 
 # Full-bleed tiles: normalize to RGBA without touching colors.
-for tile in floor_default wall portal wall_keyhole; do
+for tile in floor_default wall portal; do
   "$FFMPEG" -y -nostdin -v error -i "$(latest "$tile")" -vf "format=rgba" "$OUT/$tile.png"
 done
 
 # Green-screen sprites (#00FF00 backgrounds, measured corners ~0,253-255,0-32).
-for sprite in jolly jolly-fall key orb; do
+for sprite in jolly jolly-fall orb; do
   "$FFMPEG" -y -nostdin -v error -i "$(latest "$sprite")" \
     -vf "colorkey=0x00FF00:0.20:0.10,format=rgba" "$OUT/$sprite.png"
 done
@@ -48,21 +48,27 @@ done
 "$FFMPEG" -y -nostdin -v error -i "$(latest gate)" \
   -vf "colorkey=0xFFFFFF:0.15:0.10,format=rgba" "$OUT/gate.png"
 
-# Placeholder color variants by hue rotation. Base gold median hue is ~39
-# degrees, so offsets land red ~0, yellow ~55, green ~130, blue ~205.
-# Verified: hue after colorkey preserves the alpha channel.
-while read -r color offset; do
-  "$FFMPEG" -y -nostdin -v error -i "$(latest key)" \
-    -vf "colorkey=0x00FF00:0.20:0.10,hue=h=$offset,format=rgba" \
-    "$OUT/key_$color.png"
-  "$FFMPEG" -y -nostdin -v error -i "$(latest wall_keyhole)" \
-    -vf "hue=h=$offset,format=rgba" "$OUT/wall_keyhole_$color.png"
-done <<'VARIANTS'
-red -40
-yellow 15
-green 90
-blue 165
-VARIANTS
+# Keys and locks: real per-colour art in assets/published/lock_and_keys
+# (5 combos, no colour shifting). Keys sit on green screen; keyhole
+# tiles are full-bleed. The silver files are spelled "sliver" on disk.
+# The generic key.png / wall_keyhole.png come from the gold combo.
+LK="$SRC/lock_and_keys"
+while read -r color filecolor; do
+  "$FFMPEG" -y -nostdin -v error -i "$LK/key_$filecolor.png" \
+    -vf "colorkey=0x00FF00:0.20:0.10,format=rgba" "$OUT/key_$color.png"
+  "$FFMPEG" -y -nostdin -v error -i "$LK/keyhold_$filecolor.png" \
+    -vf "format=rgba" "$OUT/wall_keyhole_$color.png"
+done <<'COLORS'
+red red
+gold gold
+green green
+blue blue
+silver sliver
+COLORS
+"$FFMPEG" -y -nostdin -v error -i "$LK/key_gold.png" \
+  -vf "colorkey=0x00FF00:0.20:0.10,format=rgba" "$OUT/key.png"
+"$FFMPEG" -y -nostdin -v error -i "$LK/keyhold_gold.png" \
+  -vf "format=rgba" "$OUT/wall_keyhole.png"
 
 # HUD sprites: the gui art in assets/published/gui is green-screen
 # RGB (blue seven-segment digits, black labels, a black backplate
