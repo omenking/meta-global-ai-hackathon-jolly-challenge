@@ -522,13 +522,30 @@
     // End (and flush) a lost run in one write, so the session file
     // cannot land without its lost end line.
     if (state.status === 'lost') endSession('lost');
+    else if (state.status === 'won') {
+      // Warp: close this level's session as won, then load the
+      // next level in the chain. On the last level (no next) the
+      // win stands and the win screen shows (progression-state).
+      endSession('won');
+      if (state.next_level) loadNextLevel(state.next_level);
+    }
     else flushSession(false);
+  }
+  // Load the next level in the progression chain (same page, new
+  // ?level=, fresh session on first move). Replay/fork params do
+  // not carry over; creator/feature/embed do.
+  function loadNextLevel(nextId) {
+    const next = new URLSearchParams(params);
+    next.set('level', nextId);
+    next.delete('replay'); next.delete('fork'); next.delete('t');
+    location.search = '?' + next.toString();
   }
   // Idle expiry: when the live clock reaches the limit, record the
   // loss as a step at exactly the limit so replay loses at the same
   // recorded moment — never from an unrecorded wall-clock read alone.
   function expireNow() {
-    if (state.status === 'lost' || state.time_limit_s === null ||
+    if (state.status === 'lost' || state.status === 'won' ||
+        state.time_limit_s === null ||
         state.time_limit_s === undefined) return;
     applyStep({ t_ms: Math.round(state.time_limit_s * 1000), input: 'timeout' });
   }
@@ -576,7 +593,7 @@
       restartLevel();
       return;
     }
-    if (state.status === 'lost') return;
+    if (state.status === 'lost' || state.status === 'won') return;
     const input = window.GameCore.inputForKey(ev.key);
     if (!input) return;
     ev.preventDefault();
@@ -757,6 +774,8 @@
       readout: document.getElementById('replay-readout').textContent,
       warning: document.getElementById('replay-warning').textContent }),
     getState: () => state,
+    getProgression: () => ({ level: state.level,
+      status: state.status, next_level: state.next_level }),
     getPlayerSpritePos: () => playerSprite
       ? { x: playerSprite.position.x, y: playerSprite.position.y }
       : null,

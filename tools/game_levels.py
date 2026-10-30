@@ -39,6 +39,10 @@ def list_levels(root: Path) -> list[dict]:
             "id": lid,
             "name": data.get("name") or lid,
             "test": bool(data.get("test")) or lid.startswith("test-"),
+            # Ordered progression chain: the next level to load on
+            # warp, or None when this is the last level.
+            "next": data.get("next") if isinstance(data.get("next"), str)
+                    and data.get("next") else None,
         })
     return out
 
