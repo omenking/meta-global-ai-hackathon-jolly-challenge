@@ -1,24 +1,160 @@
-// Deterministic game core: a pure step function.
-//
-// State advances ONLY through step(state, input). Every input carries
-// t_ms (elapsed ms since session start, as recorded in the session
-// log), so the timer at any step is a function of the recorded log —
-// never of an unrecorded wall-clock read. Replaying the same initial
-// level with the same ordered, timestamped log always yields the same
-// states. Rendering is a view of state, never a driver of it.
-//
-// Movement (player-movement): a direction input moves the player
-// exactly one tile when the target tile is walkable; otherwise the
-// player stays. Orbs (orbs-and-gate): walking onto an orb collects
-// it — the tile turns to floor and orbs_left decrements; orbs never
-// enter the inventory. The gate stays shut until orbs_left is zero.
-// Warp (warp-and-levels): the portal tile ('X') sits behind the
-// gate; stepping onto it wins the run (status 'won', frozen like a
-// lost run) and state.next_level names the level to load next —
-// null on the last level, where the win ends the run.
+// GameCore facade: assembles registry + kernel + packs and keeps the
+// long-standing public API (initialState/step/replay/stateDigest/
+// readout/inputForKey + legacy char helpers for tests and game.js).
+// Mechanics live in packs (Phase 1: built-in registration below;
+// extracted to tools/static/packs/ in Phases 2-3/5). The kernel in
+// engine/kernel.js knows no specific tile. State is v2 layered data
+// plus a derived compatibility projection (grid/player/orbs_left/
+// gate_open) computed here, never stored as kernel truth.
 (function (root) {
   'use strict';
+  let Registry, Kernel;
+  if (typeof module !== 'undefined' && module.exports) {
+    Registry = require('./engine/registry.js');
+    Kernel = require('./engine/kernel.js');
+  } else {
+    Registry = root.GameRegistry; Kernel = root.GameKernel;
+  }
 
+  // --- Built-in pack registration (extracted in later phases) ---
+  function registerCorePack(api) {
+    api.defineTile('core:floor', { layer: 'terrain', sprite: 'floor_default.png' });
+    api.defineTile('core:spawn', { layer: 'terrain', sprite: 'floor_default.png' });
+    api.defineTile('core:wall', { layer: 'terrain', sprite: 'wall.png',
+      blocks: function () { return true; } });
+    api.defineTile('core:info', { layer: 'terrain',
+      blocks: function () { return true; } });
+    api.defineTile('core:unknown', { layer: 'terrain',
+      blocks: function () { return true; } });
+    api.defineTile('core:orb', { layer: 'object', sprite: 'orb.png',
+      onEnter: function (state, cell, actor, fx) {
+        fx.push({ type: 'removeObject', x: cell.x, y: cell.y });
+        fx.push({ type: 'incCounter', key: 'core:orbs_left', by: -1 });
+      } });
+    api.defineTile('core:gate', { layer: 'object', sprite: 'gate.png',
+      blocks: function (state) { return (state.counters['core:orbs_left'] || 0) > 0; } });
+    api.defineTile('core:warp', { layer: 'object', sprite: 'portal.png',
+      onEnter: function (state, cell, actor, fx) { fx.push({ type: 'win' }); } });
+    api.onLevelLoad(function (state) {
+      let n = 0;
+      for (const row of state.objects) for (const id of row) if (id === 'core:orb') n++;
+      state.counters['core:orbs_left'] = n;
+    });
+    api.onLevelDefs(function (level, ch, e) {
+      if (!ch) return null;
+      if (ch === '.') return 'core:floor';
+      if (ch === '#') return 'core:wall';
+      if (ch === 'P') return 'core:spawn';
+      if (ch === '*' || ch === 'O') return 'core:orb';
+      if (ch === 'G') return 'core:gate';
+      if (ch === 'X') return 'core:warp';
+      if (ch === '?') return 'core:info';
+      return null;
+    });
+  }
+  function registerKeysPack(api) {
+    api.onLevelDefs(function (level, ch, e) {
+      if (!ch || !e) return null;
+      if (e.key_color) {
+        const color = e.key_color, itemId = 'keys:key-' + color;
+        api.defineItem(itemId, { icon: 'key_' + color + '.png', readout: color });
+        api.defineTile(itemId, { layer: 'object', sprite: 'key_' + color + '.png',
+          blocks: function (state) { return state.inventory.length >= 8; },
+          onEnter: function (state, cell, actor, fx) {
+            fx.push({ type: 'giveItem', item: itemId });
+            fx.push({ type: 'removeObject', x: cell.x, y: cell.y });
+          } });
+        return itemId;
+      }
+      if (e.lock_color) {
+        const color = e.lock_color, tileId = 'keys:lock-' + color,
+          itemId = 'keys:key-' + color;
+        api.defineTile(tileId, { layer: 'object', sprite: 'wall_keyhole_' + color + '.png',
+          blocks: function (state) {
+            return !state.inventory.some((en) => en.item === itemId);
+          },
+          onEnter: function (state, cell, actor, fx) {
+            fx.push({ type: 'consumeItem', item: itemId });
+            fx.push({ type: 'removeObject', x: cell.x, y: cell.y });
+          } });
+        return tileId;
+      }
+      return null;
+    });
+  }
+
+  function createEngine(packRegisters) {
+    const registry = Registry.createRegistry();
+    for (const fn of packRegisters) registry.registerPack(fn);
+    const kernel = Kernel.createKernel(registry);
+    function tileMaps(level) {
+      const keyTiles = {}, lockTiles = {};
+      const legend = (level && level.legend) || {};
+      for (const ch of Object.keys(legend)) {
+        const e = legend[ch] || {};
+        if (e.key_color) keyTiles[ch] = e.key_color;
+        if (e.lock_color) lockTiles[ch] = e.lock_color;
+      }
+      return { keyTiles: keyTiles, lockTiles: lockTiles };
+    }
+    function project(state, maps) {
+      const player = state.actors.find((a) => a.id === 'player') || state.actors[0];
+      const grid = [];
+      for (let y = 0; y < state.height; y++) {
+        let row = '';
+        for (let x = 0; x < state.width; x++) {
+          const obj = state.objects[y][x];
+          if (obj) row += state.chars.object[obj] || '?';
+          else if (x === state.spawn.x && y === state.spawn.y) row += 'P';
+          else row += state.chars.terrain[state.terrain[y][x]] || '.';
+        }
+        grid.push(row);
+      }
+      const orbs = typeof state.counters['core:orbs_left'] === 'number'
+        ? state.counters['core:orbs_left']
+        : state.objects.flat().filter((id) => id === 'core:orb').length;
+      return Object.assign({}, state, { grid: grid,
+        player: player ? { x: player.x, y: player.y } : { x: 0, y: 0 },
+        orbs_left: orbs, gate_open: orbs === 0,
+        key_tiles: maps ? maps.keyTiles : (state.key_tiles || {}),
+        lock_tiles: maps ? maps.lockTiles : (state.lock_tiles || {}) });
+    }
+    function initialState(level, levelName) {
+      return project(kernel.initialState(level, levelName), tileMaps(level || {}));
+    }
+    function step(state, input) {
+      const maps = { keyTiles: state.key_tiles || {}, lockTiles: state.lock_tiles || {} };
+      return project(kernel.step(state, input), maps);
+    }
+    function replay(level, levelName, log) {
+      let s = initialState(level, levelName);
+      const states = [s];
+      for (const input of log || []) { s = step(s, input); states.push(s); }
+      return states;
+    }
+    function readout(state) {
+      const inv = (state.inventory || []).map((e) => {
+        if (typeof e === 'string') return e;
+        const def = registry.getItem(e.item);
+        return def && def.readout !== undefined ? def.readout : e.item;
+      });
+      const orbs = typeof state.orbs_left === 'number' ? state.orbs_left
+        : (state.counters || {})['core:orbs_left'];
+      return { step: state.steps, position: { x: state.player.x, y: state.player.y },
+        inventory: inv, orbs_left: orbs, gate_open: orbs === 0,
+        status: state.status || 'playing',
+        next_level: state.next_level === undefined ? null : state.next_level,
+        timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
+        time_left_s: state.time_left_s, elapsed_s: state.elapsed_s,
+        t_ms: state.t_ms, input: state.last_input };
+    }
+    return { initialState: initialState, step: step, replay: replay,
+      readout: readout, kernel: kernel, registry: registry };
+  }
+
+  const engine = createEngine([registerCorePack, registerKeysPack]);
+
+  // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
     const rows = (level && level.rows) || [];
     for (let y = 0; y < rows.length; y++) {
@@ -27,14 +163,6 @@
     }
     return { x: 0, y: 0 };
   }
-
-  const DIRECTIONS = {
-    up: { x: 0, y: -1 }, down: { x: 0, y: 1 },
-    left: { x: -1, y: 0 }, right: { x: 1, y: 0 },
-  };
-
-  // Only floor ('.') and the player start ('P', floor underneath) are
-  // walkable; anything else — or off-grid — blocks movement.
   function isWalkable(grid, x, y) {
     if (!Array.isArray(grid) || y < 0 || y >= grid.length) return false;
     const row = grid[y];
@@ -42,227 +170,15 @@
     const ch = row[x];
     return ch === '.' || ch === 'P';
   }
-
-  // Orb tiles, as already counted by readout and the HUD.
-  function isOrb(ch) {
-    return ch === '*' || ch === 'O';
-  }
-
-  // The warp (portal / exit) tile behind the gate.
-  function isWarp(ch) {
-    return ch === 'X';
-  }
-
+  function isOrb(ch) { return ch === '*' || ch === 'O'; }
+  function isWarp(ch) { return ch === 'X'; }
   function countOrbs(grid) {
     let n = 0;
     for (const row of grid || []) for (const ch of row) if (isOrb(ch)) n++;
     return n;
   }
-
-  // Orbs left for a state: the stored counter wins; states seeded
-  // without one (forks of older sessions) derive it from the grid.
-  function orbsLeftOf(state) {
-    return state && typeof state.orbs_left === 'number'
-      ? state.orbs_left : countOrbs(state && state.grid);
-  }
-
-  function charAt(grid, x, y) {
-    if (!Array.isArray(grid) || y < 0 || y >= grid.length) return null;
-    const row = grid[y];
-    if (typeof row !== 'string' || x < 0 || x >= row.length) return null;
-    return row[x];
-  }
-
-  function setTile(grid, x, y, ch) {
-    const next = (grid || []).slice();
-    if (y < 0 || y >= next.length) return next;
-    const row = next[y];
-    next[y] = row.slice(0, x) + ch + row.slice(x + 1);
-    return next;
-  }
-
-  // Key/lock colours come from the level legend (key_color /
-  // lock_color per tile char), so mechanics are data-driven.
-  function tileMaps(level) {
-    const keyTiles = {}, lockTiles = {};
-    const legend = (level && level.legend) || {};
-    for (const ch of Object.keys(legend)) {
-      const e = legend[ch] || {};
-      if (e.key_color) keyTiles[ch] = e.key_color;
-      if (e.lock_color) lockTiles[ch] = e.lock_color;
-    }
-    return { keyTiles: keyTiles, lockTiles: lockTiles };
-  }
-
-  // Resolve one directional press into player/grid/inventory.
-  // Walking onto a key moves the player, appends its colour to the
-  // inventory in held order and turns the tile to floor.
-  function resolveMove(state, inputName) {
-    const stay = { player: { x: state.player.x, y: state.player.y },
-      grid: state.grid, inventory: (state.inventory || []).slice(),
-      orbs_left: orbsLeftOf(state), warped: false };
-    const delta = DIRECTIONS[inputName];
-    if (!delta) return stay;
-    const nx = state.player.x + delta.x;
-    const ny = state.player.y + delta.y;
-    const ch = charAt(state.grid, nx, ny);
-    if (ch === null) return stay;
-    if (isOrb(ch)) {
-      // Collecting an orb never touches the inventory.
-      return { player: { x: nx, y: ny },
-        grid: setTile(state.grid, nx, ny, '.'),
-        inventory: stay.inventory, orbs_left: stay.orbs_left - 1,
-        warped: false };
-    }
-    if (isWarp(ch)) {
-      // Stepping onto the warp wins the run. The tile stays 'X'
-      // (the win is state, not a new tile); the gate in front of
-      // it is what keeps it unreachable while orbs remain.
-      return { player: { x: nx, y: ny }, grid: state.grid,
-        inventory: stay.inventory, orbs_left: stay.orbs_left,
-        warped: true };
-    }
-    if (ch === 'G') {
-      // Shut gate blocks like a wall while orbs remain; at zero it
-      // is passable and the tile stays 'G' (open is state, not a
-      // new tile), so replays reproduce it exactly.
-      if (stay.orbs_left > 0) return stay;
-      return { player: { x: nx, y: ny }, grid: state.grid,
-        inventory: stay.inventory, orbs_left: stay.orbs_left,
-        warped: false };
-    }
-    const keyColor = (state.key_tiles || {})[ch];
-    if (keyColor) {
-      // Full inventory (8): the key stays on the floor and the
-      // player does not step onto it.
-      if (stay.inventory.length >= 8) return stay;
-      return { player: { x: nx, y: ny },
-        grid: setTile(state.grid, nx, ny, '.'),
-        inventory: stay.inventory.concat([keyColor]),
-        orbs_left: stay.orbs_left, warped: false };
-    }
-    const lockColor = (state.lock_tiles || {})[ch];
-    if (lockColor) {
-      const idx = stay.inventory.indexOf(lockColor);
-      if (idx < 0) return stay;
-      const inv = stay.inventory.slice();
-      inv.splice(idx, 1);
-      return { player: { x: nx, y: ny },
-        grid: setTile(state.grid, nx, ny, '.'), inventory: inv,
-        orbs_left: stay.orbs_left, warped: false };
-    }
-    if (isWalkable(state.grid, nx, ny)) {
-      return { player: { x: nx, y: ny }, grid: state.grid,
-        inventory: stay.inventory, orbs_left: stay.orbs_left,
-        warped: false };
-    }
-    return stay;
-  }
-
-  function movePlayer(state, inputName) {
-    return resolveMove(state, inputName).player;
-  }
-
-  // Countdown timer: scoped by its max time. A level may set
-  // time_limit (seconds); when absent the fixed default is 2 minutes.
-  const DEFAULT_TIME_LIMIT_S = 120;
-  function initialState(level, levelName) {
-    const limit = (level && typeof level.time_limit === 'number')
-      ? level.time_limit : DEFAULT_TIME_LIMIT_S;
-    const maps = tileMaps(level || {});
-    const grid = ((level && level.rows) || []).slice();
-    const orbsLeft = countOrbs(grid);
-    return {
-      level: levelName || (level && level.name) || '',
-      grid: grid,
-      orbs_left: orbsLeft,
-      gate_open: orbsLeft === 0,
-      inventory: [],
-      key_tiles: maps.keyTiles,
-      lock_tiles: maps.lockTiles,
-      player: findPlayer(level || {}),
-      steps: 0,
-      t_ms: 0,
-      elapsed_s: 0,
-      time_limit_s: limit,
-      time_left_s: limit,
-      status: 'playing',
-      // Ordered progression: the level JSON may name the next
-      // level in the chain ('next'); absent means last level.
-      next_level: (level && typeof level.next === 'string' && level.next)
-        ? level.next : null,
-      last_input: null,
-    };
-  }
-
-  // The run is lost the moment recorded elapsed time reaches the
-  // limit. Expiry is a pure function of t_ms, so a timeout loss
-  // replays as a loss at exactly the same recorded moment.
-  function isLost(state) {
-    return !!state && state.status === 'lost';
-  }
-
-  function isWon(state) {
-    return !!state && state.status === 'won';
-  }
-
-  function step(state, input) {
-    if (!state || typeof state !== 'object') {
-      throw new Error('step needs a state object');
-    }
-    if (!input || typeof input.t_ms !== 'number' || !(input.t_ms >= 0)) {
-      throw new Error('input must carry a non-negative t_ms');
-    }
-    if (input.t_ms < state.t_ms) {
-      throw new Error('input t_ms must not go backwards');
-    }
-    const elapsed = input.t_ms / 1000;
-    const expired = state.time_limit_s !== null &&
-      state.time_limit_s !== undefined && elapsed >= state.time_limit_s;
-    // A won run stays won: expiry never flips a finished win.
-    const lost = state.status !== 'won' &&
-      (expired || state.status === 'lost');
-    // No movement on or after expiry, and a finished (lost or won)
-    // run stays frozen.
-    const finished = lost || state.status === 'won';
-    const moved = finished
-      ? { player: { x: state.player.x, y: state.player.y },
-          grid: state.grid, inventory: (state.inventory || []).slice(),
-          orbs_left: orbsLeftOf(state), warped: false }
-      : resolveMove(state, input.input);
-    const won = !lost && (state.status === 'won' || !!moved.warped);
-    return {
-      level: state.level,
-      grid: moved.grid,
-      orbs_left: moved.orbs_left,
-      gate_open: moved.orbs_left === 0,
-      inventory: moved.inventory,
-      key_tiles: state.key_tiles || {},
-      lock_tiles: state.lock_tiles || {},
-      player: moved.player,
-      steps: state.steps + 1,
-      t_ms: input.t_ms,
-      elapsed_s: elapsed,
-      time_limit_s: state.time_limit_s,
-      time_left_s: state.time_limit_s === null
-        ? null : Math.max(0, state.time_limit_s - elapsed),
-      status: lost ? 'lost' : (won ? 'won' : 'playing'),
-      next_level: state.next_level === undefined ? null : state.next_level,
-      last_input: input.input === undefined ? null : input.input,
-    };
-  }
-
-  function replay(level, levelName, log) {
-    let state = initialState(level, levelName);
-    const states = [state];
-    for (const input of log || []) {
-      state = step(state, input);
-      states.push(state);
-    }
-    return states;
-  }
-
-  // Stable digest of a state, for replay comparison in the debug UI.
+  function isLost(state) { return !!state && state.status === 'lost'; }
+  function isWon(state) { return !!state && state.status === 'won'; }
   function stateDigest(state) {
     const text = JSON.stringify(state);
     let h = 0x811c9dc5;
@@ -272,32 +188,21 @@
     }
     return ('0000000' + h.toString(16)).slice(-8);
   }
-
-  const KEY_INPUTS = {
-    w: 'up', arrowup: 'up',
-    a: 'left', arrowleft: 'left',
-    s: 'down', arrowdown: 'down',
-    d: 'right', arrowright: 'right',
-  };
-
+  const KEY_INPUTS = { w: 'up', arrowup: 'up', a: 'left', arrowleft: 'left',
+    s: 'down', arrowdown: 'down', d: 'right', arrowright: 'right' };
   function inputForKey(key) {
     if (typeof key !== 'string') return null;
     return KEY_INPUTS[key.toLowerCase()] || null;
   }
-
-  const VERSION = 'game-core-1';
-  function readout(state) {
-    return { step: state.steps, position: { x: state.player.x, y: state.player.y },
-      inventory: (state.inventory || []).slice(),
-      orbs_left: orbsLeftOf(state), gate_open: orbsLeftOf(state) === 0,
-      status: state.status || 'playing',
-      next_level: state.next_level === undefined ? null : state.next_level,
-      timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
-      time_left_s: state.time_left_s,
-      elapsed_s: state.elapsed_s, t_ms: state.t_ms, input: state.last_input };
-  }
-  const api = { findPlayer, initialState, step, replay, stateDigest,
-    inputForKey, isWalkable, isLost, isWon, isOrb, isWarp, countOrbs, DIRECTIONS, VERSION, readout, DEFAULT_TIME_LIMIT_S };
+  const VERSION = 'game-core-2';
+  const api = { findPlayer: findPlayer, initialState: engine.initialState,
+    step: engine.step, replay: engine.replay, stateDigest: stateDigest,
+    inputForKey: inputForKey, isWalkable: isWalkable, isLost: isLost,
+    isWon: isWon, isOrb: isOrb, isWarp: isWarp, countOrbs: countOrbs,
+    DIRECTIONS: Kernel.DIRECTIONS, VERSION: VERSION, readout: engine.readout,
+    DEFAULT_TIME_LIMIT_S: 120, createEngine: createEngine,
+    registerCorePack: registerCorePack, registerKeysPack: registerKeysPack,
+    registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);
