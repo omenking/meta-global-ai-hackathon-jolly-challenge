@@ -80,6 +80,9 @@
     if (e.sprite) spriteNames.add(e.sprite);
   }
   spriteNames.add('jolly-fall.png');
+  // Key icons for the HUD inventory slots, whatever the level legend.
+  for (const c of ['red', 'yellow', 'green', 'blue']) spriteNames.add('key_' + c + '.png');
+  spriteNames.add('key.png');
   const textures = {};
   const missing = new Set();
   await Promise.all([...spriteNames].map(async (name) => {
@@ -116,7 +119,7 @@
   // column beside the board, so the board never sits under the UI.
   // HUD_H is the column's design height; it scales to fit the canvas.
   const HUD_W = 184;
-  const HUD_H = 592;
+  const HUD_H = 668;
   const app = new PIXI.Application();
   await app.init({ width: embed ? window.innerWidth
       : COLS * TILE + HUD_W * Math.min(1, (ROWS * TILE) / HUD_H),
@@ -275,6 +278,42 @@
   insertHudSection(orbsReadout.group, orbsReadout.height, 1);
   const levelReadout = makeReadout('level');
   insertHudSection(levelReadout.group, levelReadout.height, 0);
+  // Inventory: no box asset exists, so the 8 slots are drawn here
+  // (dark inset squares) in the column foot; held keys show their
+  // colour icon from the derived key sprites.
+  const inventoryGroup = new PIXI.Container();
+  {
+    const invLabel = new PIXI.Text({ text: 'INVENTORY', style: {
+      fontSize: 15, fill: 0x111111, fontWeight: 'bold' } });
+    invLabel.anchor.set(0.5, 0);
+    invLabel.position.set(HUD_W / 2, 0);
+    inventoryGroup.addChild(invLabel);
+  }
+  const inventoryIcons = [];
+  for (let i = 0; i < 8; i++) {
+    const slotBg = new PIXI.Graphics();
+    const sx = 12 + (i % 4) * 41, sy = 22 + Math.floor(i / 4) * 41;
+    slotBg.roundRect(sx, sy, 36, 36, 5).fill(0x222222)
+      .stroke({ width: 2, color: 0x777777 });
+    inventoryGroup.addChild(slotBg);
+    const icon = new PIXI.Sprite(textures['key.png'] || PIXI.Texture.EMPTY);
+    icon.width = 30; icon.height = 30;
+    icon.position.set(sx + 3, sy + 3);
+    icon.visible = false;
+    inventoryGroup.addChild(icon);
+    inventoryIcons.push(icon);
+  }
+  function setInventory(slots) {
+    for (let i = 0; i < inventoryIcons.length; i++) {
+      const color = slots[i];
+      const tex = color && textures['key_' + color + '.png']
+        ? textures['key_' + color + '.png']
+        : (color ? textures['key.png'] : null);
+      inventoryIcons[i].visible = !!tex;
+      if (tex && inventoryIcons[i].texture !== tex) inventoryIcons[i].texture = tex;
+    }
+  }
+  insertHudSection(inventoryGroup, 104, 3);
   const retryGroup = new PIXI.Container();
   retryGroup.visible = false;
   const retryMsg = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
@@ -352,6 +391,9 @@
     orbsReadout.set(hudValues.orbs);
     hudValues.level = window.GameHud.levelNumber(level, state.level);
     levelReadout.set(hudValues.level);
+    hudValues.inventory = window.GameHud.inventorySlots(
+      window.GameCore.readout(state).inventory);
+    setInventory(hudValues.inventory);
     drawHud(state.elapsed_s, state.time_limit_s);
   }
   renderState();

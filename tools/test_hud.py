@@ -115,6 +115,43 @@ class LevelTests(unittest.TestCase):
         self.assertIn("levelReadout.set", js)
 
 
+INVENTORY_SCRIPT = r"""
+const hud = require(process.argv[1]);
+console.log(JSON.stringify({
+  empty: hud.inventorySlots([]),
+  some: hud.inventorySlots(['red', 'key_blue', { color: 'green' }]),
+  full: hud.inventorySlots(['red','yellow','green','blue','red','yellow','green','blue','red']),
+  none: hud.inventorySlots(null),
+  count: hud.INVENTORY_SLOTS,
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class InventoryTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_hud(INVENTORY_SCRIPT)
+
+    def test_eight_slots_padded_in_order(self):
+        self.assertEqual(self.r["count"], 8)
+        self.assertEqual(self.r["empty"], [None] * 8)
+        self.assertEqual(self.r["some"],
+                         ["red", "blue", "green", None, None, None, None, None])
+        self.assertEqual(self.r["none"], [None] * 8)
+
+    def test_ninth_key_does_not_enter_slots(self):
+        self.assertEqual(len(self.r["full"]), 8)
+        self.assertNotEqual(self.r["full"][-1], None)
+
+    def test_game_wires_inventory_from_core_readout(self):
+        js = GAME_JS.read_text(encoding="utf-8")
+        self.assertIn("GameHud.inventorySlots", js)
+        self.assertIn("GameCore.readout(state).inventory", js)
+        self.assertIn("setInventory(hudValues.inventory)", js)
+        self.assertIn("key_' + color + '.png'", js)
+
+
 class GuiSpriteTests(unittest.TestCase):
     def test_prep_derives_gui_sprites_from_published_gui(self):
         prep = (ROOT / "tools" / "prep_level_sprites.sh").read_text(

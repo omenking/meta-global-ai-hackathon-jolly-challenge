@@ -46,7 +46,28 @@
     return m ? parseInt(m[1], 10) : 0;
   }
 
-  const api = { digitsFor, timerSeconds, orbsLeft, levelNumber };
+  // Inventory: at most 8 slots, held order preserved, padded with
+  // nulls. Entries may be colour strings ('red', 'key_blue') or
+  // objects carrying a colour; the slot holds its colour name (or
+  // the raw key name when it is not a known colour).
+  const INVENTORY_SLOTS = 8;
+  const KEY_COLORS = ['red', 'yellow', 'green', 'blue'];
+  function keyColor(item) {
+    if (!item) return null;
+    const raw = typeof item === 'string' ? item
+      : (item.color || item.colour || item.name || item.key || '');
+    const m = String(raw).toLowerCase().replace(/^key[_-]?/, '');
+    return m || null;
+  }
+  function inventorySlots(inventory) {
+    const slots = (Array.isArray(inventory) ? inventory : [])
+      .slice(0, INVENTORY_SLOTS).map(keyColor);
+    while (slots.length < INVENTORY_SLOTS) slots.push(null);
+    return slots;
+  }
+
+  const api = { digitsFor, timerSeconds, orbsLeft, levelNumber,
+    inventorySlots, keyColor, INVENTORY_SLOTS, KEY_COLORS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameHud = api;
 })(typeof window !== 'undefined' ? window : globalThis);
