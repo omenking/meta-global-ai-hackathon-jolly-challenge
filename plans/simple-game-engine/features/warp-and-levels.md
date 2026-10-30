@@ -1,7 +1,7 @@
 ---
 title: Warp and level progression
 summary: Stepping on the warp behind the open gate loads the next level.
-status: proposed
+status: completed
 priority: medium
 requires:
   - ./orbs-and-gate.md
@@ -56,7 +56,7 @@ Player collects all orbs, the gate opens, the player steps on the warp, and the 
 
 ## Open Questions
 
-- What happens after the last level: loop, win screen, or back to menu? Resolve during implementation and record the choice here.
+Resolved during implementation (human, 2026-10-30): after the last level the game shows a win screen. Stepping on the last level warp leaves status won with no next level; game.js shows You win + Play again in the HUD column and the session closes as won.
 
 ## Testing
 
@@ -66,14 +66,189 @@ Needs a mechanics playground: reuse — the orbs-room Test Level plus a second l
 
 ### warp-and-levels/warp-loads-next — Step on warp behind gate
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work` · Commit: `b075f56`
 - Acceptance: Stepping on the warp behind the open gate loads the next level.
 
 ### warp-and-levels/progression-state — Progression state
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work` · Commit: `299ef22`
 - Acceptance: Level counter advances; last-level behaviour follows the recorded open-question decision.
+
+### warp-and-levels/review-fixes-1 — Review fixes: testable room-to-room transition
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes` · Commit: `7ec2786`
+- Description: Human review: warp-room shows end of game, but the actual transition from one room to another cannot be tested. warp-room is both the warp destination and the last level, so its own warp only ends the game.
+- Acceptance: The warp chain has at least two testable room-to-room transitions before the end: warp-room warps onward to a new final Test Level (warp-end-room) instead of ending the game; the win screen shows only on the final room. Full chain playable via the game menu.
+
+### warp-and-levels/review-fixes-2 — Review fixes: level summary GUI in middle of screen
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes` · Commit: `1418b75`
+- Description: Human review: when a level completes, show a level summary GUI in the middle of the screen; the player clicks to go to the next level (instead of warping instantly).
+- Acceptance: Stepping on the warp shows a centre-screen level summary (level, orbs collected, steps, time) and does not change level yet; clicking its continue button loads the next level. On the last level the summary leads to the existing win screen.
+
+### warp-and-levels/review-fixes-3 — Review fixes: wipe transition between levels
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes` · Commit: `a4972ea`
+- Description: Human review: after the level summary, moving to the next level should play a wipe transition (screen wipes over, next level loads underneath, wipe reveals it).
+- Acceptance: Clicking continue on the level summary plays a full-screen wipe that covers the old level, the next level loads under the cover, and the wipe reveals the new level. No wipe on first page load without a warp.
+
+### warp-and-levels/review-fixes-4 — Review fixes: level-change flicker (white flash before wipe cover)
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes` · Commit: `4a522cf`
+- Description: Human report: strange flicker when levels change over. Probe: on incoming wipe navigation the first painted frame is bright/white because #wipe sits off-canvas until game.js (end of body) adds .cover; only then does the cover snap on, then reveal. Black -> white flash -> black -> reveal.
+- Acceptance: No uncovered flash on level change: the wipe covers from the first paint of the incoming page (head-level cover before body paint), then reveals the loaded level. Outgoing sweep and plain loads unchanged.
 
 ## Comments
 
-_(no comments yet)_
+### 2026-10-30T14:39:57 · human · on `warp-and-levels`
+
+For the last level we have win a screen.
+
+### 2026-10-30T14:46:49 · agent · on `warp-and-levels`
+
+Ready for review: Warp and level progression (2/2 tasks completed)
+
+Tasks:
+- warp-and-levels/warp-loads-next: Step on warp behind gate — completed, commit b075f56 — stepping onto the portal (X) behind the open gate wins the run in the pure core (won, frozen, replayable); state.next_level carries the ordered chain (orbs-room -> warp-room), game.js closes the session won and loads the next level
+- warp-and-levels/progression-state: Progression state — completed, commit 299ef22 — HUD level counter advances 001 -> 002 across the warp; last-level warp shows the win screen (You win + Play again) in the HUD column; open question recorded as resolved in the spec (win screen, per human comment)
+
+Evidence:
+- Screenshots: attached (orbs-room start LEVEL 001; warp-room after warp LEVEL 002; warp-room win screen)
+- Sessions: game-orbs-room-20261030184611-92xonv (orbs-room, agent, won) — replay: http://127.0.0.1:8341/static/game.html?replay=game-orbs-room-20261030184611-92xonv ; game-warp-room-20261030184614-43sowd (warp-room, agent, won)
+- Tests: tools.test_warp_and_levels + tools.test_hud + neighbours 72 ok; full suite 200 tests, only the 3 pre-existing failures also on untouched main (test_pm_review_ui x2, test_level_capture playwright error). Browser play of the full chain with real keys passed with no console errors.
+
+Playtest:
+- Worktree: .worktrees/warp-and-levels
+- Start: cd .worktrees/warp-and-levels && python tools/server.py --port 8341 — board server stays on 8322
+- Game: http://127.0.0.1:8341/static/game.html — open the Test Level orbs-room from the game menu; collect both orbs, pass the gate, step on the portal to warp to warp-room (LEVEL 002), finish it for the win screen; linked sessions replay from the Sessions menu.
+- Evidence: `screenshots/features/warp-and-levels/20261030-144642-warp-chain-1-orbs-room-start.png`
+- Evidence: `screenshots/features/warp-and-levels/20261030-144642-warp-chain-2-warp-room-after-warp.png`
+- Evidence: `screenshots/features/warp-and-levels/20261030-144642-warp-chain-3-win-screen.png`
+- Session: `game-orbs-room-20261030184611-92xonv` (orbs-room, agent, won)
+- Session: `game-warp-room-20261030184614-43sowd` (warp-room, agent, won)
+
+### 2026-10-30T14:54:32 · agent · on `warp-and-levels`
+
+Ready for re-review: Warp and level progression (3/3 tasks completed, incl. review-fixes-1)
+
+Change since last roll-up: warp-room no longer shows end of game. Chain is now orbs-room (LEVEL 001) -> warp-room (LEVEL 002) -> warp-end-room (LEVEL 003), so both room-to-room transitions can be tested separately; win screen only on warp-end-room.
+
+Tasks:
+- warp-and-levels/warp-loads-next: completed, commit b075f56
+- warp-and-levels/progression-state: completed, commit 299ef22
+- warp-and-levels/review-fixes-1: completed, commit 7ec2786 — warp-room warps onward to new warp-end-room
+
+Evidence:
+- Screenshots: attached (after transition 1: warp-room LEVEL 002; after transition 2: warp-end-room LEVEL 003; win screen on final room)
+- Sessions: game-orbs-room-20261030185353-31s6s6, game-warp-room-20261030185354-w6trpg, game-warp-end-room-20261030185355-kw8pns (all agent, won, menu-path play)
+- Tests: tools.test_warp_and_levels + neighbours 58 ok; full suite 202, only 3 pre-existing failures also on main.
+
+Playtest (server already running):
+- Game: http://127.0.0.1:8341/static/game.html — menu Test Levels -> orbs-room -> Start level; finish each room (collect orbs, gate, portal) to warp onward; win screen on warp-end-room. Board server stays on 8322; worktree .worktrees/warp-and-levels.
+- Evidence: `screenshots/features/warp-and-levels/20261030-144642-warp-chain-2-warp-room-after-warp.png`
+- Evidence: `screenshots/features/warp-and-levels/20261030-145425-warp-chain-3-warp-end-room-after-warp.png`
+- Evidence: `screenshots/features/warp-and-levels/20261030-145425-warp-chain-4-win-screen.png`
+- Session: `game-orbs-room-20261030185353-31s6s6` (orbs-room, agent, won)
+- Session: `game-warp-room-20261030185354-w6trpg` (warp-room, agent, won)
+- Session: `game-warp-end-room-20261030185355-kw8pns` (warp-end-room, agent, won)
+
+### 2026-10-30T15:11:43 · agent · on `warp-and-levels`
+
+Ready for re-review: Warp and level progression (5/5 tasks completed)
+
+New since last roll-up (human review):
+- review-fixes-2 (1418b75 + follow-up b5e6563): finishing a level shows a centre-screen level summary (level, orbs collected, steps, time taken/left); the level does not change until the player clicks Next level (Finish on the last level dismisses to the win screen). HUD win screen is last-level only now.
+- review-fixes-3 (a4972ea): clicking Next level sweeps a full-screen wipe across, the next level loads under the cover, and the wipe slides away to reveal it (honours prefers-reduced-motion; plain loads never wipe).
+
+Evidence:
+- Screenshots: attached (summary on orbs-room; wipe mid-cover; warp-room revealed; win after Finish)
+- Sessions (menu-path play, all won): game-orbs-room-20261030191113-8f28ir, game-warp-room-20261030191116-kjly82, game-warp-end-room-20261030191119-d8dtrw
+- Tests: full suite 209 tests, only the 3 pre-existing failures also on untouched main. Browser play: summary held the level until click, wipe covering observed after click and revealed after load, no console errors.
+
+Playtest (server running): http://127.0.0.1:8341/static/game.html — Test Levels -> orbs-room -> Start; finish a room to see the summary, click Next level for the wipe; win screen after Finish on warp-end-room.
+- Evidence: `screenshots/features/warp-and-levels/20261030-151105-warp-summary-1-orbs-room.png`
+- Evidence: `screenshots/features/warp-and-levels/20261030-151105-warp-summary-2-wipe-covering.png`
+- Evidence: `screenshots/features/warp-and-levels/20261030-151105-warp-summary-4-win-after-finish.png`
+- Session: `game-orbs-room-20261030191113-8f28ir` (orbs-room, agent, won)
+- Session: `game-warp-room-20261030191116-kjly82` (warp-room, agent, won)
+- Session: `game-warp-end-room-20261030191119-d8dtrw` (warp-end-room, agent, won)
+
+### 2026-10-30T15:11:51 · agent · on `warp-and-levels`
+
+Correction: screenshot evidence paths for the roll-up above (server-stamped on upload).
+- Evidence: `screenshots/features/warp-and-levels/20261030-151143-warp-summary-1-orbs-room.png`
+- Evidence: `screenshots/features/warp-and-levels/20261030-151143-warp-summary-2-wipe-covering.png`
+- Evidence: `screenshots/features/warp-and-levels/20261030-151143-warp-summary-3-warp-room-revealed.png`
+- Evidence: `screenshots/features/warp-and-levels/20261030-151143-warp-summary-4-win-after-finish.png`
+
+### 2026-10-30T15:16:32 · agent · on `warp-and-levels`
+
+Ready for re-review: Warp and level progression (6/6 tasks completed)
+
+New since last roll-up (human report): review-fixes-4 (4a522cf) — fixed the level-change flicker: the incoming page painted one bright frame before the wipe cover snapped on. The wipe now covers from the first paint (head-flagged html.wipe-in + CSS), loads the level underneath, and reveals. Early-frame probe: dark fraction 0.03 -> 1.00 at navigation commit.
+
+Playtest (server running): http://127.0.0.1:8341/static/game.html — Test Levels -> orbs-room -> Start; finish rooms, use Next level on each summary, watch for a clean wipe with no flash; win screen after Finish on warp-end-room.
+- Evidence: `screenshots/features/warp-and-levels/20261030-151625-warp-summary-1-orbs-room.png`
+- Session: `game-orbs-room-20261030191559-p10gho` (orbs-room, agent, won)
+- Session: `game-warp-room-20261030191602-t2bmm8` (warp-room, agent, won)
+- Session: `game-warp-end-room-20261030191605-44swy5` (warp-end-room, agent, won)
+
+### 2026-10-30T15:19:43 · human · on `warp-and-levels`
+
+stetse
+
+### 2026-10-30T15:21:14 · agent · on `warp-and-levels`
+
+Merged to main as c82e7e6 (merge --no-ff of feat/warp-and-levels, 6 task commits preserved). Verified on merged main: full suite 210 tests with only the 3 pre-existing failures also present before the merge (test_pm_review_ui x2, test_level_capture playwright error); browser play of the full summary+wipe chain PASS on a fresh main server (orbs-room -> summary -> wipe -> warp-room -> summary -> wipe -> warp-end-room -> Finish -> win screen, no console errors). Sessions preserved at sessions/features/warp-and-levels/.
+
+### 2026-10-30T14:41:35 · agent · on `warp-and-levels/warp-loads-next`
+
+Starting: pure-core warp — stepping onto X (portal) behind the open gate moves onto the warp and marks the run won in GameCore state (deterministic, replayable); game.js ends the session as won and loads state.next_level (levels declare an ordered chain via next; orbs-room -> new warp-room Test Level). Requires orbs-and-gate is completed (no warning). Last-level decision per human comment: win screen (progression-state task). Verify: node-driven unittest tools.test_warp_and_levels + full repo suite; browser play of orbs-room warp chain on worktree port.
+
+### 2026-10-30T14:44:03 · agent · on `warp-and-levels/warp-loads-next`
+
+Done: stepping onto the portal (X) behind the open gate wins the run in the pure core (status won, frozen, replayable); state.next_level carries the ordered chain (levels declare next; orbs-room -> new warp-room Test Level), game_levels lists it, game.js ends the session won and loads the next level. Updated the two tests that pinned the old blocking portal (movement blockers, orbs gate script) following the */G precedent. Commit b075f56. Tests: python -m unittest tools.test_warp_and_levels tools.test_orbs_and_gate tools.test_player_movement tools.test_game_menus tools.test_hud — 61 ok. Browser play + screenshots at feature roll-up (win screen lands with progression-state).
+
+### 2026-10-30T14:44:03 · agent · on `warp-and-levels/progression-state`
+
+Starting: progression state — HUD level counter advances across the warp chain (explicit level_number on orbs-room/warp-room, read by GameHud.levelNumber from state), and last-level warp shows the win screen in the HUD column (status won with no next: You win + Play again, run frozen, session already closed as won; R/Play again restarts). Last-level decision recorded from human comment: win screen. Verify: extend tools.test_warp_and_levels (counter advance via HUD helpers, last-level won with next null) + tools.test_hud + full suite; browser play of the full chain.
+
+### 2026-10-30T14:45:46 · agent · on `warp-and-levels/progression-state`
+
+Done: HUD level counter advances across the warp chain (explicit level_number 1 on orbs-room, 2 on warp-room, read by GameHud.levelNumber from each levels own state — counter goes 001 -> 002 on warp); last-level warp (no next) leaves status won, frozen and won past the time limit, session closed as won, and game.js shows the win screen (You win + Play again) in the HUD column, never over the board. Open question recorded as resolved in the spec: win screen. Commit 299ef22. Tests: tools.test_warp_and_levels + tools.test_hud + neighbours 72 ok; full suite 200 tests with only the 3 pre-existing failures also present on untouched main (test_pm_review_ui x2, test_level_capture playwright error).
+
+### 2026-10-30T14:52:42 · agent · on `warp-and-levels/review-fixes-1`
+
+Starting: add warp-end-room (final, level 3, no next -> win screen) and point warp-room next at it, so the chain is orbs-room -> warp-room -> warp-end-room with two testable transitions; win only at the end. Smallest focused test updates in tools/test_warp_and_levels.py (warp-room names next; last-level tests retarget warp-end-room; counter 1->2->3). Verify: focused suite, then browser-play the full chain via the game menu on port 8341.
+
+### 2026-10-30T14:54:26 · agent · on `warp-and-levels/review-fixes-1`
+
+Done: warp-room no longer ends the game. New final Test Level warp-end-room (level 3, no next); warp-room next now points to it, so the chain is orbs-room (1) -> warp-room (2) -> warp-end-room (3) with two room-to-room transitions that can each be tested, and the win screen only on the final room. No engine change needed — data-only. Updated tools/test_warp_and_levels.py first (red: warp-room named no next), then green. Commit 7ec2786. Tests: focused suites 58 ok; full suite 202 tests with only the 3 pre-existing failures also on untouched main. Browser play through the game menu (Test Levels -> orbs-room -> Start) covered both transitions plus win, no console errors; 3 sessions won.
+
+### 2026-10-30T15:06:50 · agent · on `warp-and-levels/review-fixes-2`
+
+Starting: centre-screen level summary overlay (DOM over the stage, hidden by default). On live warp (status won in applyStep only, never in replay) fill level/orbs/steps/time from GameCore state, show overlay, and pause level change: session already closed won; continue button loads next level (plain navigation this task; wipe hooks in review-fixes-3) or, on the last level, dismisses to the win screen. Verify: static tests in tools.test_warp_and_levels + browser click-through.
+
+### 2026-10-30T15:08:43 · agent · on `warp-and-levels/review-fixes-2`
+
+Done: centre-screen level summary overlay (white card on dimmed backdrop, game palette; level/orbs collected/steps/time taken/time left from GameCore state). Warping now ends the session won and shows the summary without changing level; Next level button loads the next level, Finish on the last level dismisses to the win screen. Shown only by live play, never replay. Commit 1418b75. Tests: tools.test_warp_and_levels + game_page + orbs 46 ok; browser click-through at feature roll-up.
+
+### 2026-10-30T15:11:43 · agent · on `warp-and-levels/review-fixes-2`
+
+Follow-up commit b5e6563: HUD win screen now shows only on the last level (status won with no next), so it no longer duplicates the level summary mid-chain. Test assertion updated in tools.test_warp_and_levels.py.
+
+### 2026-10-30T15:08:43 · agent · on `warp-and-levels/review-fixes-3`
+
+Starting: full-screen wipe transition. Continue click sweeps a solid wipe across (CSS transform transition), next level loads under full cover (wipe=1 param), new page starts covered and wipes away to reveal. No cover on plain first load. View-only: no state/session change. Verify: static tests + browser timing checks (covered before nav, revealed after load).
+
+### 2026-10-30T15:10:07 · agent · on `warp-and-levels/review-fixes-3`
+
+Done: full-screen solid wipe (450ms slide, honours prefers-reduced-motion). Continue sweeps the wipe across, next level loads under full cover (wipe=1), new page starts covered and slides the wipe away to reveal. Plain first loads never cover. View-only. Commit a4972ea. Tests: tools.test_warp_and_levels 29 ok; browser timing verification at roll-up.
+
+### 2026-10-30T15:15:00 · agent · on `warp-and-levels/review-fixes-4`
+
+Starting: move incoming cover to first paint — inline head script flags html.wipe-in when ?wipe=1 and CSS holds #wipe covered with no transition until game.js reveal removes the flag and slides it away. fail() also clears the flag so an error page is never stuck covered. Verify: static tests (red first), early-paint probe (dark at domcontentloaded and no bright commit frame after cover), full chain play.
+
+### 2026-10-30T15:16:26 · agent · on `warp-and-levels/review-fixes-4`
+
+Done: incoming wipe now covers from the first paint — inline head script in game.html flags html.wipe-in when ?wipe=1, CSS holds #wipe covered (no transition, dark page background) until game.js revealWipe removes the flag and slides it away; fail() clears the flag so error pages never stay covered. Probe (dark-pixel fraction of earliest frame): commit 0.03 -> 1.00, covered at every stage, revealed after settle. Commit 4a522cf. Tests: tools.test_warp_and_levels 30 ok; full suite 210 with only the 3 pre-existing failures; full summary+wipe chain play PASS, no console errors.
