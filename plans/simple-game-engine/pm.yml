@@ -3843,7 +3843,7 @@ features:
   title: 'Game engine refactor: kernel + packs'
   summary: 'Kernel + pack registry refactor: layered grid, generic state, camera to
     64x64, keys/locks and core mechanics as packs.'
-  status: in_review
+  status: completed
   priority: high
   requires: []
   spec:
@@ -3932,11 +3932,13 @@ features:
     decision: approved_for_merge
     by: human
     at: '2026-10-30T17:11:18'
-  merged: null
+  merged:
+    commit: 112c389f4c556d33270e7e09ed8e2354d075d271
+    at: '2026-10-30T17:12:23'
   sessions: []
   archived: false
   created: '2026-10-30T16:00:38'
-  updated: '2026-10-30T17:11:18'
+  updated: '2026-10-30T17:12:31'
   comments:
   - id: c1
     author: agent
@@ -4055,6 +4057,16 @@ features:
     created: '2026-10-30T17:11:18'
     body: 'Approved in interactive session: you are good to merge (human). Scope:
       refactor + kept packs (core, keys-locks, water); unshipped packs discarded.'
+    attachments: []
+    session_refs: []
+  - id: c7
+    author: agent
+    created: '2026-10-30T17:12:31'
+    body: 'Merged to main as 112c389 (merge --no-ff of feat/game-engine-refactor,
+      per-task commits preserved) after human approval in interactive session. Verified
+      on merged main: full suite 215 tests with only the 2 pre-existing test_pm_review_ui
+      failures; game page serves water-room (200) from the board server; kernel purity
+      0. Kept packs: core-chips, keys-locks, water (all asset-carrying). Closing out.'
     attachments: []
     session_refs: []
   tasks:

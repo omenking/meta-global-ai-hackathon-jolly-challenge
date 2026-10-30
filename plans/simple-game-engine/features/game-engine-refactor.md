@@ -1,7 +1,7 @@
 ---
 title: Game engine refactor: kernel + packs
 summary: Kernel + pack registry refactor: layered grid, generic state, camera to 64x64, keys/locks and core mechanics as packs.
-status: in_review
+status: completed
 priority: high
 requires:
   []
@@ -122,21 +122,27 @@ Mechanics playgrounds: reuse all existing test rooms plus new scroll-room and wa
 
 ### game-engine-refactor/buttons-traps-pack — Pack: button linked to trap (pressure test b)
 
-- Status: `completed` · Priority: `high` · Kind: `work` · Commit: `e533902`
+- Status: `abandoned` · Priority: `high` · Kind: `work` · Commit: `e533902`
 - Description: Create tools/static/packs/buttons-traps.js (link:button toggles linked link:trap via state.links + setMeta) + levels/trap-room.json. Generic kernel support: cell meta passed to blocks hooks.
 - Acceptance: Node + test_novel_packs: trap blocks while closed, button toggle opens it, player passes to orb/warp; corpus green.
 
 ### game-engine-refactor/ice-force-pack — Pack: ice and force floors (pressure test d)
 
-- Status: `completed` · Priority: `high` · Kind: `work` · Commit: `8a92149`
+- Status: `abandoned` · Priority: `high` · Kind: `work` · Commit: `8a92149`
 - Description: Create tools/static/packs/ice-force.js (slide:ice slides along entry direction, slide:force-* convey in fixed direction via terrain phase) + levels/ice-room.json.
 - Acceptance: Node + test_novel_packs: stepping on ice slides to edge/block, force floor conveys one tile per step chain; corpus green.
 
 ### game-engine-refactor/monsters-pack — Pack: patrolling monster actor (pressure test c)
 
-- Status: `completed` · Priority: `high` · Kind: `work` · Commit: `043bf67`
+- Status: `abandoned` · Priority: `high` · Kind: `work` · Commit: `043bf67`
 - Description: Create tools/static/packs/monsters.js (beast:monster actor controller: deterministic wall-bounce patrol; contact loses via tick hook) + levels/monster-room.json. Generic kernel support: legend actor spawns.
 - Acceptance: Node + test_novel_packs: monster patrols deterministically, replay identical, contact loses, player can reach warp; corpus green.
+
+### game-engine-refactor/pack-assets-discard — Packs carry assets; discard unshipped packs
+
+- Status: `completed` · Priority: `high` · Kind: `work` · Commit: `9239e64`
+- Description: Kept packs (core-chips, keys-locks, water) declare their sprites/icons/glyphs in the pack; preload and board rendering resolve through pack defs, no hardcoded key-colour asset list. Remove buttons-traps, ice-force, monsters packs + their levels/tests.
+- Acceptance: Game preloads key sprites from pack declarations; water glyphs come from pack defs; trap/ice/monster rooms gone; full suite green (minus pre-existing PM-UI failures); corpus regenerated.
 
 ## Comments
 
@@ -179,6 +185,22 @@ New tasks:
 All four pressure-test mechanics now exist as packs (water, button/trap, monster, ice/force) plus core-chips and keys-locks; kernel changes for them were generic only (cell meta in blocks hooks, legend actor spawns, player-scoped object phase).
 Evidence: new trap/ice/monster screenshots attached; tools/test_novel_packs.py 8 tests; full suite 220 tests with only the 2 pre-existing test_pm_review_ui failures.
 Playtest: cd .worktrees/game-engine-refactor && python3 tools/server.py --port 8345 — Test Levels trap-room, ice-room, monster-room, water-room, scroll-room.
+
+### 2026-10-30T17:05:20 · agent · on `game-engine-refactor`
+
+Scope update per human decision: unshipped packs discarded (buttons-traps, ice-force, monsters tasks abandoned; packs/levels/tests removed in 9239e64). Kept packs are now self-contained: core-chips, keys-locks and water declare their sprites/icons/glyphs and rendering/preload resolve through pack defs. Feature remains unmerged on feat/game-engine-refactor pending human review.
+
+### 2026-10-30T17:10:43 · human · on `game-engine-refactor`
+
+all good
+
+### 2026-10-30T17:11:18 · human · on `game-engine-refactor`
+
+Approved in interactive session: you are good to merge (human). Scope: refactor + kept packs (core, keys-locks, water); unshipped packs discarded.
+
+### 2026-10-30T17:12:31 · agent · on `game-engine-refactor`
+
+Merged to main as 112c389 (merge --no-ff of feat/game-engine-refactor, per-task commits preserved) after human approval in interactive session. Verified on merged main: full suite 215 tests with only the 2 pre-existing test_pm_review_ui failures; game page serves water-room (200) from the board server; kernel purity 0. Kept packs: core-chips, keys-locks, water (all asset-carrying). Closing out.
 
 ### 2026-10-30T16:02:09 · agent · on `game-engine-refactor/regression-corpus`
 
@@ -244,6 +266,10 @@ Starting: packs/buttons-traps.js link:button/link:trap via links+setMeta, levels
 
 Done: packs/buttons-traps.js (link:button toggles linked cells via state.links + setMeta; link:trap blocks on cell meta.open) + levels/trap-room.json. Generic kernel change: blocks hooks now receive cell meta. Tests: test_novel_packs buttons (closed blocks after re-toggle, open run collects orb + warps, won) + corpus OK. Commit e533902.
 
+### 2026-10-30T17:00:55 · agent · on `game-engine-refactor/buttons-traps-pack`
+
+Discarded per human decision: button/trap pack not shipping (bugs, fixing deferred). Pack, level and tests removed from branch; generic kernel primitives stay.
+
 ### 2026-10-30T16:47:35 · agent · on `game-engine-refactor/ice-force-pack`
 
 Starting: packs/ice-force.js slide:ice + slide:force-* terrain, levels/ice-room.json, tests. Verify: ice slides along entry dir, force conveys, corpus green.
@@ -252,6 +278,10 @@ Starting: packs/ice-force.js slide:ice + slide:force-* terrain, levels/ice-room.
 
 Done: packs/ice-force.js (slide:ice along entry dir, slide:force-N/S/W/E conveyors via terrain phase) + levels/ice-room.json. Tests: ice slides (4,1)->(7,1) in one step, force lane conveys to (8,2), slide run wins; corpus OK. Commit 8a92149.
 
+### 2026-10-30T17:00:55 · agent · on `game-engine-refactor/ice-force-pack`
+
+Discarded per human decision: ice/force pack not shipping (bugs, fixing deferred). Pack, level and tests removed from branch; generic kernel primitives stay.
+
 ### 2026-10-30T16:49:12 · agent · on `game-engine-refactor/monsters-pack`
 
 Starting: packs/monsters.js beast:monster patrol controller + contact-lose tick, levels/monster-room.json; generic kernel: legend actor spawns + object phase scoped to player actor. Verify: patrol deterministic, contact loses, detour run wins.
@@ -259,3 +289,15 @@ Starting: packs/monsters.js beast:monster patrol controller + contact-lose tick,
 ### 2026-10-30T16:50:48 · agent · on `game-engine-refactor/monsters-pack`
 
 Done: packs/monsters.js (beast:monster wall-bounce patrol controller + contact-lose tick) + levels/monster-room.json. Generic kernel: legend actor spawns; terrain/object phases scoped to player actor. Tests: patrol 6->9 in 3 steps, contact loses, detour collects orb + warps (won). Full suite 220 tests, only 2 pre-existing PM-UI failures. Commit 043bf67.
+
+### 2026-10-30T17:00:55 · agent · on `game-engine-refactor/monsters-pack`
+
+Discarded per human decision: monster pack not shipping (bugs, fixing deferred). Pack, level and tests removed from branch; generic kernel primitives stay.
+
+### 2026-10-30T17:00:55 · agent · on `game-engine-refactor/pack-assets-discard`
+
+Starting: registry asset declarations for core/keys/water, def-driven sprite/glyph rendering, drop hardcoded key asset preload; delete buttons-traps/ice-force/monsters packs, levels, novel-pack tests. Verify: full suite, water/keys screenshots.
+
+### 2026-10-30T17:05:20 · agent · on `game-engine-refactor/pack-assets-discard`
+
+Done: kept packs carry assets (registry defineAsset; core declares tile sprites, keys declares per-colour key/lock sprites at legend resolution, water owns glyphs ~/F on defs and levels no longer carry them). Preload uses GameCore.assetsForLevel (hardcoded colour list removed); board resolves sprite/glyph via pack def with legend fallback. Discarded buttons-traps, ice-force, monsters packs + trap/ice/monster rooms + test_novel_packs (tasks abandoned on board); generic kernel primitives kept. New tools/test_water_pack.py. Suite 215 tests, baseline-only PM-UI failures; purity 0. Screenshots water/keys viewed. Commit 9239e64.
