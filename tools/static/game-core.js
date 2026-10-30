@@ -9,9 +9,9 @@
 //
 // Movement (player-movement): a direction input moves the player
 // exactly one tile when the target tile is walkable; otherwise the
-// player stays. Only floor is walkable in this feature — the player
-// start tile counts as floor; walls, locks, gates, orbs, keys and
-// every other tile block until later features give them behaviour.
+// player stays. Orbs (orbs-and-gate): walking onto an orb collects
+// it — the tile turns to floor and orbs_left decrements; orbs never
+// enter the inventory. The gate stays shut until orbs_left is zero.
 (function (root) {
   'use strict';
 
@@ -37,6 +37,24 @@
     if (typeof row !== 'string' || x < 0 || x >= row.length) return false;
     const ch = row[x];
     return ch === '.' || ch === 'P';
+  }
+
+  // Orb tiles, as already counted by readout and the HUD.
+  function isOrb(ch) {
+    return ch === '*' || ch === 'O';
+  }
+
+  function countOrbs(grid) {
+    let n = 0;
+    for (const row of grid || []) for (const ch of row) if (isOrb(ch)) n++;
+    return n;
+  }
+
+  // Orbs left for a state: the stored counter wins; states seeded
+  // without one (forks of older sessions) derive it from the grid.
+  function orbsLeftOf(state) {
+    return state && typeof state.orbs_left === 'number'
+      ? state.orbs_left : countOrbs(state && state.grid);
   }
 
   function charAt(grid, x, y) {
@@ -72,13 +90,20 @@
   // inventory in held order and turns the tile to floor.
   function resolveMove(state, inputName) {
     const stay = { player: { x: state.player.x, y: state.player.y },
-      grid: state.grid, inventory: (state.inventory || []).slice() };
+      grid: state.grid, inventory: (state.inventory || []).slice(),
+      orbs_left: orbsLeftOf(state) };
     const delta = DIRECTIONS[inputName];
     if (!delta) return stay;
     const nx = state.player.x + delta.x;
     const ny = state.player.y + delta.y;
     const ch = charAt(state.grid, nx, ny);
     if (ch === null) return stay;
+    if (isOrb(ch)) {
+      // Collecting an orb never touches the inventory.
+      return { player: { x: nx, y: ny },
+        grid: setTile(state.grid, nx, ny, '.'),
+        inventory: stay.inventory, orbs_left: stay.orbs_left - 1 };
+    }
     const keyColor = (state.key_tiles || {})[ch];
     if (keyColor) {
       // Full inventory (8): the key stays on the floor and the
@@ -86,7 +111,8 @@
       if (stay.inventory.length >= 8) return stay;
       return { player: { x: nx, y: ny },
         grid: setTile(state.grid, nx, ny, '.'),
-        inventory: stay.inventory.concat([keyColor]) };
+        inventory: stay.inventory.concat([keyColor]),
+        orbs_left: stay.orbs_left };
     }
     const lockColor = (state.lock_tiles || {})[ch];
     if (lockColor) {
@@ -95,11 +121,12 @@
       const inv = stay.inventory.slice();
       inv.splice(idx, 1);
       return { player: { x: nx, y: ny },
-        grid: setTile(state.grid, nx, ny, '.'), inventory: inv };
+        grid: setTile(state.grid, nx, ny, '.'), inventory: inv,
+        orbs_left: stay.orbs_left };
     }
     if (isWalkable(state.grid, nx, ny)) {
       return { player: { x: nx, y: ny }, grid: state.grid,
-        inventory: stay.inventory };
+        inventory: stay.inventory, orbs_left: stay.orbs_left };
     }
     return stay;
   }
@@ -115,9 +142,13 @@
     const limit = (level && typeof level.time_limit === 'number')
       ? level.time_limit : DEFAULT_TIME_LIMIT_S;
     const maps = tileMaps(level || {});
+    const grid = ((level && level.rows) || []).slice();
+    const orbsLeft = countOrbs(grid);
     return {
       level: levelName || (level && level.name) || '',
-      grid: ((level && level.rows) || []).slice(),
+      grid: grid,
+      orbs_left: orbsLeft,
+      gate_open: orbsLeft === 0,
       inventory: [],
       key_tiles: maps.keyTiles,
       lock_tiles: maps.lockTiles,
@@ -156,11 +187,14 @@
     // No movement on or after expiry, and a lost run stays frozen.
     const moved = lost
       ? { player: { x: state.player.x, y: state.player.y },
-          grid: state.grid, inventory: (state.inventory || []).slice() }
+          grid: state.grid, inventory: (state.inventory || []).slice(),
+          orbs_left: orbsLeftOf(state) }
       : resolveMove(state, input.input);
     return {
       level: state.level,
       grid: moved.grid,
+      orbs_left: moved.orbs_left,
+      gate_open: moved.orbs_left === 0,
       inventory: moved.inventory,
       key_tiles: state.key_tiles || {},
       lock_tiles: state.lock_tiles || {},
@@ -211,17 +245,16 @@
 
   const VERSION = 'game-core-1';
   function readout(state) {
-    let orbs = 0;
-    for (const row of state.grid || []) for (const ch of row) if (ch === '*' || ch === 'O') orbs++;
     return { step: state.steps, position: { x: state.player.x, y: state.player.y },
       inventory: (state.inventory || []).slice(),
-      orbs_left: orbs, status: state.status || 'playing',
+      orbs_left: orbsLeftOf(state), gate_open: orbsLeftOf(state) === 0,
+      status: state.status || 'playing',
       timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
       time_left_s: state.time_left_s,
       elapsed_s: state.elapsed_s, t_ms: state.t_ms, input: state.last_input };
   }
   const api = { findPlayer, initialState, step, replay, stateDigest,
-    inputForKey, isWalkable, isLost, DIRECTIONS, VERSION, readout, DEFAULT_TIME_LIMIT_S };
+    inputForKey, isWalkable, isLost, isOrb, countOrbs, DIRECTIONS, VERSION, readout, DEFAULT_TIME_LIMIT_S };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

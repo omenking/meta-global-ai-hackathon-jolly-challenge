@@ -68,5 +68,64 @@ class OrbsRoomLevelTests(unittest.TestCase):
             self.assertTrue((sprites / name).is_file(), name)
 
 
+PICKUP_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+let s = core.initialState(level, 'orbs-room');
+const start = { pos: { ...s.player }, orbs: core.readout(s).orbs_left,
+  inv: core.readout(s).inventory };
+// right x3 onto the first orb at (4,1)
+for (let i = 0; i < 3; i++) s = core.step(s, { t_ms: (i + 1) * 100, input: 'right' });
+const afterOne = { pos: { ...s.player }, orbs: core.readout(s).orbs_left,
+  inv: core.readout(s).inventory, tile: s.grid[1][4] };
+// stepping back and forth over the collected tile must not decrement again
+s = core.step(s, { t_ms: 400, input: 'left' });
+s = core.step(s, { t_ms: 500, input: 'right' });
+const recross = { orbs: core.readout(s).orbs_left };
+// right x4 onto the second orb at (8,1)
+for (let i = 0; i < 4; i++) s = core.step(s, { t_ms: 600 + i * 100, input: 'right' });
+const afterBoth = { pos: { ...s.player }, orbs: core.readout(s).orbs_left,
+  inv: core.readout(s).inventory };
+const s0 = core.initialState(level, 'orbs-room');
+console.log(JSON.stringify({ start, afterOne, recross, afterBoth,
+  freshOrbs: core.readout(s0).orbs_left, freshTile: s0.grid[1][4] }));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class OrbPickupTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(PICKUP_SCRIPT)
+
+    def test_orbs_left_starts_at_placed_count(self):
+        self.assertEqual(self.r["start"]["orbs"], 2)
+        self.assertEqual(self.r["start"]["inv"], [])
+
+    def test_walk_onto_orb_decrements_orbs_left_only(self):
+        self.assertEqual(self.r["afterOne"]["pos"], {"x": 4, "y": 1})
+        self.assertEqual(self.r["afterOne"]["orbs"], 1)
+        self.assertEqual(self.r["afterOne"]["inv"], [],
+                         "orbs must never enter the inventory")
+        self.assertEqual(self.r["afterOne"]["tile"], ".")
+
+    def test_recrossing_collected_tile_does_not_decrement(self):
+        self.assertEqual(self.r["recross"]["orbs"], 1)
+
+    def test_collecting_all_orbs_reaches_zero(self):
+        self.assertEqual(self.r["afterBoth"]["pos"], {"x": 8, "y": 1})
+        self.assertEqual(self.r["afterBoth"]["orbs"], 0)
+        self.assertEqual(self.r["afterBoth"]["inv"], [])
+
+    def test_step_is_pure(self):
+        self.assertEqual(self.r["freshOrbs"], 2)
+        self.assertEqual(self.r["freshTile"], "*")
+
+    def test_game_renders_orbs_from_state(self):
+        js = (ROOT / "tools" / "static" / "game.js").read_text(encoding="utf-8")
+        self.assertIn("dynamicTiles", js)
+        self.assertIn("ch === '*'", js)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -90,7 +90,9 @@ function attempt(rows, input) {
   return { from: s0.player, to: s1.player, steps: s1.steps };
 }
 const blockers = {};
-for (const ch of ['#', 'G', 'B', 'E', 'R', 'Y', '*', 'b', 'g', 'r', 'y', 'X', '?']) {
+// '*' is no longer a blocker: orbs-and-gate makes it collectible
+// (covered by tools/test_orbs_and_gate.py).
+for (const ch of ['#', 'G', 'B', 'E', 'R', 'Y', 'b', 'g', 'r', 'y', 'X', '?']) {
   blockers[ch] = attempt(['###', '#P' + ch, '###'], 'right');
 }
 // Walls of the movement room: up, up (second hits border), then around.

@@ -167,15 +167,15 @@
     return s;
   }
 
-  // Key/lock tiles are dynamic: their sprites follow state.grid
-  // (a picked key or dissolved lock turns to floor in state).
+  // Key/lock/orb tiles are dynamic: their sprites follow state.grid
+  // (a picked key, dissolved lock or collected orb turns to floor).
   const dynamicTiles = [];
   for (let gy = 0; gy < ROWS; gy++) {
     for (let gx = 0; gx < COLS; gx++) {
       const ch = rows[gy][gx];
       const e = legend[ch];
       if (!e) { fallbackTile(gx, gy, ch); continue; }
-      const isDynamic = !!(e.key_color || e.lock_color);
+      const isDynamic = !!(e.key_color || e.lock_color) || ch === '*' || ch === 'O';
       if (e.base) {
         if (!drawSprite(e.base, gx, gy)) { fallbackTile(gx, gy, ch); continue; }
       } else if (e.lock_color) {
