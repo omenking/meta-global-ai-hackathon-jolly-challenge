@@ -140,5 +140,28 @@ class InventoryFullTests(unittest.TestCase):
         self.assertEqual(self.r["replayDigest"], self.r["liveDigest"])
 
 
+LOCK_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+let s = core.initialState(level, 'keys-room');
+const seq = ['right', 'right', 'right', 'right', 'right'];
+seq.forEach((input, i) => { s = core.step(s, { t_ms: (i + 1) * 100, input }); });
+console.log(JSON.stringify({ pos: s.player, inv: core.readout(s).inventory,
+  lockTile: s.grid[1][6] }));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class MatchingLockTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(LOCK_SCRIPT)
+
+    def test_matching_lock_consumes_key_and_dissolves(self):
+        self.assertEqual(self.r["inv"], [])
+        self.assertEqual(self.r["pos"], {"x": 6, "y": 1})
+        self.assertEqual(self.r["lockTile"], ".")
+
+
 if __name__ == "__main__":
     unittest.main()

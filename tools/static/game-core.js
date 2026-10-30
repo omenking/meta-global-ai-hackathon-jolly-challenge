@@ -88,6 +88,15 @@
         grid: setTile(state.grid, nx, ny, '.'),
         inventory: stay.inventory.concat([keyColor]) };
     }
+    const lockColor = (state.lock_tiles || {})[ch];
+    if (lockColor) {
+      const idx = stay.inventory.indexOf(lockColor);
+      if (idx < 0) return stay;
+      const inv = stay.inventory.slice();
+      inv.splice(idx, 1);
+      return { player: { x: nx, y: ny },
+        grid: setTile(state.grid, nx, ny, '.'), inventory: inv };
+    }
     if (isWalkable(state.grid, nx, ny)) {
       return { player: { x: nx, y: ny }, grid: state.grid,
         inventory: stay.inventory };
