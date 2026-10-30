@@ -65,6 +65,47 @@ console.log(JSON.stringify({
 """
 
 
+MONSTER_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+function play(inputs) {
+  let s = core.initialState(level, 'monster-room');
+  inputs.forEach((input, i) => { s = core.step(s, { t_ms: (i + 1) * 100, input }); });
+  return s;
+}
+function monster(s) { const a = s.actors.find((a) => a.id !== 'player'); return { x: a.x, y: a.y }; }
+// Patrol: bump the top wall; the monster advances one tile per step.
+const after3 = play(['up', 'up', 'up']);
+// Contact: wait in place until the patrol reaches the player.
+const contact = play(Array(25).fill('up'));
+// Detour: along the lower row, up to the orb, right onto the warp.
+const detour = play(['down', ...Array(9).fill('right'), 'up', 'right']);
+console.log(JSON.stringify({
+  start: monster(core.initialState(level, 'monster-room')),
+  after3: monster(after3), contactStatus: contact.status,
+  detourStatus: detour.status, detourOrbs: core.readout(detour).orbs_left,
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class MonstersTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_node(MONSTER_SCRIPT, "monster-room.json")
+
+    def test_monster_patrols_one_tile_per_step(self):
+        self.assertEqual(self.r["start"], {"x": 6, "y": 1})
+        self.assertEqual(self.r["after3"], {"x": 9, "y": 1})
+
+    def test_contact_loses(self):
+        self.assertEqual(self.r["contactStatus"], "lost")
+
+    def test_detour_reaches_warp(self):
+        self.assertEqual(self.r["detourStatus"], "won")
+        self.assertEqual(self.r["detourOrbs"], 0)
+
+
 @unittest.skipUnless(shutil.which("node"), "node not available")
 class IceForceTests(unittest.TestCase):
     @classmethod

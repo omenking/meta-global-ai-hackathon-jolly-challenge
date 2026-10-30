@@ -50,11 +50,22 @@
       for (const fn of registry._levelDefHooks) fn(level, null, null);
       const height = rows.length, width = height ? rows[0].length : 0;
       const terrain = [], objects = [], links = {}, chars = { terrain: {}, object: {} };
+      const spawns = [];
       let spawn = { x: 0, y: 0 };
       for (let y = 0; y < height; y++) {
         terrain.push([]); objects.push([]);
         for (let x = 0; x < width; x++) {
           const ch = rows[y][x];
+          const legendEntry = level.legend && level.legend[ch];
+          if (legendEntry && legendEntry.actor) {
+            // Generic actor spawn (monsters etc.): floor underneath.
+            const terrId = legendEntry.terrain || 'core:floor';
+            terrain[y].push(terrId); objects[y].push(null);
+            chars.terrain[terrId] = chars.terrain[terrId] || '.';
+            spawns.push({ id: 'actor-' + spawns.length, def: legendEntry.actor,
+              x: x, y: y, dir: 'right', flags: { dir: 'right' } });
+            continue;
+          }
           let defId = resolveDef(level, ch);
           if (!defId) defId = 'core:unknown';
           let def = registry.getTile(defId);
@@ -86,7 +97,7 @@
         width: width, height: height, terrain: terrain, objects: objects,
         meta: {}, links: links, chars: chars, spawn: spawn,
         actors: [{ id: 'player', def: 'core:player', x: spawn.x, y: spawn.y,
-          dir: null, flags: {} }],
+          dir: null, flags: {} }].concat(spawns),
         inventory: [], counters: {}, flags: {}, steps: 0, t_ms: 0, elapsed_s: 0,
         time_limit_s: limit, time_left_s: limit, status: 'playing',
         next_level: (level && typeof level.next === 'string' && level.next) ? level.next : null,
@@ -182,11 +193,16 @@
         const ctrl = registry.getController(actor.def);
         if (ctrl) { const dir = ctrl(next, actor); if (dir) intents.push({ actor: actor, dir: dir }); }
       }
+      // Terrain/object phases below are scoped to the player actor;
+      // other actors move in phase 3 only (contact rules are pack
+      // tick hooks). Track the player's cells separately.
       let entered = null, vacated = null;
       for (const intent of intents) {
-        vacated = { x: intent.actor.x, y: intent.actor.y };
-        entered = tryMove(next, intent.actor, intent.dir);
-        if (!entered) vacated = null;
+        const from = { x: intent.actor.x, y: intent.actor.y };
+        const dest = tryMove(next, intent.actor, intent.dir);
+        if (dest && player && intent.actor.id === player.id) {
+          vacated = from; entered = dest;
+        }
       }
       // Phase 4 terrain effects (forced moves, bounded chain).
       let actor = player;
