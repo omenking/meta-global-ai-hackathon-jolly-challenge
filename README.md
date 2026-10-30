@@ -8,6 +8,7 @@
 - [Community Tools to Track Usage](./docs/community-tools-to-track-usage.md)
 - [Mininal Graphical Assets](./docs/minimal-graphical-assets.md)
 - [Project Manager and Simple Game Engine](./docs/pm-and-simple-game-engine.md)
+- [Game Engine Refactor](./docs/game-engine-refactor.md)
 
 ## Asset Design Tool
 

@@ -49,3 +49,60 @@ Use the interface-design and ux-usability-foundations skills to redesign the exi
 Maybe should make finding skills and using them part of our workflow:
 
 https://www.skills.sh/vercel-labs/skills/find-skills
+
+## Feature Development Workflow
+
+The PM tool did seem useful but the workflow of going to the interative Muse Code and the editor made it less likely to communicate within the PM tool.
+
+I guess other platforms eg. Github would have hook on comments and they would reply that way.
+
+So we should consider in the future testing another PM system or a simpler system since we never had blockers,
+and we had single task execution at a time. We orginally thought this would be driven by subagent development with parellel tasks,
+but the code setup one to drive one by one. This isn't a bad idea since we could do human review at each step.
+
+Honestly its probably for the best but our PM tool could be simpler.
+
+### Feature Development Findings
+
+We were able to develop our features:
+- Game shell and deterministic core
+- Player movement and collision
+- Session logs, replay and forks
+- Level timer and restart
+- Keys and locks
+- Orbs and gate
+- Warp and level progression
+- HUD: timer, orbs, level and inventory
+
+Some tasks depended on other, we didn't do a full test on all features together in a level, but I noticed going back to other test levels the AI seem to have implemented the features that they were reliant on so I am confident the base game works.
+
+## Next Steps
+
+Something I didn't consider was how the code should be organized.
+I was wondering if the tasks would be more cost effective depending how the code organized.
+I looked at the code and its just large monolothic files.
+
+1. I think we should **refactor the code to use a known way of organizing game code eg.  Classic OOP Inheritance, Component Based, or  Entity Component System (ECS)
+2. We should really treat novetely features like a mod system. We can retoactively go and change keys and locks in that system.
+  - even though we are the only modding the game, I think that isolating the novetly system on the base game will cost less for implementation for AI or at least crawl through less files.
+3. We need to decide the size of levels. and actual scale of levels screen on screen. Right now all levels fit the entire viewport but in chip's challenge levels are large enough that you have parallax scrolling so basically a camera system.
+
+I talked to Muse Wonder outside of our spend budget in playground and so I have a new plan for us to iterate on.
+
+## Feature Development Obstacles
+
+We really struggled with creating GUI elements. I ended up just generating partial assets in Muse Playground and completing the rest of work in Illustrator and Photoshop.
+
+Our Asset Design Tool is still cumbersome to use. I could see an iteration where its more like a chatbot like in Muse Playground, And we really should have Muse Wonder generating optimal prompts.
+
+GUI's are hard because of where they need to be spliced, so I'm not sure how Muse Wonder or any system can handle that.
+
+Until we added skills.sh we really stuggled with getting Muse Wonder to produce usable GUIs.
+
+We could consider using more skills, but we haven't experienced any other painpoints, or simply haven't considered more skills.
+
+Feature development looked mostly like $5 to $10 per feature.
+
+In terms of development for this kind of game, its hard to say if its justified.
+There probably is a more optiminal way to build features, but I think it requires a stronger coding, skill knowledge foundational when building games with AI.
+
