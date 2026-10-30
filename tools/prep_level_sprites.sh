@@ -64,5 +64,23 @@ green 90
 blue 165
 VARIANTS
 
+# HUD sprites: the gui art in assets/published/gui is green-screen
+# RGB (blue seven-segment digits, black labels, a black backplate
+# with green outside its rounded corners). Key the green out to
+# RGBA in tools/static/gui-sprites for the right-hand HUD column.
+GUI="$SRC/gui"
+GOUT="$ROOT/tools/static/gui-sprites"
+mkdir -p "$GOUT"
+for d in 0 1 2 3 4 5 6 7 8 9; do
+  "$FFMPEG" -y -nostdin -v error -i "$GUI/$d.png" \
+    -vf "colorkey=0x00FF00:0.20:0.10,format=rgba" "$GOUT/digit-$d.png"
+done
+for label in level time orbs; do
+  "$FFMPEG" -y -nostdin -v error -i "$GUI/${label}_label.png" \
+    -vf "colorkey=0x00FF00:0.20:0.10,format=rgba" "$GOUT/label-$label.png"
+done
+"$FFMPEG" -y -nostdin -v error -i "$GUI/backplate.png" \
+  -vf "colorkey=0x00FF00:0.20:0.10,format=rgba" "$GOUT/backplate.png"
+
 cp "$ROOT/levels/"*.json "$LVL/"
 echo "wrote $(ls "$OUT" | wc -l) sprites to $OUT"
