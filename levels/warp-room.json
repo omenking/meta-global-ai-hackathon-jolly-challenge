@@ -3,7 +3,8 @@
   "time_limit": 120,
   "test": true,
   "level_number": 2,
-  "source": "warp-and-levels Test Level: warp destination for orbs-room; one orb, gate, portal behind the gate; last in the chain (no next)",
+  "next": "warp-end-room",
+  "source": "warp-and-levels Test Level: warp destination for orbs-room; one orb, gate, portal behind the gate; warps onward to warp-end-room",
   "tile": 64,
   "legend": {
     ".": {"label": "floor", "sprite": "floor_default.png"},

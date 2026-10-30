@@ -5,7 +5,8 @@ the pure GameCore step (status 'won', frozen thereafter) and the
 state names the next level in the ordered chain (level JSON 'next';
 absent means last level). game.js closes the session as 'won' and
 loads that next level. Driven here under Node against the real
-orbs-room -> warp-room Test Level chain.
+orbs-room -> warp-room -> warp-end-room Test Level chain: two
+room-to-room transitions, then the win on the final room.
 
 Run with: python -m unittest tools.test_warp_and_levels -v
 """
@@ -60,10 +61,20 @@ class WarpRoomLevelTests(unittest.TestCase):
                         if "X" in r)
         self.assertGreater(portal_y, gate_y)
 
-    def test_warp_room_is_last_in_the_chain(self):
-        self.assertIsNone(self.level.get("next"))
+    def test_warp_room_warps_onward_not_end_of_game(self):
+        # Review fix: warp-room is a transition room, not the end —
+        # its warp must name a further room so the room-to-room
+        # transition out of warp-room can be tested on its own.
+        self.assertEqual(self.level.get("next"), "warp-end-room")
         by_id = {l["id"]: l for l in game_levels.list_levels(ROOT / "levels")}
-        self.assertIsNone(by_id["warp-room"]["next"])
+        self.assertEqual(by_id["warp-room"]["next"], "warp-end-room")
+
+    def test_warp_end_room_is_last_in_the_chain(self):
+        end = game_levels.load_level(ROOT / "levels", "warp-end-room")
+        self.assertTrue(end["test"])
+        self.assertIsNone(end.get("next"))
+        by_id = {l["id"]: l for l in game_levels.list_levels(ROOT / "levels")}
+        self.assertIsNone(by_id["warp-end-room"]["next"])
 
 
 class ProgressionChainTests(unittest.TestCase):
@@ -191,11 +202,11 @@ LAST_LEVEL_SCRIPT = r"""
 const core = require(process.argv[1]);
 const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
 const inputs = __INPUTS__;
-let s = core.initialState(level, 'warp-room');
+let s = core.initialState(level, 'warp-end-room');
 const startNext = core.readout(s).next_level;
 inputs.forEach((input, i) => { s = core.step(s, { t_ms: (i + 1) * 100, input }); });
 const log = inputs.map((input, i) => ({ t_ms: (i + 1) * 100, input }));
-const replayed = core.replay(level, 'warp-room', log).slice(-1)[0];
+const replayed = core.replay(level, 'warp-end-room', log).slice(-1)[0];
 console.log(JSON.stringify({ startNext,
   end: { pos: { ...s.player }, status: s.status,
     next: core.readout(s).next_level },
@@ -208,7 +219,7 @@ console.log(JSON.stringify({ startNext,
 class LastLevelWinTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.r = run_core(LAST_LEVEL_SCRIPT, "warp-room")
+        cls.r = run_core(LAST_LEVEL_SCRIPT, "warp-end-room")
 
     def test_last_level_names_no_next_level(self):
         self.assertIsNone(self.r["startNext"])
@@ -231,17 +242,42 @@ class LastLevelWinTests(unittest.TestCase):
         self.assertIn("isWinScreenVisible", js)
 
 
+TRANSITION_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+const inputs = __INPUTS__;
+let s = core.initialState(level, 'warp-room');
+inputs.forEach((input, i) => { s = core.step(s, { t_ms: (i + 1) * 100, input }); });
+console.log(JSON.stringify({ pos: { ...s.player }, status: s.status,
+  next: core.readout(s).next_level }));
+""".replace("__INPUTS__", json.dumps(WARP_ROOM_TO_WARP))
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class WarpRoomTransitionTests(unittest.TestCase):
+    def test_warp_room_warp_loads_warp_end_room(self):
+        # The transition out of warp-room itself: stepping on its
+        # portal must name the next room, not end the game.
+        r = run_core(TRANSITION_SCRIPT, "warp-room")
+        self.assertEqual(r["pos"], {"x": 5, "y": 5})
+        self.assertEqual(r["status"], "won")
+        self.assertEqual(r["next"], "warp-end-room")
+
+
 COUNTER_SCRIPT = r"""
 const hud = require(process.argv[1]);
 const core = require(process.argv[2]);
 const orbs = JSON.parse(require('fs').readFileSync(process.argv[3], 'utf8'));
 const warp = JSON.parse(require('fs').readFileSync(process.argv[4], 'utf8'));
+const end = JSON.parse(require('fs').readFileSync(process.argv[5], 'utf8'));
 const s1 = core.initialState(orbs, 'orbs-room');
 const s2 = core.initialState(warp, 'warp-room');
+const s3 = core.initialState(end, 'warp-end-room');
 console.log(JSON.stringify({
   first: hud.levelNumber(orbs, s1.level),
   second: hud.levelNumber(warp, s2.level),
-  stateLevelNames: [s1.level, s2.level] }));
+  third: hud.levelNumber(end, s3.level),
+  stateLevelNames: [s1.level, s2.level, s3.level] }));
 """
 
 
@@ -252,18 +288,21 @@ class LevelCounterTests(unittest.TestCase):
         out = subprocess.run(
             ["node", "-e", COUNTER_SCRIPT, str(HUD_JS), str(CORE),
              str(ROOT / "levels" / "orbs-room.json"),
-             str(ROOT / "levels" / "warp-room.json")],
+             str(ROOT / "levels" / "warp-room.json"),
+             str(ROOT / "levels" / "warp-end-room.json")],
             capture_output=True, text=True, check=True)
         cls.r = json.loads(out.stdout.strip().splitlines()[-1])
 
     def test_level_counter_advances_across_the_warp(self):
         self.assertEqual(self.r["first"], 1)
         self.assertEqual(self.r["second"], 2)
+        self.assertEqual(self.r["third"], 3)
         self.assertGreater(self.r["second"], self.r["first"])
+        self.assertGreater(self.r["third"], self.r["second"])
 
     def test_counter_comes_from_each_levels_own_state(self):
         self.assertEqual(self.r["stateLevelNames"],
-                         ["orbs-room", "warp-room"])
+                         ["orbs-room", "warp-room", "warp-end-room"])
 
 
 if __name__ == "__main__":
