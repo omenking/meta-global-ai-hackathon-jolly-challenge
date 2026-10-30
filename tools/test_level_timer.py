@@ -136,8 +136,9 @@ class LoseAtZeroTests(unittest.TestCase):
             encoding="utf-8")
         js = (ROOT / "tools" / "static" / "game.js").read_text(
             encoding="utf-8")
-        self.assertIn('id="game-message"', html)
+        self.assertNotIn('id="game-message"', html)
         self.assertIn("Time's up", js)
+        self.assertIn("lostOverlay", js)
         self.assertIn("endSession('lost')", js)
         self.assertIn("input: 'timeout'", js)
         self.assertIn('id="dbg-status"', html)
@@ -186,8 +187,9 @@ class RestartTests(unittest.TestCase):
             encoding="utf-8")
         js = (ROOT / "tools" / "static" / "game.js").read_text(
             encoding="utf-8")
-        self.assertIn('id="btn-restart"', html)
-        self.assertIn("btn-restart", js)
+        self.assertNotIn('id="btn-restart"', html)
+        self.assertIn("lostOverlay", js)
+        self.assertIn("pointertap", js)
         self.assertIn("restartLevel", js)
         self.assertIn("ev.key === 'r'", js)
         self.assertIn("GameCore.initialState(level, levelName)", js)
@@ -216,18 +218,18 @@ class FallenPoseTests(unittest.TestCase):
 
 
 class CurrentGameUiTests(unittest.TestCase):
-    def test_game_route_surfaces_restart_and_loss(self):
+    def test_restart_and_retry_message_live_in_canvas_not_outside_ui(self):
         jsx = (ROOT / "tools" / "web" / "src" / "GamePage.jsx").read_text(
             encoding="utf-8")
-        self.assertIn("Restart", jsx)
-        self.assertIn("g.restart", jsx)
-        self.assertIn("runStatus", jsx)
-        self.assertIn("Time's up", jsx)
-        # The standalone debug panel is hidden in embed mode, so the
-        # iframe's own message must not duplicate the /game banner.
-        html = (ROOT / "tools" / "static" / "game.html").read_text(
+        # No outside-UI Restart button or loss banner in /game; the
+        # message and button are drawn inside the Pixi canvas.
+        self.assertNotIn(">Restart</button>", jsx)
+        self.assertNotIn("Time's up", jsx)
+        js = (ROOT / "tools" / "static" / "game.js").read_text(
             encoding="utf-8")
-        self.assertIn("body.embed #game-message", html)
+        self.assertIn("lostOverlay", js)
+        self.assertIn("Time's up", js)
+        self.assertIn("'Restart'", js)
 
 
 if __name__ == "__main__":

@@ -28,7 +28,6 @@
   button, select { font-size: 13px; padding: 4px 10px; }
   body.embed { overflow: hidden; background: #111; }
   body.embed header, body.embed #panel { display: none; }
-  body.embed #game-message { display: none !important; }
   body.embed main { padding: 0; }
   body.embed #stage { border: 0; width: 100vw; height: 100vh; }
   body.embed #stage canvas { display: block; }
@@ -40,7 +39,6 @@
   <p id="subtitle">loading&hellip;</p>
 </header>
 <div id="error" role="alert"></div>
-<div id="game-message" role="alert" style="display:none;background:#fdecea;border:1px solid #c00;border-radius:6px;padding:12px 14px;margin:16px;font-weight:600"></div>
 <main>
   <div id="stage"></div>
   <div id="panel">
@@ -65,7 +63,6 @@
     </dl>
     <div class="row">
       <button id="btn-replay" type="button">Replay log</button>
-      <button id="btn-restart" type="button">Restart (R)</button>
       <button id="btn-end-session" type="button">End session</button>
     </div>
     <h2>Sessions</h2>

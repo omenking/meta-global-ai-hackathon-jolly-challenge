@@ -183,6 +183,42 @@
     hudTimer.text = limitS === null ? fmtHud(elapsedS)
       : fmtHud(limitS - elapsedS);
   }
+  // In-canvas loss overlay: retry message and Restart button live
+  // on the board itself, not in any outside UI.
+  const lostOverlay = new PIXI.Container();
+  lostOverlay.visible = false;
+  {
+    const cx = COLS * TILE / 2, cy = ROWS * TILE / 2;
+    const panel = new PIXI.Graphics();
+    panel.roundRect(cx - 190, cy - 95, 380, 190, 12)
+      .fill({ color: 0x111111, alpha: 0.88 })
+      .stroke({ width: 2, color: 0xc00000 });
+    lostOverlay.addChild(panel);
+    const title = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
+      fontSize: 30, fill: 0xffffff, fontWeight: 'bold' } });
+    title.anchor.set(0.5);
+    title.position.set(cx, cy - 58);
+    lostOverlay.addChild(title);
+    const hint = new PIXI.Text({ text: 'Press R or tap Restart to try again', style: {
+      fontSize: 17, fill: 0xcccccc } });
+    hint.anchor.set(0.5);
+    hint.position.set(cx, cy - 22);
+    lostOverlay.addChild(hint);
+    const btnBg = new PIXI.Graphics();
+    btnBg.roundRect(cx - 70, cy + 12, 140, 44, 8)
+      .fill(0xc00000).stroke({ width: 2, color: 0xffffff });
+    btnBg.eventMode = 'static';
+    btnBg.cursor = 'pointer';
+    btnBg.on('pointertap', () => restartLevel());
+    lostOverlay.addChild(btnBg);
+    const btnText = new PIXI.Text({ text: 'Restart', style: {
+      fontSize: 22, fill: 0xffffff, fontWeight: 'bold' } });
+    btnText.anchor.set(0.5);
+    btnText.position.set(cx, cy + 34);
+    btnText.eventMode = 'none';
+    lostOverlay.addChild(btnText);
+  }
+  board.addChild(lostOverlay);
   function renderState() {
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
@@ -205,16 +241,7 @@
     document.getElementById('dbg-state').textContent = JSON.stringify(state);
     const statusEl = document.getElementById('dbg-status');
     if (statusEl) statusEl.textContent = state.status || 'playing';
-    const msgEl = document.getElementById('game-message');
-    if (msgEl) {
-      if (state.status === 'lost') {
-        msgEl.style.display = 'block';
-        msgEl.textContent = "Time's up — you lost. Press R or Restart to try again.";
-      } else {
-        msgEl.style.display = 'none';
-        msgEl.textContent = '';
-      }
-    }
+    lostOverlay.visible = state.status === 'lost';
     drawHud(state.elapsed_s, state.time_limit_s);
   }
   renderState();
@@ -307,7 +334,6 @@
       'no session yet \u2014 move to start one';
     renderState();
   }
-  document.getElementById('btn-restart').addEventListener('click', restartLevel);
   window.addEventListener('pagehide', () => {
     if (!recorder) return;
     if (!recorder.isEnded()) { recorder.end('quit', { time_left: state.time_left_s }); }
@@ -566,6 +592,7 @@
     getPlayerSpritePos: () => playerSprite
       ? { x: playerSprite.position.x, y: playerSprite.position.y }
       : null,
+    isLostOverlayVisible: () => lostOverlay.visible,
     getPlayerPose: () => (playerSprite && textures['jolly-fall.png'] &&
       playerSprite.texture === textures['jolly-fall.png']) ? 'fallen' : 'normal',
     get sessionId() { return sessionId; },
