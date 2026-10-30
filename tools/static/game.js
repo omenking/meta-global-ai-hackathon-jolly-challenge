@@ -187,57 +187,11 @@
   fitBoard();
   if (embed) window.addEventListener('resize', fitBoard);
 
-  function fallbackTile(gx, gy, ch) {
-    const g = new PIXI.Graphics();
-    g.rect(gx * TILE, gy * TILE, TILE, TILE).fill(0xff00ff);
-    const t = new PIXI.Text({
-      text: ch, style: { fontSize: 28, fill: 0x000000, fontWeight: 'bold' } });
-    t.anchor.set(0.5);
-    t.position.set(gx * TILE + TILE / 2, gy * TILE + TILE / 2);
-    board.addChild(g, t);
-  }
-  function drawSprite(name, gx, gy) {
-    const tex = textures[name];
-    if (!tex) return false;
-    const s = new PIXI.Sprite(tex);
-    s.scale.set(scale);
-    s.position.set(gx * TILE, gy * TILE);
-    board.addChild(s);
-    return s;
-  }
-
-  // Key/lock/orb tiles are dynamic: their sprites follow state.grid
-  // (a picked key, dissolved lock or collected orb turns to floor).
-  const dynamicTiles = [];
-  for (let gy = 0; gy < ROWS; gy++) {
-    for (let gx = 0; gx < COLS; gx++) {
-      const ch = rows[gy][gx];
-      const e = legend[ch];
-      if (!e) { fallbackTile(gx, gy, ch); continue; }
-      const isDynamic = !!(e.key_color || e.lock_color) || ch === '*' || ch === 'O' || ch === 'G';
-      if (e.base) {
-        if (!drawSprite(e.base, gx, gy)) { fallbackTile(gx, gy, ch); continue; }
-      } else if (e.lock_color) {
-        // Floor under a lock, revealed when it dissolves.
-        drawSprite('floor_default.png', gx, gy);
-      }
-      if (e.sprite && ch !== 'P') {
-        const spr = drawSprite(e.sprite, gx, gy);
-        if (spr === false) fallbackTile(gx, gy, ch);
-        else if (isDynamic && spr) dynamicTiles.push({ x: gx, y: gy, ch: ch, sprite: spr });
-      } else if (e.text) {
-        const t = new PIXI.Text({
-          text: e.text,
-          style: { fontSize: 40, fill: 0xffd21f, fontWeight: 'bold',
-                   stroke: { color: 0x111111, width: 5 } } });
-        t.anchor.set(0.5);
-        t.position.set(gx * TILE + TILE / 2, gy * TILE + TILE / 2);
-        board.addChild(t);
-      } else if (!e.base) {
-        fallbackTile(gx, gy, ch);
-      }
-    }
-  }
+  // Static board + dynamicTiles tracking live in view/board.js.
+  const dynamicTiles = window.GameBoardView.createBoardView({
+    PIXI: PIXI, board: board, textures: textures, rows: rows,
+    legend: legend, TILE: TILE, scale: scale, COLS: COLS, ROWS: ROWS,
+  }).dynamicTiles;
 
   // Deterministic core: state comes from GameCore only; the board
   // above is a view of the level (floor under the start tile), and
