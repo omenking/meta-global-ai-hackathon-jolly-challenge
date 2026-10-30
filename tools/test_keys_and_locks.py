@@ -105,5 +105,40 @@ class KeyPickupTests(unittest.TestCase):
         self.assertIn("state.grid", js)
 
 
+FULL_SCRIPT = r"""
+const core = require(process.argv[1]);
+const legend = { '.': { label: 'floor' }, '#': { label: 'wall' },
+  'P': { label: 'player' },
+  'r': { label: 'key red', key_color: 'red' } };
+const level = { rows: ['#############', '#Prrrrrrrrr.#', '#############'],
+  legend, time_limit: 120 };
+let s = core.initialState(level, 'full-room');
+for (let i = 0; i < 9; i++) s = core.step(s, { t_ms: (i + 1) * 100, input: 'right' });
+const log = Array.from({ length: 9 }, (_, i) => ({ t_ms: (i + 1) * 100, input: 'right' }));
+const replayed = core.replay(level, 'full-room', log);
+console.log(JSON.stringify({ pos: s.player, inv: core.readout(s).inventory,
+  ninthTile: s.grid[1][10],
+  replayInv: core.readout(replayed[replayed.length - 1]).inventory,
+  replayDigest: core.stateDigest(replayed[replayed.length - 1]),
+  liveDigest: core.stateDigest(s) }));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class InventoryFullTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(FULL_SCRIPT)
+
+    def test_ninth_key_stays_on_floor(self):
+        self.assertEqual(len(self.r["inv"]), 8)
+        self.assertEqual(self.r["ninthTile"], "r")
+        self.assertEqual(self.r["pos"], {"x": 9, "y": 1})
+
+    def test_full_inventory_replays_identically(self):
+        self.assertEqual(self.r["replayInv"], self.r["inv"])
+        self.assertEqual(self.r["replayDigest"], self.r["liveDigest"])
+
+
 if __name__ == "__main__":
     unittest.main()

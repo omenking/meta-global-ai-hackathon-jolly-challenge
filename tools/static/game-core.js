@@ -81,6 +81,9 @@
     if (ch === null) return stay;
     const keyColor = (state.key_tiles || {})[ch];
     if (keyColor) {
+      // Full inventory (8): the key stays on the floor and the
+      // player does not step onto it.
+      if (stay.inventory.length >= 8) return stay;
       return { player: { x: nx, y: ny },
         grid: setTile(state.grid, nx, ny, '.'),
         inventory: stay.inventory.concat([keyColor]) };
