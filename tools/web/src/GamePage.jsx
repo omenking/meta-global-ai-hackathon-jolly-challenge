@@ -61,6 +61,12 @@ export default function GamePage() {
   const current = sessions.find((s) => s.id === selected) || null;
   const active = !!(replay && replay.active);
   const orbs = live && live.grid ? live.grid.join('').split('').filter((c) => c === '*' || c === 'O').length : null;
+  const runStatus = (live && live.status) || (clock && clock.status) || 'playing';
+  const lost = runStatus === 'lost';
+  function restartRun() {
+    const g = game();
+    if (g && g.restart && !active) g.restart();
+  }
 
   useEffect(() => {
     api('GET', '/api/game/levels').then((d) =>
@@ -119,7 +125,13 @@ export default function GamePage() {
     const onKey = (ev) => {
       if (/INPUT|TEXTAREA|SELECT|BUTTON/.test(ev.target.tagName)) return;
       const g = game();
-      if (!g || !replay || !replay.active) return;
+      if (!g) return;
+      if (!replay || !replay.active) {
+        if ((ev.key === 'r' || ev.key === 'R') && g.restart) {
+          ev.preventDefault(); g.restart();
+        }
+        return;
+      }
       if (ev.key === ' ') { ev.preventDefault(); g.togglePlay(); }
       else if (ev.key === 'ArrowLeft') { ev.preventDefault(); g.pauseReplay(); g.showReplay(replay.index - (ev.shiftKey ? 10 : 1)); }
       else if (ev.key === 'ArrowRight') { ev.preventDefault(); g.pauseReplay(); g.showReplay(replay.index + (ev.shiftKey ? 10 : 1)); }
@@ -150,6 +162,9 @@ export default function GamePage() {
         ) : <span className="text-[13px] text-neutral-400">No session loaded — open Sessions and pick a recording.</span>}
         <span className="flex-1" />
         <span className="text-[12px] text-neutral-400" role="status" aria-live="polite">{status}</span>
+        {lost && <span className="rounded bg-red-900 px-1.5 py-0.5 text-[11px] font-semibold text-red-100">lost</span>}
+        <button type="button" className={btn} disabled={active} title="Restart level (R)"
+          onClick={(e) => { e.currentTarget.blur(); restartRun(); }}>Restart</button>
         <button type="button" className={btn} aria-expanded={inspectorOpen}
           onClick={() => setInspectorOpen(!inspectorOpen)}>Inspector</button>
         <button type="button" className={btn} onClick={async () => {
@@ -166,6 +181,11 @@ export default function GamePage() {
       </header>
       {active && replay.warning && (
         <div className="shrink-0 bg-amber-900/60 px-3 py-1 text-[12px] text-amber-200" role="alert">{replay.warning}</div>
+      )}
+      {lost && (
+        <div className="shrink-0 bg-red-950 px-3 py-1.5 text-[13px] font-semibold text-red-100" role="alert">
+          {active ? "Time's up \u2014 this run was lost." : "Time's up \u2014 you lost. Press R or Restart to try again."}
+        </div>
       )}
       <div className="flex min-h-0 flex-1">
         {pickerOpen && (
@@ -227,6 +247,7 @@ export default function GamePage() {
                   <dt className="text-neutral-400">Inventory</dt><dd>[]</dd>
                   <dt className="text-neutral-400">Orbs left</dt><dd>{orbs}</dd>
                   <dt className="text-neutral-400">Timer</dt><dd>{fmtLeft(live.time_left_s)} left of {fmtClock(live.time_limit_s)}</dd>
+                  <dt className="text-neutral-400">Run</dt><dd>{runStatus}</dd>
                   <dt className="text-neutral-400">State</dt><dd>{replay.playing ? 'playing' : 'paused'}</dd>
                 </dl>
                 <details>

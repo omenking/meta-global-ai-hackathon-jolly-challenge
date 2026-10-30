@@ -198,5 +198,20 @@ class RestartTests(unittest.TestCase):
         self.assertIn("sessionStartTs = null", js)
 
 
+class CurrentGameUiTests(unittest.TestCase):
+    def test_game_route_surfaces_restart_and_loss(self):
+        jsx = (ROOT / "tools" / "web" / "src" / "GamePage.jsx").read_text(
+            encoding="utf-8")
+        self.assertIn("Restart", jsx)
+        self.assertIn("g.restart", jsx)
+        self.assertIn("runStatus", jsx)
+        self.assertIn("Time's up", jsx)
+        # The standalone debug panel is hidden in embed mode, so the
+        # iframe's own message must not duplicate the /game banner.
+        html = (ROOT / "tools" / "static" / "game.html").read_text(
+            encoding="utf-8")
+        self.assertIn("body.embed #game-message", html)
+
+
 if __name__ == "__main__":
     unittest.main()
