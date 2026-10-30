@@ -143,10 +143,14 @@
   // HUD_H is the column's design height; it scales to fit the canvas.
   const HUD_W = 184;
   const HUD_H = 668;
+  // Camera viewport (renderer-only): at most VIEW tiles are shown;
+  // levels up to 64x64 scroll, smaller levels render whole as before.
+  const VIEW = window.GameCamera
+    ? window.GameCamera.viewSize(COLS, ROWS) : { w: COLS, h: ROWS };
   const app = new PIXI.Application();
   await app.init({ width: embed ? window.innerWidth
-      : COLS * TILE + HUD_W * Math.min(1, (ROWS * TILE) / HUD_H),
-    height: embed ? window.innerHeight : ROWS * TILE, background: '#111' });
+      : VIEW.w * TILE + HUD_W * Math.min(1, (VIEW.h * TILE) / HUD_H),
+    height: embed ? window.innerHeight : VIEW.h * TILE, background: '#111' });
   document.getElementById('stage').appendChild(app.canvas);
   const scale = TILE / 512;
   const board = new PIXI.Container();
@@ -157,16 +161,28 @@
   // scale to fit the area left of the HUD column and centre there
   // (letterbox), refitting on resize. The canvas is never
   // CSS-stretched to the container.
+  let camPos = { x: 0, y: 0 };
+  function computeCam(player) {
+    if (!window.GameCamera || !player) return camPos;
+    camPos = window.GameCamera.compute({ cols: COLS, rows: ROWS,
+      viewW: VIEW.w, viewH: VIEW.h, player: player });
+    return camPos;
+  }
   function fitBoard() {
-    if (!embed) return;
+    if (!embed) { updateBoardTransform(); return; }
     app.renderer.resize(window.innerWidth, window.innerHeight);
     if (hudReady) layoutHud();
     const availW = Math.max(1, window.innerWidth - HUD_W * hudScale);
     const availH = Math.max(1, window.innerHeight);
-    const fit = Math.min(availW / (COLS * TILE), availH / (ROWS * TILE));
+    const fit = Math.min(availW / (VIEW.w * TILE), availH / (VIEW.h * TILE));
     board.scale.set(fit);
-    board.position.set((availW - COLS * TILE * fit) / 2,
-      (availH - ROWS * TILE * fit) / 2);
+    board.position.set((availW - VIEW.w * TILE * fit) / 2 - camPos.x * TILE * fit,
+      (availH - VIEW.h * TILE * fit) / 2 - camPos.y * TILE * fit);
+  }
+  function updateBoardTransform() {
+    // Non-embed: board at native tile size, offset by the camera.
+    if (embed) { fitBoard(); return; }
+    board.position.set(-camPos.x * TILE, -camPos.y * TILE);
   }
   fitBoard();
   if (embed) window.addEventListener('resize', fitBoard);
@@ -426,6 +442,8 @@
     hudTimer.text = String(hudValues.timer).padStart(3, '0');
   }
   function renderState() {
+    computeCam(state.player);
+    updateBoardTransform();
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
         state.player.y * TILE);
