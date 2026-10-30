@@ -80,6 +80,9 @@
     if (e.sprite) spriteNames.add(e.sprite);
   }
   spriteNames.add('jolly-fall.png');
+  // Key icons for the HUD inventory slots, whatever the level legend.
+  for (const c of ['red', 'yellow', 'green', 'blue']) spriteNames.add('key_' + c + '.png');
+  spriteNames.add('key.png');
   const textures = {};
   const missing = new Set();
   await Promise.all([...spriteNames].map(async (name) => {
@@ -90,31 +93,57 @@
     }
   }));
 
-  // Compact in-GUI bar above the playzone (like TIME in the
-  // full-level reference): the board never sits under the UI.
-  const HUD_H = 52;
+  // HUD art: blue digit sprites, black labels and the digit-box
+  // backplate, derived from assets/published/gui by the prep script.
+  const guiTextures = { digits: [], labels: {}, backplate: null };
+  {
+    const guiLoads = [];
+    for (let d = 0; d <= 9; d++) {
+      guiLoads.push(PIXI.Assets.load('gui-sprites/digit-' + d + '.png')
+        .then((t) => { guiTextures.digits[d] = t; })
+        .catch(() => { missing.add('digit-' + d + '.png'); }));
+    }
+    for (const name of ['level', 'time', 'orbs']) {
+      guiLoads.push(PIXI.Assets.load('gui-sprites/label-' + name + '.png')
+        .then((t) => { guiTextures.labels[name] = t; })
+        .catch(() => { missing.add('label-' + name + '.png'); }));
+    }
+    guiLoads.push(PIXI.Assets.load('gui-sprites/backplate.png')
+      .then((t) => { guiTextures.backplate = t; })
+      .catch(() => { missing.add('backplate.png'); }));
+    await Promise.all(guiLoads);
+  }
+
+  // Right-hand HUD column (the original game's side panel, per
+  // scratchpad/full-level-ui.png): readouts stack in a reserved
+  // column beside the board, so the board never sits under the UI.
+  // HUD_H is the column's design height; it scales to fit the canvas.
+  const HUD_W = 184;
+  const HUD_H = 668;
   const app = new PIXI.Application();
-  await app.init({ width: embed ? window.innerWidth : COLS * TILE,
-    height: embed ? window.innerHeight : HUD_H + ROWS * TILE, background: '#111' });
+  await app.init({ width: embed ? window.innerWidth
+      : COLS * TILE + HUD_W * Math.min(1, (ROWS * TILE) / HUD_H),
+    height: embed ? window.innerHeight : ROWS * TILE, background: '#111' });
   document.getElementById('stage').appendChild(app.canvas);
   const scale = TILE / 512;
   const board = new PIXI.Container();
-  if (!embed) board.position.set(0, HUD_H);
   app.stage.addChild(board);
-  // Embed: keep the board's true aspect ratio at any window size —
-  // scale to fit and centre (letterbox), refitting on resize. The
-  // canvas is never CSS-stretched to the container.
   let hudReady = false;
+  let hudScale = 1;
+  // Embed: keep the board's true aspect ratio at any window size —
+  // scale to fit the area left of the HUD column and centre there
+  // (letterbox), refitting on resize. The canvas is never
+  // CSS-stretched to the container.
   function fitBoard() {
     if (!embed) return;
     app.renderer.resize(window.innerWidth, window.innerHeight);
-    const availH = Math.max(1, window.innerHeight - HUD_H);
-    const fit = Math.min(window.innerWidth / (COLS * TILE),
-      availH / (ROWS * TILE));
-    board.scale.set(fit);
-    board.position.set((window.innerWidth - COLS * TILE * fit) / 2,
-      HUD_H + (availH - ROWS * TILE * fit) / 2);
     if (hudReady) layoutHud();
+    const availW = Math.max(1, window.innerWidth - HUD_W * hudScale);
+    const availH = Math.max(1, window.innerHeight);
+    const fit = Math.min(availW / (COLS * TILE), availH / (ROWS * TILE));
+    board.scale.set(fit);
+    board.position.set((availW - COLS * TILE * fit) / 2,
+      (availH - ROWS * TILE * fit) / 2);
   }
   fitBoard();
   if (embed) window.addEventListener('resize', fitBoard);
@@ -175,21 +204,122 @@
   }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
-  // Compact bar above the playzone: TIME always; at loss the
-  // retry message and Restart button join it — never over the board.
-  const hudBar = new PIXI.Container();
+  // Right-hand column: grey panel like the original side panel.
+  // Each readout is a label sprite over a backplate box holding
+  // three blue digit sprites; values come only from GameHud helpers
+  // over GameCore state. The retry message + Restart live at the
+  // foot of the column at loss — never over the board.
+  const hudColumn = new PIXI.Container();
   const hudBg = new PIXI.Graphics();
-  hudBar.addChild(hudBg);
-  const hudTimer = new PIXI.Text({ text: 'TIME 2:00', style: {
-    fontSize: 24, fill: 0xffffff, fontWeight: 'bold',
-    stroke: { color: 0x111111, width: 4 } } });
-  hudTimer.position.set(12, 12);
-  hudBar.addChild(hudTimer);
+  hudColumn.addChild(hudBg);
+  app.stage.addChild(hudColumn);
+  const hudSections = [];
+  const hudValues = { timer: 0, orbs: 0, level: 0, inventory: [] };
+  function addHudSection(group, height) {
+    hudColumn.addChild(group);
+    hudSections.push({ group: group, height: height });
+  }
+  function insertHudSection(group, height, index) {
+    hudColumn.addChild(group);
+    hudSections.splice(index, 0, { group: group, height: height });
+  }
+  function makeReadout(labelName) {
+    const group = new PIXI.Container();
+    const labelTex = guiTextures.labels[labelName];
+    if (labelTex) {
+      const label = new PIXI.Sprite(labelTex);
+      label.width = 150; label.height = 150 * labelTex.height / labelTex.width;
+      label.position.set((HUD_W - 150) / 2, 0);
+      group.addChild(label);
+    }
+    if (guiTextures.backplate) {
+      const plate = new PIXI.Sprite(guiTextures.backplate);
+      plate.width = 160; plate.height = 102;
+      plate.position.set((HUD_W - 160) / 2, 24);
+      group.addChild(plate);
+    } else {
+      const plateBg = new PIXI.Graphics();
+      plateBg.roundRect((HUD_W - 160) / 2, 24, 160, 102, 10).fill(0x111111);
+      group.addChild(plateBg);
+    }
+    const digitSprites = [];
+    for (let i = 0; i < 3; i++) {
+      if (!guiTextures.digits[0]) break;
+      const s = new PIXI.Sprite(guiTextures.digits[0]);
+      s.width = 36; s.height = 64;
+      s.position.set(HUD_W / 2 - 57 + i * 42, 43);
+      group.addChild(s);
+      digitSprites.push(s);
+    }
+    const text = new PIXI.Text({ text: '000', style: {
+      fontSize: 44, fill: 0x2f7bff, fontWeight: 'bold' } });
+    text.anchor.set(0.5);
+    text.position.set(HUD_W / 2, 75);
+    text.visible = digitSprites.length === 0;
+    group.addChild(text);
+    let shown = -1;
+    return { group: group, height: 138, text: text,
+      set: function (value) {
+        const v = Math.max(0, Math.min(999, Math.floor(value) || 0));
+        if (v === shown) return;
+        shown = v;
+        const digits = window.GameHud.digitsFor(v);
+        for (let i = 0; i < digitSprites.length; i++) {
+          const tex = guiTextures.digits[digits[i]];
+          if (tex && digitSprites[i].texture !== tex) digitSprites[i].texture = tex;
+        }
+        text.text = String(v).padStart(3, '0');
+      } };
+  }
+  const timeReadout = makeReadout('time');
+  const hudTimer = timeReadout.text;
+  addHudSection(timeReadout.group, timeReadout.height);
+  const orbsReadout = makeReadout('orbs');
+  insertHudSection(orbsReadout.group, orbsReadout.height, 1);
+  const levelReadout = makeReadout('level');
+  insertHudSection(levelReadout.group, levelReadout.height, 0);
+  // Inventory: no box asset exists, so the 8 slots are drawn here
+  // (dark inset squares) in the column foot; held keys show their
+  // colour icon from the derived key sprites.
+  const inventoryGroup = new PIXI.Container();
+  {
+    const invLabel = new PIXI.Text({ text: 'INVENTORY', style: {
+      fontSize: 15, fill: 0x111111, fontWeight: 'bold' } });
+    invLabel.anchor.set(0.5, 0);
+    invLabel.position.set(HUD_W / 2, 0);
+    inventoryGroup.addChild(invLabel);
+  }
+  const inventoryIcons = [];
+  for (let i = 0; i < 8; i++) {
+    const slotBg = new PIXI.Graphics();
+    const sx = 12 + (i % 4) * 41, sy = 22 + Math.floor(i / 4) * 41;
+    slotBg.roundRect(sx, sy, 36, 36, 5).fill(0x222222)
+      .stroke({ width: 2, color: 0x777777 });
+    inventoryGroup.addChild(slotBg);
+    const icon = new PIXI.Sprite(textures['key.png'] || PIXI.Texture.EMPTY);
+    icon.width = 30; icon.height = 30;
+    icon.position.set(sx + 3, sy + 3);
+    icon.visible = false;
+    inventoryGroup.addChild(icon);
+    inventoryIcons.push(icon);
+  }
+  function setInventory(slots) {
+    for (let i = 0; i < inventoryIcons.length; i++) {
+      const color = slots[i];
+      const tex = color && textures['key_' + color + '.png']
+        ? textures['key_' + color + '.png']
+        : (color ? textures['key.png'] : null);
+      inventoryIcons[i].visible = !!tex;
+      if (tex && inventoryIcons[i].texture !== tex) inventoryIcons[i].texture = tex;
+    }
+  }
+  insertHudSection(inventoryGroup, 104, 3);
   const retryGroup = new PIXI.Container();
   retryGroup.visible = false;
   const retryMsg = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
-    fontSize: 20, fill: 0xff8080, fontWeight: 'bold' } });
-  retryMsg.anchor.set(1, 0);
+    fontSize: 17, fill: 0xa00000, fontWeight: 'bold' } });
+  retryMsg.anchor.set(0.5, 0);
+  retryMsg.position.set(HUD_W / 2, 0);
   retryGroup.addChild(retryMsg);
   const retryBtnBg = new PIXI.Graphics();
   retryBtnBg.eventMode = 'static';
@@ -201,28 +331,38 @@
   retryBtnText.anchor.set(0.5);
   retryBtnText.eventMode = 'none';
   retryGroup.addChild(retryBtnText);
-  hudBar.addChild(retryGroup);
-  app.stage.addChild(hudBar);
+  addHudSection(retryGroup, 84);
   function layoutHud() {
-    const w = app.renderer.width;
+    const w = app.renderer.width, h = app.renderer.height;
+    hudScale = Math.min(1, h / HUD_H);
+    hudColumn.scale.set(hudScale);
+    hudColumn.position.set(w - HUD_W * hudScale, 0);
     hudBg.clear();
-    hudBg.rect(0, 0, w, HUD_H).fill(0x181818);
-    hudBg.rect(0, HUD_H - 2, w, 2).fill(0x444444);
+    hudBg.rect(0, 0, HUD_W, h / hudScale).fill(0xbdbdbd);
+    hudBg.rect(0, 0, 3, h / hudScale).fill(0x8a8a8a);
+    let y = 14;
+    for (const sec of hudSections) {
+      sec.group.position.set(0, y);
+      y += sec.height + 10;
+    }
     retryBtnBg.clear();
-    retryBtnBg.roundRect(w - 132, 8, 120, 36, 6)
+    retryBtnBg.roundRect(HUD_W / 2 - 60, 26, 120, 38, 6)
       .fill(0xc00000).stroke({ width: 1, color: 0xffffff });
-    retryBtnText.position.set(w - 72, 26);
-    retryMsg.position.set(w - 148, 14);
+    retryBtnText.position.set(HUD_W / 2, 45);
   }
   layoutHud();
   hudReady = true;
+  if (embed) layoutHud();
   function fmtHud(totalSeconds) {
     const v = Math.max(0, Math.floor(totalSeconds));
     return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0');
   }
   function drawHud(elapsedS, limitS) {
-    hudTimer.text = 'TIME ' + (limitS === null ? fmtHud(elapsedS)
-      : fmtHud(limitS - elapsedS));
+    const left = limitS === null || limitS === undefined
+      ? elapsedS : Math.max(0, limitS - elapsedS);
+    hudValues.timer = Math.floor(left);
+    timeReadout.set(left);
+    hudTimer.text = String(hudValues.timer).padStart(3, '0');
   }
   function renderState() {
     if (playerSprite) {
@@ -247,6 +387,13 @@
     const statusEl = document.getElementById('dbg-status');
     if (statusEl) statusEl.textContent = state.status || 'playing';
     retryGroup.visible = state.status === 'lost';
+    hudValues.orbs = window.GameHud.orbsLeft(state);
+    orbsReadout.set(hudValues.orbs);
+    hudValues.level = window.GameHud.levelNumber(level, state.level);
+    levelReadout.set(hudValues.level);
+    hudValues.inventory = window.GameHud.inventorySlots(
+      window.GameCore.readout(state).inventory);
+    setInventory(hudValues.inventory);
     drawHud(state.elapsed_s, state.time_limit_s);
   }
   renderState();
@@ -597,6 +744,8 @@
     getPlayerSpritePos: () => playerSprite
       ? { x: playerSprite.position.x, y: playerSprite.position.y }
       : null,
+    getHud: () => ({ timer: hudValues.timer, orbs: hudValues.orbs,
+      level: hudValues.level, inventory: hudValues.inventory.slice() }),
     isRetryBarVisible: () => retryGroup.visible,
     getPlayerPose: () => (playerSprite && textures['jolly-fall.png'] &&
       playerSprite.texture === textures['jolly-fall.png']) ? 'fallen' : 'normal',
