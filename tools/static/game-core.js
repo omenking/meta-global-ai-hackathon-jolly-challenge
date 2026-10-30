@@ -104,6 +104,10 @@
         grid: setTile(state.grid, nx, ny, '.'),
         inventory: stay.inventory, orbs_left: stay.orbs_left - 1 };
     }
+    if (ch === 'G' && stay.orbs_left > 0) {
+      // Shut gate: blocks like a wall while orbs remain.
+      return stay;
+    }
     const keyColor = (state.key_tiles || {})[ch];
     if (keyColor) {
       // Full inventory (8): the key stays on the floor and the

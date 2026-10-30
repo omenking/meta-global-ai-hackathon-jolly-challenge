@@ -127,5 +127,49 @@ class OrbPickupTests(unittest.TestCase):
         self.assertIn("ch === '*'", js)
 
 
+GATE_BLOCK_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+function play(inputs) {
+  let s = core.initialState(level, 'orbs-room');
+  inputs.forEach((input, i) => { s = core.step(s, { t_ms: (i + 1) * 100, input }); });
+  return s;
+}
+// Above the gate at (5,2) with both orbs remaining (approach along
+// row 2 so no orb is crossed), press down into it.
+let s = play(['down', 'right', 'right', 'right', 'right']);
+const aboveGate = { ...s.player };
+s = core.step(s, { t_ms: 600, input: 'down' });
+const blockedFull = { pos: { ...s.player }, orbs: core.readout(s).orbs_left,
+  gateTile: s.grid[3][5], steps: s.steps };
+// Collect one orb, return above the gate with one orb left, press down.
+let t = play(['right', 'right', 'right', 'down', 'right']);
+t = core.step(t, { t_ms: 600, input: 'down' });
+const blockedOne = { pos: { ...t.player }, orbs: core.readout(t).orbs_left,
+  gateTile: t.grid[3][5] };
+console.log(JSON.stringify({ aboveGate, blockedFull, blockedOne }));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class GateBlocksTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(GATE_BLOCK_SCRIPT)
+
+    def test_gate_blocks_with_all_orbs_remaining(self):
+        self.assertEqual(self.r["aboveGate"], {"x": 5, "y": 2})
+        self.assertEqual(self.r["blockedFull"]["pos"], {"x": 5, "y": 2})
+        self.assertEqual(self.r["blockedFull"]["orbs"], 2)
+        self.assertEqual(self.r["blockedFull"]["gateTile"], "G")
+        self.assertEqual(self.r["blockedFull"]["steps"], 6,
+                         "a blocked press still records a step")
+
+    def test_gate_blocks_with_one_orb_remaining(self):
+        self.assertEqual(self.r["blockedOne"]["pos"], {"x": 5, "y": 2})
+        self.assertEqual(self.r["blockedOne"]["orbs"], 1)
+        self.assertEqual(self.r["blockedOne"]["gateTile"], "G")
+
+
 if __name__ == "__main__":
     unittest.main()
