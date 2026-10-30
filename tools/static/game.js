@@ -522,6 +522,7 @@
   // first (as 'lost' if it already expired, else 'quit').
   function restartLevel() {
     if (window.__replayActive) return;
+    hideLevelSummary();
     if (recorder && !recorder.isEnded()) endSession('quit');
     recorder = null;
     forkSeed = null;
@@ -559,14 +560,41 @@
     // cannot land without its lost end line.
     if (state.status === 'lost') endSession('lost');
     else if (state.status === 'won') {
-      // Warp: close this level's session as won, then load the
-      // next level in the chain. On the last level (no next) the
-      // win stands and the win screen shows (progression-state).
+      // Warp: close this level's session as won, then show the
+      // centre-screen level summary. Loading the next level is
+      // the summary continue button's job, not this step's.
       endSession('won');
-      if (state.next_level) loadNextLevel(state.next_level);
+      showLevelSummary();
     }
     else flushSession(false);
   }
+  // Level summary (centre of the screen): a view of the finished
+  // run's GameCore state, shown only by live play (never replay).
+  const summaryEl = document.getElementById('level-summary');
+  function showLevelSummary() {
+    const total = window.GameCore.countOrbs(level.rows);
+    const left = window.GameCore.readout(state).orbs_left;
+    document.getElementById('summary-level').textContent =
+      window.GameHud.levelNumber(level, state.level) + ' (' + state.level + ')';
+    document.getElementById('summary-orbs').textContent =
+      (total - left) + ' / ' + total;
+    document.getElementById('summary-steps').textContent = String(state.steps);
+    document.getElementById('summary-time').textContent = fmtHud(state.elapsed_s);
+    document.getElementById('summary-time-left').textContent =
+      state.time_left_s === null ? '—' : fmtHud(state.time_left_s);
+    document.getElementById('btn-summary-next').textContent =
+      state.next_level ? 'Next level' : 'Finish';
+    summaryEl.classList.add('open');
+    document.getElementById('btn-summary-next').focus();
+  }
+  function hideLevelSummary() {
+    summaryEl.classList.remove('open');
+  }
+  document.getElementById('btn-summary-next').addEventListener('click', () => {
+    hideLevelSummary();
+    if (state.next_level) loadNextLevel(state.next_level);
+    // Last level: dismissing the summary reveals the win screen.
+  });
   // Load the next level in the progression chain (same page, new
   // ?level=, fresh session on first move). Replay/fork params do
   // not carry over; creator/feature/embed do.
@@ -703,6 +731,7 @@
     replayTimer = requestAnimationFrame(loop);
   }
   async function loadReplay(id, tSeconds) {
+    hideLevelSummary();
     const res = await fetch('/api/game/sessions/' + encodeURIComponent(id));
     if (!res.ok) { fail('Could not load session ' + id); return; }
     const data = await res.json();
@@ -819,6 +848,13 @@
       level: hudValues.level, inventory: hudValues.inventory.slice() }),
     isRetryBarVisible: () => retryGroup.visible,
     isWinScreenVisible: () => winGroup.visible,
+    isSummaryVisible: () => summaryEl.classList.contains('open'),
+    getSummary: () => ({
+      level: document.getElementById('summary-level').textContent,
+      orbs: document.getElementById('summary-orbs').textContent,
+      steps: document.getElementById('summary-steps').textContent,
+      button: document.getElementById('btn-summary-next').textContent,
+    }),
     getPlayerPose: () => (playerSprite && textures['jolly-fall.png'] &&
       playerSprite.texture === textures['jolly-fall.png']) ? 'fallen' : 'normal',
     get sessionId() { return sessionId; },

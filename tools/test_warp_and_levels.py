@@ -305,5 +305,42 @@ class LevelCounterTests(unittest.TestCase):
                          ["orbs-room", "warp-room", "warp-end-room"])
 
 
+class LevelSummaryOverlayTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.html = (ROOT / "tools" / "static" / "game.html").read_text(
+            encoding="utf-8")
+        cls.js = (ROOT / "tools" / "static" / "game.js").read_text(
+            encoding="utf-8")
+
+    def test_summary_markup_is_centre_screen_and_hidden_by_default(self):
+        self.assertIn('id="level-summary"', self.html)
+        self.assertIn('id="btn-summary-next"', self.html)
+        self.assertIn('id="summary-orbs"', self.html)
+        self.assertIn('id="summary-steps"', self.html)
+        # Centred overlay, shown only via the .open class.
+        self.assertIn("align-items: center", self.html)
+        self.assertIn("justify-content: center", self.html)
+
+    def test_warp_shows_summary_instead_of_loading_next_level(self):
+        self.assertIn("showLevelSummary()", self.js)
+        self.assertIn("endSession('won')", self.js)
+        # The won step must not navigate away on its own: loading
+        # the next level is the continue button's job.
+        apply_step = self.js.split("function applyStep(input)")[1]
+        apply_step = apply_step.split("// Level summary")[0]
+        self.assertIn("showLevelSummary()", apply_step)
+        self.assertNotIn("loadNextLevel", apply_step)
+
+    def test_continue_button_loads_next_level(self):
+        self.assertIn("btn-summary-next", self.js)
+        self.assertIn("loadNextLevel(state.next_level)", self.js)
+        self.assertIn("isSummaryVisible", self.js)
+
+    def test_summary_fields_come_from_core_state(self):
+        self.assertIn("countOrbs", self.js)
+        self.assertIn("summary-steps", self.js)
+
+
 if __name__ == "__main__":
     unittest.main()
