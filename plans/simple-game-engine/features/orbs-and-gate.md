@@ -1,7 +1,7 @@
 ---
 title: Orbs and gate
 summary: Collect all orbs to open the gate that blocks the warp.
-status: proposed
+status: completed
 priority: high
 requires:
   - ./player-movement.md
@@ -70,24 +70,85 @@ Needs a mechanics playground: new — an orbs-room Test Level with a gated porta
 
 ### orbs-and-gate/orbs-test-level — Test Level: gated portal with orbs
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Orbs-room Test Level places a gated portal with orbs; the gate is shut at start.
 
 ### orbs-and-gate/orb-pickup — Walk onto orb
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: Walking onto an orb decrements orbs-left and does not use inventory.
 
 ### orbs-and-gate/gate-blocks — Gate shut while orbs remain
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: The shut gate blocks movement like a wall.
 
 ### orbs-and-gate/gate-opens — Gate opens at zero orbs
 
-- Status: `proposed` · Priority: `high` · Kind: `work`
+- Status: `completed` · Priority: `high` · Kind: `work`
 - Acceptance: At zero orbs the gate opens, is passable, and state/sprites change.
 
 ## Comments
 
-_(no comments yet)_
+### 2026-10-30T14:27:59 · agent · on `orbs-and-gate`
+
+Ready for review: Orbs and gate (4/4 tasks completed)
+
+Tasks:
+- orbs-and-gate/orbs-test-level: Test Level: gated portal with orbs — completed, commit `a2f5a2d` — orbs-room 11x7 Test Level (2 orbs reachable, gate the only divider opening, portal behind it)
+- orbs-and-gate/orb-pickup: Walk onto orb — completed, commit `0f7824f` — orbs decrement orbs-left only, never inventory; orb sprites follow state
+- orbs-and-gate/gate-blocks: Gate shut while orbs remain — completed, commit `d74c020` — shut gate blocks like a wall at 2 and at 1 orbs remaining
+- orbs-and-gate/gate-opens: Gate opens at zero orbs — completed, commit `24af09e` — passable both ways, sprite hides over floor base, portal still blocks (warp is warp-and-levels)
+
+Evidence:
+- Screenshots: attached (orbs-room gate shut with ORBS 002; gate open with ORBS 000, player past the gate at the portal)
+- Sessions: game-orbs-room-20261030182739-cacqjw (orbs-room, agent, quit) — preserved at sessions/features/orbs-and-gate/; browser play: shut gate blocked at (5,2), both orbs collected (orbs_left 0, gate_open), through the gate to (5,4), portal blocked, sprite at (320,256) matches state, Replay log: match a1d02480 (19 inputs), no console errors
+- Tests: tools.test_orbs_and_gate 17 tests; focused game suites 91 ok; full repo suite 180 ran in the worktree with only the 2 pre-existing test_pm_review_ui failures (identical on untouched main, 163 tests)
+
+Playtest:
+- Worktree: `.worktrees/orbs-and-gate`
+- Start: `cd .worktrees/orbs-and-gate && python3 tools/server.py --port 8344` — board server stays on 8322
+- Game: http://127.0.0.1:8344/static/game.html — open the Test Level `orbs-room` from the game menu; collect both orbs, then walk through the gate to the portal.
+- Evidence: `screenshots/features/orbs-and-gate/20261030-142753-20261030-orbs-shut-latest.png`
+- Evidence: `screenshots/features/orbs-and-gate/20261030-142753-20261030-orbs-open-latest.png`
+- Session: `game-orbs-room-20261030182739-cacqjw` (orbs-room, agent, quit)
+
+### 2026-10-30T14:32:04 · human · on `orbs-and-gate`
+
+good
+
+### 2026-10-30T14:33:04 · agent · on `orbs-and-gate`
+
+Merged to main as 86dd143 (merge --no-ff of feat/orbs-and-gate, 4 task commits preserved). Verified on merged main: full suite 180 ran with only the 2 pre-existing test_pm_review_ui failures (also failing before the merge); browser play on a fresh main server (port 8345): orbs-room loads, shut gate blocks, both orbs open the gate, replay match fd3fe3dd (19 inputs), no console errors. Linked session preserved at sessions/features/orbs-and-gate/.
+
+### 2026-10-30T14:23:23 · agent · on `orbs-and-gate/orbs-test-level`
+
+Starting: create levels/orbs-room.json Test Level (two chambers divided by a wall, gate G as the only opening, 2 orbs * in the reachable chamber, portal X behind the gate, P start) + staged copy via prep script; core/game rendering unchanged in this task. Verify: new tools/test_orbs_and_gate.py level tests (test flag, rectangular rows, legend coverage, P/*/G/X placed, orb/gate sprites exist), existing game suites still pass.
+
+### 2026-10-30T14:23:56 · agent · on `orbs-and-gate/orbs-test-level`
+
+Done: levels/orbs-room.json (11x7 Test Level: P at 1,1, orbs at 4,1 and 8,1 in the reachable chamber, gate G at 5,3 as the only opening in the divider wall, portal X at 5,5 behind it; legend ./P/*/G/X) + tools/test_orbs_and_gate.py OrbsRoomLevelTests. Commit a2f5a2d. Tests: python3 -m unittest tools.test_orbs_and_gate tools.test_game_menus tools.test_game_core — 17 ok. Staged via tools/prep_level_sprites.sh in the worktree (gitignored).
+
+### 2026-10-30T14:23:56 · agent · on `orbs-and-gate/orb-pickup`
+
+Starting: in tools/static/game-core.js make orb tiles (* and O, as already counted by readout/GameHud) walkable: stepping onto one moves the player, turns the tile to floor, stores orbs_left (counted at initialState, decremented per pickup) in deterministic state; inventory untouched. Also make orb sprites dynamic in game.js so a collected orb disappears. Verify: node-driven tests in tools/test_orbs_and_gate.py (decrement-only pickup, no inventory use, purity, re-step on empty tile, replay digest), existing suites pass.
+
+### 2026-10-30T14:25:17 · agent · on `orbs-and-gate/orb-pickup`
+
+Done: game-core.js counts orb tiles (* and O) at initialState into state.orbs_left (gate_open derived), stepping onto one moves the player, sets the tile to floor and decrements orbs_left only — inventory untouched, step stays pure; readout reports orbs_left/gate_open; game.js renders orb sprites dynamically from state.grid. Note: tools/test_player_movement.py collision list drops * (superseded by this feature; orb blocking was the old player-movement contract). Commit 0f7824f. Tests: tools.test_orbs_and_gate + game_core/keys/player_movement/hud/input/level_timer/session_replay — 74 ok.
+
+### 2026-10-30T14:25:17 · agent · on `orbs-and-gate/gate-blocks`
+
+Starting: explicit gate branch in game-core.js resolveMove — target G while orbs_left > 0 returns stay (wall-like, step still recorded, no inventory/orbs change); unit-prove in orbs-room by pressing down into the gate from above with orbs remaining, plus a synthetic one-orb room. Verify: tools/test_orbs_and_gate.py GateBlocksTests + regression suites.
+
+### 2026-10-30T14:25:42 · agent · on `orbs-and-gate/gate-blocks`
+
+Done: explicit shut-gate branch in game-core.js resolveMove (target G with orbs_left > 0 returns stay; blocked press still records a step, grid/inventory/orbs unchanged). Commit d74c020. Tests: GateBlocksTests press the gate in orbs-room with 2 and with 1 orbs remaining — player stays above the gate; tools.test_orbs_and_gate + player_movement/game_core/keys — 41 ok.
+
+### 2026-10-30T14:25:43 · agent · on `orbs-and-gate/gate-opens`
+
+Starting: open gate at zero orbs — game-core.js: G passable when orbs_left == 0 (player steps onto the gate tile, tile stays G, gate_open true in state/readout); game.js: gate sprite dynamic, visible only while shut (open gate shows the floor base). Prove replay determinism (same log, same digest and end state). Verify: GateOpensTests incl. full orbs-room play to the portal side, portal still blocks (warp is warp-and-levels), replay digest match, sprite render check.
+
+### 2026-10-30T14:26:18 · agent · on `orbs-and-gate/gate-opens`
+
+Done: game-core.js gate branch — at zero orbs the player steps onto the G tile (tile stays G, gate_open true in state and readout, passable both ways); portal X still blocks (warp belongs to warp-and-levels). game.js: gate sprite dynamic, visible only while shut over its floor base. tools/test_player_movement.py drops G from unconditional blockers (superseded; both gate states now covered by test_orbs_and_gate). Commit 24af09e. Tests: full play collects both orbs, passes the gate to the portal side and back, replay digest matches live; suites orbs/game_core/keys/player_movement/hud/input/level_timer/session_replay/menus/page — 91 ok.
