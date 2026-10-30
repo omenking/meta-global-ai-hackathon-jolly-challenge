@@ -79,6 +79,7 @@
     if (e.base) spriteNames.add(e.base);
     if (e.sprite) spriteNames.add(e.sprite);
   }
+  spriteNames.add('jolly-fall.png');
   const textures = {};
   const missing = new Set();
   await Promise.all([...spriteNames].map(async (name) => {
@@ -186,6 +187,10 @@
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
         state.player.y * TILE);
+      // Fallen pose while the run is lost, normal pose otherwise.
+      const pose = state.status === 'lost' && textures['jolly-fall.png']
+        ? textures['jolly-fall.png'] : textures['jolly.png'];
+      if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
@@ -561,6 +566,8 @@
     getPlayerSpritePos: () => playerSprite
       ? { x: playerSprite.position.x, y: playerSprite.position.y }
       : null,
+    getPlayerPose: () => (playerSprite && textures['jolly-fall.png'] &&
+      playerSprite.texture === textures['jolly-fall.png']) ? 'fallen' : 'normal',
     get sessionId() { return sessionId; },
     endSession: endSession,
     applyStep: applyStep,

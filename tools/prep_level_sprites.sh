@@ -37,7 +37,7 @@ for tile in floor_default wall portal wall_keyhole; do
 done
 
 # Green-screen sprites (#00FF00 backgrounds, measured corners ~0,253-255,0-32).
-for sprite in jolly key orb; do
+for sprite in jolly jolly-fall key orb; do
   "$FFMPEG" -y -nostdin -v error -i "$(latest "$sprite")" \
     -vf "colorkey=0x00FF00:0.20:0.10,format=rgba" "$OUT/$sprite.png"
 done

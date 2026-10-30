@@ -198,6 +198,23 @@ class RestartTests(unittest.TestCase):
         self.assertIn("sessionStartTs = null", js)
 
 
+class FallenPoseTests(unittest.TestCase):
+    def test_fallen_sprite_published_and_derived(self):
+        published = sorted((ROOT / "assets" / "published").glob(
+            "jolly-fall-*.png"))
+        self.assertTrue(published, "jolly-fall must be in assets/published")
+        prep = (ROOT / "tools" / "prep_level_sprites.sh").read_text(
+            encoding="utf-8")
+        self.assertIn("jolly-fall", prep)
+
+    def test_player_sprite_swaps_to_fallen_when_lost(self):
+        js = (ROOT / "tools" / "static" / "game.js").read_text(
+            encoding="utf-8")
+        self.assertIn("jolly-fall.png", js)
+        self.assertIn("state.status === 'lost'", js)
+        self.assertIn("getPlayerPose", js)
+
+
 class CurrentGameUiTests(unittest.TestCase):
     def test_game_route_surfaces_restart_and_loss(self):
         jsx = (ROOT / "tools" / "web" / "src" / "GamePage.jsx").read_text(
