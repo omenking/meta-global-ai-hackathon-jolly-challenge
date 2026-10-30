@@ -1631,7 +1631,7 @@ features:
 - id: level-timer
   title: Level timer and restart
   summary: A real counting countdown that ends the run at zero, with restart.
-  status: proposed
+  status: completed
   priority: high
   requires:
   - game-shell
@@ -1673,24 +1673,254 @@ features:
       record play sessions for replay.'
   branch: feat/level-timer
   worktree: .worktrees/level-timer
-  test_level: null
+  test_level: timer-room
   review:
-    decision: pending
-    by: null
-    at: null
-  merged: null
-  sessions: []
+    decision: approved_for_merge
+    by: human
+    at: '2026-10-30T12:07:14'
+  merged:
+    commit: 0107ca92782a7a4a476b854abd1580fde0c845e0
+    at: '2026-10-30T12:09:18'
+  sessions:
+  - id: game-timer-room-20261030143531-3wyoq9
+    path: sessions/features/level-timer/game-timer-room-20261030143531-3wyoq9.jsonl
+    level: timer-room
+    created_by: agent
+    result: lost
+    label: ''
+  - id: game-timer-room-20261030143537-s3mx0x
+    path: sessions/features/level-timer/game-timer-room-20261030143537-s3mx0x.jsonl
+    level: timer-room
+    created_by: agent
+    result: quit
+    label: ''
   archived: false
   created: '2026-10-29T14:58:52'
-  updated: '2026-10-29T14:58:52'
-  comments: []
+  updated: '2026-10-30T12:09:19'
+  comments:
+  - id: c1
+    author: agent
+    created: '2026-10-30T10:36:06'
+    body: 'Ready for review: Level timer and restart (3/3 tasks completed)
+
+
+      Tasks:
+
+      - level-timer/countdown: Countdown from level limit — completed, commit `3d106ce`
+      — per-level time_limit (120s; timer-room 5s), HUD counts from GameCore time_limit_s
+
+      - level-timer/lose-at-zero: Lose at zero with message — completed, commits `efbce20`
+      + `6eb1631` — status lost at recorded t_ms >= limit, timeout step at limit*1000,
+      session ends lost, message shown
+
+      - level-timer/restart: Restart with R and button — completed, commit `df473fe`
+      — R/Restart restores position/orbs/keys/timer, new recorded session on next
+      move
+
+
+      Evidence:
+
+      - Screenshots: attached (lost at 0:00 with message, restarted, replayed loss)
+
+      - Sessions: game-timer-room-20261030143531-3wyoq9 (timer-room, agent, lost)
+      — replay: http://127.0.0.1:8344/static/game.html?level=timer-room&replay=game-timer-room-20261030143531-3wyoq9&t=5
+      ; game-timer-room-20261030143537-s3mx0x (timer-room, agent, quit, post-restart
+      run)
+
+
+      Tests: tools.test_level_timer 11 ok; full worktree suite 134 tests with only
+      the 2 pre-existing test_pm_review_ui failures (identical on untouched main at
+      123 tests). Browser play (headless Chrome, worktree port 8344): moved, idle-expired
+      at 5s to lost with message and blocked movement, R restored start/timer and
+      started a new session, Restart button restored, replay of the lost session reaches
+      lost at t=5s; no console errors.
+
+
+      Playtest:
+
+      - Worktree: `.worktrees/level-timer`
+
+      - Start: `cd .worktrees/level-timer && python3 tools/server.py --port 8344`
+      — board server stays on 8322
+
+      - Game: http://127.0.0.1:8344/static/game.html — open the Test Level `timer-room`
+      from the game menu (5-second limit); move, wait for loss, press R.'
+    attachments:
+    - screenshots/features/level-timer/20261030-103554-timer-lost.png
+    - screenshots/features/level-timer/20261030-103554-timer-restarted.png
+    - screenshots/features/level-timer/20261030-103554-timer-replay-lost.png
+    session_refs:
+    - id: game-timer-room-20261030143531-3wyoq9
+      path: sessions/features/level-timer/game-timer-room-20261030143531-3wyoq9.jsonl
+      level: timer-room
+      created_by: agent
+      result: lost
+      label: ''
+    - id: game-timer-room-20261030143537-s3mx0x
+      path: sessions/features/level-timer/game-timer-room-20261030143537-s3mx0x.jsonl
+      level: timer-room
+      created_by: agent
+      result: quit
+      label: ''
+  - id: c2
+    author: agent
+    created: '2026-10-30T10:39:37'
+    body: 'Ready for re-review: Level timer and restart (4/4 tasks completed, incl.
+      review-fixes-1)
+
+
+      Correction to the review-fixes-1 task comment: its screenshot attachment timestamp
+      was mistyped; the correct evidence paths are attached here.
+
+
+      Tasks:
+
+      - level-timer/countdown: completed, commit `3d106ce`
+
+      - level-timer/lose-at-zero: completed, commits `efbce20` + `6eb1631`
+
+      - level-timer/restart: completed, commit `df473fe`
+
+      - level-timer/review-fixes-1: Surface timer loss/restart in the current /game
+      UI — completed, commit `735c4df` — Restart button, lost chip and Time-is-up
+      banner in the React /game UI (the session-logs-replay UI, merged on main at
+      b4a0ca2); bundle rebuilt
+
+
+      Evidence:
+
+      - Screenshots: attached — /game UI at loss (banner, lost chip, Restart, 0:00)
+      and after Restart; earlier standalone-page shots remain on the first roll-up
+      comment
+
+      - Sessions: game-timer-room-20261030143531-3wyoq9 (timer-room, agent, lost),
+      game-timer-room-20261030143537-s3mx0x (timer-room, agent, quit)
+
+
+      Tests: tools.test_level_timer 12 ok. Browser play on the current UI (http://127.0.0.1:8344/game?level=timer-room):
+      moved, expired to lost with banner/chip, Restart button restored start position
+      and full 5s timer; no console errors.
+
+
+      Playtest:
+
+      - Worktree: `.worktrees/level-timer`
+
+      - Start: `cd .worktrees/level-timer && python3 tools/server.py --port 8344`
+      — board server stays on 8322
+
+      - Game: http://127.0.0.1:8344/game?level=timer-room — the current UI; 5-second
+      limit, move, wait for loss, Restart or R.'
+    attachments:
+    - screenshots/features/level-timer/20261030-103928-game-ui-lost.png
+    - screenshots/features/level-timer/20261030-103928-game-ui-restarted.png
+    session_refs:
+    - id: game-timer-room-20261030143531-3wyoq9
+      path: sessions/features/level-timer/game-timer-room-20261030143531-3wyoq9.jsonl
+      level: timer-room
+      created_by: agent
+      result: lost
+      label: ''
+  - id: c3
+    author: agent
+    created: '2026-10-30T11:34:38'
+    body: 'Ready for re-review: Level timer and restart (6/6 tasks completed)
+
+
+      New since last roll-up:
+
+      - level-timer/review-fixes-2: Fallen Jolly pose when the timer runs out — completed,
+      commit `a-fallen` — jolly-fall published to assets/published, player sprite
+      swaps to the fallen pose while lost
+
+      - level-timer/review-fixes-3: Restart button and retry message inside the canvas
+      — completed — Pixi overlay on the board; outside-UI Restart/banner from review-fixes-1
+      removed
+
+
+      (Exact commit hashes are in each task''s completion comment.)
+
+
+      Evidence: attached /game screenshot at loss — fallen pose, in-canvas Time-is-up
+      panel with Restart button; sessions from the first roll-up still linked.
+
+
+      Playtest:
+
+      - Worktree: `.worktrees/level-timer`
+
+      - Start: `cd .worktrees/level-timer && python3 tools/server.py --port 8344`
+
+      - Game: http://127.0.0.1:8344/game?level=timer-room — move, wait 5s: Jolly falls,
+      canvas shows the retry panel; click Restart in the canvas (or press R).'
+    attachments:
+    - screenshots/features/level-timer/20261030-113431-canvas-lost.png
+    - screenshots/features/level-timer/20261030-113431-canvas-restarted.png
+    session_refs:
+    - id: game-timer-room-20261030143531-3wyoq9
+      path: sessions/features/level-timer/game-timer-room-20261030143531-3wyoq9.jsonl
+      level: timer-room
+      created_by: agent
+      result: lost
+      label: ''
+  - id: c4
+    author: agent
+    created: '2026-10-30T11:34:43'
+    body: 'Correction to the re-review roll-up above: review-fixes-2 commit is `194c117`
+      and review-fixes-3 commit is `2c09397` (the roll-up had a placeholder for the
+      first).'
+    attachments: []
+    session_refs: []
+  - id: c5
+    author: agent
+    created: '2026-10-30T11:41:28'
+    body: 'Ready for re-review: Level timer and restart (7/7 tasks completed)
+
+
+      New: level-timer/review-fixes-4 (commit in its task comment) — Jolly stands
+      while playing and falls only when the timer runs out (the prep script''s jolly-*
+      glob had been resolving to the jolly-fall sprite), standing again on restart/new
+      session; the retry message and Restart moved from the board centre into a compact
+      bar above the playzone next to TIME, per scratchpad/full-level-ui.png. The review-fixes-4
+      task comment mistyped its screenshot timestamp; the correct files are attached
+      here.
+
+
+      Playtest:
+
+      - Worktree: `.worktrees/level-timer`
+
+      - Start: `cd .worktrees/level-timer && python3 tools/server.py --port 8344`
+
+      - Game: http://127.0.0.1:8344/game?level=timer-room'
+    attachments:
+    - screenshots/features/level-timer/20261030-114122-bar-lost.png
+    - screenshots/features/level-timer/20261030-114122-bar-restarted.png
+    session_refs: []
+  - id: c6
+    author: human
+    created: '2026-10-30T12:07:14'
+    body: Now correctly works.
+    attachments: []
+    session_refs: []
+  - id: c7
+    author: agent
+    created: '2026-10-30T12:09:19'
+    body: 'Merged to main as 0107ca9 (merge --no-ff of feat/level-timer, per-task
+      commits preserved). Verified on merged main: sprites re-derived (standing jolly
+      distinct from jolly-fall), full suite 139 tests with only the 2 pre-existing
+      test_pm_review_ui failures, browser play on merged main (standing -> fallen
+      at expiry with top-bar retry -> standing after canvas Restart, no console errors).
+      Linked sessions and worktree asset files preserved on main before worktree cleanup.'
+    attachments: []
+    session_refs: []
   tasks:
   - id: countdown
     feature_id: level-timer
     title: Countdown from level limit
     description: ''
     acceptance: HUD timer counts down in real time from the level limit.
-    status: proposed
+    status: completed
     priority: high
     requires: []
     order: 0
@@ -1698,14 +1928,32 @@ features:
     commit: null
     archived: false
     created: '2026-10-29T14:58:52'
-    updated: '2026-10-29T14:58:52'
-    comments: []
+    updated: '2026-10-30T10:31:54'
+    comments:
+    - id: c1
+      author: agent
+      created: '2026-10-30T10:31:26'
+      body: 'Starting: per-level time_limit in level JSON (+ short-limit timer-room
+        Test Level), HUD countdown already driven by GameCore time_limit_s/time_left_s
+        from recorded t_ms; verify with node-driven unittest (tools.test_level_timer)
+        and browser play on worktree spare port.'
+      attachments: []
+      session_refs: []
+    - id: c2
+      author: agent
+      created: '2026-10-30T10:31:54'
+      body: 'Done: per-level time_limit (chip1/test-room/movement-room 120s, new timer-room
+        Test Level 5s), staged copies refreshed; HUD countdown already driven by GameCore
+        time_limit_s. Commit 3d106ce. Tests: python3 -m unittest tools.test_level_timer
+        tools.test_game_core tools.test_game_menus — 18 ok.'
+      attachments: []
+      session_refs: []
   - id: lose-at-zero
     feature_id: level-timer
     title: Lose at zero with message
     description: ''
     acceptance: Timer expiry ends the run as lost and shows a message.
-    status: proposed
+    status: completed
     priority: high
     requires: []
     order: 1
@@ -1713,14 +1961,34 @@ features:
     commit: null
     archived: false
     created: '2026-10-29T14:58:52'
-    updated: '2026-10-29T14:58:52'
-    comments: []
+    updated: '2026-10-30T10:32:43'
+    comments:
+    - id: c1
+      author: agent
+      created: '2026-10-30T10:31:54'
+      body: 'Starting: GameCore status playing->lost when recorded t_ms reaches the
+        limit (no movement on/after expiry, frozen thereafter), live clock records
+        a timeout step at exactly limit*1000 and ends the session lost, loss message
+        in HUD/DOM, replay of a timeout log reproduces lost at the same moment. Verify:
+        tools.test_level_timer + browser play on timer-room.'
+      attachments: []
+      session_refs: []
+    - id: c2
+      author: agent
+      created: '2026-10-30T10:32:43'
+      body: 'Done: GameCore status playing->lost at recorded t_ms >= limit (frozen
+        thereafter, no move on/after expiry), live clock records timeout step at exactly
+        limit*1000 and ends session lost, Time-is-up message + dbg-status. Commit
+        efbce20. Tests: tools.test_level_timer + game_core/player_movement/session_replay
+        — 33 ok.'
+      attachments: []
+      session_refs: []
   - id: restart
     feature_id: level-timer
     title: Restart with R and button
     description: ''
     acceptance: R and the restart button restore position, orbs, keys and timer.
-    status: proposed
+    status: completed
     priority: high
     requires: []
     order: 2
@@ -1728,8 +1996,197 @@ features:
     commit: null
     archived: false
     created: '2026-10-29T14:58:52'
-    updated: '2026-10-29T14:58:52'
-    comments: []
+    updated: '2026-10-30T10:34:27'
+    comments:
+    - id: c1
+      author: agent
+      created: '2026-10-30T10:32:43'
+      body: 'Starting: R key + Restart button restore initial position/orbs/keys/timer
+        via GameCore.initialState, close the old session and start a new recorded
+        session on next move; blocked during replay. Verify: tools.test_level_timer
+        + browser play (move, R, expiry, restart).'
+      attachments: []
+      session_refs: []
+    - id: c2
+      author: agent
+      created: '2026-10-30T10:34:27'
+      body: 'Done: Restart (R) button + R key restore GameCore.initialState (position/orbs/keys/timer,
+        status playing), close old session, clear log/clock so next move starts a
+        new recorded session; restart blocked during replay. Commit df473fe. Tests:
+        tools.test_level_timer 11 ok; full worktree suite 134 with only the 2 pre-existing
+        test_pm_review_ui failures (identical on untouched main, 123 tests). Browser
+        play evidence to follow in roll-up.'
+      attachments: []
+      session_refs: []
+  - id: review-fixes-1
+    feature_id: level-timer
+    title: Surface timer loss/restart in the current /game UI
+    description: Human flagged the roll-up playtest used the old /static/game.html
+      debug page; the current UI is the React operator layout at /game (session-logs-replay)
+      embedding game.html?embed=1 with the debug panel hidden, so the Restart button,
+      status and loss message are invisible there.
+    acceptance: 'In /game: a visible Restart control restarts the live run (same behaviour
+      as R), the lost state and Time-is-up message are visible when the timer expires
+      (live and replay), and the web bundle is rebuilt. Verified by browser play on
+      /game with timer-room.'
+    status: completed
+    priority: high
+    requires: []
+    order: 3
+    kind: review-fixes
+    commit: null
+    archived: false
+    created: '2026-10-30T10:38:03'
+    updated: '2026-10-30T10:39:28'
+    comments:
+    - id: c1
+      author: agent
+      created: '2026-10-30T10:38:03'
+      body: 'Starting: add Restart + lost status/message to tools/web/src/GamePage.jsx
+        using __game.restart/getClock/getState, rebuild tools/web bundle, verify on
+        /game (timer-room expiry + restart) from the worktree server. Note: session-logs-replay
+        IS merged on main (b4a0ca2); this branch descends from it — the gap is embed-mode
+        visibility, not a stale branch.'
+      attachments: []
+      session_refs: []
+    - id: c2
+      author: agent
+      created: '2026-10-30T10:39:28'
+      body: 'Done: Restart button + lost chip + Time-is-up banner in the current /game
+        UI (GamePage.jsx via __game.restart/getClock), R from parent window, inspector
+        Run status, iframe embed message de-duplicated, web bundle rebuilt. Commit
+        735c4df. Tests: tools.test_level_timer 12 ok. Browser play on /game?level=timer-room
+        (worktree 8344): moved, expired to lost with banner/chip, Restart button restored
+        start position and 5s timer; no console errors. Screenshot attached.'
+      attachments:
+      - screenshots/features/level-timer/20261030-104201-game-ui-lost.png
+      session_refs: []
+  - id: review-fixes-2
+    feature_id: level-timer
+    title: Fallen Jolly pose when the timer runs out
+    description: 'Human: jolly-fall-s20261030-112700-t1-20261030-112721-1.png (published
+      version s20261030-112700-t1 of asset jolly-fall) is the fallen pose. Copy it
+      into assets/published, derive the level sprite, and swap the player sprite to
+      it when the run is lost.'
+    acceptance: assets/published holds jolly-fall (newest-stamp naming), prep_level_sprites.sh
+      derives level-sprites/jolly-fall.png, and in game the player sprite shows the
+      fallen pose while status is lost and the normal pose otherwise (live and replay).
+    status: completed
+    priority: high
+    requires: []
+    order: 4
+    kind: review-fixes
+    commit: null
+    archived: false
+    created: '2026-10-30T11:31:12'
+    updated: '2026-10-30T11:32:07'
+    comments:
+    - id: c1
+      author: agent
+      created: '2026-10-30T11:31:12'
+      body: 'Starting: copy the fallen output to assets/published/jolly-fall-20261030-112721.png,
+        add jolly-fall to prep_level_sprites green-screen sprites, load it in game.js
+        and swap playerSprite texture by state.status in renderState. Verify: test_level_timer
+        + browser play on /game timer-room.'
+      attachments: []
+      session_refs: []
+    - id: c2
+      author: agent
+      created: '2026-10-30T11:32:07'
+      body: 'Done: copied jolly-fall-s20261030-112700-t1-20261030-112721-1.png to
+        assets/published/jolly-fall-20261030-112721.png, prep derives level-sprites/jolly-fall.png
+        (512 RGBA, keyed corners), game swaps player texture to fallen while status=lost.
+        Commit 194c117. Tests: tools.test_level_timer 14 ok. Browser evidence in re-review
+        roll-up.'
+      attachments: []
+      session_refs: []
+  - id: review-fixes-3
+    feature_id: level-timer
+    title: Restart button and retry message inside the canvas
+    description: 'Human: the reset button and retry message must be in the game, within
+      the canvas — not outside UI. This supersedes the outside-UI placement in review-fixes-1
+      (React header Restart/banner in /game, DOM panel in game.html).'
+    acceptance: At loss, the retry message and a clickable Restart button render inside
+      the Pixi canvas (working in embed /game and standalone), restart works from
+      that button and R, and the /game React UI no longer shows its own Restart button
+      or loss banner.
+    status: completed
+    priority: high
+    requires: []
+    order: 5
+    kind: review-fixes
+    commit: null
+    archived: false
+    created: '2026-10-30T11:31:12'
+    updated: '2026-10-30T11:34:37'
+    comments:
+    - id: c1
+      author: agent
+      created: '2026-10-30T11:32:07'
+      body: 'Starting: Pixi in-canvas lost overlay (retry message + clickable Restart
+        button on the board/stage) in game.js, remove DOM game-message/panel Restart
+        and the /game React Restart/banner/chip from review-fixes-1, rebuild bundle.
+        Verify: browser play on /game timer-room clicking the canvas Restart.'
+      attachments: []
+      session_refs: []
+    - id: c2
+      author: agent
+      created: '2026-10-30T11:34:37'
+      body: 'Done: Pixi in-canvas lost overlay (Time-is-up message + clickable Restart
+        button on the board), DOM game-message/panel Restart removed, /game React
+        Restart button/banner/chip from review-fixes-1 removed (bundle rebuilt). Commit
+        2c09397. Tests: tools.test_level_timer 14 ok. Browser play on /game timer-room:
+        expiry shows fallen pose + canvas overlay, canvas Restart click restored start/normal
+        pose; no outside Restart, no console errors.'
+      attachments:
+      - screenshots/features/level-timer/20261030-113431-canvas-lost.png
+      - screenshots/features/level-timer/20261030-113431-canvas-restarted.png
+      session_refs: []
+  - id: review-fixes-4
+    feature_id: level-timer
+    title: Standing pose until expiry; compact in-GUI bar above the playzone
+    description: 'Human: Jolly shows fallen from the start (prep latest() matches
+      jolly-fall-* as the newest jolly-* sprite, so level-sprites/jolly.png IS the
+      fallen image), restart must restore the normal sprite, and retry UI must not
+      cover gameplay — a compact UI above the level, still in the game GUI, like TIME
+      in scratchpad/full-level-ui.png.'
+    acceptance: level-sprites/jolly.png derives from the standing published jolly
+      only (prep prefix cannot collide with jolly-fall); Jolly stands while playing,
+      falls only at lost, and returns to standing on restart/new session; the timer
+      and the loss retry message+Restart sit in a compact bar above the playzone inside
+      the canvas and never cover the board.
+    status: completed
+    priority: high
+    requires: []
+    order: 6
+    kind: review-fixes
+    commit: null
+    archived: false
+    created: '2026-10-30T11:39:50'
+    updated: '2026-10-30T11:41:22'
+    comments:
+    - id: c1
+      author: agent
+      created: '2026-10-30T11:39:50'
+      body: 'Starting: fix latest() glob to <asset>-<digit> stamps, re-derive sprites,
+        replace centre overlay with a reserved top bar in the canvas (timer always;
+        Time-is-up + Restart there only at loss), verify standing->fallen->standing
+        poses in browser on /game timer-room.'
+      attachments: []
+      session_refs: []
+    - id: c2
+      author: agent
+      created: '2026-10-30T11:41:22'
+      body: 'Done: prep latest() now requires a digit stamp so jolly cannot resolve
+        to jolly-fall (sprites re-derived; jolly != jolly-fall hashes), standing pose
+        while playing, fallen only at lost, standing again on restart/new session.
+        Centre overlay replaced by a compact 52px in-GUI bar above the playzone (TIME
+        always; Time-is-up + Restart in the bar at loss, board never covered). Commit
+        704ade8. Tests: tools.test_level_timer 14 ok. Browser: poses normal->fallen->normal
+        via canvas-bar Restart click; no console errors.'
+      attachments:
+      - screenshots/features/level-timer/20261030-114000-bar-lost.png
+      session_refs: []
 - id: keys-and-locks
   title: Keys and locks
   summary: Pick up coloured keys into 8 inventory slots; matching locks dissolve and

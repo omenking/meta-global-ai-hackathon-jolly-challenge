@@ -3091,3 +3091,829 @@ sessions:
         requested_height: 512
         raw_width: 1600
         raw_height: 1600
+  s20261030-105318:
+    id: s20261030-105318
+    asset_name: jolly-fall
+    title: ''
+    created: '2026-10-30T10:53:18'
+    turns:
+    - seq: 1
+      prompt: 'Image uploads-20261030-105404-jolly-20261028-192220.png: We want to
+        change the character to have fallen over face first butt up.'
+      full_prompt_sent: ''
+      references:
+      - uploads-20261030-105404-jolly-20261028-192220.png
+      num: 10
+      provider_session: null
+      status: failed
+      cost_total: null
+      outputs: []
+    - seq: 2
+      prompt: 'Image uploads-20261030-105404-jolly-20261028-192220.png: Change the
+        character''s pose so they''ve comically collapsed forward from exhaustion.
+        Their face and chest are resting on the ground, but their hips and rear end
+        are raised in the air, with their knees bent behind them. Think of an exaggerated
+        cartoon video game faceplant. Keep everything else unchanged.'
+      full_prompt_sent: 'Image uploads-20261030-105404-jolly-20261028-192220.png:
+        Change the character''s pose so they''ve comically collapsed forward from
+        exhaustion. Their face and chest are resting on the ground, but their hips
+        and rear end are raised in the air, with their knees bent behind them. Think
+        of an exaggerated cartoon video game faceplant. Keep everything else unchanged.'
+      references:
+      - uploads-20261030-105404-jolly-20261028-192220.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: jolly-fall-s20261030-105318-t2-20261030-110303-1
+        path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t2-20261030-110303-2
+        path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t2-20261030-110303-3
+        path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t2-20261030-110303-4
+        path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t2-20261030-110303-5
+        path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t2-20261030-110303-6
+        path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t2-20261030-110303-7
+        path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t2-20261030-110303-8
+        path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t2-20261030-110303-9
+        path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t2-20261030-110303-10
+        path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t2-20261030-110303-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 3
+      prompt: 'Image jolly-fall-s20261030-105318-t2-20261030-110303-7.png: This is
+        kind of close, but jolly looks too happy fallen over.
+
+        Image uploads-20261030-105404-jolly-20261028-192220.png: This is original
+        jolly reference.
+
+        Image uploads-20261030-110613-Screenshot-2026-10-30-110511.png: This is a
+        pose example where it shows the cartoon placement, So we want to replicate
+        the pose. none of the clothing features.'
+      full_prompt_sent: 'Image jolly-fall-s20261030-105318-t2-20261030-110303-7.png:
+        This is kind of close, but jolly looks too happy fallen over.
+
+        Image uploads-20261030-105404-jolly-20261028-192220.png: This is original
+        jolly reference.
+
+        Image uploads-20261030-110613-Screenshot-2026-10-30-110511.png: This is a
+        pose example where it shows the cartoon placement, So we want to replicate
+        the pose. none of the clothing features.'
+      references:
+      - jolly-fall-s20261030-105318-t2-20261030-110303-7.png
+      - uploads-20261030-105404-jolly-20261028-192220.png
+      - uploads-20261030-110613-Screenshot-2026-10-30-110511.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: jolly-fall-s20261030-105318-t3-20261030-111158-1
+        path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t3-20261030-111158-2
+        path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t3-20261030-111158-3
+        path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t3-20261030-111158-4
+        path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t3-20261030-111158-5
+        path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t3-20261030-111158-6
+        path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t3-20261030-111158-7
+        path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t3-20261030-111158-8
+        path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t3-20261030-111158-9
+        path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t3-20261030-111158-10
+        path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t3-20261030-111158-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 4
+      prompt: 'Image jolly-fall-s20261030-105318-t3-20261030-111158-3.png: The face
+        is good., the legs are in an impossible pose.
+
+        Image uploads-20261030-110613-Screenshot-2026-10-30-110511.png: See again
+        this reference image and how the rear is up and the legs are kneeling on the
+        ground.'
+      full_prompt_sent: 'Image jolly-fall-s20261030-105318-t3-20261030-111158-3.png:
+        The face is good., the legs are in an impossible pose.
+
+        Image uploads-20261030-110613-Screenshot-2026-10-30-110511.png: See again
+        this reference image and how the rear is up and the legs are kneeling on the
+        ground.'
+      references:
+      - jolly-fall-s20261030-105318-t3-20261030-111158-10.png
+      - jolly-fall-s20261030-105318-t3-20261030-111158-3.png
+      - uploads-20261030-110613-Screenshot-2026-10-30-110511.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: jolly-fall-s20261030-105318-t4-20261030-111420-1
+        path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t4-20261030-111420-2
+        path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t4-20261030-111420-3
+        path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t4-20261030-111420-4
+        path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t4-20261030-111420-5
+        path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t4-20261030-111420-6
+        path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t4-20261030-111420-7
+        path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t4-20261030-111420-8
+        path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t4-20261030-111420-9
+        path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t4-20261030-111420-10
+        path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t4-20261030-111420-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 5
+      prompt: 'Image jolly-fall-s20261030-105318-t3-20261030-111158-9.png: lets go
+        more with this pose.'
+      full_prompt_sent: 'Image jolly-fall-s20261030-105318-t3-20261030-111158-9.png:
+        lets go more with this pose.'
+      references:
+      - jolly-fall-s20261030-105318-t3-20261030-111158-9.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: jolly-fall-s20261030-105318-t5-20261030-111828-1
+        path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t5-20261030-111828-2
+        path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t5-20261030-111828-3
+        path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t5-20261030-111828-4
+        path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t5-20261030-111828-5
+        path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t5-20261030-111828-6
+        path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t5-20261030-111828-7
+        path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t5-20261030-111828-8
+        path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t5-20261030-111828-9
+        path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t5-20261030-111828-10
+        path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t5-20261030-111828-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 6
+      prompt: 'Image jolly-fall-s20261030-105318-t3-20261030-111158-9.png: This is
+        more accurate to the face we want.
+
+        Image jolly-fall-s20261030-105318-t3-20261030-111158-7.png: This is more accurate
+        to the pose we want. but it needs to fill the full frame because it change
+        the perspective too much.
+
+        Image jolly-fall-s20261030-105318-t5-20261030-111828-8.png: should not add
+        clothes the character
+
+        Image jolly-fall-s20261030-105318-t5-20261030-111828-10.png: Should not add
+        debris around the character'
+      full_prompt_sent: 'Image jolly-fall-s20261030-105318-t3-20261030-111158-9.png:
+        This is more accurate to the face we want.
+
+        Image jolly-fall-s20261030-105318-t3-20261030-111158-7.png: This is more accurate
+        to the pose we want. but it needs to fill the full frame because it change
+        the perspective too much.
+
+        Image jolly-fall-s20261030-105318-t5-20261030-111828-8.png: should not add
+        clothes the character
+
+        Image jolly-fall-s20261030-105318-t5-20261030-111828-10.png: Should not add
+        debris around the character'
+      references:
+      - jolly-fall-s20261030-105318-t5-20261030-111828-10.png
+      - jolly-fall-s20261030-105318-t5-20261030-111828-8.png
+      - jolly-fall-s20261030-105318-t3-20261030-111158-9.png
+      - jolly-fall-s20261030-105318-t3-20261030-111158-7.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: jolly-fall-s20261030-105318-t6-20261030-112136-1
+        path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t6-20261030-112136-2
+        path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t6-20261030-112136-3
+        path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t6-20261030-112136-4
+        path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t6-20261030-112136-5
+        path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t6-20261030-112136-6
+        path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t6-20261030-112136-7
+        path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t6-20261030-112136-8
+        path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t6-20261030-112136-9
+        path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t6-20261030-112136-10
+        path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t6-20261030-112136-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 7
+      prompt: 'Image jolly-fall-s20261030-105318-t6-20261030-112136-7.png: The character
+        needs to fill the frame, because its a tile base game. So look fallen over.
+        Maybe try a top down view. That would fill the frame completely better.'
+      full_prompt_sent: 'Image jolly-fall-s20261030-105318-t6-20261030-112136-7.png:
+        The character needs to fill the frame, because its a tile base game. So look
+        fallen over. Maybe try a top down view. That would fill the frame completely
+        better.'
+      references:
+      - jolly-fall-s20261030-105318-t6-20261030-112136-7.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: jolly-fall-s20261030-105318-t7-20261030-112335-1
+        path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t7-20261030-112335-2
+        path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t7-20261030-112335-3
+        path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t7-20261030-112335-4
+        path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t7-20261030-112335-5
+        path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t7-20261030-112335-6
+        path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t7-20261030-112335-7
+        path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t7-20261030-112335-8
+        path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t7-20261030-112335-9
+        path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t7-20261030-112335-10
+        path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t7-20261030-112335-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+    - seq: 8
+      prompt: 'Image jolly-fall-s20261030-105318-t2-20261030-110303-1.png: This is
+        the image we want to use. Use this exact pose, dont add clothing or a tail
+        or anything else.
+
+        Image jolly-fall-s20261030-105318-t3-20261030-111158-7.png: This is the expression
+        we want, dont use its pose.'
+      full_prompt_sent: 'Image jolly-fall-s20261030-105318-t2-20261030-110303-1.png:
+        This is the image we want to use. Use this exact pose, dont add clothing or
+        a tail or anything else.
+
+        Image jolly-fall-s20261030-105318-t3-20261030-111158-7.png: This is the expression
+        we want, dont use its pose.'
+      references:
+      - jolly-fall-s20261030-105318-t3-20261030-111158-7.png
+      - jolly-fall-s20261030-105318-t2-20261030-110303-1.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: jolly-fall-s20261030-105318-t8-20261030-112522-1
+        path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t8-20261030-112522-2
+        path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t8-20261030-112522-3
+        path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t8-20261030-112522-4
+        path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t8-20261030-112522-5
+        path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t8-20261030-112522-6
+        path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t8-20261030-112522-7
+        path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t8-20261030-112522-8
+        path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t8-20261030-112522-9
+        path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-105318-t8-20261030-112522-10
+        path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-105318-t8-20261030-112522-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+  s20261030-112700:
+    id: s20261030-112700
+    asset_name: jolly-fall
+    title: ''
+    created: '2026-10-30T11:27:00'
+    turns:
+    - seq: 1
+      prompt: 'Image uploads-20261030-112707-jolly-fall-s20261030-105318-t2-20261030-110303-4.png:
+        make the character have sad tired expresison.'
+      full_prompt_sent: 'Image uploads-20261030-112707-jolly-fall-s20261030-105318-t2-20261030-110303-4.png:
+        make the character have sad tired expresison.'
+      references:
+      - uploads-20261030-112707-jolly-fall-s20261030-105318-t2-20261030-110303-4.png
+      num: 10
+      provider_session: null
+      status: completed
+      cost_total: '0.10'
+      outputs:
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-1
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-2
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-3
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-4
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-5
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-6
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-6.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-6-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-7
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-7.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-7-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-8
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-8.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-8-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-9
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-9.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-9-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-10
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-10.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-10-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600

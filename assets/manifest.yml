@@ -282,3 +282,26 @@ assets:
     width: 512
     height: 512
     versions: []
+  jolly-fall:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261030-112700-t1
+      desc: Published from session s20261030-112700 turn 1 (jolly-fall-s20261030-112700-t1-20261030-112721-1)
+      prompt: 'Image uploads-20261030-112707-jolly-fall-s20261030-105318-t2-20261030-110303-4.png:
+        make the character have sad tired expresison.'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references:
+      - uploads-20261030-112707-jolly-fall-s20261030-105318-t2-20261030-110303-4.png
+      outputs:
+      - key: jolly-fall-s20261030-112700-t1-20261030-112721-1
+        path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/jolly-fall-s20261030-112700-t1-20261030-112721-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: 1600
+        raw_height: 1600

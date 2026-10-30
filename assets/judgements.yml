@@ -97,3 +97,31 @@ gate-s20261028-145752-t3-20261028-150246-10:
     the gate.
 gate-s20261028-145752-t4-20261028-150533-10:
   human_review: the gate should fill the entire image.
+uploads-20261030-105404-jolly-20261028-192220:
+  human_review: This is original jolly reference.
+jolly-fall-s20261030-105318-t2-20261030-110303-7:
+  human_review: This is kind of close, but jolly looks too happy fallen over.
+uploads-20261030-110613-Screenshot-2026-10-30-110511:
+  human_review: See again this reference image and how the rear is up and the legs
+    are kneeling on the ground.
+jolly-fall-s20261030-105318-t3-20261030-111158-3:
+  human_review: The face is good., the legs are in an impossible pose.
+jolly-fall-s20261030-105318-t3-20261030-111158-9:
+  human_review: This is more accurate to the face we want.
+jolly-fall-s20261030-105318-t3-20261030-111158-7:
+  human_review: This is the expression we want, dont use its pose.
+jolly-fall-s20261030-105318-t5-20261030-111828-8:
+  human_review: should not add clothes the character
+jolly-fall-s20261030-105318-t5-20261030-111828-10:
+  human_review: Should not add debris around the character
+jolly-fall-s20261030-105318-t6-20261030-112136-7:
+  human_review: The characte needs to fill the frame, because its a tile base game.
+    So looke fallen over. Maybe try a top down view.
+jolly-fall-s20261030-105318-t2-20261030-110303-1:
+  human_review: This is the image we want to use. Use this exact pose, dont add clothing
+    or a tail or anything else.
+uploads-20261030-112707-jolly-fall-s20261030-105318-t2-20261030-110303-4:
+  human_review: make the character have sad tired expresison.
+jolly-fall-s20261030-112700-t1-20261030-112721-1:
+  human_review: ''
+  preferred: false

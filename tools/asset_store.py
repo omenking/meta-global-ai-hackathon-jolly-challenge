@@ -663,4 +663,8 @@ def validate_upload(filename: object, size: int) -> str:
     if size > UPLOAD_MAX_BYTES:
         raise StoreError(
             f"upload is {size} bytes; the limit is {UPLOAD_MAX_BYTES} bytes")
-    return base
+    # The stored name is addressed verbatim by URL (/outputs/<name>),
+    # so collapse anything URL-unsafe (spaces, brackets, ...) to '-'.
+    path = Path(base)
+    stem = re.sub(r"[^A-Za-z0-9_-]+", "-", path.stem).strip("-_")
+    return (stem or "upload") + path.suffix

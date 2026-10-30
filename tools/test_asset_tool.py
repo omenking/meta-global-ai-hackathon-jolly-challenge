@@ -340,6 +340,19 @@ class UploadValidationTest(unittest.TestCase):
         with self.assertRaises(StoreError):
             validate_upload("   ", 10)
 
+    def test_url_unsafe_characters_sanitized(self):
+        # Stored names must be servable verbatim: the /outputs handler
+        # is addressed by the name in the URL, so spaces etc. break it.
+        self.assertEqual(
+            validate_upload("Screenshot 2026-10-30 110511.png", 10),
+            "Screenshot-2026-10-30-110511.png")
+        self.assertEqual(
+            validate_upload("my photo (final).JPG", 10),
+            "my-photo-final.JPG")
+
+    def test_all_symbol_stem_falls_back(self):
+        self.assertEqual(validate_upload("!!!.png", 10), "upload.png")
+
 
 if __name__ == "__main__":
     unittest.main()

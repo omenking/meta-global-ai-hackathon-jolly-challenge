@@ -788,12 +788,14 @@ class Handler(BaseHTTPRequestHandler):
                     return self._serve_file(app_index)
                 return self._serve_file(STATIC_DIR / "home.html")
             if parts[0] == "static":
-                target = (STATIC_DIR / "/".join(parts[1:])).resolve()
+                target = (STATIC_DIR / "/".join(
+                    urllib.parse.unquote(p) for p in parts[1:])).resolve()
                 if STATIC_DIR.resolve() not in target.parents:
                     return _send(self, 404, {"error": "not found"})
                 return self._serve_file(target)
             if parts[0] == "outputs":
-                target = (OUTPUTS_DIR / "/".join(parts[1:])).resolve()
+                target = (OUTPUTS_DIR / "/".join(
+                    urllib.parse.unquote(p) for p in parts[1:])).resolve()
                 if OUTPUTS_DIR.resolve() not in target.parents:
                     return _send(self, 404, {"error": "not found"})
                 return self._serve_file(target)
