@@ -217,9 +217,9 @@
   // Session recording starts with the playable build: the header is
   // flushed before any input, every step flushes, and End / pagehide
   // closes the file — no play is ever unrecorded.
-  const now = new Date();
+  let now = new Date();
   const stamp = now.toISOString().replace(/[^0-9]/g, '').slice(0, 14);
-  const sessionId = forkSeed ? forkSeed.id :
+  let sessionId = forkSeed ? forkSeed.id :
     'game-' + levelName + '-' + stamp + '-' +
     Math.random().toString(36).slice(2, 8);
   // No session exists until the first move: refreshes and idle
@@ -280,6 +280,29 @@
       sessionId + ' — ended (' + (result || 'quit') + ')';
   }
   document.getElementById('btn-end-session').addEventListener('click', () => endSession('quit'));
+  // Restart: restore the initial state (position, orbs, keys and
+  // timer all live in GameCore.initialState) and start a new
+  // recorded session on the next move. The old session is closed
+  // first (as 'lost' if it already expired, else 'quit').
+  function restartLevel() {
+    if (window.__replayActive) return;
+    if (recorder && !recorder.isEnded()) endSession('quit');
+    recorder = null;
+    forkSeed = null;
+    inputLog.length = 0;
+    now = new Date();
+    sessionId = 'game-' + levelName + '-' +
+      now.toISOString().replace(/[^0-9]/g, '').slice(0, 14) + '-' +
+      Math.random().toString(36).slice(2, 8);
+    sessionStartTs = null;
+    state = window.GameCore.initialState(level, levelName);
+    document.getElementById('dbg-input').textContent = '\u2014';
+    document.getElementById('dbg-replay').textContent = '\u2014';
+    document.getElementById('dbg-session').textContent =
+      'no session yet \u2014 move to start one';
+    renderState();
+  }
+  document.getElementById('btn-restart').addEventListener('click', restartLevel);
   window.addEventListener('pagehide', () => {
     if (!recorder) return;
     if (!recorder.isEnded()) { recorder.end('quit', { time_left: state.time_left_s }); }
@@ -345,6 +368,11 @@
       else if (ev.key === 'ArrowRight') { ev.preventDefault(); pauseReplay(); showReplay(replayIndex + (ev.shiftKey ? 10 : 1)); }
       else if (ev.key === 'Home') { ev.preventDefault(); showReplay(0); }
       else if (ev.key === 'End') { ev.preventDefault(); showReplay(1e9); }
+      return;
+    }
+    if (ev.key === 'r' || ev.key === 'R') {
+      ev.preventDefault();
+      restartLevel();
       return;
     }
     if (state.status === 'lost') return;
@@ -518,7 +546,8 @@
     showReplay: showReplay, forkFromReplay: forkFromReplay,
     togglePlay: () => { if (replayTimer) pauseReplay(); else playReplay(); },
     seekTime: (seconds) => { if (window.__replayRecords) { pauseReplay(); showReplay(window.GameReplay.stepIndexAtTime(window.__replayRecords, seconds)); } },
-    getClock: () => ({ started: sessionStartTs !== null, elapsed_s: sessionElapsedMs() / 1000, time_limit_s: state.time_limit_s, time_left_s: Math.max(0, state.time_limit_s - sessionElapsedMs() / 1000) }),
+    getClock: () => ({ started: sessionStartTs !== null, status: state.status, elapsed_s: sessionElapsedMs() / 1000, time_limit_s: state.time_limit_s, time_left_s: Math.max(0, state.time_limit_s - sessionElapsedMs() / 1000) }),
+    restart: restartLevel,
     getReplay: () => ({ playing: replayTimer !== null, playhead_ms: playheadMs, id: replayId, index: replayIndex,
       duration_ms: window.__replayRecords ? (window.GameReplay.stepsOf(window.__replayRecords).slice(-1)[0] || { t_ms: 0 }).t_ms : 0,
       step_times: window.__replayRecords ? window.GameReplay.stepsOf(window.__replayRecords).map((s) => s.t_ms) : [],
@@ -530,7 +559,7 @@
     getPlayerSpritePos: () => playerSprite
       ? { x: playerSprite.position.x, y: playerSprite.position.y }
       : null,
-    sessionId: sessionId,
+    get sessionId() { return sessionId; },
     endSession: endSession,
     applyStep: applyStep,
     getLog: () => inputLog.slice(),

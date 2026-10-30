@@ -143,5 +143,60 @@ class LoseAtZeroTests(unittest.TestCase):
         self.assertIn('id="dbg-status"', html)
 
 
+RESTART_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+let s = core.initialState(level, 'timer-room');
+const start = { pos: { ...s.player }, left: s.time_left_s, status: s.status };
+s = core.step(s, { t_ms: 1000, input: 'right' });
+s = core.step(s, { t_ms: 5000, input: 'timeout' });
+const lost = { pos: { ...s.player }, status: s.status };
+// Restart is a fresh initial state: position, orbs, keys and timer.
+const fresh = core.initialState(level, 'timer-room');
+const r = core.readout(fresh);
+console.log(JSON.stringify({
+  start, lostPos: lost.pos, lostStatus: lost.status,
+  freshPos: fresh.player, freshLeft: fresh.time_left_s,
+  freshStatus: fresh.status, freshSteps: fresh.steps,
+  freshTms: fresh.t_ms, orbs: r.orbs_left, inventory: r.inventory,
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class RestartTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.result = run_core(RESTART_SCRIPT)
+
+    def test_restart_restores_position_timer_and_status(self):
+        r = self.result
+        self.assertEqual(r["lostStatus"], "lost")
+        self.assertEqual(r["freshPos"], r["start"]["pos"])
+        self.assertEqual(r["freshLeft"], r["start"]["left"])
+        self.assertEqual(r["freshStatus"], "playing")
+        self.assertEqual(r["freshSteps"], 0)
+        self.assertEqual(r["freshTms"], 0)
+        # Orbs/keys live in the restored initial grid/inventory.
+        self.assertGreaterEqual(r["orbs"], 1)
+        self.assertEqual(r["inventory"], [])
+
+    def test_game_page_restarts_with_r_and_button_as_new_session(self):
+        html = (ROOT / "tools" / "static" / "game.html").read_text(
+            encoding="utf-8")
+        js = (ROOT / "tools" / "static" / "game.js").read_text(
+            encoding="utf-8")
+        self.assertIn('id="btn-restart"', html)
+        self.assertIn("btn-restart", js)
+        self.assertIn("restartLevel", js)
+        self.assertIn("ev.key === 'r'", js)
+        self.assertIn("GameCore.initialState(level, levelName)", js)
+        # A restart closes the old recorder and clears it, so the
+        # next move creates a new recorded session.
+        self.assertIn("recorder = null", js)
+        self.assertIn("inputLog.length = 0", js)
+        self.assertIn("sessionStartTs = null", js)
+
+
 if __name__ == "__main__":
     unittest.main()
