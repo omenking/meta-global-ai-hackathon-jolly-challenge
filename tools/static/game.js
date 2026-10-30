@@ -455,7 +455,9 @@
         : !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
     }
     retryGroup.visible = state.status === 'lost';
-    winGroup.visible = state.status === 'won';
+    // The HUD win screen is only for the last level; mid-chain a
+    // win shows the level summary (its Next button) instead.
+    winGroup.visible = state.status === 'won' && !state.next_level;
     const finishKey = (retryGroup.visible ? 'r' : '') +
       (winGroup.visible ? 'w' : '');
     if (finishKey !== renderState._finishKey) {

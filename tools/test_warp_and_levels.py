@@ -238,7 +238,9 @@ class LastLevelWinTests(unittest.TestCase):
         js = (ROOT / "tools" / "static" / "game.js").read_text(
             encoding="utf-8")
         self.assertIn("You win!", js)
-        self.assertIn("winGroup.visible = state.status === 'won'", js)
+        self.assertIn(
+            "winGroup.visible = state.status === 'won' && !state.next_level",
+            js, "HUD win screen must be last-level only (summary mid-chain)")
         self.assertIn("isWinScreenVisible", js)
 
 
