@@ -334,12 +334,37 @@ class LevelSummaryOverlayTests(unittest.TestCase):
 
     def test_continue_button_loads_next_level(self):
         self.assertIn("btn-summary-next", self.js)
-        self.assertIn("loadNextLevel(state.next_level)", self.js)
+        self.assertIn("state.next_level", self.js)
         self.assertIn("isSummaryVisible", self.js)
 
     def test_summary_fields_come_from_core_state(self):
         self.assertIn("countOrbs", self.js)
         self.assertIn("summary-steps", self.js)
+
+
+class WipeTransitionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.html = (ROOT / "tools" / "static" / "game.html").read_text(
+            encoding="utf-8")
+        cls.js = (ROOT / "tools" / "static" / "game.js").read_text(
+            encoding="utf-8")
+
+    def test_wipe_element_covers_full_screen_with_transition(self):
+        self.assertIn('id="wipe"', self.html)
+        self.assertIn("transition: transform", self.html)
+        self.assertIn("#wipe.cover", self.html)
+        self.assertIn("prefers-reduced-motion", self.html)
+
+    def test_continue_covers_then_loads_next_under_wipe(self):
+        self.assertIn("wipeToNextLevel(state.next_level)", self.js)
+        self.assertIn("classList.add('cover')", self.js)
+        self.assertIn("next.set('wipe', '1')", self.js)
+
+    def test_incoming_wipe_reveals_new_level(self):
+        self.assertIn("params.get('wipe')", self.js)
+        self.assertIn("revealWipe()", self.js)
+        self.assertIn("isWipeCovering", self.js)
 
 
 if __name__ == "__main__":

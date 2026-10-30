@@ -42,6 +42,14 @@
   #btn-summary-next { font-size: 15px; padding: 8px 22px; cursor: pointer;
            background: #0a6b00; color: #fff; border: 1px solid #075300;
            border-radius: 6px; font-weight: 600; }
+  #wipe { position: fixed; inset: 0; z-index: 30; background: #111;
+           transform: translateX(-102%); pointer-events: none;
+           transition: transform 450ms ease-in-out; }
+  #wipe.cover { transform: translateX(0); pointer-events: auto; }
+  #wipe.reveal { transform: translateX(102%); }
+  @media (prefers-reduced-motion: reduce) {
+    #wipe { transition: none; }
+  }
   body.embed { overflow: hidden; background: #111; }
   body.embed header, body.embed #panel { display: none; }
   body.embed main { padding: 0; }
@@ -129,6 +137,7 @@
     <button id="btn-summary-next" type="button">Next level</button>
   </div>
 </div>
+<div id="wipe" aria-hidden="true"></div>
 <script src="vendor/pixi.min.js"></script>
 <script src="game-core.js"></script>
 <script src="game-hud.js"></script>

@@ -16,6 +16,29 @@
   if (embed) document.body.classList.add('embed');
   const levelName = (params.get('level') || 'test-room').replace(/[^a-zA-Z0-9_-]/g, '');
 
+  // Wipe transition (view only): arriving via a warp starts fully
+  // covered, snapped on without animation, then revealWipe() slides
+  // the cover away once this level is ready. Plain loads never cover.
+  const wipeEl = document.getElementById('wipe');
+  const wipeIncoming = params.get('wipe') === '1';
+  if (wipeIncoming) {
+    wipeEl.style.transition = 'none';
+    wipeEl.classList.add('cover');
+  }
+  function revealWipe() {
+    if (!wipeIncoming) return;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      wipeEl.style.transition = '';
+      wipeEl.classList.remove('cover');
+      wipeEl.classList.add('reveal');
+      setTimeout(() => {
+        wipeEl.style.transition = 'none';
+        wipeEl.classList.remove('reveal');
+        requestAnimationFrame(() => { wipeEl.style.transition = ''; });
+      }, 500);
+    }));
+  }
+
   // Game menu: only Test Levels are offered for test play (review
   // fix). The full chip1 level is preserved in levels/ and in the
   // Level Preview, outside this menu; an explicit ?level= still
@@ -592,16 +615,23 @@
   }
   document.getElementById('btn-summary-next').addEventListener('click', () => {
     hideLevelSummary();
-    if (state.next_level) loadNextLevel(state.next_level);
+    if (state.next_level) wipeToNextLevel(state.next_level);
     // Last level: dismissing the summary reveals the win screen.
   });
+  // Sweep the wipe across, then load the next level under the
+  // cover; the new page starts covered and reveals (revealWipe).
+  function wipeToNextLevel(nextId) {
+    wipeEl.classList.add('cover');
+    setTimeout(() => loadNextLevel(nextId, true), 480);
+  }
   // Load the next level in the progression chain (same page, new
   // ?level=, fresh session on first move). Replay/fork params do
   // not carry over; creator/feature/embed do.
-  function loadNextLevel(nextId) {
+  function loadNextLevel(nextId, withWipe) {
     const next = new URLSearchParams(params);
     next.set('level', nextId);
     next.delete('replay'); next.delete('fork'); next.delete('t');
+    if (withWipe) next.set('wipe', '1'); else next.delete('wipe');
     location.search = '?' + next.toString();
   }
   // Idle expiry: when the live clock reaches the limit, record the
@@ -849,6 +879,8 @@
     isRetryBarVisible: () => retryGroup.visible,
     isWinScreenVisible: () => winGroup.visible,
     isSummaryVisible: () => summaryEl.classList.contains('open'),
+    isWipeCovering: () => wipeEl.classList.contains('cover'),
+    getWipeTransform: () => getComputedStyle(wipeEl).transform,
     getSummary: () => ({
       level: document.getElementById('summary-level').textContent,
       orbs: document.getElementById('summary-orbs').textContent,
@@ -871,4 +903,5 @@
 
   document.body.dataset.ready = levelName;
   document.title = 'ready:' + levelName + ' — Game';
+  revealWipe();
 })();
