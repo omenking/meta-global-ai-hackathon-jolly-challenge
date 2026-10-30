@@ -36,7 +36,17 @@
     return n;
   }
 
-  const api = { digitsFor, timerSeconds, orbsLeft };
+  // Current level number: an explicit level_number/number in the
+  // level data wins; otherwise the trailing digits of the level id
+  // (chip1 -> 1); otherwise 0.
+  function levelNumber(level, levelName) {
+    if (level && typeof level.level_number === 'number') return level.level_number;
+    if (level && typeof level.number === 'number') return level.number;
+    const m = /(\d+)\s*$/.exec(String(levelName || (level && level.name) || ''));
+    return m ? parseInt(m[1], 10) : 0;
+  }
+
+  const api = { digitsFor, timerSeconds, orbsLeft, levelNumber };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameHud = api;
 })(typeof window !== 'undefined' ? window : globalThis);

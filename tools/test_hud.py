@@ -89,6 +89,32 @@ class OrbsTests(unittest.TestCase):
         self.assertIn("orbsReadout.set", js)
 
 
+LEVEL_SCRIPT = r"""
+const hud = require(process.argv[1]);
+console.log(JSON.stringify({
+  chip1: hud.levelNumber({ name: 'chip1' }, 'chip1'),
+  explicit: hud.levelNumber({ level_number: 7, name: 'x9' }, 'x9'),
+  testRoom: hud.levelNumber({ name: 'test-room' }, 'test-room'),
+  none: hud.levelNumber(null, null),
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class LevelTests(unittest.TestCase):
+    def test_level_number_derivation(self):
+        r = run_hud(LEVEL_SCRIPT)
+        self.assertEqual(r["chip1"], 1)
+        self.assertEqual(r["explicit"], 7)
+        self.assertEqual(r["testRoom"], 0)
+
+    def test_game_wires_level_readout_from_state(self):
+        js = GAME_JS.read_text(encoding="utf-8")
+        self.assertIn("makeReadout('level')", js)
+        self.assertIn("GameHud.levelNumber(level, state.level)", js)
+        self.assertIn("levelReadout.set", js)
+
+
 class GuiSpriteTests(unittest.TestCase):
     def test_prep_derives_gui_sprites_from_published_gui(self):
         prep = (ROOT / "tools" / "prep_level_sprites.sh").read_text(

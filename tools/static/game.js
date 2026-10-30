@@ -273,6 +273,8 @@
   addHudSection(timeReadout.group, timeReadout.height);
   const orbsReadout = makeReadout('orbs');
   insertHudSection(orbsReadout.group, orbsReadout.height, 1);
+  const levelReadout = makeReadout('level');
+  insertHudSection(levelReadout.group, levelReadout.height, 0);
   const retryGroup = new PIXI.Container();
   retryGroup.visible = false;
   const retryMsg = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
@@ -348,6 +350,8 @@
     retryGroup.visible = state.status === 'lost';
     hudValues.orbs = window.GameHud.orbsLeft(state);
     orbsReadout.set(hudValues.orbs);
+    hudValues.level = window.GameHud.levelNumber(level, state.level);
+    levelReadout.set(hudValues.level);
     drawHud(state.elapsed_s, state.time_limit_s);
   }
   renderState();
