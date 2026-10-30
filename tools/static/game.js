@@ -320,8 +320,10 @@
     document.getElementById('dbg-input').textContent =
       String(state.last_input) + ' @ t_ms ' + state.t_ms;
     renderState();
-    flushSession(false);
+    // End (and flush) a lost run in one write, so the session file
+    // cannot land without its lost end line.
     if (state.status === 'lost') endSession('lost');
+    else flushSession(false);
   }
   // Idle expiry: when the live clock reaches the limit, record the
   // loss as a step at exactly the limit so replay loses at the same
