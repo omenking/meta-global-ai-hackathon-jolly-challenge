@@ -171,5 +171,73 @@ class GateBlocksTests(unittest.TestCase):
         self.assertEqual(self.r["blockedOne"]["gateTile"], "G")
 
 
+GATE_OPEN_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+const inputs = [
+  'right', 'right', 'right',           // collect orb at (4,1)
+  'right', 'right', 'right', 'right',  // collect orb at (8,1)
+  'left', 'left', 'left',              // back to (5,1)
+  'down',                              // (5,2) above the gate
+];
+let s = core.initialState(level, 'orbs-room');
+const startOpen = core.readout(s).gate_open;
+inputs.forEach((input, i) => { s = core.step(s, { t_ms: (i + 1) * 100, input }); });
+const aboveOpen = { pos: { ...s.player }, orbs: core.readout(s).orbs_left,
+  open: core.readout(s).gate_open };
+s = core.step(s, { t_ms: 1200, input: 'down' });
+const onGate = { pos: { ...s.player }, open: core.readout(s).gate_open,
+  gateTile: s.grid[3][5] };
+s = core.step(s, { t_ms: 1300, input: 'down' });
+const pastGate = { ...s.player };
+s = core.step(s, { t_ms: 1400, input: 'down' });
+const atPortal = { pos: { ...s.player }, tile: s.grid[5][5] };
+s = core.step(s, { t_ms: 1500, input: 'up' });
+s = core.step(s, { t_ms: 1600, input: 'up' });
+const backThrough = { ...s.player };
+const log = inputs.concat(['down', 'down', 'down', 'up', 'up'])
+  .map((input, i) => ({ t_ms: (i + 1) * 100, input }));
+const replayed = core.replay(level, 'orbs-room', log).slice(-1)[0];
+console.log(JSON.stringify({ startOpen, aboveOpen, onGate, pastGate,
+  atPortal, backThrough, liveDigest: core.stateDigest(s),
+  replayDigest: core.stateDigest(replayed),
+  replayPos: replayed.player, replayOpen: core.readout(replayed).gate_open }));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class GateOpensTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(GATE_OPEN_SCRIPT)
+
+    def test_gate_opens_at_zero_orbs(self):
+        self.assertFalse(self.r["startOpen"])
+        self.assertEqual(self.r["aboveOpen"],
+                         {"pos": {"x": 5, "y": 2}, "orbs": 0, "open": True})
+
+    def test_open_gate_is_passable_and_tile_remains(self):
+        self.assertEqual(self.r["onGate"]["pos"], {"x": 5, "y": 3})
+        self.assertTrue(self.r["onGate"]["open"])
+        self.assertEqual(self.r["onGate"]["gateTile"], "G")
+        self.assertEqual(self.r["pastGate"], {"x": 5, "y": 4})
+        self.assertEqual(self.r["backThrough"], {"x": 5, "y": 2},
+                         "open gate must be passable both ways")
+
+    def test_portal_still_blocks_in_this_feature(self):
+        self.assertEqual(self.r["atPortal"]["pos"], {"x": 5, "y": 4})
+        self.assertEqual(self.r["atPortal"]["tile"], "X")
+
+    def test_recorded_log_replays_to_same_end_state(self):
+        self.assertEqual(self.r["liveDigest"], self.r["replayDigest"])
+        self.assertEqual(self.r["replayPos"], {"x": 5, "y": 2})
+        self.assertTrue(self.r["replayOpen"])
+
+    def test_game_renders_open_gate_from_state(self):
+        js = (ROOT / "tools" / "static" / "game.js").read_text(encoding="utf-8")
+        self.assertIn("ch === 'G'", js)
+        self.assertIn("gate_open", js)
+
+
 if __name__ == "__main__":
     unittest.main()

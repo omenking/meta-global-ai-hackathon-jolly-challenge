@@ -175,7 +175,7 @@
       const ch = rows[gy][gx];
       const e = legend[ch];
       if (!e) { fallbackTile(gx, gy, ch); continue; }
-      const isDynamic = !!(e.key_color || e.lock_color) || ch === '*' || ch === 'O';
+      const isDynamic = !!(e.key_color || e.lock_color) || ch === '*' || ch === 'O' || ch === 'G';
       if (e.base) {
         if (!drawSprite(e.base, gx, gy)) { fallbackTile(gx, gy, ch); continue; }
       } else if (e.lock_color) {
@@ -396,7 +396,11 @@
     const statusEl = document.getElementById('dbg-status');
     if (statusEl) statusEl.textContent = state.status || 'playing';
     for (const dt of dynamicTiles) {
-      dt.sprite.visible = !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
+      // The gate tile stays 'G' when open: its sprite shows only
+      // while shut, revealing the floor base underneath.
+      dt.sprite.visible = dt.ch === 'G'
+        ? !state.gate_open
+        : !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
     }
     retryGroup.visible = state.status === 'lost';
     hudValues.orbs = window.GameHud.orbsLeft(state);

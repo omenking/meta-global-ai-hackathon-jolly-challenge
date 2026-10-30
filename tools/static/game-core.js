@@ -104,9 +104,13 @@
         grid: setTile(state.grid, nx, ny, '.'),
         inventory: stay.inventory, orbs_left: stay.orbs_left - 1 };
     }
-    if (ch === 'G' && stay.orbs_left > 0) {
-      // Shut gate: blocks like a wall while orbs remain.
-      return stay;
+    if (ch === 'G') {
+      // Shut gate blocks like a wall while orbs remain; at zero it
+      // is passable and the tile stays 'G' (open is state, not a
+      // new tile), so replays reproduce it exactly.
+      if (stay.orbs_left > 0) return stay;
+      return { player: { x: nx, y: ny }, grid: state.grid,
+        inventory: stay.inventory, orbs_left: stay.orbs_left };
     }
     const keyColor = (state.key_tiles || {})[ch];
     if (keyColor) {
