@@ -198,6 +198,18 @@
     document.getElementById('dbg-digest').textContent =
       window.GameCore.stateDigest(state);
     document.getElementById('dbg-state').textContent = JSON.stringify(state);
+    const statusEl = document.getElementById('dbg-status');
+    if (statusEl) statusEl.textContent = state.status || 'playing';
+    const msgEl = document.getElementById('game-message');
+    if (msgEl) {
+      if (state.status === 'lost') {
+        msgEl.style.display = 'block';
+        msgEl.textContent = "Time's up — you lost. Press R or Restart to try again.";
+      } else {
+        msgEl.style.display = 'none';
+        msgEl.textContent = '';
+      }
+    }
     drawHud(state.elapsed_s, state.time_limit_s);
   }
   renderState();
@@ -286,6 +298,15 @@
       String(state.last_input) + ' @ t_ms ' + state.t_ms;
     renderState();
     flushSession(false);
+    if (state.status === 'lost') endSession('lost');
+  }
+  // Idle expiry: when the live clock reaches the limit, record the
+  // loss as a step at exactly the limit so replay loses at the same
+  // recorded moment — never from an unrecorded wall-clock read alone.
+  function expireNow() {
+    if (state.status === 'lost' || state.time_limit_s === null ||
+        state.time_limit_s === undefined) return;
+    applyStep({ t_ms: Math.round(state.time_limit_s * 1000), input: 'timeout' });
   }
 
   // Keyboard: WASD/arrows register an input, advance the pure step
@@ -308,6 +329,11 @@
       drawHud(elapsed, state.time_limit_s);
       const dbg = document.getElementById('dbg-timer');
       if (dbg) dbg.textContent = elapsed.toFixed(1) + 's (live clock)';
+      if (sessionStartTs !== null && state.status !== 'lost' &&
+          state.time_limit_s !== null && state.time_limit_s !== undefined &&
+          elapsed >= state.time_limit_s) {
+        expireNow();
+      }
     }
     requestAnimationFrame(clockLoop);
   })();
@@ -321,6 +347,7 @@
       else if (ev.key === 'End') { ev.preventDefault(); showReplay(1e9); }
       return;
     }
+    if (state.status === 'lost') return;
     const input = window.GameCore.inputForKey(ev.key);
     if (!input) return;
     ev.preventDefault();

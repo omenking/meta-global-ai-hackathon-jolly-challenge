@@ -75,5 +75,73 @@ class CountdownTests(unittest.TestCase):
         self.assertIn("drawHud", js)
 
 
+LOSE_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+const s0 = core.initialState(level, 'timer-room');
+const before = core.step(s0, { t_ms: 4999, input: 'right' });
+const atZero = core.step(before, { t_ms: 5000, input: 'timeout' });
+const after = core.step(atZero, { t_ms: 6000, input: 'right' });
+const moveAtExpiry = core.step(s0, { t_ms: 5000, input: 'right' });
+const log = [
+  { t_ms: 1000, input: 'right' },
+  { t_ms: 5000, input: 'timeout' },
+];
+const replayed = core.replay(level, 'timer-room', log);
+const live = core.replay(level, 'timer-room', log);
+console.log(JSON.stringify({
+  startStatus: s0.status, beforeStatus: before.status,
+  beforePos: before.player, atZeroStatus: atZero.status,
+  atZeroLeft: atZero.time_left_s, atZeroPos: atZero.player,
+  afterStatus: after.status, afterPos: after.player,
+  moveAtExpiryPos: moveAtExpiry.player, startPos: s0.player,
+  replayStatus: replayed[replayed.length - 1].status,
+  replayDigest: core.stateDigest(replayed[replayed.length - 1]),
+  liveDigest: core.stateDigest(live[live.length - 1]),
+  replaySteps: replayed.map((s) => [s.t_ms, s.status]),
+  isLost: core.isLost(atZero), readoutStatus: core.readout(atZero).status,
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class LoseAtZeroTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.result = run_core(LOSE_SCRIPT)
+
+    def test_expiry_at_limit_loses_with_no_time_left(self):
+        self.assertEqual(self.result["startStatus"], "playing")
+        self.assertEqual(self.result["beforeStatus"], "playing")
+        self.assertEqual(self.result["atZeroStatus"], "lost")
+        self.assertEqual(self.result["atZeroLeft"], 0)
+        self.assertTrue(self.result["isLost"])
+        self.assertEqual(self.result["readoutStatus"], "lost")
+
+    def test_no_movement_on_or_after_expiry(self):
+        self.assertEqual(self.result["moveAtExpiryPos"],
+                         self.result["startPos"])
+        self.assertEqual(self.result["afterStatus"], "lost")
+        self.assertEqual(self.result["afterPos"], self.result["atZeroPos"])
+
+    def test_timeout_loss_replays_as_loss_at_same_moment(self):
+        self.assertEqual(self.result["replayStatus"], "lost")
+        self.assertEqual(self.result["replaySteps"],
+                         [[0, "playing"], [1000, "playing"], [5000, "lost"]])
+        self.assertEqual(self.result["replayDigest"],
+                         self.result["liveDigest"])
+
+    def test_game_page_shows_loss_message_and_ends_session_lost(self):
+        html = (ROOT / "tools" / "static" / "game.html").read_text(
+            encoding="utf-8")
+        js = (ROOT / "tools" / "static" / "game.js").read_text(
+            encoding="utf-8")
+        self.assertIn('id="game-message"', html)
+        self.assertIn("Time's up", js)
+        self.assertIn("endSession('lost')", js)
+        self.assertIn("input: 'timeout'", js)
+        self.assertIn('id="dbg-status"', html)
+
+
 if __name__ == "__main__":
     unittest.main()
