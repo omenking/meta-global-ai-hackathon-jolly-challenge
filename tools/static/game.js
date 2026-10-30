@@ -5,6 +5,8 @@
   'use strict';
   const errorBox = document.getElementById('error');
   function fail(msg) {
+    // Never leave an error page hidden under the wipe cover.
+    document.documentElement.classList.remove('wipe-in');
     errorBox.style.display = 'block';
     errorBox.textContent = msg;
     document.getElementById('subtitle').textContent = 'failed to load';
@@ -17,19 +19,17 @@
   const levelName = (params.get('level') || 'test-room').replace(/[^a-zA-Z0-9_-]/g, '');
 
   // Wipe transition (view only): arriving via a warp starts fully
-  // covered, snapped on without animation, then revealWipe() slides
-  // the cover away once this level is ready. Plain loads never cover.
+  // covered from first paint (html.wipe-in, set by the inline head
+  // script in game.html), then revealWipe() slides the cover away
+  // once this level is ready. Plain loads never cover.
   const wipeEl = document.getElementById('wipe');
   const wipeIncoming = params.get('wipe') === '1';
-  if (wipeIncoming) {
-    wipeEl.style.transition = 'none';
-    wipeEl.classList.add('cover');
-  }
   function revealWipe() {
     if (!wipeIncoming) return;
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      wipeEl.style.transition = '';
-      wipeEl.classList.remove('cover');
+      // Removing the flag re-enables the CSS transition; the
+      // reveal class then carries the cover off the far edge.
+      document.documentElement.classList.remove('wipe-in');
       wipeEl.classList.add('reveal');
       setTimeout(() => {
         wipeEl.style.transition = 'none';
@@ -881,7 +881,8 @@
     isRetryBarVisible: () => retryGroup.visible,
     isWinScreenVisible: () => winGroup.visible,
     isSummaryVisible: () => summaryEl.classList.contains('open'),
-    isWipeCovering: () => wipeEl.classList.contains('cover'),
+    isWipeCovering: () => wipeEl.classList.contains('cover') ||
+      document.documentElement.classList.contains('wipe-in'),
     getWipeTransform: () => getComputedStyle(wipeEl).transform,
     getSummary: () => ({
       level: document.getElementById('summary-level').textContent,

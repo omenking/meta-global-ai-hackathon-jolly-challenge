@@ -368,6 +368,17 @@ class WipeTransitionTests(unittest.TestCase):
         self.assertIn("revealWipe()", self.js)
         self.assertIn("isWipeCovering", self.js)
 
+    def test_incoming_wipe_covers_from_first_paint(self):
+        # The cover must be on before body paint: an inline head
+        # script flags the document, CSS holds the wipe covered
+        # with no transition, and reveal removes the flag. Without
+        # this the incoming page flashes white before game.js runs.
+        head = self.html.split("</head>")[0]
+        self.assertIn("documentElement.classList.add('wipe-in')", head)
+        self.assertIn("location.search", head)
+        self.assertIn("html.wipe-in #wipe", self.html)
+        self.assertIn("classList.remove('wipe-in')", self.js)
+
 
 if __name__ == "__main__":
     unittest.main()

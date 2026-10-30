@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Game</title>
 <link rel="icon" href="data:,">
+<script>
+  // Flag an incoming wipe before first paint, so the cover below
+  // is already on screen when the page paints (no white flash).
+  if (new URLSearchParams(location.search).get('wipe') === '1') {
+    document.documentElement.classList.add('wipe-in');
+  }
+</script>
 <style>
   body { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
          margin: 0; color: #1c1c1c; background: #f4f4f4; font-size: 14px; }
@@ -47,6 +54,9 @@
            transition: transform 450ms ease-in-out; }
   #wipe.cover { transform: translateX(0); pointer-events: auto; }
   #wipe.reveal { transform: translateX(102%); }
+  html.wipe-in { background: #111; }
+  html.wipe-in #wipe { transform: translateX(0); transition: none;
+           pointer-events: auto; }
   @media (prefers-reduced-motion: reduce) {
     #wipe { transition: none; }
   }
