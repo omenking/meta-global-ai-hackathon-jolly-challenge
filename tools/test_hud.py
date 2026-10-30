@@ -62,6 +62,33 @@ class TimerDigitsTests(unittest.TestCase):
         self.assertEqual(self.r["after61"], 59)
 
 
+ORBS_SCRIPT = r"""
+const hud = require(process.argv[1]);
+const core = require(process.argv[2]);
+const level = { rows: ['#####', '#P*.#', '#.*O#', '#####'], time_limit: 60 };
+const s0 = core.initialState(level, 'chip1');
+console.log(JSON.stringify({
+  hud: hud.orbsLeft(s0), core: core.readout(s0).orbs_left,
+  empty: hud.orbsLeft(core.initialState({ rows: ['#P#'] }, 'x')),
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class OrbsTests(unittest.TestCase):
+    def test_orbs_left_matches_core_readout(self):
+        r = run_hud(ORBS_SCRIPT)
+        self.assertEqual(r["hud"], 3)
+        self.assertEqual(r["hud"], r["core"])
+        self.assertEqual(r["empty"], 0)
+
+    def test_game_wires_orbs_readout_from_state(self):
+        js = GAME_JS.read_text(encoding="utf-8")
+        self.assertIn("makeReadout('orbs')", js)
+        self.assertIn("GameHud.orbsLeft(state)", js)
+        self.assertIn("orbsReadout.set", js)
+
+
 class GuiSpriteTests(unittest.TestCase):
     def test_prep_derives_gui_sprites_from_published_gui(self):
         prep = (ROOT / "tools" / "prep_level_sprites.sh").read_text(

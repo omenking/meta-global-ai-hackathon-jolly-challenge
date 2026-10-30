@@ -26,7 +26,17 @@
     return Math.floor(Math.max(0, state.time_left_s));
   }
 
-  const api = { digitsFor, timerSeconds };
+  // Orbs left, counted from the state grid exactly as
+  // GameCore.readout reports it ('*' or 'O' tiles not yet collected).
+  function orbsLeft(state) {
+    let n = 0;
+    for (const row of (state && state.grid) || []) {
+      for (const ch of row) if (ch === '*' || ch === 'O') n++;
+    }
+    return n;
+  }
+
+  const api = { digitsFor, timerSeconds, orbsLeft };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameHud = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -216,6 +216,10 @@
     hudColumn.addChild(group);
     hudSections.push({ group: group, height: height });
   }
+  function insertHudSection(group, height, index) {
+    hudColumn.addChild(group);
+    hudSections.splice(index, 0, { group: group, height: height });
+  }
   function makeReadout(labelName) {
     const group = new PIXI.Container();
     const labelTex = guiTextures.labels[labelName];
@@ -267,6 +271,8 @@
   const timeReadout = makeReadout('time');
   const hudTimer = timeReadout.text;
   addHudSection(timeReadout.group, timeReadout.height);
+  const orbsReadout = makeReadout('orbs');
+  insertHudSection(orbsReadout.group, orbsReadout.height, 1);
   const retryGroup = new PIXI.Container();
   retryGroup.visible = false;
   const retryMsg = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
@@ -340,6 +346,8 @@
     const statusEl = document.getElementById('dbg-status');
     if (statusEl) statusEl.textContent = state.status || 'playing';
     retryGroup.visible = state.status === 'lost';
+    hudValues.orbs = window.GameHud.orbsLeft(state);
+    orbsReadout.set(hudValues.orbs);
     drawHud(state.elapsed_s, state.time_limit_s);
   }
   renderState();
