@@ -151,8 +151,12 @@ class CollisionTests(unittest.TestCase):
 class SpriteFollowsStateTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.js = (ROOT / "tools" / "static" / "game.js").read_text(
+        # Board construction moved to view/board.js in Phase 5b;
+        # assertions follow the code, intent unchanged.
+        cls.js = ((ROOT / "tools" / "static" / "game.js").read_text(
             encoding="utf-8")
+            + (ROOT / "tools" / "static" / "view" / "board.js").read_text(
+                encoding="utf-8"))
 
     def test_player_sprite_repositioned_from_state(self):
         self.assertIn("textures['jolly.png']", self.js)
@@ -162,7 +166,9 @@ class SpriteFollowsStateTests(unittest.TestCase):
 
     def test_start_tile_not_drawn_as_static_sprite(self):
         # The static board must not leave a second Jolly at the start.
-        self.assertIn("e.sprite && ch !== 'P'", self.js)
+        # Board resolves sprites via pack defs (spriteName) since the
+        # pack-assets change; assertion follows the code.
+        self.assertIn("spriteName && ch !== 'P'", self.js)
 
 
 @unittest.skipUnless(shutil.which("node"), "node not available")

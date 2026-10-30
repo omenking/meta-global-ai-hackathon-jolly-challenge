@@ -122,7 +122,10 @@ class OrbPickupTests(unittest.TestCase):
         self.assertEqual(self.r["freshTile"], "*")
 
     def test_game_renders_orbs_from_state(self):
-        js = (ROOT / "tools" / "static" / "game.js").read_text(encoding="utf-8")
+        # Board construction moved to view/board.js in the Phase 5b
+        # split; the assertion follows the code, intent unchanged.
+        js = ((ROOT / "tools" / "static" / "game.js").read_text(encoding="utf-8")
+              + (ROOT / "tools" / "static" / "view" / "board.js").read_text(encoding="utf-8"))
         self.assertIn("dynamicTiles", js)
         self.assertIn("ch === '*'", js)
 

@@ -1,0 +1,23 @@
+{
+  "name": "water-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "water-pack Test Level: flipper pickup, water strip that kills without it, orb and warp beyond",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"label": "warp", "sprite": "portal.png"},
+    "~": {"base": "floor_default.png", "label": "water", "def": "water:water"},
+    "F": {"base": "floor_default.png", "label": "flippers", "def": "water:flipper"}
+  },
+  "rows": [
+    "###########",
+    "#P..F.~.*X#",
+    "#.....~...#",
+    "#.....~...#",
+    "###########"
+  ]
+}

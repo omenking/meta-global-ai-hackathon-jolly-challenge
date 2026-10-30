@@ -103,9 +103,11 @@
     if (e.sprite) spriteNames.add(e.sprite);
   }
   spriteNames.add('jolly-fall.png');
-  // Key icons for the HUD inventory slots, whatever the level legend.
-  for (const c of ['red', 'gold', 'green', 'blue', 'silver']) spriteNames.add('key_' + c + '.png');
-  spriteNames.add('key.png');
+  // Pack-carried assets: loaded packs declare the sprite/icon names
+  // they need (keys, locks, items); no hardcoded colour list here.
+  if (window.GameCore.assetsForLevel) {
+    for (const name of window.GameCore.assetsForLevel(level)) spriteNames.add(name);
+  }
   const textures = {};
   const missing = new Set();
   await Promise.all([...spriteNames].map(async (name) => {
@@ -143,10 +145,14 @@
   // HUD_H is the column's design height; it scales to fit the canvas.
   const HUD_W = 184;
   const HUD_H = 668;
+  // Camera viewport (renderer-only): at most VIEW tiles are shown;
+  // levels up to 64x64 scroll, smaller levels render whole as before.
+  const VIEW = window.GameCamera
+    ? window.GameCamera.viewSize(COLS, ROWS) : { w: COLS, h: ROWS };
   const app = new PIXI.Application();
   await app.init({ width: embed ? window.innerWidth
-      : COLS * TILE + HUD_W * Math.min(1, (ROWS * TILE) / HUD_H),
-    height: embed ? window.innerHeight : ROWS * TILE, background: '#111' });
+      : VIEW.w * TILE + HUD_W * Math.min(1, (VIEW.h * TILE) / HUD_H),
+    height: embed ? window.innerHeight : VIEW.h * TILE, background: '#111' });
   document.getElementById('stage').appendChild(app.canvas);
   const scale = TILE / 512;
   const board = new PIXI.Container();
@@ -157,71 +163,45 @@
   // scale to fit the area left of the HUD column and centre there
   // (letterbox), refitting on resize. The canvas is never
   // CSS-stretched to the container.
+  let camPos = { x: 0, y: 0 };
+  function computeCam(player) {
+    if (!window.GameCamera || !player) return camPos;
+    camPos = window.GameCamera.compute({ cols: COLS, rows: ROWS,
+      viewW: VIEW.w, viewH: VIEW.h, player: player });
+    return camPos;
+  }
   function fitBoard() {
-    if (!embed) return;
+    if (!embed) { updateBoardTransform(); return; }
     app.renderer.resize(window.innerWidth, window.innerHeight);
     if (hudReady) layoutHud();
     const availW = Math.max(1, window.innerWidth - HUD_W * hudScale);
     const availH = Math.max(1, window.innerHeight);
-    const fit = Math.min(availW / (COLS * TILE), availH / (ROWS * TILE));
+    const fit = Math.min(availW / (VIEW.w * TILE), availH / (VIEW.h * TILE));
     board.scale.set(fit);
-    board.position.set((availW - COLS * TILE * fit) / 2,
-      (availH - ROWS * TILE * fit) / 2);
+    board.position.set((availW - VIEW.w * TILE * fit) / 2 - camPos.x * TILE * fit,
+      (availH - VIEW.h * TILE * fit) / 2 - camPos.y * TILE * fit);
+  }
+  function updateBoardTransform() {
+    // Non-embed: board at native tile size, offset by the camera.
+    if (embed) { fitBoard(); return; }
+    board.position.set(-camPos.x * TILE, -camPos.y * TILE);
   }
   fitBoard();
   if (embed) window.addEventListener('resize', fitBoard);
 
-  function fallbackTile(gx, gy, ch) {
-    const g = new PIXI.Graphics();
-    g.rect(gx * TILE, gy * TILE, TILE, TILE).fill(0xff00ff);
-    const t = new PIXI.Text({
-      text: ch, style: { fontSize: 28, fill: 0x000000, fontWeight: 'bold' } });
-    t.anchor.set(0.5);
-    t.position.set(gx * TILE + TILE / 2, gy * TILE + TILE / 2);
-    board.addChild(g, t);
-  }
-  function drawSprite(name, gx, gy) {
-    const tex = textures[name];
-    if (!tex) return false;
-    const s = new PIXI.Sprite(tex);
-    s.scale.set(scale);
-    s.position.set(gx * TILE, gy * TILE);
-    board.addChild(s);
-    return s;
-  }
-
-  // Key/lock/orb tiles are dynamic: their sprites follow state.grid
-  // (a picked key, dissolved lock or collected orb turns to floor).
-  const dynamicTiles = [];
-  for (let gy = 0; gy < ROWS; gy++) {
-    for (let gx = 0; gx < COLS; gx++) {
-      const ch = rows[gy][gx];
-      const e = legend[ch];
-      if (!e) { fallbackTile(gx, gy, ch); continue; }
-      const isDynamic = !!(e.key_color || e.lock_color) || ch === '*' || ch === 'O' || ch === 'G';
-      if (e.base) {
-        if (!drawSprite(e.base, gx, gy)) { fallbackTile(gx, gy, ch); continue; }
-      } else if (e.lock_color) {
-        // Floor under a lock, revealed when it dissolves.
-        drawSprite('floor_default.png', gx, gy);
-      }
-      if (e.sprite && ch !== 'P') {
-        const spr = drawSprite(e.sprite, gx, gy);
-        if (spr === false) fallbackTile(gx, gy, ch);
-        else if (isDynamic && spr) dynamicTiles.push({ x: gx, y: gy, ch: ch, sprite: spr });
-      } else if (e.text) {
-        const t = new PIXI.Text({
-          text: e.text,
-          style: { fontSize: 40, fill: 0xffd21f, fontWeight: 'bold',
-                   stroke: { color: 0x111111, width: 5 } } });
-        t.anchor.set(0.5);
-        t.position.set(gx * TILE + TILE / 2, gy * TILE + TILE / 2);
-        board.addChild(t);
-      } else if (!e.base) {
-        fallbackTile(gx, gy, ch);
-      }
-    }
-  }
+  // Static board + dynamicTiles tracking live in view/board.js.
+  // Tile defs (carrying pack sprites/glyphs) resolve via GameCore.
+  const defMap = window.GameCore.levelDefMap
+    ? window.GameCore.levelDefMap(level) : {};
+  const dynamicTiles = window.GameBoardView.createBoardView({
+    PIXI: PIXI, board: board, textures: textures, rows: rows,
+    legend: legend, TILE: TILE, scale: scale, COLS: COLS, ROWS: ROWS,
+    getDef: function (ch) {
+      const id = defMap[ch];
+      return id && window.GameCore.getTileDef
+        ? window.GameCore.getTileDef(id) : null;
+    },
+  }).dynamicTiles;
 
   // Deterministic core: state comes from GameCore only; the board
   // above is a view of the level (floor under the start tile), and
@@ -426,6 +406,8 @@
     hudTimer.text = String(hudValues.timer).padStart(3, '0');
   }
   function renderState() {
+    computeCam(state.player);
+    updateBoardTransform();
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
         state.player.y * TILE);
