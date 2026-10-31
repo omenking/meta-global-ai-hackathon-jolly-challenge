@@ -19,7 +19,18 @@
     const y = (opts.availH - opts.viewH * tilePx) / 2 - (opts.camY || 0) * tilePx;
     return { scaleX: 1, scaleY: 1, tilePx: tilePx, x: x, y: y };
   }
-  const api = { WORLD_TILE_PX: WORLD_TILE_PX, boardTransform: boardTransform };
+  // The view the camera may frame in embed: only tiles that fully
+  // fit the available area at WORLD_TILE_PX, capped by the level and
+  // by the camera's MAX view. Framing more than fits puts the player
+  // in the cropped part of the view at the level's edges.
+  function visibleView(opts) {
+    const fitW = Math.max(1, Math.floor(opts.availW / WORLD_TILE_PX));
+    const fitH = Math.max(1, Math.floor(opts.availH / WORLD_TILE_PX));
+    return { w: Math.min(opts.cols, opts.maxW, fitW),
+             h: Math.min(opts.rows, opts.maxH, fitH) };
+  }
+  const api = { WORLD_TILE_PX: WORLD_TILE_PX, boardTransform: boardTransform,
+    visibleView: visibleView };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameWorldScale = api;
 })(typeof window !== 'undefined' ? window : globalThis);

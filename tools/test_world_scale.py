@@ -20,8 +20,9 @@ GAME_HTML = ROOT / "tools" / "static" / "game.html"
 
 SCRIPT = r"""
 const ws = require(process.argv[1]);
+const cam = require(process.argv[2]);
 const sizes = [[7,6],[11,7],[17,16],[32,24],[64,64]];
-const out = { tile: ws.WORLD_TILE_PX, levels: [] };
+const out = { tile: ws.WORLD_TILE_PX, levels: [], framed: [] };
 for (const [cols, rows] of sizes) {
   const view = { w: Math.min(cols, 17), h: Math.min(rows, 16) };
   const atRest = ws.boardTransform({ availW: 1280, availH: 800,
@@ -29,6 +30,21 @@ for (const [cols, rows] of sizes) {
   const scrolled = ws.boardTransform({ availW: 1280, availH: 800,
     viewW: view.w, viewH: view.h, camX: 5, camY: 3 });
   out.levels.push({ cols, rows, rest: atRest, scrolled });
+}
+// Player must be fully on screen for every position in a 32x24 level,
+// at any window size, when the camera frames the visible view.
+for (const [availW, availH] of [[1096,800],[900,600],[700,500],[1400,1000]]) {
+  const view = ws.visibleView({ availW, availH, cols: 32, rows: 24, maxW: 17, maxH: 16 });
+  let worst = null;
+  for (let y = 0; y < 24 && !worst; y++) for (let x = 0; x < 32; x++) {
+    const c = cam.compute({ cols: 32, rows: 24, viewW: view.w, viewH: view.h, player: { x, y } });
+    const t = ws.boardTransform({ availW, availH, viewW: view.w, viewH: view.h, camX: c.x, camY: c.y });
+    const px = t.x + x * t.tilePx, py = t.y + y * t.tilePx;
+    if (px < 0 || py < 0 || px + t.tilePx > availW || py + t.tilePx > availH) {
+      worst = { x, y, px, py }; break;
+    }
+  }
+  out.framed.push({ availW, availH, view, worst });
 }
 console.log(JSON.stringify(out));
 """
@@ -38,7 +54,8 @@ console.log(JSON.stringify(out));
 class WorldScaleTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        out = subprocess.run(["node", "-e", SCRIPT, str(SCALE_JS)],
+        out = subprocess.run(["node", "-e", SCRIPT, str(SCALE_JS),
+                              str(ROOT / "tools/static/engine/camera.js")],
                              capture_output=True, text=True, check=True)
         cls.data = json.loads(out.stdout.strip().splitlines()[-1])
 
@@ -57,6 +74,15 @@ class WorldScaleTests(unittest.TestCase):
             # Scrolling only translates the board, by whole tiles.
             self.assertEqual(lvl["rest"]["x"] - lvl["scrolled"]["x"], 5 * 64)
             self.assertEqual(lvl["rest"]["y"] - lvl["scrolled"]["y"], 3 * 64)
+
+    def test_player_always_fully_in_frame(self):
+        for framed in self.data["framed"]:
+            self.assertIsNone(framed["worst"], framed)
+            # Visible view never exceeds what fits at 64px, nor MAX view.
+            self.assertLessEqual(framed["view"]["w"] * 64, framed["availW"])
+            self.assertLessEqual(framed["view"]["h"] * 64, framed["availH"])
+            self.assertLessEqual(framed["view"]["w"], 17)
+            self.assertLessEqual(framed["view"]["h"], 16)
 
     def test_small_levels_letterbox_not_zoom(self):
         small = self.data["levels"][0]  # 7x6 movement-room

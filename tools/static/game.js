@@ -166,10 +166,22 @@
   // the area left of the HUD column (letterbox), refitting on resize.
   // The canvas is never CSS-stretched to the container.
   let camPos = { x: 0, y: 0 };
+  // In embed the camera frames only the tiles that fully fit the
+  // window at the fixed scale (visibleView); framing the full MAX
+  // view would crop its edges — and the player in them — off screen.
+  // Non-embed canvas is sized to VIEW, so VIEW fits exactly there.
+  function effectiveView() {
+    if (!embed || !window.GameWorldScale) return VIEW;
+    return window.GameWorldScale.visibleView({
+      availW: Math.max(1, window.innerWidth - HUD_W * hudScale),
+      availH: Math.max(1, window.innerHeight),
+      cols: COLS, rows: ROWS, maxW: VIEW.w, maxH: VIEW.h });
+  }
   function computeCam(player) {
     if (!window.GameCamera || !player) return camPos;
+    const view = effectiveView();
     camPos = window.GameCamera.compute({ cols: COLS, rows: ROWS,
-      viewW: VIEW.w, viewH: VIEW.h, player: player });
+      viewW: view.w, viewH: view.h, player: player });
     return camPos;
   }
   function fitBoard() {
@@ -181,8 +193,9 @@
     // is untouched); it never sets the board scale.
     const availW = Math.max(1, window.innerWidth - HUD_W * hudScale);
     const availH = Math.max(1, window.innerHeight);
+    const view = effectiveView();
     const t = window.GameWorldScale.boardTransform({
-      availW: availW, availH: availH, viewW: VIEW.w, viewH: VIEW.h,
+      availW: availW, availH: availH, viewW: view.w, viewH: view.h,
       camX: camPos.x, camY: camPos.y });
     board.scale.set(t.scaleX, t.scaleY);
     board.position.set(t.x, t.y);
