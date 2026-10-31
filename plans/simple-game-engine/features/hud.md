@@ -6,7 +6,7 @@ priority: medium
 requires:
   - ./game-shell.md
 unblocks:
-  []
+  - ./fixed-world-scale.md
 ---
 
 # Feature: HUD: timer, orbs, level and inventory

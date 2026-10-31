@@ -97,6 +97,7 @@ function Shell({ route, dark, onToggleDark, children }) {
           <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/assets">Asset Design</a>
           <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/static/level-preview.html">Level Preview</a>
           <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/game">Game</a>
+          <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/worktrees">Worktrees</a>
           <span className="flex-1" />
           <Button size="md" variant="outline" onPress={onToggleDark}>{dark ? 'Light' : 'Dark'}</Button>
         </div>
@@ -131,6 +132,8 @@ function Home() {
           desc="Iterate on generated tile art: versions, lottery runs, sessions, and judging." />
         <ToolCard href="/static/level-preview.html" title="Level Preview"
           desc="Render a level layout (rows plus legend) with its sprites. Add ?level=chip1 to pick a level." />
+        <ToolCard href="/worktrees" title="Worktrees & Servers"
+          desc="See every worktree and running server, click through to one, or stop a stale server left over from a prior run." />
         <ToolCard to="/pm/features/game-shell" title="Game shell — not built yet"
           desc="The playable game is the game-shell feature on the board. Until it lands, use Level Preview to look at levels." />
       </div>

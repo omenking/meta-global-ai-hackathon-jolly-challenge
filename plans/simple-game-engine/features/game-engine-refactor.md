@@ -6,7 +6,7 @@ priority: high
 requires:
   []
 unblocks:
-  []
+  - ./fixed-world-scale.md
 ---
 
 # Feature: Game engine refactor: kernel + packs

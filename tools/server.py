@@ -47,6 +47,9 @@ import game_sessions
 from game_sessions import SessionError
 import game_levels
 from game_levels import LevelError
+import os
+
+import worktree_mgr
 
 GEN_SCRIPT = ROOT / "scripts" / "gen-image"
 OUTPUTS_DIR = ROOT / "assets" / "outputs"
@@ -833,6 +836,11 @@ class Handler(BaseHTTPRequestHandler):
                 if record is None:
                     return _send(self, 404, {"error": "run not found"})
                 return _send(self, 200, record)
+            if parts == ["worktrees"]:
+                return self._serve_file(STATIC_DIR / "worktrees.html")
+            if parts == ["api", "worktrees"]:
+                return _send(self, 200, worktree_mgr.collect(
+                    ROOT, os.getpid(), self.server.server_address[1]))
             if parts == ["api", "game", "levels"]:
                 return _send(self, 200,
                              {"levels": game_levels.list_levels(ROOT / "levels")})
@@ -897,6 +905,31 @@ class Handler(BaseHTTPRequestHandler):
         parts = [p for p in parsed.path.split("/") if p]
         try:
             body = _read_json(self)
+            if parts == ["api", "worktrees", "label"]:
+                try:
+                    labels = worktree_mgr.set_label(
+                        ROOT, body.get("kind", ""), body.get("key", ""),
+                        body.get("label", ""))
+                except ValueError as exc:
+                    return _send(self, 400, {"error": str(exc)})
+                return _send(self, 200, {"labels": labels})
+            if parts == ["api", "worktrees", "stop"]:
+                try:
+                    result = worktree_mgr.stop_server(body.get("pid"), os.getpid())
+                except (ValueError, TypeError) as exc:
+                    return _send(self, 400, {"error": str(exc)})
+                return _send(self, 200, result)
+            if parts == ["api", "worktrees", "stop-stale"]:
+                data = worktree_mgr.collect(ROOT, os.getpid(),
+                                            self.server.server_address[1])
+                stopped, errors = [], []
+                for srv in data["servers"]:
+                    if srv["stale"] and not srv["is_self"]:
+                        try:
+                            stopped.append(worktree_mgr.stop_server(srv["pid"], os.getpid()))
+                        except ValueError as exc:
+                            errors.append(f"pid {srv['pid']}: {exc}")
+                return _send(self, 200, {"stopped": stopped, "errors": errors})
             if parts == ["api", "game", "sessions"]:
                 path = game_sessions.write_session(
                     pm_store.SESSIONS_ROOT, body.get("id", ""),
