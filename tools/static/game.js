@@ -82,7 +82,10 @@
       '. Run tools/prep_level_sprites.sh first.');
     return;
   }
-  const rows = level.rows, legend = level.legend, TILE = level.tile || 64;
+  // Renderer-owned world scale: a level's own tile value never changes
+  // the on-screen tile size (fixed-world-scale; movement-room native).
+  const rows = level.rows, legend = level.legend,
+    TILE = window.GameWorldScale ? window.GameWorldScale.WORLD_TILE_PX : (level.tile || 64);
   let forkSeed = null;
   if (params.get('fork')) {
     try {
@@ -159,31 +162,49 @@
   app.stage.addChild(board);
   let hudReady = false;
   let hudScale = 1;
-  // Embed: keep the board's true aspect ratio at any window size —
-  // scale to fit the area left of the HUD column and centre there
-  // (letterbox), refitting on resize. The canvas is never
-  // CSS-stretched to the container.
+  // Embed: fixed world scale at any window size — centre the view in
+  // the area left of the HUD column (letterbox), refitting on resize.
+  // The canvas is never CSS-stretched to the container.
   let camPos = { x: 0, y: 0 };
+  // In embed the camera frames only the tiles that fully fit the
+  // window at the fixed scale (visibleView); framing the full MAX
+  // view would crop its edges — and the player in them — off screen.
+  // Non-embed canvas is sized to VIEW, so VIEW fits exactly there.
+  function effectiveView() {
+    if (!embed || !window.GameWorldScale) return VIEW;
+    return window.GameWorldScale.visibleView({
+      availW: Math.max(1, window.innerWidth - HUD_W * hudScale),
+      availH: Math.max(1, window.innerHeight),
+      cols: COLS, rows: ROWS, maxW: VIEW.w, maxH: VIEW.h });
+  }
   function computeCam(player) {
     if (!window.GameCamera || !player) return camPos;
+    const view = effectiveView();
     camPos = window.GameCamera.compute({ cols: COLS, rows: ROWS,
-      viewW: VIEW.w, viewH: VIEW.h, player: player });
+      viewW: view.w, viewH: view.h, player: player });
     return camPos;
   }
   function fitBoard() {
     if (!embed) { updateBoardTransform(); return; }
     app.renderer.resize(window.innerWidth, window.innerHeight);
     if (hudReady) layoutHud();
+    // Fixed world scale: tiles are WORLD_TILE_PX on screen in every
+    // level. The HUD only reserves its column width (its own sizing
+    // is untouched); it never sets the board scale.
     const availW = Math.max(1, window.innerWidth - HUD_W * hudScale);
     const availH = Math.max(1, window.innerHeight);
-    const fit = Math.min(availW / (VIEW.w * TILE), availH / (VIEW.h * TILE));
-    board.scale.set(fit);
-    board.position.set((availW - VIEW.w * TILE * fit) / 2 - camPos.x * TILE * fit,
-      (availH - VIEW.h * TILE * fit) / 2 - camPos.y * TILE * fit);
+    const view = effectiveView();
+    const t = window.GameWorldScale.boardTransform({
+      availW: availW, availH: availH, viewW: view.w, viewH: view.h,
+      camX: camPos.x, camY: camPos.y });
+    board.scale.set(t.scaleX, t.scaleY);
+    board.position.set(t.x, t.y);
   }
   function updateBoardTransform() {
-    // Non-embed: board at native tile size, offset by the camera.
+    // Non-embed: board at the same fixed tile size (canvas is sized
+    // in TILE units, TILE === WORLD_TILE_PX), offset by the camera.
     if (embed) { fitBoard(); return; }
+    board.scale.set(1, 1);
     board.position.set(-camPos.x * TILE, -camPos.y * TILE);
   }
   fitBoard();
