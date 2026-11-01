@@ -458,6 +458,7 @@
     document.getElementById('dbg-state').textContent = JSON.stringify(state);
     const statusEl = document.getElementById('dbg-status');
     if (statusEl) statusEl.textContent = state.status || 'playing';
+    renderState._dirtPos = null;
     for (const dt of dynamicTiles) {
       // The gate tile stays 'G' when open: its sprite shows only
       // while shut, revealing the floor base underneath. A crumbling
@@ -477,6 +478,26 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'D') {
+        // The dirt blocks move and are consumed into floor: their
+        // sprites follow the dirt:dirt-block cells in live state
+        // (assigned in row order; the art is identical, so which
+        // sprite follows which block does not matter) and a sprite
+        // hides once its block has been spent filling a tile.
+        if (!renderState._dirtPos) {
+          renderState._dirtPos = [];
+          for (let gy = 0; gy < state.height; gy++) {
+            for (let gx = 0; gx < state.width; gx++) {
+              if (state.objects[gy][gx] === 'dirt:dirt-block') {
+                renderState._dirtPos.push({ x: gx, y: gy });
+              }
+            }
+          }
+          renderState._dirtSeen = 0;
+        }
+        const dPos = renderState._dirtPos[renderState._dirtSeen++];
+        dt.sprite.visible = !!dPos;
+        if (dPos) dt.sprite.position.set(dPos.x * TILE, dPos.y * TILE);
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open

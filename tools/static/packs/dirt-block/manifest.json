@@ -1,0 +1,13 @@
+{
+  "pack": "dirt-block",
+  "main": "main.js",
+  "assets": [
+    {"file": "dirt-filled-floor.png", "kind": "tiles", "bundled": true,
+     "shows": "permanent floor left where a dirt block was consumed in void, water or lava"},
+    {"file": "dirt-block.png", "kind": "blocks", "bundled": true,
+     "shows": "intact dirt block on land before it is pushed into void, water or lava"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
