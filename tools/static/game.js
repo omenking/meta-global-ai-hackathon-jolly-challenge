@@ -477,6 +477,18 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'B') {
+        // The blocker shuffles inside its doorway strip: follow
+        // its live grid position instead of its placed cell.
+        let bx = -1, by = -1;
+        for (let gy = 0; gy < state.grid.length && by < 0; gy++) {
+          const gx = state.grid[gy].indexOf('B');
+          if (gx >= 0) { bx = gx; by = gy; }
+        }
+        dt.sprite.visible = bx >= 0;
+        if (bx >= 0 && dt.sprite.position) {
+          dt.sprite.position.set(bx * TILE, by * TILE);
+        }
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
