@@ -1,15 +1,15 @@
 // Pack: crumbling tile (mech-5-crumbling-tile sanity check).
 // A crumbling tile crumbles in stages, and the stage advances
-// when the player steps on it, never when they leave it: the first
-// step-on makes it minor, the second makes it major, and stepping
-// onto a major tile makes it fall under the player, so the attempt
-// is lost. That gives the player one backtrack: cross (minor),
-// come back (major), with the major state visible as the warning
-// that the next step-on is the fall. Void, the hole a fallen tile
-// leaves, is likewise a hazard on entry. Restart restores every
-// stage because a fresh initialState rebuilds the room. The stage
-// is a count in cell meta; all state advances through the pure
-// step function and no rule reads wall-clock time.
+// when the player leaves it, never when they step on it: leaving
+// an intact tile makes it minor, leaving a minor tile makes it
+// major, and leaving a major tile drops it to void behind the
+// player. Every stage is safe to stand on, so the player can
+// cross (minor behind), come back (major behind), and cross once
+// more (void behind), with no second return. Stepping into an
+// existing void is falling and loses the attempt. Restart
+// restores every stage because a fresh initialState rebuilds the
+// room. The stage is a count in cell meta; all state advances
+// through the pure step function and no rule reads wall-clock.
 // UMD: browser global GamePackCrumbling + Node export (register fn).
 (function (root) {
   'use strict';
@@ -22,12 +22,11 @@
     }
     api.defineTile('crumble:crumbling', { layer: 'object',
       sprite: 'crumbling.png', glyph: 'C',
-      onEnter: function (state, cell, actor, fx) {
+      onExit: function (state, cell, actor, fx) {
         const stage = (cell.meta && cell.meta.crumble_stage) || 0;
         if (stage >= 2) {
           fx.push({ type: 'setObject', x: cell.x, y: cell.y,
             def: 'crumble:void' });
-          fx.push({ type: 'lose' });
         } else {
           fx.push({ type: 'setMeta', x: cell.x, y: cell.y,
             key: 'crumble_stage', value: stage + 1 });

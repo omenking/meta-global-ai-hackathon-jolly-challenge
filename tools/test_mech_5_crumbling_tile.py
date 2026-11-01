@@ -2,9 +2,9 @@
 
 The mechanic lives in the pure GameCore step (packs/crumbling.js);
 driven here under Node against the teaching room. Rules: safe while
-stood on; stepping on it advances minor then major, stepping onto
-a major tile makes it fall and loses the attempt; restart (fresh
-state) restores every stage.
+stood on at every stage; leaving it advances minor then major,
+and leaving a major tile drops it to void behind the player;
+restart (fresh state) restores every stage.
 
 Run with: python -m unittest tools.test_mech_5_crumbling_tile -v
 """
@@ -93,8 +93,9 @@ const toBridge = ['right', 'right', 'right', 'down'];
 const a = run([...toBridge, 'right', 'right', 'right', 'right', 'up']);
 // B: stand on the middle bridge tile and push into the wall twice.
 const b = run([...toBridge, 'right', 'right', 'up', 'up', 'right']);
-// C: on and off the first bridge tile until its third step-on.
-const c = run([...toBridge, 'right', 'left', 'right', 'left', 'right']);
+// C: on and off the first bridge tile until it drops, then retry.
+const c = run([...toBridge, 'right', 'left', 'right', 'left',
+  'right', 'left', 'right']);
 // D: cross, take the far orb, fail back over the void, long way home.
 const d = run([...toBridge, 'right', 'right', 'right', 'right',
   'up', 'right', 'right', 'left', 'left', 'down',
@@ -127,33 +128,39 @@ class CrumblingMechanicTests(unittest.TestCase):
         self.assertEqual(self.r["a"][4]["pos"], {"x": 4, "y": 2})
         self.assertEqual(self.r["a"][4]["row"], "#....CCC....#")
 
-    def test_stage_advances_on_step_on_never_on_leaving(self):
+    def test_stage_advances_on_leaving_never_on_step_on(self):
         a = self.r["a"]
-        # Each first step-on makes its tile minor; leaving changes
-        # nothing, so the crossed bridge is all minor, none void.
-        self.assertEqual(a[6]["stages"], [1, 1, 0])
-        self.assertEqual(a[7]["stages"], [1, 1, 1])
+        # Standing on a tile shows its stage before any leaving: the
+        # tile behind has advanced, the stood-on tile has not.
+        self.assertEqual(a[6]["stages"], [1, 0, 0])
+        self.assertEqual(a[7]["stages"], [1, 1, 0])
         self.assertEqual(a[8]["pos"], {"x": 8, "y": 2})
         self.assertEqual(a[8]["row"], "#....CCC....#")
+        self.assertEqual(a[8]["stages"], [1, 1, 1])
         self.assertEqual(a[9]["stages"], [1, 1, 1])
 
     def test_safe_while_standing_on_it(self):
         b = self.r["b"]
-        # Two blocked pushes: no new step-on, so no stage advance,
-        # and the tile still carries the player onward.
+        # Two blocked pushes: no leaving, so no stage advance, and
+        # the tile still carries the player onward.
         self.assertEqual(b[8]["pos"], {"x": 6, "y": 2})
-        self.assertEqual(b[8]["stages"], [1, 1, 0])
+        self.assertEqual(b[8]["stages"], [1, 0, 0])
         self.assertEqual(b[9]["pos"], {"x": 7, "y": 2})
 
-    def test_third_step_on_falls_and_loses(self):
+    def test_leaving_a_major_tile_drops_it_behind_the_player(self):
         c = self.r["c"]
-        # Second step-on: major (stage 2), still safe to stand on.
+        # Second entry stands on minor (stage 1), still safe.
         self.assertEqual(c[7]["pos"], {"x": 5, "y": 2})
-        self.assertEqual(c[7]["stages"], [2, 0, 0])
+        self.assertEqual(c[7]["stages"], [1, 0, 0])
         self.assertEqual(c[7]["status"], "playing")
-        # Third step-on steps onto a major tile: fall and loss.
+        # Third entry stands on major (stage 2), also safe; leaving
+        # it drops it to void behind, and retrying the hole loses.
         self.assertEqual(c[9]["pos"], {"x": 5, "y": 2})
-        self.assertEqual(c[9]["status"], "lost")
+        self.assertEqual(c[9]["stages"], [2, 0, 0])
+        self.assertEqual(c[10]["pos"], {"x": 4, "y": 2})
+        self.assertEqual(c[10]["row"], "#....VCC....#")
+        self.assertEqual(c[11]["pos"], {"x": 5, "y": 2})
+        self.assertEqual(c[11]["status"], "lost")
 
     def test_long_way_home_avoids_the_void_and_works(self):
         d = self.r["d"]
@@ -241,28 +248,24 @@ console.log(JSON.stringify({ snaps }));
 
 @unittest.skipUnless(shutil.which("node"), "node not available")
 class BacktrackRegressionTests(unittest.TestCase):
-    """Stages advance on step-on: minor, major, then fall."""
+    """Stages advance on leaving: minor, major, then void behind."""
 
     @classmethod
     def setUpClass(cls):
         cls.r = run_core(BACKTRACK_SCRIPT)
 
-    def test_backtrack_once_advances_to_major_but_stays_safe(self):
+    def test_backtrack_and_recross_stay_safe(self):
         snaps = self.r["snaps"]
         self.assertEqual(snaps[7]["pos"], {"x": 7, "y": 2})
         self.assertEqual(snaps[7]["status"], "playing")
-        # Back onto the middle tile: its second step-on (major).
+        # Back over the bridge and forward again: stepping onto a
+        # major tile is safe; stages only advance when leaving.
         self.assertEqual(snaps[8]["pos"], {"x": 6, "y": 2})
         self.assertEqual(snaps[8]["status"], "playing")
         self.assertEqual(snaps[9]["pos"], {"x": 5, "y": 2})
         self.assertEqual(snaps[9]["status"], "playing")
-
-    def test_stepping_onto_a_major_tile_falls_and_loses(self):
-        snaps = self.r["snaps"]
-        # Forward again steps onto the now-major middle tile: it
-        # falls under the player and the attempt is lost.
         self.assertEqual(snaps[10]["pos"], {"x": 6, "y": 2})
-        self.assertEqual(snaps[10]["status"], "lost")
+        self.assertEqual(snaps[10]["status"], "playing")
 
 
 if __name__ == "__main__":
