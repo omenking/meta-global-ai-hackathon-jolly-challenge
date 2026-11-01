@@ -233,3 +233,37 @@ class SanityReplayTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TeleportPackAssetTests(unittest.TestCase):
+    def test_bundled_pad_art_exists_and_is_512_png(self):
+        import struct
+        pack = ROOT / "tools" / "static" / "packs" / "teleport"
+        manifest = json.loads((pack / "manifest.json").read_text(
+            encoding="utf-8"))
+        self.assertEqual(manifest["pack"], "teleport")
+        bundled = [a for a in manifest["assets"] if a["bundled"]]
+        self.assertEqual([a["file"] for a in bundled],
+                         ["teleport-pad-a.png", "teleport-pad-b.png"])
+        for entry in bundled:
+            path = pack / "assets" / entry["file"]
+            self.assertTrue(path.is_file(), entry["file"])
+            data = path.read_bytes()
+            self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+            self.assertEqual(struct.unpack(">II", data[16:24]),
+                             (512, 512), entry["file"])
+
+    @unittest.skipUnless(shutil.which("node"), "node not available")
+    def test_bundled_assets_load_from_their_pack(self):
+        script = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+console.log(JSON.stringify({
+  paths: core.assetPathsForLevel(level),
+}));
+"""
+        r = run_core(script)
+        by_name = {a["name"]: a["url"] for a in r["paths"]}
+        for name in ("teleport-pad-a.png", "teleport-pad-b.png"):
+            self.assertEqual(by_name[name],
+                             f"packs/teleport/assets/{name}")
