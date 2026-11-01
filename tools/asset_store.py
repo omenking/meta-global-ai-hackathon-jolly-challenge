@@ -411,7 +411,8 @@ def mark_failed(assets: dict, asset_name: str, slug: str) -> None:
 
 def save_judgement(judgements: dict, key: str, human_review: str,
                    checklist: dict | None = None,
-                   preferred: bool | None = None) -> dict:
+                   preferred: bool | None = None,
+                   author: str | None = None) -> dict:
     if not (key or "").strip():
         raise StoreError("judgement key must not be empty")
     record = judgements.get(key) or {}
@@ -422,8 +423,37 @@ def save_judgement(judgements: dict, key: str, human_review: str,
         record["checklist"] = {str(k): bool(v) for k, v in checklist.items()}
     if preferred is not None:
         record["preferred"] = bool(preferred)
+    if author is not None:
+        record["author"] = str(author)
     judgements[key] = record
     return record
+
+
+def import_turn(sessions: dict, sid: str, prompt: str,
+                references: object, outputs_info: list,
+                provider_session: str = "") -> dict:
+    """Append a completed turn from images generated outside the tool.
+
+    Used by the Muse driver: images arrive through the upload path
+    and become ordinary session outputs, so verdicts, references and
+    publish treat them exactly like key-generated outputs. Cost is
+    the image count at the tool's per-image estimate.
+    """
+    turn = add_turn(sessions, sid, prompt, references,
+                    num=len(outputs_info))
+    turn["provider_session"] = str(provider_session or "")
+    total = f"{len(outputs_info) * 0.01:.2f}"
+    return record_turn_outputs(sessions, sid, turn["seq"], outputs_info,
+                               total_usd=total, full_prompt_sent=prompt)
+
+
+def session_spend(session: dict) -> dict:
+    """Recorded outputs and spend for one session (budget evidence)."""
+    outputs = sum(len(t.get("outputs") or [])
+                  for t in session.get("turns") or [])
+    return {"outputs": outputs,
+            "spend_usd": f"{outputs * 0.01:.2f}",
+            "turns": len(session.get("turns") or [])}
 
 
 def validate_run_not_noop(version: dict, parent: dict | None,

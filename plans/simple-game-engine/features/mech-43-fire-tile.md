@@ -42,6 +42,10 @@ The player meets Fire tile for the first time in its teaching room (mech-43-fire
 - An ice block slid or pushed into a fire tile melts and cancels that fire tile, a hazard and a slippy block cancelling each other like a key and keylock
 - Movement/state stays deterministic: state advances only through the pure step function with recorded t_ms; a recorded session replays to the same end state.
 - Restart (R / restart) restores the room to its initial state, including this mechanic.
+- No soft-lock: every reachable state has a legal move, a lose, or a reset.
+- Definition audit: fire: hazard defined here; lethal while burning on flammable floor, spreads on a move count, burns out and is cancelled by one ice block
+- Definition audit: flammable floor: grass or wood floor; fire spreads only onto it, never onto stone floor (floor per mechanic 5 in this file)
+- Definition audit: ice block: pushable block that cancels fire, per mechanic 82 in blocks.yml
 
 ## UI / Feedback
 
@@ -54,6 +58,9 @@ The player meets Fire tile for the first time in its teaching room (mech-43-fire
 - Level JSON: new Test Level mech-43-fire-tile-room (rows + legend) implementing the teaching moment above.
 - Sprites/defs: reuse existing tiles where the mechanic reuses an existing tile; add a new sprite/tile def only if this mechanic introduces a new tile (confirm in the implement task).
 - Source: plans/level-design/candidate-mechanics/terrain-and-hazards.yml mechanic #43.
+- Pack assets (from candidate file; bundled in packs/fire-tile/assets):
+- Pack asset (tiles): fire.png — burning fire on flammable floor, lethal while alight
+- Pack asset (tiles): scorched.png — burnt-out floor after the fire dies, safe to cross
 
 ## Acceptance Criteria
 
@@ -63,6 +70,8 @@ The player meets Fire tile for the first time in its teaching room (mech-43-fire
 - [ ] Rule verified in mech-43-fire-tile-room: An ice block slid or pushed into a fire tile melts and cancels that fire tile, a hazard and a slippy block cancelling each other like a key and keylock
 - [ ] A recorded agent play session of the room replays to the same end state (replay digest match).
 - [ ] Screenshot of the room attached as evidence on the sanity-check task.
+- [ ] Adversarial case verified in the room: waiting beside the return path lets fire spread across it as the teaching moment warns; the room still resolves by cancelling or waiting out, never by a stranded state
+- [ ] No reachable state has no legal move and no lose/reset (soft-lock check played, not just the solution path).
 
 ## Out of Scope
 
@@ -79,10 +88,17 @@ The player meets Fire tile for the first time in its teaching room (mech-43-fire
 - Synergies deferred to a later run (do not build now): Ice block (82): the intended way through, spend a block to cancel a fire.
 - Demos deferred (reference only): Lava tile (44): fire can be cancelled and burns out, lava can do neither.
 - Confirm any new sprite/tile def and any HUD counter this mechanic needs before the implement task is approved.
+- Dependencies from test cases (blocked-by mechanic ids): 82 . Those cases run when the blocking mechanic lands.
 
 ## Testing
 
 Needs a mechanics playground: new — Test Level mech-43-fire-tile-room, built from this mechanic's teaching moment above. What to check there: every rule in Player-Facing Behavior, played in mech-43-fire-tile-room; the teaching moment's first (naive) action should fail as described and the corrected action should succeed. Record play sessions for replay: yes — sessions are the review evidence. Synergy rooms are explicitly deferred to a later run and are not part of this feature's check.
+Named test cases (from the candidate file; all must be played):
+- Test case spread follows the move clock: fire spreads to one adjacent flammable tile every 10 moves and never onto stone; the count is moves, not seconds
+- Test case burn-out boundary: a fire tile burns out after 30 moves leaving scorched floor, and the player can cross it from that move on
+- Test case ice cancels fire: blocked-by: 82 (ice block): sliding an ice block into fire melts the block and cancels that one fire tile only
+- Test case adversarial waiting game: waiting beside the return path lets fire spread across it as the teaching moment warns; the room still resolves by cancelling or waiting out, never by a stranded state
+- Test case restart and replay: restart restores every fire to its placed state, and a recorded 30-move session replays to the same end state
 
 ## Tasks
 

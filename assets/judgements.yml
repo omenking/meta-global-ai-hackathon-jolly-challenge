@@ -125,3 +125,177 @@ uploads-20261030-112707-jolly-fall-s20261030-105318-t2-20261030-110303-4:
 jolly-fall-s20261030-112700-t1-20261030-112721-1:
   human_review: ''
   preferred: false
+crumbling-s20261101-161458-t1-20261101-161627-1:
+  human_review: 'bad: black side bars, tile does not fill the frame'
+  preferred: false
+  author: claude
+crumbling-s20261101-161458-t1-20261101-161627-2:
+  human_review: 'bad: framed slab look with edge cracks, reads as a panel not a floor
+    tile'
+  preferred: false
+  author: claude
+crumbling-s20261101-161458-t1-20261101-161627-3:
+  human_review: 'bad: already shattered into slabs; this is major damage, not intact'
+  preferred: false
+  author: claude
+crumbling-s20261101-161458-t1-20261101-161627-4:
+  human_review: 'good: fine cracks readable and still intact, but busier than the
+    winner'
+  preferred: false
+  author: claude
+crumbling-s20261101-161458-t1-20261101-161627-5:
+  human_review: 'bad: too cracked for intact and muted at 64px'
+  preferred: false
+  author: claude
+crumbling-s20261101-161458-t2-20261101-161820-1:
+  human_review: 'good: winner. One clean diagonal hairline crack reads at 64px, stone
+    matches the floor, almost intact as briefed'
+  preferred: true
+  author: claude
+crumbling-s20261101-161458-t2-20261101-161820-2:
+  human_review: 'bad: corner branch cracks only at the edges, centre reads as plain
+    floor'
+  preferred: false
+  author: claude
+crumbling-s20261101-161458-t2-20261101-161820-3:
+  human_review: 'bad: warm tint and visible frame margin, does not match the floor
+    palette'
+  preferred: false
+  author: claude
+crumbling-s20261101-161458-t2-20261101-161820-4:
+  human_review: 'good: two bold cracks read at 64px, slightly more damaged than the
+    winner'
+  preferred: false
+  author: claude
+crumbling-s20261101-161458-t2-20261101-161820-5:
+  human_review: 'bad: polygonal slab pattern reads as already major, wrong stage'
+  preferred: false
+  author: claude
+crumbling-minor-s20261101-161845-t1-20261101-162001-1:
+  human_review: 'good: winner. Clear crack web at 64px, still one slab, same stone
+    as intact'
+  preferred: true
+  author: claude
+crumbling-minor-s20261101-161845-t1-20261101-162001-2:
+  human_review: 'good: strong corner crack web, but damage concentrated on one side'
+  preferred: false
+  author: claude
+crumbling-minor-s20261101-161845-t1-20261101-162001-3:
+  human_review: 'bad: thick separated fissures already read as splitting apart, closer
+    to major'
+  preferred: false
+  author: claude
+crumbling-minor-s20261101-161845-t1-20261101-162001-4:
+  human_review: 'bad: lifted 3D pieces break the flat top-down tile read'
+  preferred: false
+  author: claude
+crumbling-major-s20261101-162011-t1-20261101-162236-1:
+  human_review: 'good: winner. Bold black crack web and edge rubble, clearly beyond
+    minor, no hole yet'
+  preferred: true
+  author: claude
+crumbling-major-s20261101-162011-t1-20261101-162236-2:
+  human_review: 'bad: photographic high contrast and black bars at edges'
+  preferred: false
+  author: claude
+crumbling-major-s20261101-162011-t1-20261101-162236-3:
+  human_review: 'bad: strong but one huge fissure dominates; reads closer to void
+    gash'
+  preferred: false
+  author: claude
+crumbling-major-s20261101-162011-t1-20261101-162236-4:
+  human_review: 'bad: giant flat black channels read as painted stripes, too graphic'
+  preferred: false
+  author: claude
+crumbling-void-s20261101-162011-2-t1-20261101-162237-1:
+  human_review: 'good: winner. Instant black hole with broken stone rim, same speckled
+    stone, reads at 64px'
+  preferred: true
+  author: claude
+crumbling-void-s20261101-162011-2-t1-20261101-162237-2:
+  human_review: 'bad: round well with 3D blocks, too dimensional and centred as decoration'
+  preferred: false
+  author: claude
+crumbling-void-s20261101-162011-2-t1-20261101-162237-3:
+  human_review: 'bad: contains drawn triangle/circle/square symbols, unusable'
+  preferred: false
+  author: claude
+crumbling-void-s20261101-162011-2-t1-20261101-162237-4:
+  human_review: 'good: clean flat hole but rim too tidy and cartoon-flat against the
+    set'
+  preferred: false
+  author: claude
+crumbling-s20261101-164222-t1-20261101-164326-1:
+  human_review: 'good: bold cracks read at 64px and stone matches floor, but busier
+    than intact should be'
+  preferred: false
+  author: claude
+crumbling-s20261101-164222-t1-20261101-164326-2:
+  human_review: 'bad: chunky black fissures already read as major damage'
+  preferred: false
+  author: claude
+crumbling-s20261101-164222-t1-20261101-164326-3:
+  human_review: 'good: winner. Single bold diagonal crack on the real floor surface,
+    instant read at 64px, still solid'
+  preferred: true
+  author: claude
+crumbling-s20261101-164222-t1-20261101-164326-4:
+  human_review: 'bad: dense bold web is a later stage, not intact'
+  preferred: false
+  author: claude
+crumbling-minor-s20261101-164222-2-t1-20261101-164456-1:
+  human_review: 'good: winner. Even bold crack web on the real floor stone, clearly
+    beyond intact at 64px, still solid'
+  preferred: true
+  author: claude
+crumbling-minor-s20261101-164222-2-t1-20261101-164456-2:
+  human_review: 'bad: one thick central fissure dominates, reads closer to major'
+  preferred: false
+  author: claude
+crumbling-minor-s20261101-164222-2-t1-20261101-164456-3:
+  human_review: 'good: clear web at 64px but diagonal layout too close to the intact
+    winner'
+  preferred: false
+  author: claude
+crumbling-minor-s20261101-164222-2-t1-20261101-164456-4:
+  human_review: 'good: clear web at 64px but diagonal layout too close to the intact
+    winner'
+  preferred: false
+  author: claude
+crumbling-major-s20261101-164222-3-t1-20261101-164635-1:
+  human_review: 'good: wide fissures read beyond minor at 64px, no hole'
+  preferred: false
+  author: claude
+crumbling-major-s20261101-164222-3-t1-20261101-164635-2:
+  human_review: 'good: winner. Wide fissures plus crumbled rubble corners, clearly
+    the worst surface stage at 64px'
+  preferred: true
+  author: claude
+crumbling-major-s20261101-164222-3-t1-20261101-164635-3:
+  human_review: 'good: bold separating cracks at 64px, lacks the rubble that separates
+    it from minor'
+  preferred: false
+  author: claude
+crumbling-major-s20261101-164222-3-t1-20261101-164635-4:
+  human_review: 'good: bold separating cracks at 64px, lacks the rubble that separates
+    it from minor'
+  preferred: false
+  author: claude
+crumbling-void-s20261101-164222-4-t1-20261101-164801-1:
+  human_review: 'good: winner. Black hole fills the tile with a broken rim of the
+    real floor stone, instant read at 64px'
+  preferred: true
+  author: claude
+crumbling-void-s20261101-164222-4-t1-20261101-164801-2:
+  human_review: 'good: clean hole and rim at 64px, rim plainer than winner'
+  preferred: false
+  author: claude
+crumbling-void-s20261101-164222-4-t1-20261101-164801-3:
+  human_review: 'bad: round pit ringed with chunky blocks reads as a well, smaller
+    hole'
+  preferred: false
+  author: claude
+crumbling-void-s20261101-164222-4-t1-20261101-164801-4:
+  human_review: 'bad: smooth round gradient pit reads as a crater/well, rim too tidy'
+  preferred: false
+  author: claude

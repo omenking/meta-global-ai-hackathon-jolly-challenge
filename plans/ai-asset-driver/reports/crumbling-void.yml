@@ -1,0 +1,48 @@
+asset: crumbling-void
+session: s20261101-162011-2
+title: 'Muse driver: crumbling void tile (mech-5)'
+muse_session: saffron-draco-01a1989b
+capture: backfilled from asset session records after the run; asset_driver now appends
+  this file live per turn
+budget:
+  target_usd: '1.00'
+  cap_usd: '2.00'
+spend_usd: '0.04'
+decision: Briefed against the set as the same floor fallen; winner reads instantly
+  as a hole at 64px with the set's stone on the rim.
+turns:
+- seq: 1
+  prompt: 'Void tile: black hole where the tile fell, broken rim of same stone'
+  references_recorded: []
+  provider_session: saffron-draco-01a1989b
+  cost_total: '0.04'
+  outputs:
+  - key: crumbling-void-s20261101-162011-2-t1-20261101-162237-1
+    path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-1.png
+    verdict: 'good: winner. Instant black hole with broken stone rim, same speckled
+      stone, reads at 64px'
+    author: claude
+    preferred: true
+  - key: crumbling-void-s20261101-162011-2-t1-20261101-162237-2
+    path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-2.png
+    verdict: 'bad: round well with 3D blocks, too dimensional and centred as decoration'
+    author: claude
+    preferred: false
+  - key: crumbling-void-s20261101-162011-2-t1-20261101-162237-3
+    path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-3.png
+    verdict: 'bad: contains drawn triangle/circle/square symbols, unusable'
+    author: claude
+    preferred: false
+  - key: crumbling-void-s20261101-162011-2-t1-20261101-162237-4
+    path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-4.png
+    verdict: 'good: clean flat hole but rim too tidy and cartoon-flat against the
+      set'
+    author: claude
+    preferred: false
+winner: crumbling-void-s20261101-162011-2-t1-20261101-162237-1
+pack_file: .worktrees/mech-5-crumbling-tile/tools/static/packs/crumbling/assets/void.png
+muse_session_recorded_as: saffron-draco-01a1989b (session name + short id, as passed
+  to import-turn)
+muse_session_full: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+project: meta-global-ai-hackathon-jolly-challenge
+project_root: /home/andrew/Sites/meta-global-ai-hackathon-jolly-challenge

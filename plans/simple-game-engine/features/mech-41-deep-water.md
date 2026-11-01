@@ -42,6 +42,12 @@ The player meets Deep water for the first time in its teaching room (mech-41-dee
 - That slowness, plus what current and ice blocks do in it, is the mechanic, not a plain block
 - Movement/state stays deterministic: state advances only through the pure step function with recorded t_ms; a recorded session replays to the same end state.
 - Restart (R / restart) restores the room to its initial state, including this mechanic.
+- No soft-lock: every reachable state has a legal move, a lose, or a reset.
+- Definition audit: deep water: dark water defined here; without a life preserver it is a hazard, with one each tile costs two moves
+- Definition audit: shallow water: enterable surface water per mechanic 50 in this file
+- Definition audit: life preserver: gear that admits the player to deep water, per mechanic 61 in gear-and-items.yml
+- Definition audit: checkpoint: respawn set by touch, per mechanic 48 in this file
+- Definition audit: patroller: enemy on a fixed loop, per mechanic 31 in enemies-and-bots.yml
 
 ## UI / Feedback
 
@@ -54,6 +60,9 @@ The player meets Deep water for the first time in its teaching room (mech-41-dee
 - Level JSON: new Test Level mech-41-deep-water-room (rows + legend) implementing the teaching moment above.
 - Sprites/defs: reuse existing tiles where the mechanic reuses an existing tile; add a new sprite/tile def only if this mechanic introduces a new tile (confirm in the implement task).
 - Source: plans/level-design/candidate-mechanics/terrain-and-hazards.yml mechanic #41.
+- Pack assets (from candidate file; bundled in packs/deep-water/assets):
+- Pack asset (tiles): deep-water.png — dark deep water, distinct from shallow water
+- Pack asset (jolly_states): jolly-wading.png — Jolly half-submerged on the first of the two moves a deep tile costs
 
 ## Acceptance Criteria
 
@@ -64,6 +73,8 @@ The player meets Deep water for the first time in its teaching room (mech-41-dee
 - [ ] Rule verified in mech-41-deep-water-room: That slowness, plus what current and ice blocks do in it, is the mechanic, not a plain block
 - [ ] A recorded agent play session of the room replays to the same end state (replay digest match).
 - [ ] Screenshot of the room attached as evidence on the sanity-check task.
+- [ ] Adversarial case verified in the room: blocked-by: 61, 48: stopping mid-crossing never strands the player; every deep tile can still be exited or resolves to the checkpoint
+- [ ] No reachable state has no legal move and no lose/reset (soft-lock check played, not just the solution path).
 
 ## Out of Scope
 
@@ -77,10 +88,16 @@ The player meets Deep water for the first time in its teaching room (mech-41-dee
 - Synergies deferred to a later run (do not build now): Life preserver (61): preserver admits you, the two-move cost is the tax.
 - Synergies deferred to a later run (do not build now): Ice block (82): it melts in deep water instead of bridging it, unlike shallow water.
 - Confirm any new sprite/tile def and any HUD counter this mechanic needs before the implement task is approved.
+- Dependencies from test cases (blocked-by mechanic ids): 48 , 61 , 61, 48. Those cases run when the blocking mechanic lands.
 
 ## Testing
 
 Needs a mechanics playground: new — Test Level mech-41-deep-water-room, built from this mechanic's teaching moment above. What to check there: every rule in Player-Facing Behavior, played in mech-41-deep-water-room; the teaching moment's first (naive) action should fail as described and the corrected action should succeed. Record play sessions for replay: yes — sessions are the review evidence. Synergy rooms are explicitly deferred to a later run and are not part of this feature's check.
+Named test cases (from the candidate file; all must be played):
+- Test case with preserver crossing costs two moves per tile: blocked-by: 61 (life preserver): with one held, each deep tile takes two inputs, the first wading in place
+- Test case without preserver returns to checkpoint: blocked-by: 48 (checkpoint): entering without a preserver returns the player to the active checkpoint with the timer running
+- Test case adversarial hesitation in deep water: blocked-by: 61, 48: stopping mid-crossing never strands the player; every deep tile can still be exited or resolves to the checkpoint
+- Test case restart and replay: restart restores the room, and a recorded crossing replays to the same end state
 
 ## Tasks
 

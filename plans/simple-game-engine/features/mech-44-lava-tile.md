@@ -43,6 +43,11 @@ The player meets Lava tile for the first time in its teaching room (mech-44-lava
 - An ice block pushed into it melts and is destroyed and the lava stays
 - Movement/state stays deterministic: state advances only through the pure step function with recorded t_ms; a recorded session replays to the same end state.
 - Restart (R / restart) restores the room to its initial state, including this mechanic.
+- No soft-lock: every reachable state has a legal move, a lose, or a reset.
+- Definition audit: lava: fixed hazard defined here; entering it loses the attempt, it never spreads or burns out and nothing cancels it
+- Definition audit: fire: cancellable, burning-out hazard per mechanic 43 in this file; lava is explicitly not a stronger fire
+- Definition audit: ice block: per mechanic 82 in blocks.yml; in lava it melts and is destroyed while the lava stays
+- Definition audit: dirt block: the one block that fills lava into floor, per mechanic 90 in blocks.yml
 
 ## UI / Feedback
 
@@ -55,6 +60,8 @@ The player meets Lava tile for the first time in its teaching room (mech-44-lava
 - Level JSON: new Test Level mech-44-lava-tile-room (rows + legend) implementing the teaching moment above.
 - Sprites/defs: reuse existing tiles where the mechanic reuses an existing tile; add a new sprite/tile def only if this mechanic introduces a new tile (confirm in the implement task).
 - Source: plans/level-design/candidate-mechanics/terrain-and-hazards.yml mechanic #44.
+- Pack assets (from candidate file; bundled in packs/lava-tile/assets):
+- Pack asset (tiles): lava.png — fixed lava, permanent and uncancellable
 
 ## Acceptance Criteria
 
@@ -65,6 +72,8 @@ The player meets Lava tile for the first time in its teaching room (mech-44-lava
 - [ ] Rule verified in mech-44-lava-tile-room: You route around it or fill it with dirt
 - [ ] A recorded agent play session of the room replays to the same end state (replay digest match).
 - [ ] Screenshot of the room attached as evidence on the sanity-check task.
+- [ ] Adversarial case verified in the room: every lava tile in the room can be routed around or filled; no route requires standing on lava or leaves the player stranded
+- [ ] No reachable state has no legal move and no lose/reset (soft-lock check played, not just the solution path).
 
 ## Out of Scope
 
@@ -79,10 +88,16 @@ The player meets Lava tile for the first time in its teaching room (mech-44-lava
 - Synergies deferred to a later run (do not build now): Dirt block (90): the only block that fills lava into floor.
 - Demos deferred (reference only): Fire tile (43): the pair a test room must separate, cancellable fire versus permanent lava.
 - Confirm any new sprite/tile def and any HUD counter this mechanic needs before the implement task is approved.
+- Dependencies from test cases (blocked-by mechanic ids): 82 . Those cases run when the blocking mechanic lands.
 
 ## Testing
 
 Needs a mechanics playground: new — Test Level mech-44-lava-tile-room, built from this mechanic's teaching moment above. What to check there: every rule in Player-Facing Behavior, played in mech-44-lava-tile-room; the teaching moment's first (naive) action should fail as described and the corrected action should succeed. Record play sessions for replay: yes — sessions are the review evidence. Synergy rooms are explicitly deferred to a later run and are not part of this feature's check.
+Named test cases (from the candidate file; all must be played):
+- Test case lethal and permanent: stepping on lava loses the attempt (or returns to the active checkpoint), and the lava tile is unchanged afterwards
+- Test case ice does not cancel lava: blocked-by: 82 (ice block): pushing an ice block in melts the block and the lava stays, unlike fire
+- Test case adversarial route-around: every lava tile in the room can be routed around or filled; no route requires standing on lava or leaves the player stranded
+- Test case restart and replay: restart restores the room, and a recorded session replays to the same end state
 
 ## Tasks
 

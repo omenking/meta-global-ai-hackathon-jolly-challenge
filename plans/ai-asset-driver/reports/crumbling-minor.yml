@@ -1,0 +1,49 @@
+asset: crumbling-minor
+session: s20261101-161845
+title: 'Muse driver: crumbling minor tile (mech-5)'
+muse_session: saffron-draco-01a1989b
+capture: backfilled from asset session records after the run; asset_driver now appends
+  this file live per turn
+budget:
+  target_usd: '1.00'
+  cap_usd: '2.00'
+spend_usd: '0.04'
+decision: Briefed against the intact winner as reference in the Muse session; first
+  turn winner already read at 64px between intact and major.
+turns:
+- seq: 1
+  prompt: 'Minor crumble stage of the intact winner: more cracks, still one solid
+    slab, same stone'
+  references_recorded: []
+  provider_session: saffron-draco-01a1989b
+  cost_total: '0.04'
+  outputs:
+  - key: crumbling-minor-s20261101-161845-t1-20261101-162001-1
+    path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-1.png
+    verdict: 'good: winner. Clear crack web at 64px, still one slab, same stone as
+      intact'
+    author: claude
+    preferred: true
+  - key: crumbling-minor-s20261101-161845-t1-20261101-162001-2
+    path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-2.png
+    verdict: 'good: strong corner crack web, but damage concentrated on one side'
+    author: claude
+    preferred: false
+  - key: crumbling-minor-s20261101-161845-t1-20261101-162001-3
+    path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-3.png
+    verdict: 'bad: thick separated fissures already read as splitting apart, closer
+      to major'
+    author: claude
+    preferred: false
+  - key: crumbling-minor-s20261101-161845-t1-20261101-162001-4
+    path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-4.png
+    verdict: 'bad: lifted 3D pieces break the flat top-down tile read'
+    author: claude
+    preferred: false
+winner: crumbling-minor-s20261101-161845-t1-20261101-162001-1
+pack_file: .worktrees/mech-5-crumbling-tile/tools/static/packs/crumbling/assets/crumbling-minor.png
+muse_session_recorded_as: saffron-draco-01a1989b (session name + short id, as passed
+  to import-turn)
+muse_session_full: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+project: meta-global-ai-hackathon-jolly-challenge
+project_root: /home/andrew/Sites/meta-global-ai-hackathon-jolly-challenge

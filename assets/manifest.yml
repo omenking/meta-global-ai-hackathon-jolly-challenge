@@ -305,3 +305,169 @@ assets:
         requested_height: 512
         raw_width: 1600
         raw_height: 1600
+  crumbling:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261101-161458-t2
+      desc: Published from session s20261101-161458 turn 2 (crumbling-s20261101-161458-t2-20261101-161820-1)
+      prompt: 'Turn 2: exactly square edge-to-edge tile, almost intact, two or three
+        hairline cracks only'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references: []
+      outputs:
+      - key: crumbling-s20261101-161458-t2-20261101-161820-1
+        path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+    - slug: s20261101-164222-t1
+      desc: Published from session s20261101-164222 turn 1 (crumbling-s20261101-164222-t1-20261101-164326-3)
+      prompt: 'Grounded rerun turn 1: edit real floor_default.png, bold 8-12px cracks,
+        intact slab'
+      parent: s20261101-161458-t2
+      status: completed
+      width: null
+      height: null
+      references:
+      - tools/static/level-sprites/floor_default.png
+      outputs:
+      - key: crumbling-s20261101-164222-t1-20261101-164326-3
+        path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+  crumbling-minor:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261101-161845-t1
+      desc: Published from session s20261101-161845 turn 1 (crumbling-minor-s20261101-161845-t1-20261101-162001-1)
+      prompt: 'Minor crumble stage of the intact winner: more cracks, still one solid
+        slab, same stone'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references: []
+      outputs:
+      - key: crumbling-minor-s20261101-161845-t1-20261101-162001-1
+        path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+    - slug: s20261101-164222-2-t1
+      desc: Published from session s20261101-164222-2 turn 1 (crumbling-minor-s20261101-164222-2-t1-20261101-164456-1)
+      prompt: 'Grounded minor: floor_default.png + intact winner refs, bold crack
+        web, solid slab'
+      parent: s20261101-161845-t1
+      status: completed
+      width: null
+      height: null
+      references:
+      - tools/static/level-sprites/floor_default.png
+      - assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-3.png
+      outputs:
+      - key: crumbling-minor-s20261101-164222-2-t1-20261101-164456-1
+        path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+  crumbling-major:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261101-162011-t1
+      desc: Published from session s20261101-162011 turn 1 (crumbling-major-s20261101-162011-t1-20261101-162236-1)
+      prompt: 'Major crumble stage of minor winner: wide dark cracks, pieces separating,
+        no big hole'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references: []
+      outputs:
+      - key: crumbling-major-s20261101-162011-t1-20261101-162236-1
+        path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+    - slug: s20261101-164222-3-t1
+      desc: Published from session s20261101-164222-3 turn 1 (crumbling-major-s20261101-164222-3-t1-20261101-164635-2)
+      prompt: 'Grounded major: floor_default.png + minor winner refs, wide fissures,
+        separating pieces, no hole'
+      parent: s20261101-162011-t1
+      status: completed
+      width: null
+      height: null
+      references:
+      - tools/static/level-sprites/floor_default.png
+      - assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-1.png
+      outputs:
+      - key: crumbling-major-s20261101-164222-3-t1-20261101-164635-2
+        path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+  crumbling-void:
+    width: 512
+    height: 512
+    versions:
+    - slug: s20261101-162011-2-t1
+      desc: Published from session s20261101-162011-2 turn 1 (crumbling-void-s20261101-162011-2-t1-20261101-162237-1)
+      prompt: 'Void tile: black hole where the tile fell, broken rim of same stone'
+      parent: null
+      status: completed
+      width: null
+      height: null
+      references: []
+      outputs:
+      - key: crumbling-void-s20261101-162011-2-t1-20261101-162237-1
+        path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+    - slug: s20261101-164222-4-t1
+      desc: Published from session s20261101-164222-4 turn 1 (crumbling-void-s20261101-164222-4-t1-20261101-164801-1)
+      prompt: 'Grounded void: floor_default.png + major winner refs, black hole, broken
+        rim of same stone'
+      parent: s20261101-162011-2-t1
+      status: completed
+      width: null
+      height: null
+      references:
+      - tools/static/level-sprites/floor_default.png
+      - assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-2.png
+      outputs:
+      - key: crumbling-void-s20261101-164222-4-t1-20261101-164801-1
+        path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null

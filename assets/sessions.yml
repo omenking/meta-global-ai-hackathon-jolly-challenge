@@ -3917,3 +3917,460 @@ sessions:
         requested_height: 512
         raw_width: 1600
         raw_height: 1600
+  s20261101-161458:
+    id: s20261101-161458
+    asset_name: crumbling
+    title: 'Muse driver: crumbling intact tile (mech-5)'
+    created: '2026-11-01T16:14:58'
+    turns:
+    - seq: 1
+      prompt: Top-down 2D puzzle-game floor tile, light gray stone, flat clean PC-98
+        game-art style (turn 1 lottery, intact crumbling tile)
+      full_prompt_sent: Top-down 2D puzzle-game floor tile, light gray stone, flat
+        clean PC-98 game-art style (turn 1 lottery, intact crumbling tile)
+      references: []
+      num: 5
+      provider_session: saffron-draco-01a1989b
+      status: completed
+      cost_total: '0.05'
+      outputs:
+      - key: crumbling-s20261101-161458-t1-20261101-161627-1
+        path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-161458-t1-20261101-161627-2
+        path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-161458-t1-20261101-161627-3
+        path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-161458-t1-20261101-161627-4
+        path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-161458-t1-20261101-161627-5
+        path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+    - seq: 2
+      prompt: 'Turn 2: exactly square edge-to-edge tile, almost intact, two or three
+        hairline cracks only'
+      full_prompt_sent: 'Turn 2: exactly square edge-to-edge tile, almost intact,
+        two or three hairline cracks only'
+      references: []
+      num: 5
+      provider_session: saffron-draco-01a1989b
+      status: completed
+      cost_total: '0.05'
+      outputs:
+      - key: crumbling-s20261101-161458-t2-20261101-161820-1
+        path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-161458-t2-20261101-161820-2
+        path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-161458-t2-20261101-161820-3
+        path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-161458-t2-20261101-161820-4
+        path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-161458-t2-20261101-161820-5
+        path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-5.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-5-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+  s20261101-161845:
+    id: s20261101-161845
+    asset_name: crumbling-minor
+    title: 'Muse driver: crumbling minor tile (mech-5)'
+    created: '2026-11-01T16:18:45'
+    turns:
+    - seq: 1
+      prompt: 'Minor crumble stage of the intact winner: more cracks, still one solid
+        slab, same stone'
+      full_prompt_sent: 'Minor crumble stage of the intact winner: more cracks, still
+        one solid slab, same stone'
+      references: []
+      num: 4
+      provider_session: saffron-draco-01a1989b
+      status: completed
+      cost_total: '0.04'
+      outputs:
+      - key: crumbling-minor-s20261101-161845-t1-20261101-162001-1
+        path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-minor-s20261101-161845-t1-20261101-162001-2
+        path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-minor-s20261101-161845-t1-20261101-162001-3
+        path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-minor-s20261101-161845-t1-20261101-162001-4
+        path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-minor-s20261101-161845-t1-20261101-162001-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+  s20261101-162011:
+    id: s20261101-162011
+    asset_name: crumbling-major
+    title: 'Muse driver: crumbling major tile (mech-5)'
+    created: '2026-11-01T16:20:11'
+    turns:
+    - seq: 1
+      prompt: 'Major crumble stage of minor winner: wide dark cracks, pieces separating,
+        no big hole'
+      full_prompt_sent: 'Major crumble stage of minor winner: wide dark cracks, pieces
+        separating, no big hole'
+      references: []
+      num: 4
+      provider_session: saffron-draco-01a1989b
+      status: completed
+      cost_total: '0.04'
+      outputs:
+      - key: crumbling-major-s20261101-162011-t1-20261101-162236-1
+        path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-major-s20261101-162011-t1-20261101-162236-2
+        path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-major-s20261101-162011-t1-20261101-162236-3
+        path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-major-s20261101-162011-t1-20261101-162236-4
+        path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+  s20261101-162011-2:
+    id: s20261101-162011-2
+    asset_name: crumbling-void
+    title: 'Muse driver: crumbling void tile (mech-5)'
+    created: '2026-11-01T16:20:11'
+    turns:
+    - seq: 1
+      prompt: 'Void tile: black hole where the tile fell, broken rim of same stone'
+      full_prompt_sent: 'Void tile: black hole where the tile fell, broken rim of
+        same stone'
+      references: []
+      num: 4
+      provider_session: saffron-draco-01a1989b
+      status: completed
+      cost_total: '0.04'
+      outputs:
+      - key: crumbling-void-s20261101-162011-2-t1-20261101-162237-1
+        path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-void-s20261101-162011-2-t1-20261101-162237-2
+        path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-void-s20261101-162011-2-t1-20261101-162237-3
+        path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-void-s20261101-162011-2-t1-20261101-162237-4
+        path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-void-s20261101-162011-2-t1-20261101-162237-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+  s20261101-164222:
+    id: s20261101-164222
+    asset_name: crumbling
+    title: 'Muse driver grounded rerun: crumbling (mech-5)'
+    created: '2026-11-01T16:42:22'
+    turns:
+    - seq: 1
+      prompt: 'Grounded rerun turn 1: edit real floor_default.png, bold 8-12px cracks,
+        intact slab'
+      full_prompt_sent: 'Grounded rerun turn 1: edit real floor_default.png, bold
+        8-12px cracks, intact slab'
+      references:
+      - tools/static/level-sprites/floor_default.png
+      num: 4
+      provider_session: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+      status: completed
+      cost_total: '0.04'
+      outputs:
+      - key: crumbling-s20261101-164222-t1-20261101-164326-1
+        path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-164222-t1-20261101-164326-2
+        path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-164222-t1-20261101-164326-3
+        path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-s20261101-164222-t1-20261101-164326-4
+        path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+  s20261101-164222-2:
+    id: s20261101-164222-2
+    asset_name: crumbling-minor
+    title: 'Muse driver grounded rerun: crumbling-minor (mech-5)'
+    created: '2026-11-01T16:42:22'
+    turns:
+    - seq: 1
+      prompt: 'Grounded minor: floor_default.png + intact winner refs, bold crack
+        web, solid slab'
+      full_prompt_sent: 'Grounded minor: floor_default.png + intact winner refs, bold
+        crack web, solid slab'
+      references:
+      - tools/static/level-sprites/floor_default.png
+      - assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-3.png
+      num: 4
+      provider_session: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+      status: completed
+      cost_total: '0.04'
+      outputs:
+      - key: crumbling-minor-s20261101-164222-2-t1-20261101-164456-1
+        path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-minor-s20261101-164222-2-t1-20261101-164456-2
+        path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-minor-s20261101-164222-2-t1-20261101-164456-3
+        path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-minor-s20261101-164222-2-t1-20261101-164456-4
+        path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+  s20261101-164222-3:
+    id: s20261101-164222-3
+    asset_name: crumbling-major
+    title: 'Muse driver grounded rerun: crumbling-major (mech-5)'
+    created: '2026-11-01T16:42:22'
+    turns:
+    - seq: 1
+      prompt: 'Grounded major: floor_default.png + minor winner refs, wide fissures,
+        separating pieces, no hole'
+      full_prompt_sent: 'Grounded major: floor_default.png + minor winner refs, wide
+        fissures, separating pieces, no hole'
+      references:
+      - tools/static/level-sprites/floor_default.png
+      - assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-1.png
+      num: 4
+      provider_session: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+      status: completed
+      cost_total: '0.04'
+      outputs:
+      - key: crumbling-major-s20261101-164222-3-t1-20261101-164635-1
+        path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-major-s20261101-164222-3-t1-20261101-164635-2
+        path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-major-s20261101-164222-3-t1-20261101-164635-3
+        path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-major-s20261101-164222-3-t1-20261101-164635-4
+        path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+  s20261101-164222-4:
+    id: s20261101-164222-4
+    asset_name: crumbling-void
+    title: 'Muse driver grounded rerun: crumbling-void (mech-5)'
+    created: '2026-11-01T16:42:22'
+    turns:
+    - seq: 1
+      prompt: 'Grounded void: floor_default.png + major winner refs, black hole, broken
+        rim of same stone'
+      full_prompt_sent: 'Grounded void: floor_default.png + major winner refs, black
+        hole, broken rim of same stone'
+      references:
+      - tools/static/level-sprites/floor_default.png
+      - assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-2.png
+      num: 4
+      provider_session: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+      status: completed
+      cost_total: '0.04'
+      outputs:
+      - key: crumbling-void-s20261101-164222-4-t1-20261101-164801-1
+        path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-1.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-1-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-void-s20261101-164222-4-t1-20261101-164801-2
+        path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-2.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-2-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-void-s20261101-164222-4-t1-20261101-164801-3
+        path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-3.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-3-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null
+      - key: crumbling-void-s20261101-164222-4-t1-20261101-164801-4
+        path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-4.png
+        estimated_usd: '0.01'
+        original_path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-4-orig.png
+        requested_width: 512
+        requested_height: 512
+        raw_width: null
+        raw_height: null

@@ -1,0 +1,52 @@
+asset: crumbling-minor
+session: s20261101-164222-2
+muse_session: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+project: meta-global-ai-hackathon-jolly-challenge
+project_root: /home/andrew/Sites/meta-global-ai-hackathon-jolly-challenge
+capture: live, appended by asset_driver as turns happen
+started: '2026-11-01T16:44:57'
+budget:
+  target_usd: '1.00'
+  cap_usd: '2.00'
+turns:
+- seq: 1
+  at: '2026-11-01T16:44:57'
+  prompt: 'Grounded minor: floor_default.png + intact winner refs, bold crack web,
+    solid slab'
+  references:
+  - tools/static/level-sprites/floor_default.png
+  - assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-3.png
+  generated_files:
+  - generated_images/call_01a19911920172a5b991bcb9ed9280d6.jpg
+  - generated_images/call_01a19911955072acbc58b8a2412400d9.jpg
+  - generated_images/call_01a1991198e97648acd844640b338515.jpg
+  - generated_images/call_01a199119c2f7415812fa27c468dc690.jpg
+  outputs:
+  - key: crumbling-minor-s20261101-164222-2-t1-20261101-164456-1
+    path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-1.png
+    verdict: 'good: winner. Even bold crack web on the real floor stone, clearly beyond
+      intact at 64px, still solid'
+    author: claude
+    preferred: true
+  - key: crumbling-minor-s20261101-164222-2-t1-20261101-164456-2
+    path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-2.png
+    verdict: 'bad: one thick central fissure dominates, reads closer to major'
+    author: claude
+    preferred: false
+  - key: crumbling-minor-s20261101-164222-2-t1-20261101-164456-3
+    path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-3.png
+    verdict: 'good: clear web at 64px but diagonal layout too close to the intact
+      winner'
+    author: claude
+    preferred: false
+  - key: crumbling-minor-s20261101-164222-2-t1-20261101-164456-4
+    path: assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-4.png
+    verdict: 'good: clear web at 64px but diagonal layout too close to the intact
+      winner'
+    author: claude
+    preferred: false
+  cost_total: '0.04'
+spend_usd: '0.04'
+winner: crumbling-minor-s20261101-164222-2-t1-20261101-164456-1
+pack_file: .worktrees/mech-5-crumbling-tile/tools/static/packs/crumbling/assets/crumbling-minor.png
+finished: '2026-11-01T16:48:27'

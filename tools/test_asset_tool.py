@@ -12,12 +12,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from asset_store import (StoreError, add_turn, add_version,
                          build_prompt_draft, create_asset, create_session,
-                         get_session, load_sessions, load_judgements,
+                         get_session, import_turn, load_sessions, load_judgements,
                          load_manifest, lottery_keys, mark_turn_failed,
                          normalize_run_count, publish_slug,
                          record_turn_outputs, save_judgement, save_judgements,
                          save_manifest, save_sessions, session_context_refs,
-                         split_cost_per_output, update_version,
+                         session_spend, split_cost_per_output, update_version,
                          validate_references, validate_run_not_noop,
                          validate_upload)
 
@@ -222,6 +222,31 @@ class PromptDraftTest(unittest.TestCase):
         draft = build_prompt_draft("tile", "still framed", {"no_cracks": False})
         self.assertIn("no cracks", draft)
         self.assertIn('Parent noted: "still framed"', draft)
+
+
+class DriverImportTest(unittest.TestCase):
+    def test_import_turn_records_outputs_cost_and_provider(self):
+        sessions = {}
+        create_session(sessions, "s1", "crumbling")
+        infos = [{"key": "k1", "path": "assets/outputs/k1.png",
+                  "estimated_usd": "0.01"},
+                 {"key": "k2", "path": "assets/outputs/k2.png",
+                  "estimated_usd": "0.01"}]
+        turn = import_turn(sessions, "s1", "cracked floor tile", [],
+                           infos, provider_session="muse-session-1")
+        self.assertEqual(turn["status"], "completed")
+        self.assertEqual(turn["provider_session"], "muse-session-1")
+        self.assertEqual(turn["cost_total"], "0.02")
+        self.assertEqual(session_spend(sessions["s1"]),
+                         {"outputs": 2, "spend_usd": "0.02", "turns": 1})
+
+    def test_judgement_records_author(self):
+        judgements = {}
+        save_judgement(judgements, "k", "reads well",
+                       author="claude")
+        save_judgement(judgements, "k2", "human note")
+        self.assertEqual(judgements["k"]["author"], "claude")
+        self.assertNotIn("author", judgements["k2"])
 
 
 class SessionStoreTest(unittest.TestCase):

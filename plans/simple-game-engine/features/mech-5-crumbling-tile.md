@@ -1,7 +1,7 @@
 ---
 title: Crumbling tile — sanity check
 summary: breaks one step after you leave. Sanity-check for candidate mechanic #5 (Terrain and Hazards, trial).
-status: proposed
+status: completed
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -40,6 +40,11 @@ The player meets Crumbling tile for the first time in its teaching room (mech-5-
 
 - Movement/state stays deterministic: state advances only through the pure step function with recorded t_ms; a recorded session replays to the same end state.
 - Restart (R / restart) restores the room to its initial state, including this mechanic.
+- No soft-lock: every reachable state has a legal move, a lose, or a reset.
+- Definition audit: floor: walkable ground; standing, waiting and turning on it are always safe (ground term, defined here for this file)
+- Definition audit: wall: never enterable from any side; it only blocks and never harms (ground term, defined here for this file)
+- Definition audit: void: a hole where floor used to be; entering it is falling, so the attempt is lost, or the player returns to the active checkpoint per mechanic 48 in this file where one is placed (ground term, defined here for this file)
+- Definition audit: orb: walking onto it collects it; it is counted by the gate and never enters the inventory
 
 ## UI / Feedback
 
@@ -52,6 +57,10 @@ The player meets Crumbling tile for the first time in its teaching room (mech-5-
 - Level JSON: new Test Level mech-5-crumbling-tile-room (rows + legend) implementing the teaching moment above.
 - Sprites/defs: reuse existing tiles where the mechanic reuses an existing tile; add a new sprite/tile def only if this mechanic introduces a new tile (confirm in the implement task).
 - Source: plans/level-design/candidate-mechanics/terrain-and-hazards.yml mechanic #5.
+- Pack assets (from candidate file; bundled in packs/crumbling-tile/assets):
+- Pack asset (tiles): crumbling.png — intact crumbling tile, safe to stand on
+- Pack asset (tiles): crumbling-cracked.png — tile while Jolly stands on it, strained but safe
+- Pack asset (tiles): void.png — hole left after the tile falls; blocks movement for the rest of the attempt
 
 ## Acceptance Criteria
 
@@ -61,6 +70,11 @@ The player meets Crumbling tile for the first time in its teaching room (mech-5-
 - [ ] Rule verified in mech-5-crumbling-tile-room: Restarts and checkpoints restore it
 - [ ] A recorded agent play session of the room replays to the same end state (replay digest match).
 - [ ] Screenshot of the room attached as evidence on the sanity-check task.
+- [ ] Adversarial case verified in the room: cross two tiles then press back twice; the vacated tiles are void, backward presses are blocked, and the forward exit is still reachable (no floating middle tile)
+- [ ] No reachable state has no legal move and no lose/reset (soft-lock check played, not just the solution path).
+- [ ] Stepping into a fallen (void) tile is falling: the attempt is lost, per the void definition in the candidate entry.
+- [ ] Crumbling stages verified: first step-on minor, second major (visible after stepping off), stepping onto major falls and loses; standing/leaving never advances a stage.
+- [ ] Stage timing verified (review-fixes-5 supersedes the step-on reading): leaving advances minor then major; stepping onto major is safe; leaving a major tile drops it to void behind the player.
 
 ## Out of Scope
 
@@ -77,27 +91,328 @@ The player meets Crumbling tile for the first time in its teaching room (mech-5-
 ## Testing
 
 Needs a mechanics playground: new — Test Level mech-5-crumbling-tile-room, built from this mechanic's teaching moment above. What to check there: every rule in Player-Facing Behavior, played in mech-5-crumbling-tile-room; the teaching moment's first (naive) action should fail as described and the corrected action should succeed. Record play sessions for replay: yes — sessions are the review evidence. Synergy rooms are explicitly deferred to a later run and are not part of this feature's check.
+Named test cases (from the candidate file; all must be played):
+- Test case solution crossing: cross the bridge, collect the far orb, return by the long way; both orbs collected, back at start
+- Test case adversarial backtracking: cross two tiles then press back twice; the vacated tiles are void, backward presses are blocked, and the forward exit is still reachable (no floating middle tile)
+- Test case safe standing: stand on a bridge tile and push into a wall twice; the stood-on tile does not fall and still carries the player onward
+- Test case restart and replay: restart restores all three bridge tiles, and a recorded crossing session replays to the same end state
+- Test case staged backtrack: cross (minor), return (major), step forward onto major and lose the attempt.
 
 ## Tasks
 
 ### mech-5-crumbling-tile/test-level — Test Level: mech-5-crumbling-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-5-crumbling-tile-room.json (test:true) realising the teaching moment for Crumbling tile: First room: a crumbling crossing with an orb on the far side and something worth returning for. A player who crosses, collects, and turns back finds the tile they left has fallen and must take the long way or restart, which teaches that the crossing is spent by leaving it rather than by standing on it.
 - Acceptance: mech-5-crumbling-tile-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-5-crumbling-tile/implement-mechanic — Implement Crumbling tile
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #5 deterministically in the pure step function per the spec rules. Rules: Safe while you stand on it; One move after you leave, it falls and becomes a void tile for the rest of the attempt; Restarts and checkpoints restore it
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-5-crumbling-tile-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-5-crumbling-tile/sanity-check — Sanity check Crumbling tile in mech-5-crumbling-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-5-crumbling-tile-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-144319-room-latest.png`
+- Session: `game-mech-5-crumbling-tile-room-20261101194229-614skx` (mech-5-crumbling-tile-room, agent, quit)
+
+### mech-5-crumbling-tile/review-fixes-1 — Pack folder design: main.js + manifest + bundled assets
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes`
+- Description: Human request in chat: packs are single js files; make each pack a folder with main.js and a manifest describing the assets it uses, loading bundled assets from the pack. Use tools/make_placeholder_sprites.sh to generate the crumbling placeholder assets.
+- Acceptance: Every pack under tools/static/packs/ is a folder with main.js + manifest.json; bundled assets load from packs/<id>/assets/; crumbling placeholders generated and playtested; existing suites still pass.
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-150023-room-pack-assets.png`
+
+### mech-5-crumbling-tile/review-fixes-2 — Fix backtracking soft-lock on crumbling bridge
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes`
+- Description: Human playtest session game-mech-5-crumbling-tile-room-20261101200208-8nug8j: crossing then backing onto the middle bridge tile strands the player (void both sides, walls above/below, no legal move, no reset). Delayed fall + re-entry disarm lets a bridge isolate its middle tile.
+- Acceptance: The human session sequence can no longer strand the player on a bridge tile; backtracking is blocked by the fallen tile and the forward exit stays reachable; spec rules still hold (safe standing, falls after leaving, restart restores); focused regression test added.
+- Session: `game-mech-5-crumbling-tile-room-20261101200208-8nug8j` (mech-5-crumbling-tile-room, human, quit)
+
+### mech-5-crumbling-tile/review-fixes-3 — Void is a hazard: falling into a fallen tile loses the attempt
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes`
+- Description: Definition audit (candidate mechanic 5 definitions, inline): void means entering is falling and the attempt is lost. Current pack makes crumble:void a blocker, so the hole can never hurt the player. Make void enterable as a hazard (lose on entry; blocks still cannot be pushed into it per blocks.yml), update tests and the adversarial test case, re-run Q&A.
+- Acceptance: Stepping into a fallen tile loses the attempt and offers restart; pushing/forward play unchanged; BacktrackRegression updated; Q&A sessions re-recorded.
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-153052-room-qa3.png`
+- Session: `game-mech-5-crumbling-tile-room-20261101202952-4d0w2i` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101202957-dz48sr` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101203000-hvsj3z` (mech-5-crumbling-tile-room, agent, quit)
+
+### mech-5-crumbling-tile/review-fixes-4 — Crumbling stages: minor, major, then void on step-on
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes`
+- Description: Human design: crumbling has two degraded states so backtracking once has a reason. Stepping on a tile advances it (intact -> minor -> major); stepping on a major tile makes it fall under the player and loses the attempt. Leaving a tile does not advance it. Middle stages must stay visible after the player steps off.
+- Acceptance: Bridge tiles show minor after first step-on and major after second; a third step-on (onto major) falls and loses; crossing, one backtrack, standing and restart behave as the updated candidate test cases state; Q&A sessions re-recorded.
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-153815-room-qa4.png`
+- Session: `game-mech-5-crumbling-tile-room-20261101203716-mrczd2` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101203721-iszn1k` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101203724-3okx8e` (mech-5-crumbling-tile-room, agent, quit)
+
+### mech-5-crumbling-tile/review-fixes-5 — Crumble stages advance on leaving, not on stepping on
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes`
+- Description: Human correction: step-on advancement makes a major tile fall under the player; the step-off reading is correct. Intact, minor and major are all safe to stand on; leaving advances one stage, and leaving a major tile drops it to void behind the player. Stepping into an existing void still falls and loses.
+- Acceptance: Leaving advances minor->major->void (behind the player); stepping onto major is safe; cross, backtrack once, and cross again works with no second return; Q&A re-run.
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-154202-room-qa5.png`
+- Session: `game-mech-5-crumbling-tile-room-20261101204119-cbcxvd` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101204123-sfnvze` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101204127-9htq6f` (mech-5-crumbling-tile-room, agent, quit)
+
+### mech-5-crumbling-tile/review-fixes-6 — Death (and win) freeze the timer and the game state
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes`
+- Description: Human oversight, general not crumbling-specific: after the player enters the death state the live timer keeps ticking and the pure step still advances its clock on later inputs. Any finished run (won or lost) must freeze: elapsed, time_left, steps and HUD clock stay at the finishing moment.
+- Acceptance: Stepping a lost/won state with a later t_ms returns the identical state; the game HUD/debug clock displays the frozen finishing time after death; existing timer/replay suites pass.
+- Session: `game-mech-5-crumbling-tile-room-20261101205423-epup69` (mech-5-crumbling-tile-room, agent, quit)
+
+### mech-5-crumbling-tile/review-fixes-7 — Fill crumbling pack with generated art via Muse driver
+
+- Status: `completed` · Priority: `medium` · Kind: `review-fixes`
+- Description: Per plans/ai-asset-driver/PLAN.md: Muse generates the four crumbling tiles through the Muse image tool, each run captured as an asset session with verdicts, winners published into packs/crumbling/assets replacing placeholders.
+- Acceptance: Four generated 512x512 assets in the pack, stages distinguishable at 64px, asset sessions with Claude verdicts and spend under cap, in-game screenshot attached.
+- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-minor.png`
+- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-major.png`
+- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-void.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T14:43:31 · agent · on `mech-5-crumbling-tile`
+
+Ready for review: Crumbling tile — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-5-crumbling-tile/test-level: Test Level: mech-5-crumbling-tile-room — completed, commit b5ce4e4 — 13x8 room, 3-tile CCC bridge, far + return orbs
+- mech-5-crumbling-tile/implement-mechanic: Implement Crumbling tile — completed, commit deda0e3 — packs/crumbling.js in the pure step (safe standing, falls one move after leaving, void blocks, re-entry disarms); golden regenerated with only the new level added
+- mech-5-crumbling-tile/sanity-check: Sanity check Crumbling tile in mech-5-crumbling-tile-room — completed, commit 8b78940 — replay digest matches live playthrough
+
+Evidence:
+- Screenshots: screenshots/features/mech-5-crumbling-tile/20261101-144319-room-latest.png (attached on the sanity-check task)
+- Sessions: game-mech-5-crumbling-tile-room-20261101194229-614skx (mech-5-crumbling-tile-room, agent, quit) — preserved at sessions/features/mech-5-crumbling-tile/ ; browser Replay log: match 12c43c59 (31 inputs), no console errors
+- Tests: tools.test_mech_5_crumbling_tile 12 ok; full suite 245 ran with only the 2 pre-existing test_pm_review_ui failures (also failing on untouched main)
+
+Playtest:
+- Worktree: .worktrees/mech-5-crumbling-tile
+- Start: cd .worktrees/mech-5-crumbling-tile && python3 tools/server.py --port 8351 — board server stays on 8321
+- Game: http://127.0.0.1:8351/static/game.html — open the Test Level mech-5-crumbling-tile-room from the game menu; cross the CCC bridge, then try to come straight back.
+
+### 2026-11-01T15:00:24 · agent · on `mech-5-crumbling-tile`
+
+Ready for re-review: Crumbling tile — sanity check (4/4 tasks completed, incl. review-fixes-1)
+
+Change since last review: pack folder design. Every pack under tools/static/packs/ is now a folder with main.js + manifest.json describing its assets; bundled assets load from packs/<id>/assets/, shared art still resolves to level-sprites/. The crumbling pack bundles generated placeholders (crumbling / crumbling-cracked / void) and the game swaps them as the tile arms and falls. See tools/static/packs/README.md. Commit f47be88.
+
+Evidence: new screenshot on review-fixes-1 (bridge rendered from pack placeholders, 11 sprites none missing); earlier session + screenshot on sanity-check unchanged. Tests: 250 ran, only the 2 pre-existing pm-review-ui failures.
+
+Playtest:
+- Worktree: .worktrees/mech-5-crumbling-tile
+- Start: cd .worktrees/mech-5-crumbling-tile && python3 tools/server.py --port 8351 — board server stays on 8321
+- Game: http://127.0.0.1:8351/static/game.html — open mech-5-crumbling-tile-room from Test Levels.
+
+### 2026-11-01T15:08:20 · agent · on `mech-5-crumbling-tile`
+
+Ready for re-review: soft-lock fixed (review-fixes-2, commit 06c8714). The backtracking sequence from your session no longer strands the player: vacated bridge tiles are void immediately, backward presses are blocked, forward exit stays open. Playtest: cd .worktrees/mech-5-crumbling-tile && python3 tools/server.py --port 8351 — open http://127.0.0.1:8351/static/game.html, choose mech-5-crumbling-tile-room, cross the bridge and try to back out.
+
+### 2026-11-01T15:19:17 · agent · on `mech-5-crumbling-tile`
+
+Q&A pass 2 ready for your review: Crumbling tile (ticket enriched with named test cases; code unchanged since 06c8714)
+
+Rule -> evidence:
+- Safe while you stand on it: unit CrumblingMechanicTests + session 5zs8xw (annotated step 8, two blocked pushes, tile intact)
+- Falls on the step that leaves it, void blocks re-entry: unit tests + sessions wleja6 step 15 and 31tepe step 8 (annotated)
+- Solution crossing, orbs both collected: session wleja6 (31 inputs, final at start, orbs_left 0, digest 352f1110)
+- Adversarial backtracking (your stranded sequence): session 31tepe — backward presses blocked, forward exit reached at (8,2); regression tests BacktrackRegressionTests
+- Restart restores: unit test (fresh initial state) ; Replay: all three sessions replayed independently through GameCore — digests match the live browser digests exactly. Empty log stays playing (room has no win tile; success is read at the readout, orbs 0 at start tile).
+
+Interaction audit: void blocks like a wall for player movement; orbs/keys/locks/gate unaffected (n-a in this room); enemies/water/switches n-a in this room.
+
+Sessions (preserved under sessions/features/mech-5-crumbling-tile/, headers carry feature/task):
+- success wleja6, naive-failure 31tepe, edge 5zs8xw — replay from the game Sessions menu or ?replay=<id>&t=<seconds>
+
+Playtest:
+- Worktree server was started with: cd .worktrees/mech-5-crumbling-tile && python3 tools/server.py --port 8351 (board stays on 8321)
+- Game: http://127.0.0.1:8351/static/game.html — open mech-5-crumbling-tile-room from Test Levels.
+
+Screenshot evidence: screenshots/features/mech-5-crumbling-tile/20261101-151916-room-qa2.png (also attached via this comment context on the feature page).
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-151916-room-qa2.png`
+- Session: `game-mech-5-crumbling-tile-room-20261101201828-wleja6` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101201833-31tepe` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101201836-5zs8xw` (mech-5-crumbling-tile-room, agent, quit)
+
+### 2026-11-01T15:30:54 · agent · on `mech-5-crumbling-tile`
+
+Ready for re-review: void hazard fixed and Q&A re-run (review-fixes-3, commit 0f18096).
+
+What changed: stepping into a fallen tile is now falling — the attempt is lost and Restart is offered, exactly as the candidate entry's void definition states. The hole is no longer a wall in disguise.
+
+Q&A evidence (all replay-verified to the live digests):
+- success 4d0w2i (30 inputs, both orbs, back at start)
+- fall dz48sr (stepping back into the void, status lost, annotated at the fall)
+- standing hvsj3z (stood-on tile safe)
+
+Playtest:
+- Worktree: .worktrees/mech-5-crumbling-tile
+- Start: cd .worktrees/mech-5-crumbling-tile && python3 tools/server.py --port 8351 — board server stays on 8321
+- Game: http://127.0.0.1:8351/static/game.html — open mech-5-crumbling-tile-room, cross the bridge, then step back into the hole.
+
+### 2026-11-01T15:38:17 · agent · on `mech-5-crumbling-tile`
+
+Ready for re-review: staged crumbling (review-fixes-4, commit c5b2eb0).
+
+Rules now: stepping on a tile advances it (first step-on minor, second major, both visible once you step off); standing still or leaving never advances it; stepping onto a major tile makes it fall under you and loses the attempt. So the bridge can be crossed, backtracked once, and the major tiles warn that another step-on is the fall.
+
+Q&A (replay-verified): success mrczd2, major-fall iszn1k annotated at the fall, standing 3okx8e.
+
+Playtest:
+- Worktree: .worktrees/mech-5-crumbling-tile
+- Start: cd .worktrees/mech-5-crumbling-tile && python3 tools/server.py --port 8351 — board server stays on 8321
+- Game: http://127.0.0.1:8351/static/game.html — open mech-5-crumbling-tile-room, cross the bridge, come back, then step forward again.
+
+### 2026-11-01T15:42:03 · agent · on `mech-5-crumbling-tile`
+
+Ready for re-review: stage timing corrected (review-fixes-5, commit 606ebee).
+
+You were right that the step-on reading was wrong. Now leaving a tile advances it (minor, then major, then void behind you), and stepping onto a major tile is safe. Cross, come back, cross once more — after that the bridge behind you is void and there is no second return.
+
+Q&A (replay-verified): success cbcxvd, major-safe sfnvze annotated on the major tile, standing 9htq6f.
+
+Playtest:
+- Worktree: .worktrees/mech-5-crumbling-tile
+- Start: cd .worktrees/mech-5-crumbling-tile && python3 tools/server.py --port 8351 — board server stays on 8321
+- Game: http://127.0.0.1:8351/static/game.html — open mech-5-crumbling-tile-room, cross, come back, and cross again.
+
+### 2026-11-01T15:55:05 · agent · on `mech-5-crumbling-tile`
+
+Ready for re-review: death freeze (review-fixes-6, commit 871a1e4).
+
+General fix as requested: entering the death state stops the timer, and the game freezes. Later inputs return the finished state unchanged, and the HUD clock shows the finishing moment instead of ticking on behind the loss screen. Wins freeze the same way.
+
+Playtest:
+- Worktree: .worktrees/mech-5-crumbling-tile
+- Start: cd .worktrees/mech-5-crumbling-tile && python3 tools/server.py --port 8351 — board server stays on 8321
+- Game: http://127.0.0.1:8351/static/game.html — open mech-5-crumbling-tile-room, wear the first bridge tile down to void, step in, and watch the timer stop.
+
+### 2026-11-01T17:23:23 · agent · on `mech-5-crumbling-tile`
+
+Human approved in Muse session ('okay enough for this feature, its approved so merge and just merge it'). Merging feat/mech-5-crumbling-tile into main per step 8; board review.decision was still pending, approval recorded here from the human's instruction.
+
+### 2026-11-01T14:38:01 · agent · on `mech-5-crumbling-tile/test-level`
+
+Starting (random pick from mechanic-sanity-checks epic): build levels/mech-5-crumbling-tile-room.json crumbling crossing (3-tile bridge, orb far side, return orb on long way). Verify: game_levels listing + structure tests.
+
+### 2026-11-01T14:38:29 · agent · on `mech-5-crumbling-tile/test-level`
+
+Done: levels/mech-5-crumbling-tile-room.json (13x8, test:true) — 3-tile CCC bridge in wall divider, far orb at (10,1), return orb at (2,6) on open bottom passage. Commit b5ce4e4. Tests: python3 -m unittest tools.test_mech_5_crumbling_tile — 3 ok.
+
+### 2026-11-01T14:38:30 · agent · on `mech-5-crumbling-tile/implement-mechanic`
+
+Starting: new pack tools/static/packs/crumbling.js (crumble:crumbling object + crumble:void blocker, deadline in cell meta, tick collapse), registered in game-core.js + game.html, C/V glyph render follows state grid. Verify: node-driven behaviour tests (safe standing, falls one move after leaving, void blocks, restart restores) + existing suites.
+
+### 2026-11-01T14:41:31 · agent · on `mech-5-crumbling-tile/implement-mechanic`
+
+Done: tools/static/packs/crumbling.js (crumble:crumbling onExit arms step deadline in cell meta, tick collapses to blocking crumble:void, re-entry disarms), registered in game-core.js + game.html; game.js glyph follows C->V so void stays visible. Golden regenerated deliberately: only the new level added, no existing readout changed. Commit deda0e3. Tests: tools.test_mech_5_crumbling_tile 11 ok; tools.test_refactor_regression ok.
+
+### 2026-11-01T14:41:32 · agent · on `mech-5-crumbling-tile/sanity-check`
+
+Starting: add replay/determinism sanity tests, stage sprites/levels in worktree, run worktree server on spare port, browser-play the room (cross, burn, long way), record agent session + screenshot evidence. Verify: replay digest matches live.
+
+### 2026-11-01T14:43:26 · agent · on `mech-5-crumbling-tile/sanity-check`
+
+Done: played mech-5-crumbling-tile-room end-to-end (cross CCC bridge, far orb, direct return blocked by VVV void, long way home collecting return orb, back at start; orbs 0). Browser replay: match 12c43c59 (31 inputs), no console errors. Screenshot attached. Commit 8b78940 adds replay-vs-live digest test. Tests: tools.test_mech_5_crumbling_tile 12 ok; full suite 245 ran with only the 2 pre-existing test_pm_review_ui failures (also failing on untouched main).
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-144319-room-latest.png`
+- Session: `game-mech-5-crumbling-tile-room-20261101194229-614skx` (mech-5-crumbling-tile-room, agent, quit)
+
+### 2026-11-01T14:56:52 · agent · on `mech-5-crumbling-tile/review-fixes-1`
+
+Starting: convert core-chips/keys-locks/proof-water/crumbling to pack folders (main.js + manifest.json), registry records bundled asset paths, game loads pack assets from the pack. Crumbling assets generated with make_placeholder_sprites.sh into packs/crumbling/assets/. Verify: pack layout tests, mech tests, full suite, browser play.
+
+### 2026-11-01T15:00:23 · agent · on `mech-5-crumbling-tile/review-fixes-1`
+
+Done: every pack is now a folder (main.js + manifest.json); registry defineAsset records pack+bundled and assetPathsForLevel resolves bundled assets to packs/<id>/assets/<file>, shared art to level-sprites/; game loads pack sprites from the pack and swaps crumbling/cracked/void textures with state. Crumbling placeholders generated with tools/make_placeholder_sprites.sh into packs/crumbling/assets/. Screenshot attached (screenshots/features/mech-5-crumbling-tile/20261101-150023-room-pack-assets.png). Commit f47be88. Tests: tools.test_pack_folders 5 ok, mech suite 12 ok; full suite 250 ran with only the 2 pre-existing test_pm_review_ui failures. Browser play: 31-input run, replay match, no console errors.
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-150023-room-pack-assets.png`
+
+### 2026-11-01T15:06:34 · agent · on `mech-5-crumbling-tile/review-fixes-2`
+
+Starting: reproduce the human session in a regression test first (cross, back onto middle tile, stranded), then make the tile fall on the leaving step so a vacated tile can never be re-occupied or isolate the player. Verify: regression + updated behaviour tests, full suite, browser replay of the human sequence.
+
+### 2026-11-01T15:08:19 · agent · on `mech-5-crumbling-tile/review-fixes-2`
+
+Done: the human session sequence (cross, step back, step back) stranded the player at (6,2) with void both sides and no legal move. Cause: one-move fall delay plus re-entry disarm, which I invented in tests rather than taking from the spec. Fix: a crumbling tile now falls on the step that leaves it, so a vacated tile can never be re-occupied and the forward exit always stays reachable; cracked sprite now shows while stood on. Added BacktrackRegressionTests from the session (failed before, passes after). Commit 06c8714. Tests: crumbling+pack suites 19 ok; full suite 252 ran with only the 2 pre-existing test_pm_review_ui failures. Browser check of the stranded sequence: player reaches the exit floor at (8,2), no console errors.
+- Session: `game-mech-5-crumbling-tile-room-20261101200208-8nug8j` (mech-5-crumbling-tile-room, human, quit)
+
+### 2026-11-01T15:28:14 · agent · on `mech-5-crumbling-tile/review-fixes-3`
+
+Starting: make crumble:void a hazard (enterable, lose on entry) instead of a blocker; blocks semantics unchanged for future pushables. Add/update regression tests for falling, then full Q&A sessions. Verify: focused tests, full suite, browser Q&A.
+
+### 2026-11-01T15:30:53 · agent · on `mech-5-crumbling-tile/review-fixes-3`
+
+Done: crumble:void is now a hazard (onEnter loses) instead of a blocker; void definition in the candidate entry governs. Regression: stepping back into a fallen tile moves into the hole and status is lost (BacktrackRegressionTests, failed before the change). Commit 0f18096. Tests: 19 crumbling/pack tests ok; full suite 252 with only the 2 pre-existing pm-review-ui failures. Q&A sessions below replay to identical digests (success 3a1847d8, fall b2eaec6f lost, standing 8c825c5c). Screenshot: screenshots/features/mech-5-crumbling-tile/20261101-153052-room-qa3.png
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-153052-room-qa3.png`
+- Session: `game-mech-5-crumbling-tile-room-20261101202952-4d0w2i` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101202957-dz48sr` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101203000-hvsj3z` (mech-5-crumbling-tile-room, agent, quit)
+
+### 2026-11-01T15:35:04 · agent · on `mech-5-crumbling-tile/review-fixes-4`
+
+Starting: stage lives in cell meta, advances onEnter only (minor=1, major=2, step onto major -> void+lose); swap cracked asset for minor/major placeholders via make_placeholder_sprites.sh; update candidate assets/test cases; re-run Q&A. Verify: stage regression tests first, full suite, browser sessions.
+
+### 2026-11-01T15:38:16 · agent · on `mech-5-crumbling-tile/review-fixes-4`
+
+Done: crumbling advances on step-on only (intact -> minor -> major), stored in crumble_stage meta; stepping onto major converts it to void and loses. Minor/major bundled sprites replace the single cracked placeholder (generate via make_placeholder_sprites.sh). Commit c5b2eb0. Tests: 19 crumbling/pack tests ok; full suite 252 with only the 2 pre-existing pm-review-ui failures. Q&A sessions replay to live digests (success a96c5c0a, major-fall 1637f82d lost, standing 0bb06b11). Screenshot: screenshots/features/mech-5-crumbling-tile/20261101-153815-room-qa4.png
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-153815-room-qa4.png`
+- Session: `game-mech-5-crumbling-tile-room-20261101203716-mrczd2` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101203721-iszn1k` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101203724-3okx8e` (mech-5-crumbling-tile-room, agent, quit)
+
+### 2026-11-01T15:39:50 · agent · on `mech-5-crumbling-tile/review-fixes-5`
+
+Starting: move crumble_stage advance from onEnter to onExit; major entry stays safe, leaving major converts to void. Update stage tests first, then pack, candidate wording, and Q&A. Verify: focused tests, full suite, browser sessions.
+
+### 2026-11-01T15:42:03 · agent · on `mech-5-crumbling-tile/review-fixes-5`
+
+Done: crumble_stage advances in onExit only; every stage is safe to stand on, leaving a major tile drops it to void behind the player, and stepping into that void still loses. The backtrack sequence that fell under the player in review-fixes-4 now ends standing safely on the major tile. Commit 606ebee. Tests: 18 crumbling/pack tests ok; full suite 251 with only the 2 pre-existing pm-review-ui failures. Q&A sessions replay to live digests (success b57ccefa, major-safe a3bfb523, standing 61c52b32). Screenshot: screenshots/features/mech-5-crumbling-tile/20261101-154202-room-qa5.png
+- Evidence: `screenshots/features/mech-5-crumbling-tile/20261101-154202-room-qa5.png`
+- Session: `game-mech-5-crumbling-tile-room-20261101204119-cbcxvd` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101204123-sfnvze` (mech-5-crumbling-tile-room, agent, quit)
+- Session: `game-mech-5-crumbling-tile-room-20261101204127-9htq6f` (mech-5-crumbling-tile-room, agent, quit)
+
+### 2026-11-01T15:52:24 · agent · on `mech-5-crumbling-tile/review-fixes-6`
+
+Starting: add a frozen-after-death test to the level timer suite, freeze finished states in kernel step before clock mutation, and make the page clock draw the frozen state time after lost/won. Verify: timer/game-core suites, full suite, browser death check.
+
+### 2026-11-01T15:55:04 · agent · on `mech-5-crumbling-tile/review-fixes-6`
+
+Done (general fix, filed here): a finished run is frozen in the pure step (kernel returns the finished state unchanged before any clock mutation), and the page clock/getClock draw the frozen finishing time after lost/won. New test test_death_freezes_the_clock_and_the_state failed before, passes after. Golden regenerated deliberately: only post-loss readouts changed (steps and time_left now stay frozen; positions unchanged). Commit 871a1e4. Tests: timer/core/warp/crumbling/page suites ok; full suite shows only the 2 pre-existing pm-review-ui failures apart from the golden regeneration now included. Browser: fell into void at 0.666s, clock identical 2.2s later, session epup69 annotated.
+- Session: `game-mech-5-crumbling-tile-room-20261101205423-epup69` (mech-5-crumbling-tile-room, agent, quit)
+
+### 2026-11-01T16:14:48 · agent · on `mech-5-crumbling-tile/review-fixes-7`
+
+Starting per plans/ai-asset-driver/PLAN.md: asset tool import path + driver CLI done (45 asset tests ok). Generating intact first (lottery x10 via Muse image tool), judging, narrowing, then minor/major/void with winner references. Budget target $1, hard cap $2 per asset, enforced from session spend.
+
+### 2026-11-01T16:26:04 · agent · on `mech-5-crumbling-tile/review-fixes-7`
+
+Done: Muse drove the asset tool per plans/ai-asset-driver/PLAN.md. Four generated 512x512 tiles replace the placeholders in packs/crumbling/assets (worktree commit 30bd9b7). Asset sessions (all verdicts author=claude, spend from session records, cap $2): intact s20261101-161458 10 outputs $0.10; minor s20261101-161845 4 outputs $0.04; major s20261101-162011 4 outputs $0.04; void s20261101-162011-2 4 outputs $0.04. Winners: crumbling-s20261101-161458-t2-20261101-161820-1, crumbling-minor-s20261101-161845-t1-20261101-162001-1, crumbling-major-s20261101-162011-t1-20261101-162236-1, crumbling-void-s20261101-162011-2-t1-20261101-162237-1. Verified: 64px side-by-side gradient intact<minor<major<void; driven in-game shots show minor/major/void stages; pack+crumbling suites 18 ok; full worktree suite 252 with only the 2 pre-existing test_pm_review_ui failures. Tool changes on main (uncommitted): asset_store import_turn/session_spend, server import endpoint + judgement author, tools/asset_driver.py CLI, 47 asset/driver tests ok. Feature left in_review for human verdict on the art.
+- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-minor.png`
+- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-major.png`
+- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-void.png`
+
+### 2026-11-01T16:35:41 · agent · on `mech-5-crumbling-tile/review-fixes-7`
+
+Per-asset decision reports written (plan note: final report files per iterative run, with references and judgements): plans/ai-asset-driver/reports/crumbling.md, crumbling-minor.md, crumbling-major.md, crumbling-void.md on the main checkout. Each lists its session, turns/prompts, every output's Claude verdict, the published winner, and spend. One record gap is named in each report: turn references were passed to the image tool in-session and not carried into the asset record's references field.
+
+### 2026-11-01T16:40:32 · agent · on `mech-5-crumbling-tile/review-fixes-7`
+
+Grounding gap found in review: the crumbling run never passed the game's real floor sprite (tools/static/level-sprites/floor_default.png) to the image tool - text description only - and accepted realistic hairline cracks that nearly vanish at 64px camera scale. Collected into plans/ai-asset-driver/GROUNDING.md (ground sprites with sampled palettes, edit-the-floor rule, exaggerated 8-12px bold strokes, 64px judging gate). Driver brief now names the ground sprite files and the boldness requirement. Current pack art stands as best-so-far; a grounded rerun would supersede it.
+
+### 2026-11-01T16:49:49 · agent · on `mech-5-crumbling-tile/review-fixes-7`
+
+Grounded rerun done, superseding the first run's art (worktree commit ad596a6). Every generation call carried the real tools/static/level-sprites/floor_default.png (plus previous stage winner) as reference files, recorded in the turn references and in live YAML reports plans/ai-asset-driver/reports/{crumbling,crumbling-minor,crumbling-major,crumbling-void}-grounded.yml, appended by asset_driver import-turn/judge/publish as the loop ran. Sessions: s20261101-164222 (intact), s20261101-164222-2 (minor), s20261101-164222-3 (major), s20261101-164222-4 (void); 4 outputs each, $0.04 each, provider_session recorded as full Muse session UUID 01a1989b-2d1f-7ae3-87b0-03b8655a0f98. New 64px gradient reads instantly: single bold crack -> crack web -> wide fissures with rubble corners -> black hole, all on the real floor speckle/grout; in-room shots re-captured. Pack suites 18 ok. Cost-centre check is on the Muse platform side: 16 new image calls are in this session's log under the project workspace.
+
+### 2026-11-01T17:03:20 · agent · on `mech-5-crumbling-tile/review-fixes-7`
+
+Cost-centre capture fixed as requested. The cost centre only counts muse-image model records, which the built-in image tool never emits, so the driver now records each run itself: meta-cost record (model muse-image-1.0, images per turn, billing subscription) under a NEW named session per asset run, e.g. asset-driver-crumbling-s20261101-164222 named 'Asset driver: crumbling intact — grounded rerun (mech-5)', label asset-driver. meta-cost record lacked a way to name sessions, so --name/--label were added in ~/Sites/meta-costcenter (record.go, cli.go, record_test.go; rebuilt binary needs installing over ~/.local/bin/meta-cost). Both crumbling runs are recorded: 8 sessions, project images now 38 ($0.38). Driver import-turn records future turns automatically (idempotent per-turn ids) and stamps cost_centre_session/name/recorded into the YAML report. Go suite: one pre-existing failure TestHookRecordsWithoutSecretsOrOutput, also failing on untouched HEAD.

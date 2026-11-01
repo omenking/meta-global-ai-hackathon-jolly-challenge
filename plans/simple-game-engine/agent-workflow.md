@@ -110,7 +110,12 @@ read-only in the UI; never try to edit or delete them.
    / mechanics playground where the task calls for one. Existing repo
    tests must still pass. Every mechanic must preserve determinism:
    state advances only through the pure step function, inputs carry
-   `t_ms`, and no mechanic may read unrecorded wall-clock time.
+   `t_ms`, and no mechanic may read unrecorded wall-clock time. For a
+   mechanic sanity check, the play must also run the ticket's named
+   `test_cases`, including the adversarial case (backtracking,
+   hesitation, or the naive action): a reachable state with no legal
+   move and no lose/reset is a failure, however well the solution
+   path plays.
 5. **Evidence and commit.** For any visual or playable change, capture
    screenshots of the worktree build (see below) and, once the engine
    supports it, record an agent-labelled play session of the Test Level.

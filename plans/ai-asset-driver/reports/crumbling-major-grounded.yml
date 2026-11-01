@@ -1,0 +1,52 @@
+asset: crumbling-major
+session: s20261101-164222-3
+muse_session: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+project: meta-global-ai-hackathon-jolly-challenge
+project_root: /home/andrew/Sites/meta-global-ai-hackathon-jolly-challenge
+capture: live, appended by asset_driver as turns happen
+started: '2026-11-01T16:46:35'
+budget:
+  target_usd: '1.00'
+  cap_usd: '2.00'
+turns:
+- seq: 1
+  at: '2026-11-01T16:46:35'
+  prompt: 'Grounded major: floor_default.png + minor winner refs, wide fissures, separating
+    pieces, no hole'
+  references:
+  - tools/static/level-sprites/floor_default.png
+  - assets/outputs/crumbling-minor-s20261101-164222-2-t1-20261101-164456-1.png
+  generated_files:
+  - generated_images/call_01a1991311c877fdb85caa7b349ddbdb.jpg
+  - generated_images/call_01a19913148677f2a60f72caef57c8b0.jpg
+  - generated_images/call_01a1991316ca77b8b8090f9e374cb61f.jpg
+  - generated_images/call_01a1991319f873d2aad099b205f7646b.jpg
+  outputs:
+  - key: crumbling-major-s20261101-164222-3-t1-20261101-164635-1
+    path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-1.png
+    verdict: 'good: wide fissures read beyond minor at 64px, no hole'
+    author: claude
+    preferred: false
+  - key: crumbling-major-s20261101-164222-3-t1-20261101-164635-2
+    path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-2.png
+    verdict: 'good: winner. Wide fissures plus crumbled rubble corners, clearly the
+      worst surface stage at 64px'
+    author: claude
+    preferred: true
+  - key: crumbling-major-s20261101-164222-3-t1-20261101-164635-3
+    path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-3.png
+    verdict: 'good: bold separating cracks at 64px, lacks the rubble that separates
+      it from minor'
+    author: claude
+    preferred: false
+  - key: crumbling-major-s20261101-164222-3-t1-20261101-164635-4
+    path: assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-4.png
+    verdict: 'good: bold separating cracks at 64px, lacks the rubble that separates
+      it from minor'
+    author: claude
+    preferred: false
+  cost_total: '0.04'
+spend_usd: '0.04'
+winner: crumbling-major-s20261101-164222-3-t1-20261101-164635-2
+pack_file: .worktrees/mech-5-crumbling-tile/tools/static/packs/crumbling/assets/crumbling-major.png
+finished: '2026-11-01T16:48:27'

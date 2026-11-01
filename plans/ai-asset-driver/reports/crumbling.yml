@@ -1,0 +1,86 @@
+asset: crumbling
+session: s20261101-161458
+title: 'Muse driver: crumbling intact tile (mech-5)'
+muse_session: saffron-draco-01a1989b
+capture: backfilled from asset session records after the run; asset_driver now appends
+  this file live per turn
+budget:
+  target_usd: '1.00'
+  cap_usd: '2.00'
+spend_usd: '0.10'
+decision: Turn 1 lottery exposed margins/slab-framing/over-damage; turn 2 narrowed
+  to almost-intact, hairline cracks only.
+turns:
+- seq: 1
+  prompt: Top-down 2D puzzle-game floor tile, light gray stone, flat clean PC-98 game-art
+    style (turn 1 lottery, intact crumbling tile)
+  references_recorded: []
+  provider_session: saffron-draco-01a1989b
+  cost_total: '0.05'
+  outputs:
+  - key: crumbling-s20261101-161458-t1-20261101-161627-1
+    path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-1.png
+    verdict: 'bad: black side bars, tile does not fill the frame'
+    author: claude
+    preferred: false
+  - key: crumbling-s20261101-161458-t1-20261101-161627-2
+    path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-2.png
+    verdict: 'bad: framed slab look with edge cracks, reads as a panel not a floor
+      tile'
+    author: claude
+    preferred: false
+  - key: crumbling-s20261101-161458-t1-20261101-161627-3
+    path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-3.png
+    verdict: 'bad: already shattered into slabs; this is major damage, not intact'
+    author: claude
+    preferred: false
+  - key: crumbling-s20261101-161458-t1-20261101-161627-4
+    path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-4.png
+    verdict: 'good: fine cracks readable and still intact, but busier than the winner'
+    author: claude
+    preferred: false
+  - key: crumbling-s20261101-161458-t1-20261101-161627-5
+    path: assets/outputs/crumbling-s20261101-161458-t1-20261101-161627-5.png
+    verdict: 'bad: too cracked for intact and muted at 64px'
+    author: claude
+    preferred: false
+- seq: 2
+  prompt: 'Turn 2: exactly square edge-to-edge tile, almost intact, two or three hairline
+    cracks only'
+  references_recorded: []
+  provider_session: saffron-draco-01a1989b
+  cost_total: '0.05'
+  outputs:
+  - key: crumbling-s20261101-161458-t2-20261101-161820-1
+    path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-1.png
+    verdict: 'good: winner. One clean diagonal hairline crack reads at 64px, stone
+      matches the floor, almost intact as briefed'
+    author: claude
+    preferred: true
+  - key: crumbling-s20261101-161458-t2-20261101-161820-2
+    path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-2.png
+    verdict: 'bad: corner branch cracks only at the edges, centre reads as plain floor'
+    author: claude
+    preferred: false
+  - key: crumbling-s20261101-161458-t2-20261101-161820-3
+    path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-3.png
+    verdict: 'bad: warm tint and visible frame margin, does not match the floor palette'
+    author: claude
+    preferred: false
+  - key: crumbling-s20261101-161458-t2-20261101-161820-4
+    path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-4.png
+    verdict: 'good: two bold cracks read at 64px, slightly more damaged than the winner'
+    author: claude
+    preferred: false
+  - key: crumbling-s20261101-161458-t2-20261101-161820-5
+    path: assets/outputs/crumbling-s20261101-161458-t2-20261101-161820-5.png
+    verdict: 'bad: polygonal slab pattern reads as already major, wrong stage'
+    author: claude
+    preferred: false
+winner: crumbling-s20261101-161458-t2-20261101-161820-1
+pack_file: .worktrees/mech-5-crumbling-tile/tools/static/packs/crumbling/assets/crumbling.png
+muse_session_recorded_as: saffron-draco-01a1989b (session name + short id, as passed
+  to import-turn)
+muse_session_full: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+project: meta-global-ai-hackathon-jolly-challenge
+project_root: /home/andrew/Sites/meta-global-ai-hackathon-jolly-challenge

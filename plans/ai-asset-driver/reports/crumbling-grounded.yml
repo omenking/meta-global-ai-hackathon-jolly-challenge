@@ -1,0 +1,50 @@
+asset: crumbling
+session: s20261101-164222
+muse_session: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+project: meta-global-ai-hackathon-jolly-challenge
+project_root: /home/andrew/Sites/meta-global-ai-hackathon-jolly-challenge
+capture: live, appended by asset_driver as turns happen
+started: '2026-11-01T16:43:27'
+budget:
+  target_usd: '1.00'
+  cap_usd: '2.00'
+turns:
+- seq: 1
+  at: '2026-11-01T16:43:27'
+  prompt: 'Grounded rerun turn 1: edit real floor_default.png, bold 8-12px cracks,
+    intact slab'
+  references:
+  - tools/static/level-sprites/floor_default.png
+  generated_files:
+  - generated_images/call_01a199105bd6708b9b6db918ce47a1f6.jpg
+  - generated_images/call_01a199106046758899150aa9a2086e77.jpg
+  - generated_images/call_01a1991062e7719e8f19d320b83fb382.jpg
+  - generated_images/call_01a199106535719993e32479b378601c.jpg
+  outputs:
+  - key: crumbling-s20261101-164222-t1-20261101-164326-1
+    path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-1.png
+    verdict: 'good: bold cracks read at 64px and stone matches floor, but busier than
+      intact should be'
+    author: claude
+    preferred: false
+  - key: crumbling-s20261101-164222-t1-20261101-164326-2
+    path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-2.png
+    verdict: 'bad: chunky black fissures already read as major damage'
+    author: claude
+    preferred: false
+  - key: crumbling-s20261101-164222-t1-20261101-164326-3
+    path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-3.png
+    verdict: 'good: winner. Single bold diagonal crack on the real floor surface,
+      instant read at 64px, still solid'
+    author: claude
+    preferred: true
+  - key: crumbling-s20261101-164222-t1-20261101-164326-4
+    path: assets/outputs/crumbling-s20261101-164222-t1-20261101-164326-4.png
+    verdict: 'bad: dense bold web is a later stage, not intact'
+    author: claude
+    preferred: false
+  cost_total: '0.04'
+spend_usd: '0.04'
+winner: crumbling-s20261101-164222-t1-20261101-164326-3
+pack_file: .worktrees/mech-5-crumbling-tile/tools/static/packs/crumbling/assets/crumbling.png
+finished: '2026-11-01T16:48:27'

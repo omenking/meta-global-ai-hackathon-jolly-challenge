@@ -3,13 +3,14 @@ description: Floor and terrain that harms, slows or breaks.
 mechanics:
 - id: 5
   name: Crumbling tile
-  effect: breaks one step after you leave.
+  effect: crumbles in two stages before it falls.
   mechanics:
-  - Safe while you stand on it
-  - One move after you leave, it falls and becomes a void tile for the rest of the attempt
-  - Restarts and checkpoints restore it
-  unique: the tile goes after you leave it, not while you stand on it.
-  useful: burns the retreat path, so visit order matters.
+  - Safe while you stand on it at every stage; stepping on it never advances its crumble
+  - Leaving it advances the crumble by one stage: first leaving minor, second leaving major, both visible behind you
+  - Leaving a major tile drops it to void behind you for the rest of the attempt; stepping into that void is falling and loses the attempt
+  - Restarts and checkpoints restore every tile to intact
+  unique: the only tile whose crumble advances when you leave it, in two visible stages, so one backtrack is a decision rather than an accident.
+  useful: burns the retreat path one stage at a time, so visit order matters.
   synergies:
   - 'One-way door (4): crumbling is the exit that makes a one-way room final.'
   - 'Fan tile (10): wind decides which crumbling tile you leave first.'
@@ -17,6 +18,33 @@ mechanics:
     for. A player who crosses, collects, and turns back finds the tile they left has fallen and must take
     the long way or restart, which teaches that the crossing is spent by leaving it rather than by standing
     on it.'
+  definitions:
+  - 'floor: walkable ground; standing, waiting and turning on it are always safe (ground term, defined here for this file)'
+  - 'wall: never enterable from any side; it only blocks and never harms (ground term, defined here for this file)'
+  - 'void: a hole where floor used to be; entering it is falling, so the attempt is lost, or the player returns to the active checkpoint per mechanic 48 in this file where one is placed (ground term, defined here for this file)'
+  - 'orb: walking onto it collects it; it is counted by the gate and never enters the inventory'
+  assets:
+    tiles:
+    - file: crumbling.png
+      shows: intact crumbling tile, never yet stepped on
+    - file: crumbling-minor.png
+      shows: tile after the player first leaves it, one crossing spent
+    - file: crumbling-major.png
+      shows: tile after the player leaves it a second time; leaving it once more drops it to void
+    - file: void.png
+      shows: hole left after a major tile falls; stepping into it is falling and loses the attempt
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution crossing
+    check: cross the bridge, collect the far orb, return by the long way; both orbs collected, back at start
+  - name: adversarial backtracking
+    check: "cross the bridge (minor behind), come back (major behind), then cross again (void behind): every stage is safe to stand on, one backtrack and one recross are allowed, and there is no second return because stepping into the void left behind is falling"
+  - name: safe standing
+    check: stand on a bridge tile and push into a wall twice; no leaving means no stage advance, and the tile still carries the player onward
+  - name: restart and replay
+    check: restart restores all three bridge tiles, and a recorded crossing session replays to the same end state
   status: trial
   human_review: {}
 - id: 41
@@ -36,6 +64,30 @@ mechanics:
     player who enters with the preserver but treats it as ordinary floor is still wading on the second
     move when the patrol arrives and is returned to the checkpoint, which teaches that permission to enter
     and the cost of crossing are separate facts.'
+  definitions:
+  - 'deep water: dark water defined here; without a life preserver it is a hazard, with one each tile costs two moves'
+  - 'shallow water: enterable surface water per mechanic 50 in this file'
+  - 'life preserver: gear that admits the player to deep water, per mechanic 61 in gear-and-items.yml'
+  - 'checkpoint: respawn set by touch, per mechanic 48 in this file'
+  - 'patroller: enemy on a fixed loop, per mechanic 31 in enemies-and-bots.yml'
+  assets:
+    tiles:
+    - file: deep-water.png
+      shows: dark deep water, distinct from shallow water
+    jolly_states:
+    - file: jolly-wading.png
+      shows: Jolly half-submerged on the first of the two moves a deep tile costs
+    gui: []
+    blocks: []
+  test_cases:
+  - name: with preserver crossing costs two moves per tile
+    check: 'blocked-by: 61 (life preserver): with one held, each deep tile takes two inputs, the first wading in place'
+  - name: without preserver returns to checkpoint
+    check: 'blocked-by: 48 (checkpoint): entering without a preserver returns the player to the active checkpoint with the timer running'
+  - name: adversarial hesitation in deep water
+    check: 'blocked-by: 61, 48: stopping mid-crossing never strands the player; every deep tile can still be exited or resolves to the checkpoint'
+  - name: restart and replay
+    check: restart restores the room, and a recorded crossing replays to the same end state
   status: revised
   human_review:
   - has to be more too it.
@@ -58,6 +110,30 @@ mechanics:
     player who walks past it to collect an orb finds, ten moves later, that it has spread across the path
     they meant to return by, which teaches that fire is a clock on flammable floor and that the ice block
     was the way through rather than an ornament.'
+  definitions:
+  - 'fire: hazard defined here; lethal while burning on flammable floor, spreads on a move count, burns out and is cancelled by one ice block'
+  - 'flammable floor: grass or wood floor; fire spreads only onto it, never onto stone floor (floor per mechanic 5 in this file)'
+  - 'ice block: pushable block that cancels fire, per mechanic 82 in blocks.yml'
+  assets:
+    tiles:
+    - file: fire.png
+      shows: burning fire on flammable floor, lethal while alight
+    - file: scorched.png
+      shows: burnt-out floor after the fire dies, safe to cross
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: spread follows the move clock
+    check: fire spreads to one adjacent flammable tile every 10 moves and never onto stone; the count is moves, not seconds
+  - name: burn-out boundary
+    check: a fire tile burns out after 30 moves leaving scorched floor, and the player can cross it from that move on
+  - name: ice cancels fire
+    check: 'blocked-by: 82 (ice block): sliding an ice block into fire melts the block and cancels that one fire tile only'
+  - name: adversarial waiting game
+    check: waiting beside the return path lets fire spread across it as the teaching moment warns; the room still resolves by cancelling or waiting out, never by a stranded state
+  - name: restart and replay
+    check: restart restores every fire to its placed state, and a recorded 30-move session replays to the same end state
   status: revised
   human_review:
   - I think I'd prefer if fire is cancelled out by ice block.
@@ -82,6 +158,27 @@ mechanics:
     that ice cancels fire. A player who pushes the block into the lava watches it melt while the lava
     remains and must restart the room, which teaches that lava is not a stronger fire and cannot be cancelled
     at all.'
+  definitions:
+  - 'lava: fixed hazard defined here; entering it loses the attempt, it never spreads or burns out and nothing cancels it'
+  - 'fire: cancellable, burning-out hazard per mechanic 43 in this file; lava is explicitly not a stronger fire'
+  - 'ice block: per mechanic 82 in blocks.yml; in lava it melts and is destroyed while the lava stays'
+  - 'dirt block: the one block that fills lava into floor, per mechanic 90 in blocks.yml'
+  assets:
+    tiles:
+    - file: lava.png
+      shows: fixed lava, permanent and uncancellable
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: lethal and permanent
+    check: stepping on lava loses the attempt (or returns to the active checkpoint), and the lava tile is unchanged afterwards
+  - name: ice does not cancel lava
+    check: 'blocked-by: 82 (ice block): pushing an ice block in melts the block and the lava stays, unlike fire'
+  - name: adversarial route-around
+    check: every lava tile in the room can be routed around or filled; no route requires standing on lava or leaves the player stranded
+  - name: restart and replay
+    check: restart restores the room, and a recorded session replays to the same end state
   status: revised
   human_review:
   - I think that it could just be lava tile, and it never spreads.
@@ -105,6 +202,28 @@ mechanics:
   teaching_moment: 'First room: a sandy room with two similar exits, one of which is a dead end. A player
     who does not notice their own footprints takes the same dead end twice and wastes the timer retracing
     it, which teaches that the prints are a record left for the player rather than decoration on the floor.'
+  definitions:
+  - 'sand: floor variant defined here; it never slows the player (floor per mechanic 5 in this file)'
+  - 'prints: visible record of the path walked, defined here for sand; prints in sand are readable only by the player, unlike mud per mechanic 47 in this file'
+  - 'enemy: patroller or chaser per mechanics 31 and 32 in enemies-and-bots.yml; enemies ignore sand prints'
+  assets:
+    tiles:
+    - file: sand.png
+      shows: plain sand with no prints yet
+    - file: sand-prints.png
+      shows: sand with the player footprints left for the rest of the attempt
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: prints persist and cost nothing
+    check: crossing sand leaves prints for the rest of the attempt and movement takes the normal one move per tile
+  - name: adversarial dead-end retrace
+    check: entering the dead end and returning, the prints show the taken route and the untaken exit stays print-free
+  - name: enemies ignore prints
+    check: 'blocked-by: 31 (patroller): an enemy crossing sand prints follows its own rule unchanged'
+  - name: restart and replay
+    check: restart clears every print, and a recorded session replays to the same end state
   status: revised
   human_review:
   - make like mud tile where it leaves front prints, dont slow down.
@@ -125,6 +244,30 @@ mechanics:
     beyond it. A player who crosses for the orb and comes straight back uses the second crossing without
     realising it was the last one the glass would allow, and must find another way to the key, which teaches
     that glass allows a return exactly once.'
+  definitions:
+  - 'glass: tile over a drop defined here; first crossing cracks it, second crossing is the last it allows'
+  - 'void: hole after the glass shatters, per mechanic 5 in this file; entering it is falling'
+  - 'drop: open space below the glass, treated exactly as void per mechanic 5 in this file'
+  assets:
+    tiles:
+    - file: glass.png
+      shows: intact glass over a drop, never yet crossed
+    - file: glass-cracked.png
+      shows: glass after its first crossing, one return left
+    - file: void.png
+      shows: hole after the second crossing shatters it
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: there and back exactly once
+    check: first crossing cracks the glass, the return crossing crosses safely, and leaving it the second time shatters it to void
+  - name: adversarial third approach
+    check: after shattering, pressing toward the void is blocked; an alternate route or restart resolves the room, never a stranded tile
+  - name: safe standing on cracked glass
+    check: standing and turning on cracked glass does not shatter it; only leaving after the second crossing does
+  - name: restart and replay
+    check: restart restores intact glass, and a recorded session replays to the same end state
   status: trial
   human_review: {}
 - id: 47
@@ -145,6 +288,28 @@ mechanics:
     who walks the direct muddy line leads the chaser along their own prints to the orb room and is caught
     there, which teaches that mud carries their route to enemies and that a false trail could have been
     left instead.'
+  definitions:
+  - 'mud: floor variant defined here; it stores the walked path as scent prints in walk order'
+  - 'prints: record of the path walked per mechanic 45 in this file, with the explicit difference that enemies can read mud prints'
+  - 'chaser: enemy that copies the player moves, per mechanic 32 in enemies-and-bots.yml; in mud it follows print order instead'
+  assets:
+    tiles:
+    - file: mud.png
+      shows: plain mud with no scent prints yet
+    - file: mud-prints.png
+      shows: mud carrying the ordered scent prints an enemy can follow
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: prints record order
+    check: walking a bent path in mud stores the prints in walk order, readable start to finish
+  - name: enemy follows prints
+    check: 'blocked-by: 32 (chaser): an enemy entering the mud follows the print order instead of its normal rule until the prints end'
+  - name: adversarial false trail
+    check: 'blocked-by: 32: a loop of prints baits the enemy around the loop while the player exits by a dry route; avoiding mud leaves no trail at all'
+  - name: restart and replay
+    check: restart clears every print, and a recorded session replays to the same end state
   status: trial
   human_review:
   - true
@@ -165,6 +330,28 @@ mechanics:
     direct line. A player who runs the direct line and dies in the corridor is returned to the level start
     instead of the tile they passed, which teaches that a checkpoint only counts once it has been stepped
     on.'
+  definitions:
+  - 'checkpoint: respawn set by touch, defined here; only the last one touched is active, and hazard deaths return to it with the timer running'
+  - 'hazard: any tile whose entry loses the attempt, for example fire per mechanic 43 or lava per mechanic 44 in this file; with an active checkpoint the loss returns here instead of restarting'
+  - 'timer: the level countdown, which keeps running through a checkpoint return and is cleared only by a manual restart'
+  assets:
+    tiles:
+    - file: checkpoint-off.png
+      shows: checkpoint tile not yet touched, unlit
+    - file: checkpoint-on.png
+      shows: active checkpoint, lit; only the last one touched is lit
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: touch activates, death returns there
+    check: stepping on the tile lights it, and a later hazard death returns the player to it with timer, orbs and keys as at the death
+  - name: last one touched wins
+    check: touching a second checkpoint moves the respawn to it and unlights the first; deaths then return to the second
+  - name: adversarial skip the checkpoint
+    check: running the direct line past the tile and dying returns the player to the level start, exactly as the teaching moment promises
+  - name: restart and replay
+    check: restart clears every active checkpoint, and a recorded death-and-return session replays to the same end state
   status: revised
   human_review:
   - instead a checkpoint tile, so it other hazards just bring tou back here with timer intact
@@ -192,6 +379,29 @@ mechanics:
     in full view. A player who stops on the bridge to consider the room melts through it and is returned
     to the checkpoint, which teaches that standing still, rather than crossing, is what the bridge cannot
     survive.'
+  definitions:
+  - 'shallow water: surface water defined here; on its own it is not lethal, and an ice block pushed into it forms this bridge, unlike deep water per mechanic 41 in this file'
+  - 'ice block: pushable block per mechanic 82 in blocks.yml; here it becomes the bridge itself rather than crossing the water'
+  - 'fire: hazard per mechanic 43 in this file; fire spreading beside the bridge melts it'
+  - 'checkpoint: respawn per mechanic 48 in this file; melting through the bridge returns the player there'
+  assets:
+    tiles:
+    - file: ice-bridge.png
+      shows: formed bridge over shallow water, safe while crossed without stopping
+    - file: ice-bridge-melting.png
+      shows: bridge in the move where the player stands still on it, visibly melting
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: formed by an ice block
+    check: 'blocked-by: 82 (ice block): pushing an ice block into shallow water forms the bridge; deep water melts it instead'
+  - name: keep-moving crossing
+    check: walking straight across without a full stopped move reaches the far bank; the bridge survives a crossing
+  - name: adversarial standing still
+    check: 'blocked-by: 48 (checkpoint): standing still on the bridge for one full move melts it, and the player returns to the checkpoint, never stranded mid-water'
+  - name: restart and replay
+    check: restart restores the unbridged crossing, and a recorded session replays to the same end state
   status: trial
   human_review:
   - I think ice blocks can get pushed into water to form this unreliable bridge.

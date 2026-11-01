@@ -40,6 +40,10 @@ The player meets Checkpoint tile for the first time in its teaching room (mech-4
 
 - Movement/state stays deterministic: state advances only through the pure step function with recorded t_ms; a recorded session replays to the same end state.
 - Restart (R / restart) restores the room to its initial state, including this mechanic.
+- No soft-lock: every reachable state has a legal move, a lose, or a reset.
+- Definition audit: checkpoint: respawn set by touch, defined here; only the last one touched is active, and hazard deaths return to it with the timer running
+- Definition audit: hazard: any tile whose entry loses the attempt, for example fire per mechanic 43 or lava per mechanic 44 in this file; with an active checkpoint the loss returns here instead of restarting
+- Definition audit: timer: the level countdown, which keeps running through a checkpoint return and is cleared only by a manual restart
 
 ## UI / Feedback
 
@@ -52,6 +56,9 @@ The player meets Checkpoint tile for the first time in its teaching room (mech-4
 - Level JSON: new Test Level mech-48-checkpoint-tile-room (rows + legend) implementing the teaching moment above.
 - Sprites/defs: reuse existing tiles where the mechanic reuses an existing tile; add a new sprite/tile def only if this mechanic introduces a new tile (confirm in the implement task).
 - Source: plans/level-design/candidate-mechanics/terrain-and-hazards.yml mechanic #48.
+- Pack assets (from candidate file; bundled in packs/checkpoint-tile/assets):
+- Pack asset (tiles): checkpoint-off.png — checkpoint tile not yet touched, unlit
+- Pack asset (tiles): checkpoint-on.png — active checkpoint, lit; only the last one touched is lit
 
 ## Acceptance Criteria
 
@@ -61,6 +68,8 @@ The player meets Checkpoint tile for the first time in its teaching room (mech-4
 - [ ] Rule verified in mech-48-checkpoint-tile-room: Multiple checkpoints: the last one touched is active
 - [ ] A recorded agent play session of the room replays to the same end state (replay digest match).
 - [ ] Screenshot of the room attached as evidence on the sanity-check task.
+- [ ] Adversarial case verified in the room: running the direct line past the tile and dying returns the player to the level start, exactly as the teaching moment promises
+- [ ] No reachable state has no legal move and no lose/reset (soft-lock check played, not just the solution path).
 
 ## Out of Scope
 
@@ -78,6 +87,11 @@ The player meets Checkpoint tile for the first time in its teaching room (mech-4
 ## Testing
 
 Needs a mechanics playground: new — Test Level mech-48-checkpoint-tile-room, built from this mechanic's teaching moment above. What to check there: every rule in Player-Facing Behavior, played in mech-48-checkpoint-tile-room; the teaching moment's first (naive) action should fail as described and the corrected action should succeed. Record play sessions for replay: yes — sessions are the review evidence. Synergy rooms are explicitly deferred to a later run and are not part of this feature's check.
+Named test cases (from the candidate file; all must be played):
+- Test case touch activates, death returns there: stepping on the tile lights it, and a later hazard death returns the player to it with timer, orbs and keys as at the death
+- Test case last one touched wins: touching a second checkpoint moves the respawn to it and unlights the first; deaths then return to the second
+- Test case adversarial skip the checkpoint: running the direct line past the tile and dying returns the player to the level start, exactly as the teaching moment promises
+- Test case restart and replay: restart clears every active checkpoint, and a recorded death-and-return session replays to the same end state
 
 ## Tasks
 

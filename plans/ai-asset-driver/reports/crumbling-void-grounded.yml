@@ -1,0 +1,50 @@
+asset: crumbling-void
+session: s20261101-164222-4
+muse_session: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+project: meta-global-ai-hackathon-jolly-challenge
+project_root: /home/andrew/Sites/meta-global-ai-hackathon-jolly-challenge
+capture: live, appended by asset_driver as turns happen
+started: '2026-11-01T16:48:01'
+budget:
+  target_usd: '1.00'
+  cap_usd: '2.00'
+turns:
+- seq: 1
+  at: '2026-11-01T16:48:01'
+  prompt: 'Grounded void: floor_default.png + major winner refs, black hole, broken
+    rim of same stone'
+  references:
+  - tools/static/level-sprites/floor_default.png
+  - assets/outputs/crumbling-major-s20261101-164222-3-t1-20261101-164635-2.png
+  generated_files:
+  - generated_images/call_01a199147e00733594f32e8b22883d9b.jpg
+  - generated_images/call_01a19914808576a5807fa7909830e641.jpg
+  - generated_images/call_01a19914844d73299ec2cae17a4d3c77.jpg
+  - generated_images/call_01a19914872575c99c583b80ab29be13.jpg
+  outputs:
+  - key: crumbling-void-s20261101-164222-4-t1-20261101-164801-1
+    path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-1.png
+    verdict: 'good: winner. Black hole fills the tile with a broken rim of the real
+      floor stone, instant read at 64px'
+    author: claude
+    preferred: true
+  - key: crumbling-void-s20261101-164222-4-t1-20261101-164801-2
+    path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-2.png
+    verdict: 'good: clean hole and rim at 64px, rim plainer than winner'
+    author: claude
+    preferred: false
+  - key: crumbling-void-s20261101-164222-4-t1-20261101-164801-3
+    path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-3.png
+    verdict: 'bad: round pit ringed with chunky blocks reads as a well, smaller hole'
+    author: claude
+    preferred: false
+  - key: crumbling-void-s20261101-164222-4-t1-20261101-164801-4
+    path: assets/outputs/crumbling-void-s20261101-164222-4-t1-20261101-164801-4.png
+    verdict: 'bad: smooth round gradient pit reads as a crater/well, rim too tidy'
+    author: claude
+    preferred: false
+  cost_total: '0.04'
+spend_usd: '0.04'
+winner: crumbling-void-s20261101-164222-4-t1-20261101-164801-1
+pack_file: .worktrees/mech-5-crumbling-tile/tools/static/packs/crumbling/assets/void.png
+finished: '2026-11-01T16:48:27'

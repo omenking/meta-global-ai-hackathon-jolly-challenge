@@ -41,6 +41,10 @@ The player meets Sand tile for the first time in its teaching room (mech-45-sand
 
 - Movement/state stays deterministic: state advances only through the pure step function with recorded t_ms; a recorded session replays to the same end state.
 - Restart (R / restart) restores the room to its initial state, including this mechanic.
+- No soft-lock: every reachable state has a legal move, a lose, or a reset.
+- Definition audit: sand: floor variant defined here; it never slows the player (floor per mechanic 5 in this file)
+- Definition audit: prints: visible record of the path walked, defined here for sand; prints in sand are readable only by the player, unlike mud per mechanic 47 in this file
+- Definition audit: enemy: patroller or chaser per mechanics 31 and 32 in enemies-and-bots.yml; enemies ignore sand prints
 
 ## UI / Feedback
 
@@ -53,6 +57,9 @@ The player meets Sand tile for the first time in its teaching room (mech-45-sand
 - Level JSON: new Test Level mech-45-sand-tile-room (rows + legend) implementing the teaching moment above.
 - Sprites/defs: reuse existing tiles where the mechanic reuses an existing tile; add a new sprite/tile def only if this mechanic introduces a new tile (confirm in the implement task).
 - Source: plans/level-design/candidate-mechanics/terrain-and-hazards.yml mechanic #45.
+- Pack assets (from candidate file; bundled in packs/sand-tile/assets):
+- Pack asset (tiles): sand.png — plain sand with no prints yet
+- Pack asset (tiles): sand-prints.png — sand with the player footprints left for the rest of the attempt
 
 ## Acceptance Criteria
 
@@ -63,6 +70,8 @@ The player meets Sand tile for the first time in its teaching room (mech-45-sand
 - [ ] Rule verified in mech-45-sand-tile-room: Scent tracking is mud's job
 - [ ] A recorded agent play session of the room replays to the same end state (replay digest match).
 - [ ] Screenshot of the room attached as evidence on the sanity-check task.
+- [ ] Adversarial case verified in the room: entering the dead end and returning, the prints show the taken route and the untaken exit stays print-free
+- [ ] No reachable state has no legal move and no lose/reset (soft-lock check played, not just the solution path).
 
 ## Out of Scope
 
@@ -76,10 +85,16 @@ The player meets Sand tile for the first time in its teaching room (mech-45-sand
 - Synergies deferred to a later run (do not build now): Dark room (51): your own lit trail out of a room you cannot see.
 - Demos deferred (reference only): Mud tile (47): sand prints are for you, mud prints are for enemies, a room with both teaches the difference.
 - Confirm any new sprite/tile def and any HUD counter this mechanic needs before the implement task is approved.
+- Dependencies from test cases (blocked-by mechanic ids): 31 . Those cases run when the blocking mechanic lands.
 
 ## Testing
 
 Needs a mechanics playground: new — Test Level mech-45-sand-tile-room, built from this mechanic's teaching moment above. What to check there: every rule in Player-Facing Behavior, played in mech-45-sand-tile-room; the teaching moment's first (naive) action should fail as described and the corrected action should succeed. Record play sessions for replay: yes — sessions are the review evidence. Synergy rooms are explicitly deferred to a later run and are not part of this feature's check.
+Named test cases (from the candidate file; all must be played):
+- Test case prints persist and cost nothing: crossing sand leaves prints for the rest of the attempt and movement takes the normal one move per tile
+- Test case adversarial dead-end retrace: entering the dead end and returning, the prints show the taken route and the untaken exit stays print-free
+- Test case enemies ignore prints: blocked-by: 31 (patroller): an enemy crossing sand prints follows its own rule unchanged
+- Test case restart and replay: restart clears every print, and a recorded session replays to the same end state
 
 ## Tasks
 

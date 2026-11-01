@@ -41,6 +41,11 @@ The player meets Ice bridge for the first time in its teaching room (mech-50-ice
 - Not placed directly: it forms when an ice block is pushed into a shallow water tile
 - Movement/state stays deterministic: state advances only through the pure step function with recorded t_ms; a recorded session replays to the same end state.
 - Restart (R / restart) restores the room to its initial state, including this mechanic.
+- No soft-lock: every reachable state has a legal move, a lose, or a reset.
+- Definition audit: shallow water: surface water defined here; on its own it is not lethal, and an ice block pushed into it forms this bridge, unlike deep water per mechanic 41 in this file
+- Definition audit: ice block: pushable block per mechanic 82 in blocks.yml; here it becomes the bridge itself rather than crossing the water
+- Definition audit: fire: hazard per mechanic 43 in this file; fire spreading beside the bridge melts it
+- Definition audit: checkpoint: respawn per mechanic 48 in this file; melting through the bridge returns the player there
 
 ## UI / Feedback
 
@@ -53,6 +58,9 @@ The player meets Ice bridge for the first time in its teaching room (mech-50-ice
 - Level JSON: new Test Level mech-50-ice-bridge-room (rows + legend) implementing the teaching moment above.
 - Sprites/defs: reuse existing tiles where the mechanic reuses an existing tile; add a new sprite/tile def only if this mechanic introduces a new tile (confirm in the implement task).
 - Source: plans/level-design/candidate-mechanics/terrain-and-hazards.yml mechanic #50.
+- Pack assets (from candidate file; bundled in packs/ice-bridge/assets):
+- Pack asset (tiles): ice-bridge.png — formed bridge over shallow water, safe while crossed without stopping
+- Pack asset (tiles): ice-bridge-melting.png — bridge in the move where the player stands still on it, visibly melting
 
 ## Acceptance Criteria
 
@@ -62,6 +70,8 @@ The player meets Ice bridge for the first time in its teaching room (mech-50-ice
 - [ ] Rule verified in mech-50-ice-bridge-room: It also melts if fire spreads next to it
 - [ ] A recorded agent play session of the room replays to the same end state (replay digest match).
 - [ ] Screenshot of the room attached as evidence on the sanity-check task.
+- [ ] Adversarial case verified in the room: blocked-by: 48 (checkpoint): standing still on the bridge for one full move melts it, and the player returns to the checkpoint, never stranded mid-water
+- [ ] No reachable state has no legal move and no lose/reset (soft-lock check played, not just the solution path).
 
 ## Out of Scope
 
@@ -75,10 +85,16 @@ The player meets Ice bridge for the first time in its teaching room (mech-50-ice
 - Synergies deferred to a later run (do not build now): Ice block (82): the block is the bridge, building it is half the puzzle.
 - Synergies deferred to a later run (do not build now): Fire tile (43): fire beside a bridge is a timed bridge without a visible timer.
 - Confirm any new sprite/tile def and any HUD counter this mechanic needs before the implement task is approved.
+- Dependencies from test cases (blocked-by mechanic ids): 48 , 82 . Those cases run when the blocking mechanic lands.
 
 ## Testing
 
 Needs a mechanics playground: new — Test Level mech-50-ice-bridge-room, built from this mechanic's teaching moment above. What to check there: every rule in Player-Facing Behavior, played in mech-50-ice-bridge-room; the teaching moment's first (naive) action should fail as described and the corrected action should succeed. Record play sessions for replay: yes — sessions are the review evidence. Synergy rooms are explicitly deferred to a later run and are not part of this feature's check.
+Named test cases (from the candidate file; all must be played):
+- Test case formed by an ice block: blocked-by: 82 (ice block): pushing an ice block into shallow water forms the bridge; deep water melts it instead
+- Test case keep-moving crossing: walking straight across without a full stopped move reaches the far bank; the bridge survives a crossing
+- Test case adversarial standing still: blocked-by: 48 (checkpoint): standing still on the bridge for one full move melts it, and the player returns to the checkpoint, never stranded mid-water
+- Test case restart and replay: restart restores the unbridged crossing, and a recorded session replays to the same end state
 
 ## Tasks
 

@@ -1,0 +1,48 @@
+asset: crumbling-major
+session: s20261101-162011
+title: 'Muse driver: crumbling major tile (mech-5)'
+muse_session: saffron-draco-01a1989b
+capture: backfilled from asset session records after the run; asset_driver now appends
+  this file live per turn
+budget:
+  target_usd: '1.00'
+  cap_usd: '2.00'
+spend_usd: '0.04'
+decision: Briefed against the minor winner as reference in the Muse session; winner
+  is beyond minor with no hole opened.
+turns:
+- seq: 1
+  prompt: 'Major crumble stage of minor winner: wide dark cracks, pieces separating,
+    no big hole'
+  references_recorded: []
+  provider_session: saffron-draco-01a1989b
+  cost_total: '0.04'
+  outputs:
+  - key: crumbling-major-s20261101-162011-t1-20261101-162236-1
+    path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-1.png
+    verdict: 'good: winner. Bold black crack web and edge rubble, clearly beyond minor,
+      no hole yet'
+    author: claude
+    preferred: true
+  - key: crumbling-major-s20261101-162011-t1-20261101-162236-2
+    path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-2.png
+    verdict: 'bad: photographic high contrast and black bars at edges'
+    author: claude
+    preferred: false
+  - key: crumbling-major-s20261101-162011-t1-20261101-162236-3
+    path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-3.png
+    verdict: 'bad: strong but one huge fissure dominates; reads closer to void gash'
+    author: claude
+    preferred: false
+  - key: crumbling-major-s20261101-162011-t1-20261101-162236-4
+    path: assets/outputs/crumbling-major-s20261101-162011-t1-20261101-162236-4.png
+    verdict: 'bad: giant flat black channels read as painted stripes, too graphic'
+    author: claude
+    preferred: false
+winner: crumbling-major-s20261101-162011-t1-20261101-162236-1
+pack_file: .worktrees/mech-5-crumbling-tile/tools/static/packs/crumbling/assets/crumbling-major.png
+muse_session_recorded_as: saffron-draco-01a1989b (session name + short id, as passed
+  to import-turn)
+muse_session_full: 01a1989b-2d1f-7ae3-87b0-03b8655a0f98
+project: meta-global-ai-hackathon-jolly-challenge
+project_root: /home/andrew/Sites/meta-global-ai-hackathon-jolly-challenge

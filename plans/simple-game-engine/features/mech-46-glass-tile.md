@@ -40,6 +40,10 @@ The player meets Glass tile for the first time in its teaching room (mech-46-gla
 
 - Movement/state stays deterministic: state advances only through the pure step function with recorded t_ms; a recorded session replays to the same end state.
 - Restart (R / restart) restores the room to its initial state, including this mechanic.
+- No soft-lock: every reachable state has a legal move, a lose, or a reset.
+- Definition audit: glass: tile over a drop defined here; first crossing cracks it, second crossing is the last it allows
+- Definition audit: void: hole after the glass shatters, per mechanic 5 in this file; entering it is falling
+- Definition audit: drop: open space below the glass, treated exactly as void per mechanic 5 in this file
 
 ## UI / Feedback
 
@@ -52,6 +56,10 @@ The player meets Glass tile for the first time in its teaching room (mech-46-gla
 - Level JSON: new Test Level mech-46-glass-tile-room (rows + legend) implementing the teaching moment above.
 - Sprites/defs: reuse existing tiles where the mechanic reuses an existing tile; add a new sprite/tile def only if this mechanic introduces a new tile (confirm in the implement task).
 - Source: plans/level-design/candidate-mechanics/terrain-and-hazards.yml mechanic #46.
+- Pack assets (from candidate file; bundled in packs/glass-tile/assets):
+- Pack asset (tiles): glass.png — intact glass over a drop, never yet crossed
+- Pack asset (tiles): glass-cracked.png — glass after its first crossing, one return left
+- Pack asset (tiles): void.png — hole after the second crossing shatters it
 
 ## Acceptance Criteria
 
@@ -61,6 +69,8 @@ The player meets Glass tile for the first time in its teaching room (mech-46-gla
 - [ ] Rule verified in mech-46-glass-tile-room: Standing on a cracked tile is safe
 - [ ] A recorded agent play session of the room replays to the same end state (replay digest match).
 - [ ] Screenshot of the room attached as evidence on the sanity-check task.
+- [ ] Adversarial case verified in the room: after shattering, pressing toward the void is blocked; an alternate route or restart resolves the room, never a stranded tile
+- [ ] No reachable state has no legal move and no lose/reset (soft-lock check played, not just the solution path).
 
 ## Out of Scope
 
@@ -77,6 +87,11 @@ The player meets Glass tile for the first time in its teaching room (mech-46-gla
 ## Testing
 
 Needs a mechanics playground: new — Test Level mech-46-glass-tile-room, built from this mechanic's teaching moment above. What to check there: every rule in Player-Facing Behavior, played in mech-46-glass-tile-room; the teaching moment's first (naive) action should fail as described and the corrected action should succeed. Record play sessions for replay: yes — sessions are the review evidence. Synergy rooms are explicitly deferred to a later run and are not part of this feature's check.
+Named test cases (from the candidate file; all must be played):
+- Test case there and back exactly once: first crossing cracks the glass, the return crossing crosses safely, and leaving it the second time shatters it to void
+- Test case adversarial third approach: after shattering, pressing toward the void is blocked; an alternate route or restart resolves the room, never a stranded tile
+- Test case safe standing on cracked glass: standing and turning on cracked glass does not shatter it; only leaving after the second crossing does
+- Test case restart and replay: restart restores intact glass, and a recorded session replays to the same end state
 
 ## Tasks
 

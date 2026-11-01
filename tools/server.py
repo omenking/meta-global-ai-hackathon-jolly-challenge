@@ -33,13 +33,13 @@ from asset_store import (SESSION_CONTEXT_MAX, UPLOAD_EXTENSIONS,
                          UPLOAD_MAX_BYTES, StoreError, add_turn, add_version,
                          build_prompt_draft, create_asset, create_session,
                          find_session_output, get_session, get_version,
-                         load_judgements, load_manifest, load_sessions,
+                         import_turn, load_judgements, load_manifest, load_sessions,
                          lottery_keys, mark_failed, mark_turn_failed,
                          normalize_run_count, publish_slug, record_output,
                          record_turn_outputs, save_judgement, save_judgements,
                          save_manifest, save_sessions, session_context_refs,
                          split_cost_per_output, update_asset, update_version,
-                         validate_references, validate_run_not_noop,
+                         session_spend, validate_references, validate_run_not_noop,
                          validate_upload)
 import pm_store
 from pm_store import StoreError as PMStoreError
@@ -144,13 +144,15 @@ def _session_view(sid: str) -> dict:
             record["human_review"] = judge.get("human_review", "")
             record["checklist"] = judge.get("checklist") or {}
             record["preferred"] = bool(judge.get("preferred"))
+            record["author"] = judge.get("author", "")
             outputs.append(record)
         view = dict(turn)
         view["outputs"] = outputs
         turns.append(view)
     return {"id": sid, "asset_name": session["asset_name"],
             "title": session.get("title", ""),
-            "created": session.get("created", ""), "turns": turns}
+            "created": session.get("created", ""), "turns": turns,
+            "spend": session_spend(session)}
 
 
 def _pm_feature_view(feature: dict) -> dict:
@@ -651,6 +653,60 @@ def _strip_png(name: str) -> str:
     return name[:-4] if name.endswith(".png") else name
 
 
+def _import_turn(sid: str, body: dict) -> dict:
+    """Import Muse-generated images as one completed session turn.
+
+    Each named upload (already stored by POST /api/uploads) becomes a
+    session output under a lottery-style key, resized with ffmpeg to
+    the asset's declared size with the raw file kept as -orig, the
+    same treatment the key-based generator applies. The Muse
+    session id rides on the turn's provider_session field so the
+    asset run and the cost-centre session name each other.
+    """
+    session = STATE.sessions[sid]
+    asset = STATE.assets.get(session["asset_name"])
+    if asset is None:
+        raise StoreError(f"asset {session['asset_name']!r} does not exist")
+    files = body.get("files")
+    if not isinstance(files, list) or not files:
+        raise StoreError("import needs a non-empty files list")
+    width = asset.get("width") or 512
+    height = asset.get("height") or 512
+    seq = len(session["turns"]) + 1
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    base = f"{session['asset_name']}-{sid}-t{seq}-{stamp}"
+    infos = []
+    for i, name in enumerate(files, 1):
+        src = (OUTPUTS_DIR / str(name)).resolve()
+        if OUTPUTS_DIR.resolve() not in src.parents or not src.is_file():
+            raise StoreError(f"upload {name!r} not found in assets/outputs")
+        key = f"{base}-{i}" if len(files) > 1 else base
+        raw = OUTPUTS_DIR / f"{key}-orig.png"
+        dest = OUTPUTS_DIR / f"{key}.png"
+        import shutil as _shutil
+        _shutil.copyfile(src, raw)
+        proc = subprocess.run(
+            ["ffmpeg", "-y", "-nostdin", "-v", "error", "-i", str(raw),
+             "-vf", f"crop='min(iw,ih)':'min(iw,ih)',scale={width}:{height}",
+             "-pix_fmt", "rgba", str(dest)], capture_output=True, text=True)
+        if proc.returncode != 0 or not dest.is_file():
+            raise StoreError(f"ffmpeg resize failed for {name!r}")
+        infos.append({"key": key, "path": f"assets/outputs/{key}.png",
+                      "estimated_usd": "0.01",
+                      "original_path": f"assets/outputs/{key}-orig.png",
+                      "requested_width": width,
+                      "requested_height": height,
+                      "raw_width": None, "raw_height": None})
+    with STATE_LOCK:
+        turn = import_turn(STATE.sessions, sid,
+                           body.get("prompt", "") or "",
+                           body.get("references", []),
+                           infos,
+                           provider_session=body.get("muse_session_id", ""))
+        STATE.save_all()
+    return _session_view(sid)["turns"][-1] | {"seq": turn["seq"]}
+
+
 def _publish_output(session_id: str, output_key: object,
                     asset_name: object) -> tuple[str, dict]:
     """Publish a session turn output to the official asset list.
@@ -1027,6 +1083,11 @@ class Handler(BaseHTTPRequestHandler):
                         created=time.strftime("%Y-%m-%dT%H:%M:%S"))
                     STATE.save_all()
                     return _send(self, 201, _session_view(session["id"]))
+            if len(parts) == 5 and parts[:2] == ["api", "sessions"] and parts[3] == "turns" and parts[4] == "import":
+                sid = urllib.parse.unquote(parts[2])
+                if sid not in STATE.sessions:
+                    return _send(self, 404, {"error": f"session {sid!r} not found"})
+                return _send(self, 201, _import_turn(sid, body))
             if len(parts) == 4 and parts[:2] == ["api", "sessions"] and parts[3] == "turns":
                 sid = urllib.parse.unquote(parts[2])
                 with STATE_LOCK:
@@ -1273,7 +1334,9 @@ class Handler(BaseHTTPRequestHandler):
                     record = save_judgement(
                         STATE.judgements, key, body.get("human_review", ""),
                         checklist=body.get("checklist"),
-                        preferred=preferred if isinstance(preferred, bool) else None)
+                        preferred=preferred if isinstance(preferred, bool) else None,
+                        author=body.get("author") if isinstance(
+                            body.get("author"), str) else None)
                     STATE.save_all()
                 return _send(self, 200, {"key": key, **record})
             if len(parts) == 4 and parts[:3] == ["api", "pm", "epics"]:

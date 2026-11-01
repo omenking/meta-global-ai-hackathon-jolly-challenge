@@ -90,6 +90,10 @@ animations, sounds. Reference `scratchpad/full-level-ui.png` if applicable.>
 - Mechanics playground: <new: name the Test Level to build / reuse: name the
   existing Test Level / none: say why no playground is needed>
 - What to check there: <the exact play flow that proves the mechanic>
+- Test cases: <copy the mechanic's `test_cases` from its candidate file:
+  solution path, one adversarial case (backtracking/hesitation/naive
+  action), a boundary case, restart and replay. A reachable state with
+  no legal move and no lose/reset fails the ticket.>
 - Record play sessions for replay: <yes — sessions are the review evidence /
   no — screenshots only, and why>
 
