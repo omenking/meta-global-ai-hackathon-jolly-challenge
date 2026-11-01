@@ -1,0 +1,24 @@
+{
+  "name": "mech-10-fan-tile-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-10-fan-tile Test Level: fan-east corridor (>>>>>) through a wall divider, safe floor left of the corridor to read the room, two orbs on the far side; standing in the wind pushes you one tile east each recorded second",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    ">": {"base": "floor_default.png", "label": "fan east", "text": ">", "def": "fan:fan-east"}
+  },
+  "rows": [
+    "#############",
+    "#P....#..*..#",
+    "#.....#.....#",
+    "#.....>>>>>.#",
+    "#.....#.....#",
+    "#.....#...*.#",
+    "#.....#.....#",
+    "#############"
+  ]
+}
