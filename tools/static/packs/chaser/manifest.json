@@ -1,0 +1,13 @@
+{
+  "pack": "chaser",
+  "main": "main.js",
+  "assets": [
+    {"file": "chaser.png", "kind": "tiles", "bundled": true,
+     "shows": "chaser ready to copy the player last move, lethal on touch"},
+    {"file": "chaser-blocked.png", "kind": "tiles", "bundled": true,
+     "shows": "chaser held against a wall after a copied step that was not free"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
