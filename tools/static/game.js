@@ -477,6 +477,15 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'g') {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'g' || gc === 'V';
+        const gmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const gstage = (gmeta && gmeta.glass_stage) || 0;
+        const texName = gc === 'V' ? 'void.png'
+          : (gstage >= 1 ? 'glass-cracked.png' : 'glass.png');
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
