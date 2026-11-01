@@ -1,0 +1,27 @@
+{
+  "name": "mech-62-ice-cleats-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-62-ice-cleats Test Level: ice strip (I) ending at a braking wall, orb (o) in the middle of the ice, ice cleats pickup (K) on the floor before the strip; sliding in without the cleats passes the orb and stops only at the wall, wearing the cleats ice walks as normal floor so the player stops on the orb, turns and walks back; floor return row, gate + warp beyond",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "K": {"base": "floor_default.png", "label": "ice cleats pickup", "sprite": "ice-cleats.png", "def": "cleats:cleats"},
+    "I": {"label": "ice tile", "text": "I", "def": "cleats:ice"},
+    "o": {"label": "chip (orb) on ice", "sprite": "orb.png", "def": "core:orb", "terrain": "cleats:ice"},
+    "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"}
+  },
+  "rows": [
+    "###############",
+    "#P............#",
+    "#.K..IIIoII#..#",
+    "#.............#",
+    "########G######",
+    "#.............#",
+    "#.....X.......#",
+    "###############"
+  ]
+}
