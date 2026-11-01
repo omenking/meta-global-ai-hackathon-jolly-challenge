@@ -1,0 +1,19 @@
+{
+  "pack": "mirror-block",
+  "main": "main.js",
+  "assets": [
+    {"file": "mirror-block.png", "kind": "blocks", "bundled": true,
+     "shows": "mirror block with its reflective face showing the direction enemies will be turned back toward"},
+    {"file": "mirror-block-reversing.png", "kind": "blocks", "bundled": true,
+     "shows": "mirror block in the move an enemy moves into it and reverses direction"}
+  ],
+  "tiles": [],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": [
+    {"file": "mirror-block.png", "kind": "blocks", "bundled": true,
+     "shows": "mirror block with its reflective face showing the direction enemies will be turned back toward"},
+    {"file": "mirror-block-reversing.png", "kind": "blocks", "bundled": true,
+     "shows": "mirror block in the move an enemy moves into it and reverses direction"}
+  ]
+}
