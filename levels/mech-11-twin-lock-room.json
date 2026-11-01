@@ -1,0 +1,29 @@
+{
+  "name": "mech-11-twin-lock-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-11-twin-lock Test Level: twin lock (T, red, needs two red keys) first in the top corridor, single red lock (R) beyond it; two red keys (r) and two blue keys (b, wrong colour) west, long-way floor gap at the bottom of the first divider so the corrected action (save keys, go the long way, open the single lock) succeeds while spending both red keys on the twin first strands the player at the single lock until restart",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"base": "floor_default.png", "label": "warp (exit)", "sprite": "portal.png"},
+    "r": {"base": "floor_default.png", "label": "key red", "sprite": "key_red.png", "key_color": "red"},
+    "b": {"base": "floor_default.png", "label": "key blue", "sprite": "key_blue.png", "key_color": "blue"},
+    "R": {"label": "lock red (single, needs one red key)", "sprite": "wall_keyhole_red.png", "lock_color": "red"},
+    "T": {"label": "twin lock red (needs two red keys)", "sprite": "twin-lock.png", "twin_lock_color": "red"}
+  },
+  "rows": [
+    "#################",
+    "#P..r...T...R.*X#",
+    "#.......#...#...#",
+    "#.r..b..#...#...#",
+    "#.b.....#...#.r.#",
+    "#.......#...#...#",
+    "#...........#...#",
+    "#...........#...#",
+    "#################"
+  ]
+}
