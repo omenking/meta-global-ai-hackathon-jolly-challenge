@@ -1,0 +1,17 @@
+{
+  "pack": "oneway",
+  "main": "main.js",
+  "assets": [
+    {"file": "one-way-door-north.png", "kind": "tiles", "bundled": true,
+     "shows": "one-way door with chevrons pointing north, passable only northward"},
+    {"file": "one-way-door-east.png", "kind": "tiles", "bundled": true,
+     "shows": "one-way door with chevrons pointing east, passable only eastward"},
+    {"file": "one-way-door-south.png", "kind": "tiles", "bundled": true,
+     "shows": "one-way door with chevrons pointing south, passable only southward"},
+    {"file": "one-way-door-west.png", "kind": "tiles", "bundled": true,
+     "shows": "one-way door with chevrons pointing west, passable only westward"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
