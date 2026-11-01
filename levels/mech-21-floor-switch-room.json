@@ -9,13 +9,14 @@
     "#": {"label": "wall", "sprite": "wall.png"},
     "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
     "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"base": "floor_default.png", "label": "portal (exit)", "sprite": "portal.png"},
     "S": {"label": "floor switch plate", "def": "switch:plate", "link": "door1"},
     "D": {"base": "floor_default.png", "label": "linked door", "def": "switch:door", "link": "door1"}
   },
   "rows": [
     "###############",
     "#P......#...*.#",
-    "#.......#.....#",
+    "#......##.....#",
     "#.S....SD...X.#",
     "#.......#.....#",
     "#.......#.....#",

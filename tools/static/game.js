@@ -477,6 +477,21 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (state.meta && state.meta[dt.x + ',' + dt.y] &&
+          ('switch_open' in state.meta[dt.x + ',' + dt.y] ||
+           'switch_pressed' in state.meta[dt.x + ',' + dt.y])) {
+        // Floor switch pack: the door sprite follows switch_open
+        // and the plate sprite follows switch_pressed, both cell
+        // meta written by the pack tick hook (a view of the held
+        // state, never a driver of it).
+        const smeta = state.meta[dt.x + ',' + dt.y];
+        const texName = 'switch_open' in smeta
+          ? (smeta.switch_open ? 'door-open.png' : 'door-closed.png')
+          : (smeta.switch_pressed ? 'floor-switch-pressed.png'
+            : 'floor-switch-unpressed.png');
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+        dt.sprite.visible = true;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
