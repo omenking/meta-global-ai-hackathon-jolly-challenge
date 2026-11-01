@@ -477,6 +477,19 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'T') {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        const tmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const tphase = (tmeta && tmeta.timed_phase) || 'unseen';
+        // Dissolved: show the faint reforming ghost on its start
+        // tile; otherwise the orb itself, ringed while counting.
+        dt.sprite.visible = gc === 'T' || tphase === 'dissolved';
+        const texName = tphase === 'dissolved'
+          ? 'timed-orb-reforming.png'
+          : (tphase === 'ringing' ? 'timed-orb-ringing.png'
+            : 'timed-orb.png');
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
