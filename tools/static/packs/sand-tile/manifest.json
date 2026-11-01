@@ -1,0 +1,13 @@
+{
+  "pack": "sand-tile",
+  "main": "main.js",
+  "assets": [
+    {"file": "sand.png", "kind": "tiles", "bundled": true,
+     "shows": "plain sand with no prints yet"},
+    {"file": "sand-prints.png", "kind": "tiles", "bundled": true,
+     "shows": "sand with the player footprints left for the rest of the attempt"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
