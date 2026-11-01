@@ -1,0 +1,38 @@
+{
+  "name": "mech-82-ice-block-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-82-ice-block Test Level: ice block on ice with an orb lane beside its slide line; the naive nearest-wall push slides the whole way past the lane to a useless stop at the far wall, restart restores it, and the corrected slide into the fire lane cancels the fire so the player can cross the scorched floor to the orb and warp",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"label": "warp", "sprite": "portal.png"},
+    "I": {"base": "floor_default.png", "label": "ice block", "def": "ice:ice-block", "terrain": "ice:ice"},
+    "i": {"label": "ice", "def": "ice:ice"},
+    "F": {"label": "fire", "text": "F", "def": "ice:fire"},
+    "A": {"label": "lava", "text": "A", "def": "ice:lava"},
+    "~": {"label": "shallow water", "text": "~", "def": "ice:shallow"},
+    "D": {"label": "deep water", "text": "D", "def": "ice:deep"},
+    "V": {"label": "void", "text": "V", "def": "ice:void"}
+  },
+  "rows": [
+    "#################",
+    "#P.Iiiiiiii.....#",
+    "#.......*.......#",
+    "#..I....F...*X..#",
+    "#.###############",
+    "#..I....~.......#",
+    "#.###############",
+    "#..I....D.......#",
+    "#.###############",
+    "#..I....A.......#",
+    "#.###############",
+    "#..I....V.......#",
+    "#.###############",
+    "#..I...i..I.....#",
+    "#################"
+  ]
+}
