@@ -1,0 +1,17 @@
+{
+  "pack": "one-time-switch",
+  "main": "main.js",
+  "assets": [
+    {"file": "one-time-switch-intact.png", "kind": "tiles", "bundled": true,
+     "shows": "one-time switch never yet pressed, linked door still closed"},
+    {"file": "one-time-switch-broken.png", "kind": "tiles", "bundled": true,
+     "shows": "broken one-time switch after its single press, visibly spent and inert"},
+    {"file": "door-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "closed door blocking the doorway like wall before the press"},
+    {"file": "door-open.png", "kind": "tiles", "bundled": true,
+     "shows": "open door after the one press, permanently open for the attempt"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
