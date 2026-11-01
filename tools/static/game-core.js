@@ -8,7 +8,7 @@
 // gate_open) computed here, never stored as kernel truth.
 (function (root) {
   'use strict';
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, RaftPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -16,12 +16,14 @@
     CorePack = require('./packs/core-chips/main.js');
     WaterPack = require('./packs/proof-water/main.js');
     CrumblePack = require('./packs/crumbling/main.js');
+    RaftPack = require('./packs/raft/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
     CorePack = root.GamePackCoreChips;
     WaterPack = root.GamePackProofWater;
     CrumblePack = root.GamePackCrumbling;
+    RaftPack = root.GamePackRaft;
   }
 
   function createEngine(packRegisters) {
@@ -87,7 +89,9 @@
         next_level: state.next_level === undefined ? null : state.next_level,
         timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
         time_left_s: state.time_left_s, elapsed_s: state.elapsed_s,
-        t_ms: state.t_ms, input: state.last_input };
+        t_ms: state.t_ms, input: state.last_input,
+        raft_riding: !!(state.flags && state.flags['raft:riding']),
+        raft_remaining: (state.counters && typeof state.counters['raft:remaining'] === 'number') ? state.counters['raft:remaining'] : null };
     }
     // Pack-carried assets: probing a level registers its pack defs,
     // whose declared sprite/icon names are what the page preloads.
@@ -120,7 +124,7 @@
       getTileDef: function (id) { return registry.getTile(id); } };
   }
 
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, RaftPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -175,6 +179,7 @@
     getTileDef: engine.getTileDef,
     registerCorePack: CorePack, registerKeysPack: KeysPack,
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack,
+    registerRaftPack: RaftPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
