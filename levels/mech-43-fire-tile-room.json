@@ -1,0 +1,27 @@
+{
+  "name": "mech-43-fire-tile-room",
+  "time_limit": 300,
+  "test": true,
+  "source": "mech-43-fire-tile Test Level: fire on grass beside the grass return path, orb on the far side; after 10 moves fire spreads across the return path, so the naive straight return walks into fire, while the stone detour (fire never spreads onto stone) or waiting for burn-out (30 moves) succeeds",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "stone floor (not flammable)", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "g": {"label": "grass floor (flammable)", "text": "g", "def": "fire:grass"},
+    "w": {"label": "wood floor (flammable)", "text": "w", "def": "fire:wood"},
+    "F": {"label": "fire on grass (lethal while burning)", "text": "F", "def": "fire:fire", "terrain": "fire:grass"}
+  },
+  "rows": [
+    "#############",
+    "#P..........#",
+    "#..ggggg..*.#",
+    "#....F......#",
+    "#.*.........#",
+    "#....www....#",
+    "#.....F.....#",
+    "#...........#",
+    "#############"
+  ]
+}
