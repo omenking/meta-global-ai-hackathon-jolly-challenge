@@ -1,8835 +1,9740 @@
 {
  "chip1": [
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 7
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 0
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 9,
     "y": 7
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 1
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.75,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 7
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.75,
    "steps": 2
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.5,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 9,
     "y": 7
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.5,
    "steps": 3
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.25,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 9,
     "y": 6
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.25,
    "steps": 4
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 9,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119,
    "steps": 5
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.75,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 10,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.75,
    "steps": 6
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.5,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 9,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.5,
    "steps": 7
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.25,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.25,
    "steps": 8
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118,
    "steps": 9
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.75,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.75,
    "steps": 10
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.5,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.5,
    "steps": 11
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.25,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 7,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.25,
    "steps": 12
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 6,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117,
    "steps": 13
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.75,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 6,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.75,
    "steps": 14
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.5,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 7,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.5,
    "steps": 15
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.25,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 7,
     "y": 6
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.25,
    "steps": 16
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 7,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116,
    "steps": 17
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.75,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.75,
    "steps": 18
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.5,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.5,
    "steps": 19
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.25,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.25,
    "steps": 20
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.75,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.75,
    "steps": 22
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.5,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.5,
    "steps": 23
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.25,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 7,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.25,
    "steps": 24
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 8,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114,
    "steps": 25
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.75,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 9,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.75,
    "steps": 26
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.5,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 10,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.5,
    "steps": 27
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 10,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 10,
     "y": 5
    },
-   "inv": [],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113,
    "steps": 29
   },
   {
+   "gate": false,
+   "inv": [
+    "red"
+   ],
+   "left": 112.75,
+   "next": null,
+   "orbs": 11,
    "pos": {
     "x": 10,
     "y": 6
    },
-   "inv": [
-    "red"
-   ],
-   "orbs": 11,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.75,
    "steps": 30
   },
   {
+   "gate": false,
+   "inv": [
+    "red"
+   ],
+   "left": 112.5,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 10,
     "y": 7
    },
-   "inv": [
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.5,
    "steps": 31
   },
   {
+   "gate": false,
+   "inv": [
+    "red"
+   ],
+   "left": 112.25,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 10,
     "y": 6
    },
-   "inv": [
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.25,
    "steps": 32
   },
   {
+   "gate": false,
+   "inv": [
+    "red"
+   ],
+   "left": 112,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 10,
     "y": 7
    },
-   "inv": [
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112,
    "steps": 33
   },
   {
+   "gate": false,
+   "inv": [
+    "red"
+   ],
+   "left": 111.75,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 10,
     "y": 6
    },
-   "inv": [
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.75,
    "steps": 34
   },
   {
+   "gate": false,
+   "inv": [
+    "red"
+   ],
+   "left": 111.5,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 10,
     "y": 7
    },
-   "inv": [
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.5,
    "steps": 35
   },
   {
+   "gate": false,
+   "inv": [
+    "red"
+   ],
+   "left": 111.25,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 9,
     "y": 7
    },
-   "inv": [
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.25,
    "steps": 36
   },
   {
+   "gate": false,
+   "inv": [
+    "red"
+   ],
+   "left": 111,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 9,
     "y": 8
    },
-   "inv": [
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111,
    "steps": 37
   },
   {
+   "gate": false,
+   "inv": [
+    "red"
+   ],
+   "left": 110.75,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 9,
     "y": 9
    },
-   "inv": [
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.75,
    "steps": 38
   },
   {
+   "gate": false,
+   "inv": [
+    "red"
+   ],
+   "left": 110.5,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 10,
     "y": 9
    },
-   "inv": [
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.5,
    "steps": 39
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 8
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 110.25,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 8
+   },
+   "status": "playing",
    "steps": 40
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 8
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 110,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 8
+   },
+   "status": "playing",
    "steps": 41
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 109.75,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 42
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 8
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 109.5,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 8
+   },
+   "status": "playing",
    "steps": 43
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 109.25,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 44
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 109,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 45
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 108.75,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 46
   },
   {
-   "pos": {
-    "x": 9,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 108.5,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 9,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 47
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 108.25,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 48
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 108,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 49
   },
   {
+   "gate": false,
+   "inv": [
+    "red",
+    "red"
+   ],
+   "left": 107.75,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 10,
     "y": 8
    },
-   "inv": [
-    "red",
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.75,
    "steps": 50
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 107.5,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 51
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 107.25,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 52
   },
   {
+   "gate": false,
+   "inv": [
+    "red",
+    "red"
+   ],
+   "left": 107,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 9,
     "y": 9
    },
-   "inv": [
-    "red",
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107,
    "steps": 53
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 106.75,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 54
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 8
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 106.5,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 8
+   },
+   "status": "playing",
    "steps": 55
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 106.25,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 56
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 106,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 57
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 105.75,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 58
   },
   {
-   "pos": {
-    "x": 10,
-    "y": 9
-   },
+   "gate": false,
    "inv": [
     "red",
     "red"
    ],
-   "orbs": 10,
-   "gate": false,
-   "status": "playing",
-   "next": null,
    "left": 105.5,
+   "next": null,
+   "orbs": 10,
+   "pos": {
+    "x": 10,
+    "y": 9
+   },
+   "status": "playing",
    "steps": 59
   },
   {
+   "gate": false,
+   "inv": [
+    "red",
+    "red"
+   ],
+   "left": 105.25,
+   "next": null,
+   "orbs": 10,
    "pos": {
     "x": 10,
     "y": 8
    },
-   "inv": [
-    "red",
-    "red"
-   ],
-   "orbs": 10,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.25,
    "steps": 60
   }
  ],
  "keys-room": [
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 0
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 1
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.75,
    "steps": 2
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.5,
    "steps": 3
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.25,
    "steps": 4
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119,
    "steps": 5
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.75,
    "steps": 6
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.5,
    "steps": 7
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.25,
    "steps": 8
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118,
    "steps": 9
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.75,
    "steps": 10
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.5,
    "steps": 11
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.25,
    "steps": 12
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117,
    "steps": 13
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.75,
    "steps": 14
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.5,
    "steps": 15
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.25,
    "steps": 16
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116,
    "steps": 17
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.75,
    "steps": 18
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.5,
    "steps": 19
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.25,
    "steps": 20
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.75,
    "steps": 22
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.5,
    "steps": 23
   },
   {
+   "gate": false,
+   "inv": [
+    "green"
+   ],
+   "left": 114.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 3
    },
-   "inv": [
-    "green"
-   ],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.25,
    "steps": 24
   },
   {
+   "gate": false,
+   "inv": [
+    "green"
+   ],
+   "left": 114,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [
-    "green"
-   ],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114,
    "steps": 25
   },
   {
+   "gate": false,
+   "inv": [
+    "green"
+   ],
+   "left": 113.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 3
    },
-   "inv": [
-    "green"
-   ],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.75,
    "steps": 26
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.5,
    "steps": 27
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113,
    "steps": 29
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.75,
    "steps": 30
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 5
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.5,
    "steps": 31
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.25,
    "steps": 32
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 5
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112,
    "steps": 33
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.75,
    "steps": 34
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 5
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.5,
    "steps": 35
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 5
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.25,
    "steps": 36
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 6
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111,
    "steps": 37
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.75,
    "steps": 38
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.5,
    "steps": 39
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 6
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.25,
    "steps": 40
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 6
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110,
    "steps": 41
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.75,
    "steps": 42
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 6
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.5,
    "steps": 43
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.25,
    "steps": 44
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109,
    "steps": 45
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.75,
    "steps": 46
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.5,
    "steps": 47
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.25,
    "steps": 48
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 10,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108,
    "steps": 49
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 10,
     "y": 6
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.75,
    "steps": 50
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 10,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.5,
    "steps": 51
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 10,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.25,
    "steps": 52
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107,
    "steps": 53
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 10,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.75,
    "steps": 54
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 10,
     "y": 6
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.5,
    "steps": 55
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 10,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.25,
    "steps": 56
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 11,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106,
    "steps": 57
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 11,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.75,
    "steps": 58
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 11,
     "y": 7
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.5,
    "steps": 59
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 11,
     "y": 6
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.25,
    "steps": 60
   }
  ],
  "mech-5-crumbling-tile-room": [
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 0
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 1
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.75,
    "steps": 2
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.5,
    "steps": 3
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.25,
    "steps": 4
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119,
    "steps": 5
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.75,
    "steps": 6
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.5,
    "steps": 7
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.25,
    "steps": 8
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118,
    "steps": 9
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.75,
    "steps": 10
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.5,
    "steps": 11
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.25,
    "steps": 12
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117,
    "steps": 13
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.75,
    "steps": 14
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.5,
    "steps": 15
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.25,
    "steps": 16
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116,
    "steps": 17
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.75,
    "steps": 18
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.5,
    "steps": 19
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.25,
    "steps": 20
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.75,
    "steps": 22
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.5,
    "steps": 23
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 3
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.25,
    "steps": 24
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114,
    "steps": 25
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 3
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.75,
    "steps": 26
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 3
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.5,
    "steps": 27
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 3
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 3
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113,
    "steps": 29
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.75,
    "steps": 30
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 5
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.5,
    "steps": 31
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.25,
    "steps": 32
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 5
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112,
    "steps": 33
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.75,
    "steps": 34
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 5
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.5,
    "steps": 35
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 5
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.25,
    "steps": 36
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111,
    "steps": 37
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.75,
    "steps": 38
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.5,
    "steps": 39
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 5
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.25,
    "steps": 40
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 5
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110,
    "steps": 41
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.75,
    "steps": 42
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 5
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.5,
    "steps": 43
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.25,
    "steps": 44
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 5,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109,
    "steps": 45
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 5,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.75,
    "steps": 46
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.5,
    "steps": 47
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 5,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.25,
    "steps": 48
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108,
    "steps": 49
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.75,
    "steps": 50
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.5,
    "steps": 51
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.25,
    "steps": 52
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 5,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107,
    "steps": 53
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.75,
    "steps": 54
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.5,
    "steps": 55
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.25,
    "steps": 56
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 7,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106,
    "steps": 57
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.75,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 8,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.75,
    "steps": 58
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.5,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 9,
     "y": 6
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.5,
    "steps": 59
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.25,
+   "next": null,
+   "orbs": 2,
    "pos": {
     "x": 9,
     "y": 5
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
+   "steps": 60
+  }
+ ],
+ "mech-61-life-preserver-room": [
+  {
+   "gate": false,
+   "inv": [],
+   "left": 120,
    "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 1,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 0
+  },
+  {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 2,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 1
+  },
+  {
+   "gate": false,
+   "inv": [],
+   "left": 119.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 1,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 2
+  },
+  {
+   "gate": false,
+   "inv": [],
+   "left": 119.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 2,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 3
+  },
+  {
+   "gate": false,
+   "inv": [],
+   "left": 119.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 2,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 4
+  },
+  {
+   "gate": false,
+   "inv": [],
+   "left": 119,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 2,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 5
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 118.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 3,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 6
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 118.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 2,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 7
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 118.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 1,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 8
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 118,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 1,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 9
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 117.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 1,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 10
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 117.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 1,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 11
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 117.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 1,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 12
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 117,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 1,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 13
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 116.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 1,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 14
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 116.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 2,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 15
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 116.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 2,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 16
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 116,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 2,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 17
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 115.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 3,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 18
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 115.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 3,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 19
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 115.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 3,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 20
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 115,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 3,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 21
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 114.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 3,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 22
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 114.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 3,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 23
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 114.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 2,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 24
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 114,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 3,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 25
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 113.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 4,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 26
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 113.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 27
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 28
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 113,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 29
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 112.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 30
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 112.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 31
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 112.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 32
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 112,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 33
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 111.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 34
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 111.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 35
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 111.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 36
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 111,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 37
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 110.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 38
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 110.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 39
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 110.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 40
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 110,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 41
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 109.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 42
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 109.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 43
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 109.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 44
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 109,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 45
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 108.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 46
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 108.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 47
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 108.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 48
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 108,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 49
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 107.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 50
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 107.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 51
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 107.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 52
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 107,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 53
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 106.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 54
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 106.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 1
+   },
+   "status": "playing",
+   "steps": 55
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 106.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 5,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 56
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 106,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 57
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 105.75,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 6,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 58
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
+   "left": 105.5,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 7,
+    "y": 2
+   },
+   "status": "playing",
+   "steps": 59
+  },
+  {
+   "gate": false,
+   "inv": [
+    "life-preserver"
+   ],
    "left": 105.25,
+   "next": null,
+   "orbs": 1,
+   "pos": {
+    "x": 7,
+    "y": 2
+   },
+   "status": "playing",
    "steps": 60
   }
  ],
  "movement-room": [
   {
+   "gate": true,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 0
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 1
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 119.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 119.75,
    "steps": 2
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 119.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 119.5,
    "steps": 3
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 119.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 119.25,
    "steps": 4
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 119,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 119,
    "steps": 5
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 118.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 4,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 118.75,
    "steps": 6
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 118.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 118.5,
    "steps": 7
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 118.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 118.25,
    "steps": 8
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 118,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 118,
    "steps": 9
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 117.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 117.75,
    "steps": 10
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 117.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 117.5,
    "steps": 11
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 117.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 117.25,
    "steps": 12
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 117,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 117,
    "steps": 13
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 116.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 116.75,
    "steps": 14
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 116.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 116.5,
    "steps": 15
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 116.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 116.25,
    "steps": 16
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 116,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 116,
    "steps": 17
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 115.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 115.75,
    "steps": 18
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 115.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 115.5,
    "steps": 19
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 115.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 115.25,
    "steps": 20
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 115,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 115,
    "steps": 21
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 114.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 114.75,
    "steps": 22
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 114.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 114.5,
    "steps": 23
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 114.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 2,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 114.25,
    "steps": 24
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 114,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 114,
    "steps": 25
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 113.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 4,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 113.75,
    "steps": 26
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 113.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 113.5,
    "steps": 27
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 113,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 113,
    "steps": 29
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 112.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 112.75,
    "steps": 30
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 112.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 112.5,
    "steps": 31
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 112.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 112.25,
    "steps": 32
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 112,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 112,
    "steps": 33
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 111.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 111.75,
    "steps": 34
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 111.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 111.5,
    "steps": 35
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 111.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 111.25,
    "steps": 36
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 111,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 111,
    "steps": 37
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 110.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 110.75,
    "steps": 38
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 110.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 110.5,
    "steps": 39
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 110.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 110.25,
    "steps": 40
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 110,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 110,
    "steps": 41
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 109.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 109.75,
    "steps": 42
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 109.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 109.5,
    "steps": 43
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 109.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 109.25,
    "steps": 44
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 109,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 109,
    "steps": 45
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 108.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 108.75,
    "steps": 46
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 108.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 108.5,
    "steps": 47
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 108.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 108.25,
    "steps": 48
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 108,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 108,
    "steps": 49
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 107.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 107.75,
    "steps": 50
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 107.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 107.5,
    "steps": 51
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 107.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 107.25,
    "steps": 52
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 107,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 107,
    "steps": 53
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 106.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 106.75,
    "steps": 54
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 106.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 106.5,
    "steps": 55
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 106.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 106.25,
    "steps": 56
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 106,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 106,
    "steps": 57
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 105.75,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 105.75,
    "steps": 58
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 105.5,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 105.5,
    "steps": 59
   },
   {
+   "gate": true,
+   "inv": [],
+   "left": 105.25,
+   "next": null,
+   "orbs": 0,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 0,
-   "gate": true,
    "status": "playing",
-   "next": null,
-   "left": 105.25,
    "steps": 60
   }
  ],
  "orbs-room": [
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 120,
    "steps": 0
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 120,
    "steps": 1
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.75,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 119.75,
    "steps": 2
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.5,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 119.5,
    "steps": 3
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.25,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 119.25,
    "steps": 4
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 119,
    "steps": 5
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.75,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 118.75,
    "steps": 6
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.5,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 118.5,
    "steps": 7
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.25,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 118.25,
    "steps": 8
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 118,
    "steps": 9
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.75,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 117.75,
    "steps": 10
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.5,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 117.5,
    "steps": 11
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.25,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 117.25,
    "steps": 12
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 117,
    "steps": 13
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.75,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 116.75,
    "steps": 14
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.5,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 116.5,
    "steps": 15
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.25,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 116.25,
    "steps": 16
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 116,
    "steps": 17
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.75,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 115.75,
    "steps": 18
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.5,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 115.5,
    "steps": 19
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.25,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 115.25,
    "steps": 20
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 115,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.75,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 114.75,
    "steps": 22
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.5,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 114.5,
    "steps": 23
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.25,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 114.25,
    "steps": 24
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 114,
    "steps": 25
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.75,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 4,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 113.75,
    "steps": 26
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.5,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 5,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 113.5,
    "steps": 27
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 113,
    "steps": 29
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.75,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 112.75,
    "steps": 30
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.5,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 112.5,
    "steps": 31
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.25,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 7,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 112.25,
    "steps": 32
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 112,
    "steps": 33
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.75,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 7,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 111.75,
    "steps": 34
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.5,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 111.5,
    "steps": 35
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.25,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 111.25,
    "steps": 36
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 111,
    "steps": 37
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.75,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 110.75,
    "steps": 38
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.5,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 110.5,
    "steps": 39
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.25,
+   "next": "warp-room",
+   "orbs": 2,
    "pos": {
     "x": 7,
     "y": 1
    },
-   "inv": [],
-   "orbs": 2,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 110.25,
    "steps": 40
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 110,
    "steps": 41
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.75,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 109.75,
    "steps": 42
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.5,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 109.5,
    "steps": 43
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.25,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 109.25,
    "steps": 44
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 109,
    "steps": 45
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.75,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 108.75,
    "steps": 46
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.5,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 108.5,
    "steps": 47
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.25,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 108.25,
    "steps": 48
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 108,
    "steps": 49
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.75,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 107.75,
    "steps": 50
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.5,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 107.5,
    "steps": 51
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.25,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 107.25,
    "steps": 52
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 107,
    "steps": 53
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.75,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 106.75,
    "steps": 54
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.5,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 106.5,
    "steps": 55
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.25,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 106.25,
    "steps": 56
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 106,
    "steps": 57
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.75,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 105.75,
    "steps": 58
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.5,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 105.5,
    "steps": 59
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.25,
+   "next": "warp-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-room",
-   "left": 105.25,
    "steps": 60
   }
  ],
  "scroll-room": [
   {
+   "gate": false,
+   "inv": [],
+   "left": 300,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 300,
    "steps": 0
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 300,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 300,
    "steps": 1
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 299.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 299.75,
    "steps": 2
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 299.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 299.5,
    "steps": 3
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 299.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 299.25,
    "steps": 4
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 299,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 299,
    "steps": 5
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 298.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 4,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 298.75,
    "steps": 6
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 298.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 298.5,
    "steps": 7
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 298.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 298.25,
    "steps": 8
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 298,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 298,
    "steps": 9
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 297.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 297.75,
    "steps": 10
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 297.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 297.5,
    "steps": 11
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 297.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 297.25,
    "steps": 12
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 297,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 297,
    "steps": 13
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 296.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 296.75,
    "steps": 14
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 296.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 296.5,
    "steps": 15
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 296.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 296.25,
    "steps": 16
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 296,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 296,
    "steps": 17
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 295.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 295.75,
    "steps": 18
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 295.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 295.5,
    "steps": 19
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 295.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 295.25,
    "steps": 20
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 295,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 295,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 294.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 294.75,
    "steps": 22
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 294.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 294.5,
    "steps": 23
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 294.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 2,
     "y": 3
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 294.25,
    "steps": 24
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 294,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 294,
    "steps": 25
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 293.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 4,
     "y": 3
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 293.75,
    "steps": 26
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 293.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 293.5,
    "steps": 27
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 293.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 293.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 293,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 7,
     "y": 3
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 293,
    "steps": 29
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 292.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 7,
     "y": 4
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 292.75,
    "steps": 30
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 292.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 7,
     "y": 5
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 292.5,
    "steps": 31
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 292.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 7,
     "y": 4
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 292.25,
    "steps": 32
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 292,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 7,
     "y": 5
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 292,
    "steps": 33
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 291.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 7,
     "y": 4
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 291.75,
    "steps": 34
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 291.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 7,
     "y": 5
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 291.5,
    "steps": 35
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 291.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 6,
     "y": 5
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 291.25,
    "steps": 36
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 291,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 6,
     "y": 6
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 291,
    "steps": 37
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 290.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 6,
     "y": 7
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 290.75,
    "steps": 38
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 290.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 7,
     "y": 7
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 290.5,
    "steps": 39
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 290.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 7,
     "y": 6
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 290.25,
    "steps": 40
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 290,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 8,
     "y": 6
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 290,
    "steps": 41
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 289.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 8,
     "y": 7
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 289.75,
    "steps": 42
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 289.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 8,
     "y": 6
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 289.5,
    "steps": 43
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 289.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 8,
     "y": 7
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 289.25,
    "steps": 44
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 289,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 9,
     "y": 7
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 289,
    "steps": 45
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 288.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 9,
     "y": 8
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 288.75,
    "steps": 46
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 288.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 8,
     "y": 8
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 288.5,
    "steps": 47
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 288.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 9,
     "y": 8
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 288.25,
    "steps": 48
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 288,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 10,
     "y": 8
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 288,
    "steps": 49
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 287.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 10,
     "y": 7
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 287.75,
    "steps": 50
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 287.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 10,
     "y": 8
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 287.5,
    "steps": 51
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 287.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 10,
     "y": 9
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 287.25,
    "steps": 52
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 287,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 9,
     "y": 9
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 287,
    "steps": 53
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 286.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 10,
     "y": 9
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 286.75,
    "steps": 54
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 286.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 10,
     "y": 8
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 286.5,
    "steps": 55
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 286.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 10,
     "y": 9
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 286.25,
    "steps": 56
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 286,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 11,
     "y": 9
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 286,
    "steps": 57
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 285.75,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 12,
     "y": 9
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 285.75,
    "steps": 58
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 285.5,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 13,
     "y": 9
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 285.5,
    "steps": 59
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 285.25,
+   "next": null,
+   "orbs": 5,
    "pos": {
     "x": 13,
     "y": 8
    },
-   "inv": [],
-   "orbs": 5,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 285.25,
    "steps": 60
   }
  ],
  "test-room": [
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 0
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 1
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.75,
    "steps": 2
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.5,
    "steps": 3
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.25,
    "steps": 4
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119,
    "steps": 5
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.75,
    "steps": 6
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.5,
    "steps": 7
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.25,
    "steps": 8
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118,
    "steps": 9
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.75,
    "steps": 10
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.5,
    "steps": 11
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.25,
    "steps": 12
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117,
    "steps": 13
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.75,
    "steps": 14
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.5,
    "steps": 15
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.25,
    "steps": 16
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116,
    "steps": 17
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.75,
    "steps": 18
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.5,
    "steps": 19
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.25,
    "steps": 20
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.75,
    "steps": 22
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.5,
    "steps": 23
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.25,
    "steps": 24
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114,
    "steps": 25
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.75,
    "steps": 26
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.5,
    "steps": 27
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113,
    "steps": 29
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.75,
    "steps": 30
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.5,
    "steps": 31
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.25,
    "steps": 32
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112,
    "steps": 33
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.75,
    "steps": 34
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.5,
    "steps": 35
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.25,
    "steps": 36
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111,
    "steps": 37
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.75,
    "steps": 38
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.5,
    "steps": 39
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.25,
    "steps": 40
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110,
    "steps": 41
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.75,
    "steps": 42
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.5,
    "steps": 43
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.25,
    "steps": 44
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109,
    "steps": 45
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.75,
    "steps": 46
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.5,
    "steps": 47
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.25,
    "steps": 48
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108,
    "steps": 49
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.75,
    "steps": 50
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.5,
    "steps": 51
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.25,
    "steps": 52
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107,
    "steps": 53
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.75,
    "steps": 54
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.5,
    "steps": 55
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.25,
    "steps": 56
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106,
    "steps": 57
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.75,
    "steps": 58
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 4
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.5,
    "steps": 59
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.25,
    "steps": 60
   }
  ],
  "timer-room": [
   {
+   "gate": false,
+   "inv": [],
+   "left": 5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 5,
    "steps": 0
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 5,
    "steps": 1
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 4.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 4.75,
    "steps": 2
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 4.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 4.5,
    "steps": 3
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 4.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 4.25,
    "steps": 4
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 4,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 4,
    "steps": 5
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 3.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 3.75,
    "steps": 6
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 3.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 3.5,
    "steps": 7
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 3.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 3.25,
    "steps": 8
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 3,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 3,
    "steps": 9
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 2.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 2.75,
    "steps": 10
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 2.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 2.5,
    "steps": 11
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 2.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 2.25,
    "steps": 12
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 2,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 2,
    "steps": 13
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 1.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 1.75,
    "steps": 14
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 1.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 1.5,
    "steps": 15
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 1.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 1.25,
    "steps": 16
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 1,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 1,
    "steps": 17
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 0.75,
    "steps": 18
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 0.5,
    "steps": 19
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 0.25,
    "steps": 20
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 0,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 0,
    "steps": 21
   }
  ],
  "warp-end-room": [
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 0
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 1
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.75,
    "steps": 2
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.5,
    "steps": 3
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.25,
    "steps": 4
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119,
    "steps": 5
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.75,
    "steps": 6
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.5,
    "steps": 7
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.25,
    "steps": 8
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118,
    "steps": 9
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.75,
    "steps": 10
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.5,
    "steps": 11
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.25,
    "steps": 12
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117,
    "steps": 13
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.75,
    "steps": 14
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.5,
    "steps": 15
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.25,
    "steps": 16
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116,
    "steps": 17
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.75,
    "steps": 18
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.5,
    "steps": 19
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.25,
    "steps": 20
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.75,
    "steps": 22
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.5,
    "steps": 23
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.25,
    "steps": 24
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114,
    "steps": 25
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.75,
    "steps": 26
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.5,
    "steps": 27
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113,
    "steps": 29
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.75,
    "steps": 30
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.5,
    "steps": 31
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112.25,
    "steps": 32
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 112,
    "steps": 33
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.75,
    "steps": 34
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.5,
    "steps": 35
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111.25,
    "steps": 36
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 111,
    "steps": 37
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.75,
    "steps": 38
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.5,
    "steps": 39
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110.25,
    "steps": 40
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 110,
    "steps": 41
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.75,
    "steps": 42
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.5,
    "steps": 43
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109.25,
    "steps": 44
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 109,
    "steps": 45
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.75,
    "steps": 46
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.5,
    "steps": 47
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108.25,
    "steps": 48
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 108,
    "steps": 49
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.75,
    "steps": 50
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.5,
    "steps": 51
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107.25,
    "steps": 52
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 107,
    "steps": 53
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.75,
    "steps": 54
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.5,
    "steps": 55
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106.25,
    "steps": 56
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 106,
    "steps": 57
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.75,
    "steps": 58
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.5,
    "steps": 59
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 105.25,
    "steps": 60
   }
  ],
  "warp-room": [
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 120,
    "steps": 0
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 120,
    "steps": 1
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 119.75,
    "steps": 2
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 119.5,
    "steps": 3
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 119.25,
    "steps": 4
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 119,
    "steps": 5
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 118.75,
    "steps": 6
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 118.5,
    "steps": 7
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 118.25,
    "steps": 8
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 118,
    "steps": 9
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 117.75,
    "steps": 10
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 117.5,
    "steps": 11
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 117.25,
    "steps": 12
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 117,
    "steps": 13
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 116.75,
    "steps": 14
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 116.5,
    "steps": 15
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 116.25,
    "steps": 16
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 116,
    "steps": 17
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 115.75,
    "steps": 18
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 115.5,
    "steps": 19
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 115.25,
    "steps": 20
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 115,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 114.75,
    "steps": 22
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 114.5,
    "steps": 23
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 114.25,
    "steps": 24
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 114,
    "steps": 25
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 113.75,
    "steps": 26
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 113.5,
    "steps": 27
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 113,
    "steps": 29
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 112.75,
    "steps": 30
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 112.5,
    "steps": 31
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 112.25,
    "steps": 32
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 112,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 112,
    "steps": 33
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 111.75,
    "steps": 34
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 111.5,
    "steps": 35
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 111.25,
    "steps": 36
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 111,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 111,
    "steps": 37
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 110.75,
    "steps": 38
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 110.5,
    "steps": 39
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 7,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 110.25,
    "steps": 40
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 110,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 110,
    "steps": 41
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 109.75,
    "steps": 42
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 109.5,
    "steps": 43
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 109.25,
    "steps": 44
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 109,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 109,
    "steps": 45
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 108.75,
    "steps": 46
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 108.5,
    "steps": 47
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 108.25,
    "steps": 48
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 108,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 108,
    "steps": 49
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 107.75,
    "steps": 50
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 107.5,
    "steps": 51
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 107.25,
    "steps": 52
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 107,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 8,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 107,
    "steps": 53
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 106.75,
    "steps": 54
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 106.5,
    "steps": 55
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 106.25,
    "steps": 56
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 106,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 106,
    "steps": 57
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.75,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 105.75,
    "steps": 58
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.5,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 105.5,
    "steps": 59
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 105.25,
+   "next": "warp-end-room",
+   "orbs": 1,
    "pos": {
     "x": 9,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": "warp-end-room",
-   "left": 105.25,
    "steps": 60
   }
  ],
  "water-room": [
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 0
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 120,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 120,
    "steps": 1
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.75,
    "steps": 2
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.5,
    "steps": 3
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119.25,
    "steps": 4
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 119,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 119,
    "steps": 5
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.75,
    "steps": 6
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.5,
    "steps": 7
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118.25,
    "steps": 8
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 118,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 118,
    "steps": 9
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.75,
    "steps": 10
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.5,
    "steps": 11
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117.25,
    "steps": 12
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 117,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 117,
    "steps": 13
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 1,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.75,
    "steps": 14
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.5,
    "steps": 15
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116.25,
    "steps": 16
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 116,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 116,
    "steps": 17
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.75,
    "steps": 18
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 1
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.5,
    "steps": 19
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115.25,
    "steps": 20
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 115,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 115,
    "steps": 21
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 2
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.75,
    "steps": 22
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.5,
    "steps": 23
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 2,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114.25,
    "steps": 24
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 114,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 3,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 114,
    "steps": 25
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.75,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 4,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.75,
    "steps": 26
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.5,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 5,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "playing",
-   "next": null,
-   "left": 113.5,
    "steps": 27
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   },
   {
+   "gate": false,
+   "inv": [],
+   "left": 113.25,
+   "next": null,
+   "orbs": 1,
    "pos": {
     "x": 6,
     "y": 3
    },
-   "inv": [],
-   "orbs": 1,
-   "gate": false,
    "status": "lost",
-   "next": null,
-   "left": 113.25,
    "steps": 28
   }
  ]
