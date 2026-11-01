@@ -1,0 +1,25 @@
+{
+  "name": "mech-84-mirror-block-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-84 Mirror block Test Level: patroller lane (row 3) crosses the room; mirror block starts one tile below the lane at (5,4) - pushing it up into the lane at (5,3) makes the patroller reverse there so its loop no longer crosses the right-hand orb corridor; left where it starts, the patroller keeps crossing that corridor",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "M": {"base": "floor_default.png", "label": "mirror block", "sprite": "mirror-block.png", "def": "mirror:mirror-block"},
+    "E": {"base": "floor_default.png", "label": "patroller", "actor": "mirror:patroller", "terrain": "core:floor"}
+  },
+  "rows": [
+    "###############",
+    "#P............#",
+    "#.............#",
+    "#E............#",
+    "#....M........#",
+    "#..........*..#",
+    "#.............#",
+    "###############"
+  ]
+}
