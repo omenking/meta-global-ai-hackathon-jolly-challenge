@@ -464,7 +464,15 @@
       // tile ('C') becomes void ('V'): the same glyph follows the
       // grid char so the hole stays visible instead of turning back
       // into plain floor.
-      if (dt.ch === 'C') {
+      if (dt.ch === 'D') {
+        const gcDoor = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gcDoor === 'D' || gcDoor === 'd';
+        const doorTex = textures[gcDoor === 'd'
+          ? 'final-door-open.png' : 'final-door-closed.png'];
+        if (doorTex && dt.sprite.texture !== doorTex) {
+          dt.sprite.texture = doorTex;
+        }
+      } else if (dt.ch === 'C') {
         const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
         dt.sprite.visible = gc === 'C' || gc === 'V';
         // Intact, minor, major and void each have a bundled sprite
