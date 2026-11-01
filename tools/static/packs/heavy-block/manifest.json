@@ -1,0 +1,17 @@
+{
+  "pack": "heavy-block",
+  "main": "main.js",
+  "assets": [
+    {"file": "heavy-block.png", "kind": "blocks", "bundled": true,
+     "shows": "heavy block at rest before any push input"},
+    {"file": "heavy-block-budging.png", "kind": "blocks", "bundled": true,
+     "shows": "heavy block budging in place on the first push input, not yet moved to a new tile"},
+    {"file": "jolly-straining.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly showing the pushing and straining graphic on the first push, while the heavy block budges but stays"},
+    {"file": "jolly-pushing-heavy.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly completing the second consecutive push as the heavy block moves one tile"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
