@@ -1,0 +1,28 @@
+{
+  "name": "mech-81-push-block-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-81-push-block Test Level: one push block (B) with open floor behind it to the north wall, a switch plate (S) across the room and a switch gate (D) to the orb and warp; the naive first push (north, from the spawn south of the block) corners the block against the north wall where it cannot be pulled back, so the switch can never be held and the room must be restarted",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"label": "warp", "sprite": "portal.png"},
+    "B": {"base": "floor_default.png", "label": "push block", "def": "blocks:push-block"},
+    "S": {"base": "floor_default.png", "label": "switch plate", "text": "S", "def": "blocks:switch-plate"},
+    "D": {"label": "switch gate", "sprite": "gate.png", "def": "blocks:switch-gate"}
+  },
+  "rows": [
+    "#############",
+    "#...........#",
+    "#....B......#",
+    "#....P......#",
+    "#...........#",
+    "#........S..#",
+    "######D######",
+    "#.....*..X..#",
+    "#############"
+  ]
+}
