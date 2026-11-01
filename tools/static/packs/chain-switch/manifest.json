@@ -1,0 +1,17 @@
+{
+  "pack": "chain-switch",
+  "main": "main.js",
+  "assets": [
+    {"file": "chain-switch-unlit.png", "kind": "tiles", "bundled": true,
+     "shows": "chain switch not yet lit, order mark visible and unlit"},
+    {"file": "chain-switch-lit.png", "kind": "tiles", "bundled": true,
+     "shows": "chain switch lit after its correct press in the sequence"},
+    {"file": "door-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "closed chain door blocking the doorway like wall until the last press"},
+    {"file": "door-open.png", "kind": "tiles", "bundled": true,
+     "shows": "open chain door after the final switch is pressed in order"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

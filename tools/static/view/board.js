@@ -53,6 +53,18 @@
           const spr = drawSprite(spriteName, gx, gy);
           if (spr === false) fallbackTile(gx, gy, ch);
           else if (isDynamic && spr) dynamicTiles.push({ x: gx, y: gy, ch: ch, sprite: spr });
+          // Chain switches carry their order mark as a text overlay
+          // over the shared switch sprite (the mark, not proximity,
+          // says which switch is next).
+          if (spr && def && /^chain:switch-/.test(def.id || '') && glyph) {
+            const mark = new PIXI.Text({
+              text: glyph,
+              style: { fontSize: 40, fill: 0xffd21f, fontWeight: 'bold',
+                stroke: { color: 0x111111, width: 5 } } });
+            mark.anchor.set(0.5);
+            mark.position.set(gx * TILE + TILE / 2, gy * TILE + TILE / 2);
+            board.addChild(mark);
+          }
         } else if (glyph) {
           const t = new PIXI.Text({
             text: glyph,
