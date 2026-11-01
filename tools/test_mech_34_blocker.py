@@ -228,5 +228,25 @@ class SanityReplayTests(unittest.TestCase):
         self.assertEqual(self.r["replaySteps"], 20)
 
 
+class BlockerAssetTests(unittest.TestCase):
+    def test_manifest_bundled_assets_exist_and_are_512_pngs(self):
+        import struct
+        pack = ROOT / "tools" / "static" / "packs" / "blocker"
+        manifest = json.loads(
+            (pack / "manifest.json").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["pack"], "blocker")
+        bundled = [a for a in manifest["assets"] if a["bundled"]]
+        self.assertEqual([a["file"] for a in bundled],
+                         ["blocker.png", "blocker-doorway.png",
+                          "push-block.png"])
+        for entry in bundled:
+            path = pack / "assets" / entry["file"]
+            self.assertTrue(path.is_file(), entry["file"])
+            data = path.read_bytes()
+            self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+            self.assertEqual(struct.unpack(">II", data[16:24]),
+                             (512, 512), entry["file"])
+
+
 if __name__ == "__main__":
     unittest.main()
