@@ -260,5 +260,32 @@ class SanityReplayTests(unittest.TestCase):
         self.assertEqual(self.r["replaySteps"], 14)
 
 
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class BounceAssetPathTests(unittest.TestCase):
+    """Sanity: bundled bounce art resolves into its pack folder."""
+
+    @classmethod
+    def setUpClass(cls):
+        script = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+console.log(JSON.stringify({
+  names: core.assetsForLevel(level),
+  paths: core.assetPathsForLevel(level),
+}));
+"""
+        out = subprocess.run(["node", "-e", script, str(CORE), str(LEVEL)],
+                             capture_output=True, text=True, check=True)
+        cls.result = json.loads(out.stdout.strip().splitlines()[-1])
+        cls.by_name = {a["name"]: a["url"] for a in cls.result["paths"]}
+
+    def test_bundled_assets_load_from_the_bounce_pack(self):
+        for name in ("bounce-pad.png", "bounce-pad-compressed.png",
+                     "jolly-launching.png"):
+            self.assertIn(name, self.result["names"])
+            self.assertEqual(self.by_name[name],
+                             f"packs/bounce/assets/{name}")
+
+
 if __name__ == "__main__":
     unittest.main()
