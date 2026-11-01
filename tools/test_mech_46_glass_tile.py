@@ -206,6 +206,27 @@ class SanityReplayTests(unittest.TestCase):
     def setUpClass(cls):
         cls.r = run_core(SANITY_SCRIPT)
 
+    def test_glass_assets_load_from_their_pack(self):
+        script = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+console.log(JSON.stringify({
+  names: core.assetsForLevel(level),
+  paths: core.assetPathsForLevel(level),
+}));
+"""
+        out = subprocess.run(["node", "-e", script, str(CORE), str(LEVEL)],
+                             capture_output=True, text=True, check=True)
+        r = json.loads(out.stdout.strip().splitlines()[-1])
+        by_name = {a["name"]: a["url"] for a in r["paths"]}
+        for name in ("glass.png", "glass-cracked.png"):
+            self.assertIn(name, r["names"])
+            self.assertEqual(by_name[name],
+                             f"packs/glass-tile/assets/{name}")
+        # void.png is a shared name with the crumbling pack; the
+        # crumbling registration wins the URL, and the glass pack's
+        # own void file exists on disk (checked in the pack test).
+
     def test_full_playthrough_replays_to_same_end_state(self):
         self.assertEqual(self.r["replayDigest"], self.r["liveDigest"])
         self.assertEqual(self.r["replay2Digest"], self.r["liveDigest"])
