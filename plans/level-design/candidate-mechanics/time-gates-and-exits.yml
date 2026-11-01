@@ -1,0 +1,120 @@
+group: Time, Gates and Exits
+description: Timer rules, gates, warps and level goals.
+mechanics:
+- id: 69
+  name: Hourglass
+  effect: freeze the timer for 10 seconds.
+  mechanics:
+  - Stepping on the hourglass tile freezes the level timer for 10 real seconds while you keep moving,
+    shown by a frozen timer display
+  - It fires on collection, so placement is the choice of when
+  unique: stops the clock anywhere, usable when you choose.
+  useful: thinking time in the hardest room of a level.
+  synergies:
+  - 'Timer switch (25): your clock frozen, the door''s countdown is not.'
+  demos:
+  - 'Sinking-adjacent end rooms: thinking time placed just before a hard push puzzle.'
+  teaching_moment: 'First room: the hourglass tile on the main path near the start of a level whose hard
+    room is at the end. A player who collects it as they pass spends the frozen ten seconds on the easy
+    opening and reaches the hard room with the timer running normally, which teaches that because it fires
+    on collection, where it is placed is the decision about when it is used.'
+  status: trial
+  human_review: {}
+- id: 71
+  name: Still tile
+  effect: timer pauses while you stand there.
+  mechanics:
+  - While you stand on it the timer display pauses and shows a held icon
+  - Enemies move on inputs so nothing else advances either
+  - Stepping off resumes the clock
+  - It buys thinking at the cost of standing still
+  unique: freezes the clock only while you stand and do nothing.
+  useful: a safe thinking spot that costs you progress.
+  synergies:
+  - 'Guard (37): think on a still tile while a guard cycle turns on your inputs elsewhere.'
+  demos:
+  - 'Move door (79): standing still is free here and expensive there.'
+  teaching_moment: 'First room: a still tile in sight of a guard''s corridor. A player who stands on it
+    to think and then steps off in the direction they had planned discovers that the guard''s cycle had
+    been waiting on their next input rather than on the clock, which teaches what the pause actually holds
+    still and what it does not.'
+  status: trial
+  human_review: {}
+- id: 72
+  name: Hurry gate
+  effect: only opens with 30+ seconds left.
+  unique: this gate checks the timer, not orbs or keys.
+  useful: rewards a fast run and punishes dawdling directly.
+  status: rejected
+  human_review:
+  - then effectivtly that is the timer, no point
+- id: 73
+  name: Slow field
+  effect: timer runs at half speed inside.
+  unique: slows the clock in one area while you work there.
+  useful: shelters a hard puzzle section from time pressure.
+  status: rejected
+  human_review: {}
+- id: 75
+  name: Checkpoint bell
+  effect: restart here, not at the start.
+  unique: moves the restart point into the middle of a level.
+  useful: removes replay tedium from long scrolling levels.
+  status: rejected
+  human_review:
+  - we have another one revised to have checkpoints.
+  - Checkpoint to the middle of the level but with timer intact.
+  - This I think would just mean we should have two levels...
+- id: 77
+  name: Sinking warp
+  effect: reach it before it disappears.
+  unique: the exit itself has the deadline, not a pickup.
+  useful: end-of-level urgency after the gate is already open.
+  status: rejected
+  human_review:
+  - again this is basically just the timer.
+- id: 91
+  name: Power switches (recipe)
+  effect: Three existing switches, all on at once, call the elevator; no new tile.
+  mechanics:
+  - 'This is a level recipe, not a new object: wire any three existing switches (floor, toggle or weight)
+    to one gate, with a 0/3 to 3/3 counter in the HUD'
+  - The gate calls the elevator only while all three are on together, so a floor switch in the set forces
+    a block or a bot into the design
+  - No new tile or code beyond counting wired switches
+  unique: three separate switches together replace the orb gate.
+  useful: a level goal spread across the whole map.
+  synergies:
+  - 'Floor switch (21) + Weight switch (29) + Toggle switch (22): one of each is the test room for the
+    recipe.'
+  - 'Mule bot (40): a bot standing in for the third pair of feet.'
+  teaching_moment: 'First room: the recipe built from one floor switch, one weight switch and one toggle,
+    with the counter in the HUD. A player who sets two of them and steps off the floor switch to go and
+    look at the gate watches the counter fall back to two, which teaches that the three have to be on
+    together and that one of them therefore needs a block or a bot.'
+  status: revised
+  human_review:
+  - this is a new object mechanic but something we can already build from existing objects
+- id: 95
+  name: Shortcut warp
+  effect: skip ahead, leave orbs behind.
+  unique: an exit that trades completion for progress.
+  useful: lets a stuck player move on at a cost.
+  status: rejected
+  human_review: {}
+- id: 96
+  name: Mercy gate
+  effect: opens early, bonus if you finish all orbs.
+  unique: the gate opens before zero, orbs become a bonus.
+  useful: stuck players progress, perfect players still rewarded.
+  status: rejected
+  human_review:
+  - most gameplay is all orbs to open gate.
+- id: 97
+  name: Reclosing gate
+  effect: shuts 10 seconds after opening.
+  unique: the orb gate itself recloses, in real seconds.
+  useful: a final sprint straight after the last orb.
+  status: rejected
+  human_review:
+  - again basically just the same thing as the timer.

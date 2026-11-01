@@ -1,0 +1,124 @@
+group: Gear and Items
+description: Carried gear and one-use items in inventory slots.
+mechanics:
+- id: 61
+  name: Life preserver
+  effect: Float across water, take one inventory slot.
+  mechanics:
+  - Picking it up fills one inventory slot
+  - While held, water tiles are walkable and deep water still costs two moves per tile (41)
+  - Without it, entering deep water sends you back to your checkpoint
+  - It is held for the rest of the level
+  unique: a preserver, not flippers; you float on water instead of swimming it.
+  useful: carrying it trades a key slot for a water route.
+  synergies:
+  - 'Deep water (41): preserver gets you in, the two-move cost still taxes the crossing.'
+  demos:
+  - 'Raft block (86): preserver is the slot-cost route, the raft is the 10-tile budget route.'
+  teaching_moment: 'First room: a life preserver on the near bank and deep water beyond it. A player who
+    wades straight in without picking it up is returned to the checkpoint as soon as the water deepens,
+    which teaches that the preserver is the permission and that deep water will still cost two moves a
+    tile once they have it.'
+  status: revised
+  human_review:
+  - I dont want flippers. make it a life preserver
+- id: 62
+  name: Ice cleats
+  effect: walk on ice without sliding.
+  mechanics:
+  - 'While held in a slot, ice tiles behave as normal floor: no slide, you can stop and turn on them'
+  - All other movement is unchanged
+  unique: only gear that cancels a movement tile instead of crossing a hazard.
+  useful: collect orbs mid-ice and turn on ice that would slide you past.
+  synergies:
+  - 'Ice tile (1): mid-ice orb test room you can only collect wearing cleats.'
+  - 'Ice block (82): cleats let you stand on ice to push a block along it.'
+  teaching_moment: 'First room: an orb sits in the middle of an ice strip that ends at a wall. A player
+    who slides in without the cleats passes the orb and stops at the wall unable to come back for it,
+    so the retry teaches that cleats change ice from a slide into floor you can stop on.'
+  status: trial
+  human_review: {}
+- id: 63
+  name: Magnet glove
+  effect: pull metal blocks toward you.
+  mechanics:
+  - Held in a slot
+  - When you press toward a metal block in a clear line within 3 tiles, the block slides one tile toward
+    you and you stay
+  - Otherwise you move normally
+  - It cannot pull blocks through walls
+  unique: moves a block remotely, toward you, no push needed.
+  useful: retrieves blocks stranded across gaps or hazards.
+  synergies:
+  - 'Push block (81): pull a block out of a corner pushing could never free.'
+  - 'Weight switch (29): pull a block onto a switch from across a hazard.'
+  teaching_moment: 'First room: a metal block stands across a gap with a wall in one pulling line and
+    a clear line in the other. A player who pulls from the first position they reach either pulls nothing
+    or pulls the block off its switch, which teaches that the glove works along a clear line and that
+    the line is chosen by where you stand.'
+  status: trial
+  human_review: {}
+- id: 65
+  name: Lantern oil
+  effect: collect to keep your light burning.
+  mechanics:
+  - A pickup that refills the lantern
+  - In a dark room the lantern burns down over time shown on a conditional HUD gauge
+  - Oil restores it to full, without it the light shrinks back to the base radius
+  unique: a consumable that refuels light, not time or health.
+  useful: makes long dark levels a resource route, not a rush.
+  synergies:
+  - 'Dark room (51) + Lantern (52): an oil route is the level inside the dark room.'
+  - 'Hidden orb (16): oil is what makes a thorough hidden-orb search affordable.'
+  teaching_moment: 'First room: a dark room with oil near the entrance and the search area beyond it.
+    A player who walks past the oil to save time finds their light shrunk before the far orbs appear and
+    has to feel their way back, which teaches that oil is the route through a dark room rather than a
+    bonus beside it.'
+  status: trial
+  human_review: {}
+- id: 68
+  name: Shield
+  effect: survive one hazard, then it breaks.
+  unique: one deliberate hazard crossing bought with an item.
+  useful: a planned shortcut through water or fire, once.
+  status: rejected
+  human_review: {}
+- id: 70
+  name: Haste boots
+  effect: you move twice per enemy move.
+  unique: changes the move ratio against enemies, permanently.
+  useful: outruns patrollers no single dash could escape.
+  status: rejected
+  human_review:
+  - I think we'd have to change our our movement system works.
+  - too much overhaul right now
+- id: 74
+  name: Rewind charm
+  effect: undo your last 5 moves, once.
+  unique: the only undo in the game.
+  useful: recovers one mistake without restarting the level.
+  status: rejected
+  human_review:
+  - no thanks.
+- id: 89
+  name: Power gloves
+  effect: Push heavy blocks in one push, and shove a whole line of blocks one tile.
+  mechanics:
+  - Held in a slot
+  - A heavy block (87) moves in one push instead of two, with the strain graphic skipped
+  - Pushing a normal block into a line of blocks shifts the whole line one tile, the domino behaviour
+  - The line only shifts if the tile beyond the far block is empty floor or a switch plate; a wall, lock,
+    block, water, deep water, void, fire or lava at the far end stops the whole line
+  unique: gloves that change pushing itself; domino is their line-push, not a special block.
+  useful: turns two-push labour into one and moves a row no single push could.
+  synergies:
+  - 'Push block (81): a three-block line puzzle only the line-push solves.'
+  demos:
+  - 'Heavy block (87): the before/after room its review proposed.'
+  teaching_moment: 'First room: a line of three blocks ending one tile from a wall. A player who shoves
+    the line without checking the far end either jams it against the wall or, without the gloves, moves
+    only the first block, which teaches that the line only shifts when the tile beyond the far block is
+    free.'
+  status: revised
+  human_review:
+  - I think this is just a default behaviour of power gloves feature I proposed in Heavy block human review

@@ -1,0 +1,173 @@
+group: Switches and Doors
+description: Switches and doors driven by presses, holds and states.
+mechanics:
+- id: 21
+  name: Floor switch
+  effect: holds a door open while stood on.
+  mechanics:
+  - The linked door is open only while you, a bot or a block stands on the plate
+  - Step off and it closes on the next move
+  - Sprites show the plate pressed and the door state
+  unique: only held while the player personally stands there.
+  useful: poses stand-versus-leave dilemmas and starts sequences.
+  synergies:
+  - 'Push block (81): leave a block holding it, the room that teaches blocks.'
+  - 'Twin Jolly (92): two plates, two Jollys, one input.'
+  teaching_moment: 'First room: a floor switch in sight of its door, with the door too far to reach in
+    one move. A player who steps on the switch, sees the door open, and steps off toward it arrives after
+    it has closed, which teaches that the door is held rather than latched and that something has to stay
+    on the plate.'
+  status: trial
+  human_review: {}
+- id: 22
+  name: Toggle switch
+  effect: each press swaps two doors.
+  mechanics:
+  - Stepping on it swaps its two linked doors, open becomes closed and closed becomes open, and the state
+    persists after you leave
+  - Pressing again swaps them back
+  unique: one press inverts two doors and the state persists.
+  useful: binary room configuration you set and walk away from.
+  synergies:
+  - 'Mirror switch (30): a room of toggles one mirror press reverses wholesale.'
+  - 'One-way door (4): toggle the door you are about to one-way through.'
+  teaching_moment: 'First room: a toggle switch between two doors, one open and one closed. A player who
+    presses it a second time to be sure swaps the doors back and finds their exit closed again, which
+    teaches that the state persists and that pressing is itself the thing to count.'
+  status: trial
+  human_review: {}
+- id: 23
+  name: Count switch
+  effect: needs three presses to open.
+  unique: counts presses on one switch, nothing to find elsewhere.
+  useful: repetition and counting, not searching, is the cost.
+  status: rejected
+  human_review:
+  - sounds annoying
+- id: 25
+  name: Timer switch
+  effect: door stays open for 5 seconds.
+  mechanics:
+  - Pressing it opens its door and starts a visible 5-second countdown on the door
+  - At zero the door closes
+  - Pressing again resets the countdown
+  unique: the door window runs in real seconds after you leave.
+  useful: a sprint test between switch and door.
+  synergies:
+  - 'Sticky tile (8): a sprint sticky tiles make fail by exactly one tile.'
+  - 'Hourglass (69): freeze your clock, the door countdown keeps its own.'
+  teaching_moment: 'First room: a timer switch with its door at the far end of a short corridor and an
+    orb on the way. A player who presses the switch and collects the orb on the way arrives as the countdown
+    ends and the door closes, which teaches that the five seconds are spent by everything done inside
+    them.'
+  status: trial
+  human_review: {}
+- id: 26
+  name: Remote switch
+  effect: opens a door off-screen.
+  unique: cause and effect are in different camera views.
+  useful: rewards remembering what changed elsewhere.
+  status: rejected
+  human_review:
+  - one time switch serves the same purpose
+- id: 27
+  name: One-time switch
+  effect: works once, then breaks.
+  mechanics:
+  - The first press fires its linked door permanently and the switch breaks (sprite changes)
+  - It never resets, so placed far away it is also how you open a remote door, which is why remote switch
+    was rejected as a duplicate
+  unique: the only irreversible switch.
+  useful: a configuration choice you cannot undo.
+  synergies:
+  - 'Remote door across a scrolling level (Beyond the Screen): press here, discover it open two screens
+    later.'
+  - 'Chain switch (28): a one-time switch as the last link of a sequence.'
+  teaching_moment: 'First room: a one-time switch whose door can be seen to be the room''s exit, with
+    a patroller outside it. A player who presses it as soon as they reach it, before they are ready to
+    leave, opens the exit permanently and gives the patroller a way in, which teaches that an irreversible
+    press is made last rather than first.'
+  status: trial
+  human_review:
+  - can serve remote switch purpose as well.
+- id: 28
+  name: Chain switch
+  effect: switches must fire in order.
+  mechanics:
+  - Switches carry order marks
+  - Pressing them in order lights each in turn and opens the linked door at the last one
+  - Pressing out of order resets all of them
+  unique: the sequence matters, not just pressing them all.
+  useful: an order and memory puzzle across a room.
+  synergies:
+  - 'One-time switch (27): finish a chain with a switch that can never be re-pressed.'
+  demos:
+  - 'Info tile (58): the tile that teaches the order is the room''s lesson.'
+  teaching_moment: 'First room: three switches with clear order marks and an info tile beside the first.
+    A player who presses the nearest switch first because it is nearest resets the chain and lights nothing,
+    which teaches that the order, rather than the pressing, is the puzzle.'
+  status: trial
+  human_review: {}
+- id: 29
+  name: Weight switch
+  effect: needs a block left on it.
+  mechanics:
+  - The plate is only active while a block sits on it (you standing on it works too, but you cannot leave
+    it held)
+  - Remove the block and the door closes
+  - This is the permanent hold the floor switch cannot give
+  unique: a pushed block holds it after the player leaves.
+  useful: a permanent hold the floor switch cannot give.
+  synergies:
+  - 'Heavy block (87): a two-push hold, labour is the price of permanent.'
+  - 'Power gloves (89): line-push a block straight onto the plate.'
+  teaching_moment: 'First room: a weight switch beside its door, with a block in the room. A player who
+    stands on the plate, sees the door open, and steps off to use it watches it close exactly as the floor
+    switch did, which teaches that what this plate wants left on it is the block.'
+  status: trial
+  human_review: {}
+- id: 30
+  name: Mirror switch
+  effect: flips every switch in the room.
+  mechanics:
+  - One press inverts every switch state in the room at once, toggles and their doors included
+  - Broken one-time switches are unaffected
+  - It is a room reset with consequences, not a door opener itself
+  unique: inverts all switch states at once, globally.
+  useful: resets or reverses a whole switch puzzle from one point.
+  synergies:
+  - 'Toggle switch (22): set three toggles wrong, one mirror makes them right.'
+  - 'Chain switch (28): a mirror that would reset a lit chain is a trap.'
+  teaching_moment: 'First room: a room of toggles already set mostly right, with the mirror switch by
+    the entrance. A player who presses the mirror switch to see what it does finds every setting inverted
+    and their nearly finished room undone, which teaches that its scope is the whole room and that it
+    is pressed, if at all, before anything else is set.'
+  status: trial
+  human_review: {}
+- id: 79
+  name: Move door
+  effect: opens after exactly 50 moves.
+  mechanics:
+  - A move counter shows in the HUD
+  - The door opens permanently on your 50th move input of the attempt and stays open after it, so the
+    puzzle is planning a route of exactly that length, not finding a key
+  unique: opens on a move count, not a switch, key or timer.
+  useful: rewards planning an exact-length route.
+  synergies:
+  - 'Sticky and heavy pushing: wasted moves are the currency this door spends.'
+  - 'Ghost (78): a door that counts moves in a level that replays them.'
+  teaching_moment: 'First room: the move door at the end of a route that takes about forty moves, with
+    the counter in the HUD. A player who plays efficiently arrives in the low forties to a closed door
+    and has to find moves to spend, which teaches that this door is measuring the length of the route
+    rather than the player''s speed or keys.'
+  status: trial
+  human_review: {}
+- id: 80
+  name: Calm door
+  effect: opens only if you never restarted.
+  unique: the only door that checks your attempt history.
+  useful: a flawless-run shortcut that rewards clean play.
+  status: rejected
+  human_review:
+  - this would only work if you are designing multiple runs
+  - it would be very frustrating failure.

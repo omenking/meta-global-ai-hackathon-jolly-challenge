@@ -1,0 +1,169 @@
+group: Vision and Information
+description: Light, fog, camera and teaching tiles.
+mechanics:
+- id: 51
+  name: Dark room
+  effect: only tiles near Jolly are lit.
+  mechanics:
+  - Tiles beyond two tiles from Jolly are not drawn at all in this room
+  - The HUD still shows
+  - The radius is the whole mechanic, so layout must be learned by walking it
+  unique: limits vision across the whole room at once.
+  useful: hides layout so memory and searching lead.
+  synergies:
+  - 'Lantern (52) and Lantern oil (65): radius and fuel are the economy of this room.'
+  - 'Hidden orb (16): the orb class this room exists to hide.'
+  teaching_moment: 'First room: a dark room with an orb placed outside the light that surrounds the entrance.
+    A player who follows the visible floor reaches the gate with one orb still missing and has to return,
+    which teaches that the absence of a tile from view is not evidence that nothing is there.'
+  status: trial
+  human_review: {}
+- id: 52
+  name: Lantern
+  effect: widens your light for one room.
+  mechanics:
+  - Picking it up widens your radius from two tiles to four for that room only
+  - Leaving the room ends it
+  - It is not consumed by time
+  - Its fuel partner is lantern oil
+  unique: a light buff scoped to a single room.
+  useful: a choice of which dark room deserves the help.
+  synergies:
+  - 'Dark room (51): the lantern is scoped to exactly one such room.'
+  demos:
+  - 'Hidden orb (16): a search room sized so two tiles fails and four succeeds.'
+  teaching_moment: 'First room: a dark room with the lantern near its entrance and a one-way exit halfway
+    through. A player who picks up the lantern and leaves by the one-way exit before searching the room
+    loses the widened light with the orb still inside, which teaches that the lantern belongs to the room
+    it is found in and that the room is finished before it is left.'
+  status: trial
+  human_review: {}
+- id: 53
+  name: Fog tile
+  effect: hides orbs until you stand adjacent.
+  mechanics:
+  - A fog tile never shows what is on it until you stand next to it, after which it stays revealed for
+    the attempt
+  - Movement through fog is normal, so it hides in lit rooms where a dark room would be too much
+  unique: local hiding on one tile, even in a lit room.
+  useful: close-search spots without darkening a whole room.
+  synergies:
+  - 'Mimic orb (36): fog is where a mimic can hide in plain light.'
+  - 'Echo tile (54): a ping tells you a fog tile is worth walking to.'
+  teaching_moment: 'First room: a lit room with fog along one wall and the gate''s last orb inside it.
+    A player who walks the clear floor in the middle reaches the gate one orb short and must come back
+    along the wall, which teaches that fog is searched by standing next to it rather than by looking at
+    it.'
+  status: trial
+  human_review: {}
+- id: 54
+  name: Echo tile
+  effect: pings the direction of hidden orbs.
+  mechanics:
+  - Standing on it pings an eight-direction indicator toward the nearest hidden orb and is reusable after
+    a few moves
+  - It gives a direction only, never a picture, so the search stays yours
+  unique: gives a direction, never a picture or a reveal.
+  useful: guides a search while keeping the search itself.
+  synergies:
+  - 'Hidden orb (16): ping, then walk your light the way it pointed.'
+  - 'Fog tile (53): a ping into a fog bank picks which tile to approach.'
+  teaching_moment: 'First room: a room where the echo tile pings toward a hidden orb that lies behind
+    a hazard. A player who walks in the pinged direction in a straight line meets the hazard rather than
+    the orb, which teaches that the ping gives a direction to search in and says nothing about the route.'
+  status: trial
+  human_review: {}
+- id: 55
+  name: Map tile
+  effect: briefly shows the whole level.
+  mechanics:
+  - Stepping on it consumes it and shows the whole level as an overlay for three seconds while play continues,
+    then the view fades back
+  - What you did not memorise, you lose
+  unique: a brief full reveal that fades while you play on.
+  useful: a memory test, you must act on what you glimpsed.
+  synergies:
+  - 'Beyond the Screen levels: one glimpse of a two-screen room before you scroll it.'
+  demos:
+  - 'Lookout successor: lookout was rejected as this tile''s duplicate, the brief reveal is the surviving
+    form.'
+  teaching_moment: 'First room: the map tile at the entrance to a branching room, with three seconds of
+    full view. A player who glances and runs takes the branch that looked shortest and finds the lock
+    they have no key for, which teaches that the glimpse has to be read before it is acted on because
+    it will not come back.'
+  status: trial
+  human_review: {}
+- id: 56
+  name: Locked camera room
+  effect: no scrolling inside it.
+  unique: the camera rule changes inside one room only.
+  useful: a fixed-screen challenge inside a scrolling level.
+  status: rejected
+  human_review: {}
+- id: 57
+  name: Lookout tile
+  effect: shows the full level while stood on.
+  unique: full reveal only while you stand still and study it.
+  useful: plan the route, then execute it from memory.
+  status: rejected
+  human_review:
+  - this is same as map tile
+- id: 58
+  name: Info tile
+  effect: teaches the next mechanic in one line.
+  mechanics:
+  - Stepping on the marked tile shows a one-line banner teaching the next mechanic in the level and does
+    nothing else
+  - It triggers once per tile and never blocks movement
+  unique: the only tile whose job is teaching, not blocking.
+  useful: introduces a mechanic inside the level that needs it.
+  synergies: []
+  demos:
+  - 'Chain switch (28): the info tile carries the order the chain needs.'
+  - 'Any trial mechanic''s first room: teach it where it is first used.'
+  teaching_moment: 'First room: an info tile beside a chain of switches, written with the order on it.
+    A player who steps over it without reading, because it does not block anything, presses the switches
+    in the order they reach them and resets the chain, which teaches that a tile can be in a level to
+    be read rather than to be crossed.'
+  status: trial
+  human_review: {}
+- id: 59
+  name: Secret wall
+  effect: looks solid, walk straight through.
+  mechanics:
+  - Drawn exactly as a wall but with no collision
+  - The first time you walk through, its sprite fades so you know what you found
+  - It never hides a required exit without a readable clue nearby
+  unique: a passable wall, hidden by appearance alone.
+  useful: optional shortcuts and secrets off the main route.
+  synergies:
+  - 'Teleport pair (3): a pad room only a secret wall reaches.'
+  demos:
+  - 'Bomb block (83): a fake wall beside a bomb-cracked real one, two kinds of opening.'
+  teaching_moment: 'First room: a room whose last orb is behind a stretch of wall that the layout suggests
+    is too thin, with a readable clue beside it. A player who treats every drawn wall as solid completes
+    the room one orb short and must search the walls, which teaches that appearance and collision are
+    not the same thing in this game.'
+  status: trial
+  human_review: {}
+- id: 60
+  name: Peep hole
+  effect: see the next room through a gap.
+  mechanics:
+  - Stepping on it locks your controls and pans the camera up for two seconds into the next room, which
+    is otherwise drawn black until you enter it in person
+  - Then the camera returns and you choose whether to go in
+  unique: vision into the next room with no way through.
+  useful: preview a lock or enemy before committing to enter.
+  synergies:
+  - 'Locked rooms (one-way door 4): preview the lock you are about to commit to.'
+  demos:
+  - 'Fog-of-war scrolling: rooms stay unrevealed until visited, peeping is the one exception.'
+  teaching_moment: 'First room: a peep hole before a one-way door, showing a lock in the room beyond.
+    A player who peeps, sees only part of the room, and commits through the one-way door discovers the
+    enemy the pan did not reach and is returned to the checkpoint, which teaches that a preview is partial
+    and that the timer kept running while it was shown.'
+  status: trial
+  human_review:
+  - this requires the camera to move up temporarily
+  - this means rooms we are not in unrevealed until we visit.

@@ -1,0 +1,197 @@
+group: Terrain and Hazards
+description: Floor and terrain that harms, slows or breaks.
+mechanics:
+- id: 5
+  name: Crumbling tile
+  effect: breaks one step after you leave.
+  mechanics:
+  - Safe while you stand on it
+  - One move after you leave, it falls and becomes a void tile for the rest of the attempt
+  - Restarts and checkpoints restore it
+  unique: the tile goes after you leave it, not while you stand on it.
+  useful: burns the retreat path, so visit order matters.
+  synergies:
+  - 'One-way door (4): crumbling is the exit that makes a one-way room final.'
+  - 'Fan tile (10): wind decides which crumbling tile you leave first.'
+  teaching_moment: 'First room: a crumbling crossing with an orb on the far side and something worth returning
+    for. A player who crosses, collects, and turns back finds the tile they left has fallen and must take
+    the long way or restart, which teaches that the crossing is spent by leaving it rather than by standing
+    on it.'
+  status: trial
+  human_review: {}
+- id: 41
+  name: Deep water
+  effect: With a life preserver you cross it at two moves per tile; without one it sends you to your checkpoint.
+  mechanics:
+  - Dark water
+  - Without a life preserver (61) entering it sends you back to your checkpoint with the timer running
+  - 'With one, each deep tile takes two moves: the first wades in place, the second crosses'
+  - That slowness, plus what current and ice blocks do in it, is the mechanic, not a plain block
+  unique: water that taxes moves instead of simply blocking.
+  useful: a swimmable route with a real cost, not a wall.
+  synergies:
+  - 'Life preserver (61): preserver admits you, the two-move cost is the tax.'
+  - 'Ice block (82): it melts in deep water instead of bridging it, unlike shallow water.'
+  teaching_moment: 'First room: deep water beyond a life preserver, crossed by a patroller''s bank. A
+    player who enters with the preserver but treats it as ordinary floor is still wading on the second
+    move when the patrol arrives and is returned to the checkpoint, which teaches that permission to enter
+    and the cost of crossing are separate facts.'
+  status: revised
+  human_review:
+  - has to be more too it.
+- id: 43
+  name: Fire tile
+  effect: Burns on flammable floor, spreads slowly, burns out; an ice block cancels it.
+  mechanics:
+  - Fire sits on grass or wood floor and is lethal while burning
+  - Every 10 moves it spreads to one adjacent flammable tile, and each fire tile burns out after 30 moves
+    leaving safe scorched floor, so it never burns forever
+  - An ice block slid or pushed into a fire tile melts and cancels that fire tile, a hazard and a slippy
+    block cancelling each other like a key and keylock
+  unique: fire that spreads on flammable floor, burns out, and is cancelled by ice.
+  useful: spend an ice block to cancel it, or wait for it to burn out.
+  synergies:
+  - 'Ice block (82): the intended way through, spend a block to cancel a fire.'
+  demos:
+  - 'Lava tile (44): fire can be cancelled and burns out, lava can do neither.'
+  teaching_moment: 'First room: fire on grass beside the return path, with an ice block in the room. A
+    player who walks past it to collect an orb finds, ten moves later, that it has spread across the path
+    they meant to return by, which teaches that fire is a clock on flammable floor and that the ice block
+    was the way through rather than an ornament.'
+  status: revised
+  human_review:
+  - I think I'd prefer if fire is cancelled out by ice block.
+  - its basically a key and keylock, but one is a hazard and the other is slippy block
+  - I think fire should be able to started, and spread based on floor tile eg. grass.
+  - I think fire shouldn't burn forever
+- id: 44
+  name: Lava tile
+  effect: Static lethal lava that never spreads and destroys ice blocks.
+  mechanics:
+  - A fixed lava tile, lethal to step on, that never spreads or burns out
+  - An ice block pushed into it melts and is destroyed and the lava stays
+  - Nothing cancels lava
+  - You route around it or fill it with dirt
+  unique: static lethal lava, permanent and uncancellable.
+  useful: the hazard you must route around or fill, never put out.
+  synergies:
+  - 'Dirt block (90): the only block that fills lava into floor.'
+  demos:
+  - 'Fire tile (43): the pair a test room must separate, cancellable fire versus permanent lava.'
+  teaching_moment: 'First room: a lava tile with an ice block beside it, placed after the player has learned
+    that ice cancels fire. A player who pushes the block into the lava watches it melt while the lava
+    remains and must restart the room, which teaches that lava is not a stronger fire and cannot be cancelled
+    at all.'
+  status: revised
+  human_review:
+  - I think that it could just be lava tile, and it never spreads.
+  - and it can destroy ice block.
+- id: 45
+  name: Sand tile
+  effect: Leaves your footprints for you to follow back; no slowing.
+  mechanics:
+  - Walking on sand leaves clear footprints that persist for the rest of the attempt so you can see and
+    retrace your own route
+  - It does not slow you
+  - Enemies ignore sand prints
+  - Scent tracking is mud's job
+  unique: footprints only you read, left at no speed cost.
+  useful: retrace your route in sand, especially where you cannot see far.
+  synergies:
+  - 'Dark room (51): your own lit trail out of a room you cannot see.'
+  demos:
+  - 'Mud tile (47): sand prints are for you, mud prints are for enemies, a room with both teaches the
+    difference.'
+  teaching_moment: 'First room: a sandy room with two similar exits, one of which is a dead end. A player
+    who does not notice their own footprints takes the same dead end twice and wastes the timer retracing
+    it, which teaches that the prints are a record left for the player rather than decoration on the floor.'
+  status: revised
+  human_review:
+  - make like mud tile where it leaves front prints, dont slow down.
+- id: 46
+  name: Glass tile
+  effect: cracks, breaks on second crossing.
+  mechanics:
+  - First crossing cracks it
+  - The second crossing, in either direction, shatters it after you leave and it becomes a void tile
+  - Standing on a cracked tile is safe
+  unique: allows exactly one return crossing, unlike crumbling.
+  useful: a there-and-back-once route over a drop.
+  synergies:
+  - 'Heavy orb (17): push an orb over glass you then cannot re-cross yourself.'
+  demos:
+  - 'Crumbling tile (5): glass is the there-and-back-once version, crumbling is one-way.'
+  teaching_moment: 'First room: a glass tile over a drop, with an orb on the far side and a key visible
+    beyond it. A player who crosses for the orb and comes straight back uses the second crossing without
+    realising it was the last one the glass would allow, and must find another way to the key, which teaches
+    that glass allows a return exactly once.'
+  status: trial
+  human_review: {}
+- id: 47
+  name: Mud tile
+  effect: leaves footprints enemies can follow.
+  mechanics:
+  - You leave scent prints in mud
+  - A chaser or patroller stepping into mud follows the order of your prints instead of its normal rule
+    until the prints end
+  - Laying a loop of prints baits it in a circle
+  unique: terrain that stores your path for enemies to read.
+  useful: lay false trails, or avoid mud to stay untracked.
+  synergies:
+  - 'Chaser (32): a mud loop is the trap its copy-rule cannot escape.'
+  demos:
+  - 'Sand tile (45): prints enemies read versus prints only you read.'
+  teaching_moment: 'First room: a muddy loop on the way to an orb, with a chaser in the level. A player
+    who walks the direct muddy line leads the chaser along their own prints to the orb room and is caught
+    there, which teaches that mud carries their route to enemies and that a false trail could have been
+    left instead.'
+  status: trial
+  human_review:
+  - true
+- id: 48
+  name: Checkpoint tile
+  effect: Step on it and later hazards return you here with the timer intact.
+  mechanics:
+  - Stepping on it lights it and makes it your respawn
+  - Any hazard or enemy death after that returns you to the last checkpoint you touched instead of restarting,
+    with the timer still running and your orbs and keys as they were at the death
+  - 'Multiple checkpoints: the last one touched is active'
+  unique: a respawn you set by touch, with the timer still running.
+  useful: retry a lethal room from inside the attempt, not from the start.
+  synergies:
+  - 'Void and lava rooms: checkpoints are what makes a lethal room fair to retry inside one attempt.'
+  - 'Ghost (78): ghosts restart from your checkpoint, not the start.'
+  teaching_moment: 'First room: a checkpoint tile just before a hazard corridor, placed slightly off the
+    direct line. A player who runs the direct line and dies in the corridor is returned to the level start
+    instead of the tile they passed, which teaches that a checkpoint only counts once it has been stepped
+    on.'
+  status: revised
+  human_review:
+  - instead a checkpoint tile, so it other hazards just bring tou back here with timer intact
+- id: 49
+  name: Flood tide
+  effect: lowest row floods every 30 seconds.
+  unique: water rises from the bottom on real seconds.
+  useful: a vertical escape the lava crack's move count is not.
+  status: rejected
+  human_review: {}
+- id: 50
+  name: Ice bridge
+  effect: melts if you stand still on it.
+  mechanics:
+  - 'Not placed directly: it forms when an ice block is pushed into a shallow water tile'
+  - You can walk on it, but standing still on it for a full move melts it, you fall, and you return to
+    your checkpoint
+  - It also melts if fire spreads next to it
+  unique: breaks from standing still, not from crossing it.
+  useful: a keep-moving crossing where waiting is the danger.
+  synergies:
+  - 'Ice block (82): the block is the bridge, building it is half the puzzle.'
+  - 'Fire tile (43): fire beside a bridge is a timed bridge without a visible timer.'
+  teaching_moment: 'First room: a shallow crossing already bridged by an ice block, with the far bank
+    in full view. A player who stops on the bridge to consider the room melts through it and is returned
+    to the checkpoint, which teaches that standing still, rather than crossing, is what the bridge cannot
+    survive.'
+  status: trial
+  human_review:
+  - I think ice blocks can get pushed into water to form this unreliable bridge.

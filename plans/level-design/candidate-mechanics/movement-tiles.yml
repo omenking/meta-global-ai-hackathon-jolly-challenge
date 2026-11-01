@@ -1,0 +1,243 @@
+group: Movement Tiles
+description: Tiles and abilities that move you, or change how you move.
+mechanics:
+- id: 1
+  name: Ice tile
+  effect: slide until a wall stops you.
+  mechanics:
+  - Step onto ice in a direction and you keep sliding that way within the same input until the next tile
+    is a wall, lock or block
+  - You cannot steer or stop midway, orbs on the line are collected, and the puzzle is choosing your entry
+    direction against the braking wall
+  unique: you slide in your entry direction, the whole crossing in one input.
+  useful: forces planning around the braking wall, and crosses fast.
+  synergies:
+  - 'Ice block (82): push a block onto the ice as a movable braking wall.'
+  - 'Ice cleats (62): a mid-ice orb room that needs cleats to stop and turn.'
+  teaching_moment: 'First room: an orb halfway along an ice strip that ends at a wall. A player who slides
+    straight in passes the orb and stops at the wall with no way back along the strip, so the restart
+    teaches that the entry direction and the braking wall are the whole decision.'
+  status: trial
+  human_review:
+  - so they key to this is choosing the direction at the breaking wall.
+- id: 2
+  name: Conveyor tile
+  effect: Carries you one tile per move; you only get off where it ends.
+  mechanics:
+  - Step onto the belt and at the start of each move it carries you one tile in its arrow direction
+  - While on the belt you cannot step off sideways
+  - You get off only where the belt ends on a normal tile, so from a normal tile surrounded by belts you
+    read the arrows ahead and choose which belt to enter
+  unique: the belt's direction, one tile per move, even if you move across it.
+  useful: drift you must fight or ride where exits are scarce.
+  synergies:
+  - 'Patroller (31): belt junctions timed against a loop you cannot wait out on the belt.'
+  - 'Floor switch (21): a belt that deposits you onto a switch, then carries you off it.'
+  teaching_moment: 'First room: two belts meet on a normal tile, one running to the exit and one to a
+    hazard. A player who steps onto the first belt without reading its arrow is carried off it with no
+    way to step off sideways and is returned to the checkpoint, which teaches that the route is chosen
+    on the normal tile before the belt takes over.'
+  status: trial
+  human_review:
+  - I don't think you should be able to get off.
+  - I thinks the strategy here is when you land on a normal tile and all directiones are conveyor you
+    need to look at ahead to determine your strategy.
+- id: 3
+  name: Teleport pair
+  effect: enter one pad, exit its twin.
+  mechanics:
+  - Stepping on a pad instantly moves you to its paired pad (same mark) keeping your direction
+  - If a block sits on the twin, the teleport does not happen
+  - Pads work both ways
+  unique: only instant relocation between two fixed pads.
+  useful: links sealed chambers and makes one-way routing puzzles.
+  synergies:
+  - 'One-way door (4): teleport in, one-way out, a sealed chamber with a single escape.'
+  - 'Secret wall (59): a pad hidden behind a wall you must find first.'
+  teaching_moment: 'First room: two pads of different marks in one chamber. A player who steps on pads
+    at random arrives back where they started and makes no progress, which teaches that pads are pairs
+    to be identified rather than doors that simply open.'
+  status: trial
+  human_review:
+  - Yep sounds good.
+- id: 4
+  name: One-way door
+  effect: pass in one direction only.
+  mechanics:
+  - Walkable only in its arrow direction and a wall from the other three sides, shown by chevrons
+  - Passing through never consumes anything and it never resets
+  unique: a wall from one side, a door from the other.
+  useful: creates commitment and loops with no backtracking.
+  synergies:
+  - 'Teleport pair (3): one-way routing that makes a teleported chamber one-way.'
+  - 'Crumbling tile (5): one-way in, crumbling out, a room with no return at all.'
+  teaching_moment: 'First room: an orb sits beyond a one-way door, with a long loop back. A player who
+    goes through for the orb and then tries to come back the way they came finds a wall and must take
+    the loop, which teaches that the door''s direction is a commitment made before entering.'
+  status: trial
+  human_review: {}
+- id: 6
+  name: Bounce pad
+  effect: Launches you two tiles in the direction you choose, after a one-move pause.
+  mechanics:
+  - Step on the pad and it compresses for one move with you standing on it, exposed
+  - Your next directional input launches you two tiles that way, clearing the tile in between
+  - The landing tile must be floor
+  - The strategy is choosing the launch direction and surviving the pause
+  unique: only forced launch you aim yourself, after a one-move charge on the pad.
+  useful: a chosen two-tile leap over a gap, hazard or guard.
+  synergies:
+  - 'Guard (37): launch over a guard on its turning cycle.'
+  - 'Void tile route (48): bounce a gap and land beyond a checkpoint.'
+  teaching_moment: 'First room: the pad sits in sight of a guard, pointed at a gap. A player who steps
+    straight onto it is caught while it compresses, or launches in the direction they happened to press
+    and lands badly, so the retry teaches that the pause and the chosen direction are both part of the
+    move.'
+  status: revised
+  human_review:
+  - its honestly just a fixed movement, the boune part is fun but no real strategy.
+- id: 7
+  name: Turntable tile
+  effect: A framed tile that turns your on-foot movement 90 degrees, never a slide.
+  mechanics:
+  - The tile is drawn in a rotating frame with an arrow
+  - Stepping onto it on foot turns the arrow 90 degrees clockwise and nudges you one tile in the arrow
+    direction, automatically on entry, nothing to press
+  - 'Sliding on ice or riding a conveyor passes straight over it: momentum and belt direction do not turn'
+  unique: the only tile that turns on-foot movement; slides and belts ignore it.
+  useful: bends a bounce launch around a corner without touching ice momentum.
+  synergies:
+  - 'Bounce pad (6): turntable before a pad bends a launch around a corner.'
+  - 'One-way door (4): a nudged exit that only lines up one way.'
+  teaching_moment: 'First room: a turntable stands before a junction, its arrow visible in the frame.
+    A player who steps on it while thinking about the junction is nudged down the arrow''s lane into a
+    one-way stretch and has to loop back, which teaches that the framed arrow, rather than their next
+    input, decides where it sends them on foot.'
+  status: revised
+  human_review:
+  - not clear neough how it works, if you have bound pad, and turntable as a tile how does that work.
+  - Do we interact with it, or is there another thing that triggers the change?
+  - is it a frame around a tile so we know that its going to change the direction?
+  - Ice direction can't change its a specific direction based on momentum.
+- id: 8
+  name: Sticky tile
+  effect: takes two moves to cross.
+  mechanics:
+  - 'Entering takes two inputs: the first you strain and stay, the second you step off'
+  - The tile stays reusable
+  - Enemies are not slowed by it, which is where its pressure comes from
+  unique: costs moves, but the tile stays reusable.
+  useful: taxes a shortcut against enemy and switch timing.
+  synergies:
+  - 'Patroller (31): a sticky shortcut a patroller covers at full speed.'
+  - 'Timer switch (25): a sprint that sticky tiles make just too slow.'
+  teaching_moment: 'First room: a sticky shortcut crosses a patroller''s loop. A player who takes it is
+    still straining on the first tile when the patroller, which is not slowed, reaches them, so the retry
+    teaches that the shortcut costs moves rather than distance.'
+  status: trial
+  human_review:
+  - could work for when enemies are not impacted by the sticky ness.
+  - makes you have to plan a bit more.
+- id: 9
+  name: Dash tile
+  effect: Stores a dash you spend by moving the same way twice.
+  mechanics:
+  - Stepping on the tile stores one dash, shown in the HUD
+  - 'Moving in the same direction twice in a row spends it: the second step travels two tiles and can
+    clear a one-tile hazard or gap'
+  - Changing direction keeps the charge, so when and where to spend it is the decision, not counting tiles
+  unique: a stored dash spent by repeating a direction, not a tile you count from.
+  useful: save the leap for the hazard or deadline that actually needs it.
+  synergies:
+  - 'Timed orb (15): a stored dash is how you beat an orb deadline.'
+  - 'Patroller (31): dash through a loop gap you cannot walk through in time.'
+  teaching_moment: 'First room: the dash tile sits on a straight corridor a player is already walking
+    along. A player who keeps moving in the same direction out of habit spends the stored dash into the
+    far wall and has nothing left for the gap beyond it, which teaches that repeating a direction is the
+    trigger and that the charge is kept by changing direction.'
+  status: revised
+  human_review:
+  - yes but if they are simply placed then you are doing basic math.
+  - Anyway to make this more interesting?
+- id: 10
+  name: Fan tile
+  effect: pushes you one tile each second.
+  mechanics:
+  - Wind tiles push you one tile downwind every real second if that tile is free, even if you made no
+    input
+  - Wind direction is marked on the tiles, so standing still is a move the fan makes for you
+  unique: only mover driven by real seconds, even with no input.
+  useful: punishes waiting and syncs movement to the timer.
+  synergies:
+  - 'Sleeper (33): wind that pushes you into a sleeper room while you read the map.'
+  - 'Crumbling tile (5): wind timing decides which crumbling route you are pushed onto.'
+  teaching_moment: 'First room: a fan-wind corridor crosses a crumbling tile, with a safe place to stand
+    and read the room. A player who stands there to think is pushed a tile each second onto ground they
+    did not choose, which teaches that the fan moves them even when they make no input at all.'
+  status: trial
+  human_review: {}
+- id: 42
+  name: Current tile
+  effect: water pushes you downstream.
+  mechanics:
+  - While you are on water with a life preserver, the current carries you one tile downstream at the start
+    of each move, then you make your own move
+  - Banks and islands are the exits, and you can be carried past them
+  unique: forced drift that only applies while swimming.
+  useful: one-way water routes and exits you can be carried past.
+  synergies:
+  - 'Life preserver (61): current is the uncontrolled water route, the preserver alone is not control.'
+  demos:
+  - 'Raft block (86): the raft ignores current, the budget route versus the free drift.'
+  teaching_moment: 'First room: the current runs past a banked exit toward deep water. A player who aims
+    straight at the exit is carried one tile past it on every move and ends up swimming beyond it, so
+    the retry teaches that the swim is aimed upstream of where they want to land.'
+  status: trial
+  human_review: {}
+- id: 64
+  name: Grapple
+  effect: pull yourself to a distant wall.
+  unique: moves the player to an anchor, the magnet glove reversed.
+  useful: crosses void where no pad, raft or bridge exists.
+  status: rejected
+  human_review:
+  - the grapple animation might be tricky here.
+- id: 92
+  name: Twin Jolly
+  effect: one input moves both at once.
+  mechanics:
+  - 'A level mode, not a tile: two Jollys share one input'
+  - Each step both try to move
+  - A blocked one stays
+  - Orbs and keys are shared, and if either Jolly touches a lethal enemy or hazard the level is lost
+  unique: two players on screen under one set of inputs.
+  useful: synchronised puzzles no single Jolly can solve.
+  synergies:
+  - 'Floor switch (21): two Jollys holding two switches at once is a room only this mode solves.'
+  - 'Push block (81): one Jolly pushes while the other is pushed into place by the same input.'
+  teaching_moment: 'First room: two Jollys in connected lanes, one lane passing a hazard. A player who
+    makes the obvious move for the Jolly they are watching moves the other one into the hazard with the
+    same input and loses the level, which teaches that every input is checked against both positions.'
+  status: trial
+  human_review:
+  - yes and either dies you lose.  Not really a tile category but yes.
+- id: 93
+  name: Swap tile
+  effect: Swap places with an adjacent block or bot; the game's only pull.
+  mechanics:
+  - A swap tile sits under a block or bot
+  - Stand next to it and press toward it and you exchange tiles with it, so you can pull a block out of
+    a corner or get behind it without restarting
+  - The swap tile stays and can be reused
+  unique: swaps you with an entity, teleport pads swap nothing.
+  useful: frees a block stuck in a corner in one step.
+  synergies:
+  - 'Push block (81): a cornered-block rescue room, push it in, swap it out.'
+  - 'Mule bot (40): swap with your own bot to get it past a one-tile pinch.'
+  teaching_moment: 'First room: a swap tile under a block in a narrow corridor, with an orb behind you.
+    A player who swaps without considering both resulting positions ends up on the far side of a block
+    that now closes their way back, so the restart teaches that a swap gives you the block''s place and
+    gives the block yours.'
+  status: revised
+  human_review:
+  - I can't see the strategy.

@@ -1,0 +1,170 @@
+group: Orbs
+description: Orb variants and anything that changes the orb goal.
+mechanics:
+- id: 14
+  name: Fake orb
+  effect: raises orbs-left instead of lowering it.
+  unique: the only pickup that moves the counter backwards.
+  useful: punishes grabbing everything without looking.
+  status: rejected
+  human_review:
+  - I don't get it, orbs don't get riased or lowered.
+  - do we already have ae monster that already does this?
+- id: 15
+  name: Timed orb
+  effect: vanishes if not reached in 10 seconds.
+  mechanics:
+  - The countdown starts the first time the orb enters the camera view, with a ring showing the seconds
+    left
+  - Collected in time it counts as normal
+  - If it expires it dissolves and reforms at its start tile after 5 seconds, so the level is never unwinnable
+  unique: the orb itself has the deadline, not the level.
+  useful: forces target priority inside a calm level.
+  synergies:
+  - 'Dash tile (9): a stored dash is the intended way to beat the ring.'
+  demos:
+  - 'Locked scrolling (Beyond the Screen): an orb that starts ticking as it scrolls in.'
+  teaching_moment: 'First room: two orbs, one of which starts its ring when it scrolls into view. A player
+    who collects the nearer orb first watches the timed orb dissolve and reform, losing nothing but the
+    trip, which teaches that the ring begins on sight and sets the order for them.'
+  status: trial
+  human_review:
+  - But what triggers it?
+- id: 16
+  name: Hidden orb
+  effect: only visible inside your light radius.
+  mechanics:
+  - In a dark room the orb is simply not drawn outside your light radius
+  - Entering the radius reveals it for as long as it is lit, so searching is walking the room, not guessing
+    a route
+  unique: invisible because of light, not because it is disguised.
+  useful: makes searching, not routing, the puzzle in the dark.
+  synergies:
+  - 'Lantern (52) and Lantern oil (65): radius and fuel decide how much search you can afford.'
+  - 'Echo tile (54): direction first, then walk the light into it.'
+  teaching_moment: 'First room: a dark room whose gate needs an orb that sits outside the entrance light.
+    A player who walks the obvious lit route reaches the gate with the counter still showing one and has
+    to return, which teaches that an orb can be present without being visible and that the room is searched
+    by walking the light through it.'
+  status: trial
+  human_review:
+  - yes very good, if we can implement a room where you cannot see.
+  - then you can have more objects to help with vision.
+- id: 17
+  name: Heavy orb
+  effect: push it onto a scale to collect it.
+  mechanics:
+  - The orb is a solid object you push one tile at a time like a block
+  - It cannot be pushed into walls or water
+  - Pushing it onto a scale tile locks it there and counts it as collected
+  unique: this orb is pushed like a block, never walked over.
+  useful: attaches a pushing puzzle to the orb goal itself.
+  synergies:
+  - 'Push block (81): an orb and a block competing for the same push lane.'
+  - 'Magnet glove (63): pull a stranded heavy orb back toward you.'
+  teaching_moment: 'First room: a heavy orb and a scale, with a wall pocket beside the pushing lane. A
+    player who pushes it straight ahead without checking the far side pockets it where it cannot be pulled
+    back and restarts the room, which teaches that pushing an orb is chosen by where the orb will end
+    up.'
+  status: trial
+  human_review: {}
+- id: 18
+  name: Linked orbs
+  effect: collecting one moves the other.
+  unique: collecting changes where another orb is.
+  useful: collection order becomes a puzzle, not a checklist.
+  status: rejected
+  human_review: {}
+- id: 19
+  name: Guarded orb
+  effect: steps one tile away when approached.
+  mechanics:
+  - When you come within two tiles it steps one tile away from you to a free floor tile, once per your
+    move
+  - It cannot enter walls or water
+  - Drive it against a wall or block and you can step onto it
+  unique: the only orb that flees the player.
+  useful: a herding puzzle, solved by cornering it.
+  synergies:
+  - 'Push block (81): park a block to close its last escape tile.'
+  - 'Ice cleats (62): corner it on ice it can flee across but you can turn on.'
+  teaching_moment: 'First room: the guarded orb in an open area with one walled corner. A player who chases
+    it directly follows it around the room without ever stepping on it, until they drive it toward the
+    corner almost by accident, which teaches that the orb is herded rather than caught.'
+  status: trial
+  human_review: {}
+- id: 20
+  name: Bonus orb
+  effect: optional, adds 10 seconds when taken.
+  mechanics:
+  - Drawn with a gold ring, it is not counted in orbs-left and the gate does not need it
+  - Taking it adds 10 seconds to the timer immediately
+  unique: not needed for the gate, a large off-path time bank.
+  useful: a risk detour that pays for a slow main route.
+  synergies:
+  - 'Sleeper (33): a bonus orb that wakes a sleeper is a trade, not a gift.'
+  - 'Orb bank (94): banked bonus orbs are what carry into the next level.'
+  teaching_moment: 'First room: a bonus orb down a short detour on a level with a tight timer. A player
+    who takes the detour without counting discovers that the trip cost more than the ten seconds it repaid
+    when the timer ends on the way back, which teaches that the bonus is a trade to be priced rather than
+    a free reward.'
+  status: trial
+  human_review: {}
+- id: 67
+  name: Orb pouch
+  effect: Pouch levels count orbs up and let you spend them.
+  mechanics:
+  - 'In a pouch level the counter flips: orbs you collect count up into a held pouch instead of orbs-left
+    counting down'
+  - Scales and orb-doors spend from the pouch when you press into them at their stated cost, and unspent
+    orbs are your score at the warp
+  - The gate in a pouch level opens on pouch spent, not orbs collected
+  unique: a level rule that counts orbs up as a spendable pouch.
+  useful: spend orbs on scales and doors instead of only collecting them.
+  synergies:
+  - 'Heavy orb (17): push an orb onto a scale to spend it, the pouch made physical.'
+  - 'Orb bank (94): unspent pouch orbs bank into the next level.'
+  teaching_moment: 'First room: a pouch level with an orb-door shortcut priced at one orb before the scale
+    that needs two. A player who spends on the shortcut arrives at the scale one orb short and must go
+    back for orbs they passed, which teaches that a counter that counts up is a budget and that spending
+    is part of the level''s order.'
+  status: revised
+  human_review:
+  - I think for certian level instead of having counting down the orbs, you change the critera. So here
+    we flip the orbs counters to count up.
+  - this would allow for more mechnaics like spending orbs somehow.
+- id: 76
+  name: Time orb
+  effect: collecting it adds 5 seconds.
+  unique: a small time refill placed on the main route.
+  useful: paces a level so steady play keeps the clock alive.
+  status: rejected
+  human_review:
+  - duplicate of bonus orb
+- id: 94
+  name: Orb bank
+  effect: gate counts orbs banked last level.
+  mechanics:
+  - 'A higher-level campaign rule: bonus orbs you bank at a warp are remembered, and a later bank gate
+    deducts from that bank instead of orbs in its own level'
+  - The bank shows in the HUD between levels
+  unique: orbs persist between levels, not just within one.
+  useful: rewards finishing earlier levels with orbs to spare.
+  synergies:
+  - 'Bonus orb (20): bonus orbs are the only income the bank takes.'
+  - 'Orb pouch (67): a pouch level spending from last level''s bank.'
+  teaching_moment: 'First room: a level that ends with a visible bonus orb beside the warp, followed by
+    a bank gate in the next level. A player who warps past the bonus arrives at the bank gate with nothing
+    banked and must take the long way round, which teaches that what is banked in one level is spent in
+    another.'
+  status: trial
+  human_review:
+  - this is as higher level mechanic
+- id: 99
+  name: Thief hand
+  effect: moves one orb every 20 seconds.
+  unique: the antagonist relocates an orb, nothing is stolen.
+  useful: the goal keeps shifting on a long level.
+  status: rejected
+  human_review:
+  - no thanks.

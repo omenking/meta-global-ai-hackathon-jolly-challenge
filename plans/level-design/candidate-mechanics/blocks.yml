@@ -1,0 +1,182 @@
+group: Blocks
+description: Pushable blocks and what pushing them can do.
+mechanics:
+- id: 81
+  name: Push block
+  effect: Push onto floor or a switch to hold it; it cannot enter hazards.
+  mechanics:
+  - Press toward the block and it moves one tile only if the tile beyond is empty floor or a switch plate
+    (floor switch 21 or weight switch 29)
+  - It cannot be pulled
+  - 'Walls, locks, closed gates, other blocks and enemies block the push: the block and you both stay'
+  - 'Water, deep water, void, fire and lava also block the push: the block never enters or covers them'
+  - On a switch plate it holds that switch down for as long as it sits there
+  - It occupies its tile, so enemies cannot move through it
+  unique: the plain movable block; filling or cancelling hazards belongs to the dirt block (90) and ice
+    block (82).
+  useful: holds buttons and blocks enemies; it does not cover hazards.
+  synergies:
+  - 'Floor switch (21): the basic test room, push a block on and walk through the held door.'
+  demos:
+  - 'Dirt block (90): contrast room where the push block cannot bridge but the dirt block can.'
+  teaching_moment: 'First room: one block, a switch across the room, and open wall space behind the block.
+    A player who pushes it in the first direction that moves it usually corners it against a wall, where
+    it cannot be pulled back, so the switch can never be held and the small room must be restarted, which
+    teaches that a push is chosen by its destination.'
+  status: revised
+  human_review:
+  - I could see it holding a button.
+  - But we should have a specialized one for bridges like dirt block.
+- id: 82
+  name: Ice block
+  effect: slides until it hits a wall.
+  mechanics:
+  - Push it and it slides in the push direction over floor and ice until a wall, lock, gate or block stops
+    it
+  - 'Fire tile: it slides in, melts, and is consumed; that fire tile becomes scorched floor'
+  - 'Lava tile: it slides in, melts, and is destroyed; the lava tile stays lava'
+  - 'Shallow water: it stops there and becomes an ice bridge (50)'
+  - 'Deep water: it sinks, melts, and is destroyed; no bridge forms and the water stays'
+  - 'Void: it falls and is destroyed; the void stays'
+  unique: a pushed block that travels the whole slide in one push.
+  useful: places a block far away without walking beside it.
+  synergies:
+  - 'Fire tile (43): slide an ice block in to cancel the fire, a hazard/keylock pair.'
+  - 'Ice bridge (50): push into shallow water (not deep) to build a timed crossing.'
+  - 'Ice tile (1): a slid block becomes the braking wall for your own slide.'
+  teaching_moment: 'First room: an ice block on ice with an orb lane beside its slide line. A player who
+    pushes it toward the nearest wall watches it slide the whole way past the lane and stop somewhere
+    useless, so they restart and learn that an ice block only stops where a braking wall has been arranged.'
+  status: trial
+  human_review:
+  - yes a block that slides until it collides with a wall.
+  - if there was a fire tile I suppose it could cancel out fire.
+  - if there is a lava tile it suppose ti would dissolve the block
+  - we'd have to decided if these other terrain tiles exist.
+- id: 83
+  name: Bomb block
+  effect: push into a wall to crack it.
+  mechanics:
+  - It moves only onto empty floor or a switch plate, exactly as a push block (81)
+  - Water, deep water, void, fire and lava block it; it never enters or covers them
+  - 'When a push would drive it into a wall, it explodes instead: that wall tile becomes floor and the
+    bomb block is consumed'
+  - It only cracks walls, not locks, closed gates or other blocks
+  unique: the only block that destroys a wall.
+  useful: opens a route no key or switch can.
+  synergies:
+  - 'Secret wall (59): bomb reveals a real opening where a fake wall only pretended.'
+  demos:
+  - 'Push block (81): mixed block room where only the bomb block opens the exit.'
+  teaching_moment: 'First room: one bomb block facing two walls, only one of which hides the exit. A player
+    who pushes it into the nearest wall spends the bomb on solid rock and must restart, which teaches
+    that the wall a bomb is spent on is a choice rather than a formality.'
+  status: trial
+  human_review:
+  - It acts like a block but it would look like a bomb.
+- id: 84
+  name: Mirror block
+  effect: turns enemies that hit it.
+  mechanics:
+  - It moves only onto empty floor or a switch plate, exactly as a push block (81)
+  - Water, deep water, void, fire and lava block it; it never enters or covers them
+  - An enemy that moves into it reverses direction instead of passing, so it edits a patroller loop without
+    touching the player
+  unique: edits enemy paths instead of blocking the player.
+  useful: redirects a patroller away from your corridor.
+  synergies:
+  - 'Patroller (31): move the mirror to bend a loop away from an orb corridor.'
+  - 'Guard (37): reflect a guard cycle to open a timed window.'
+  teaching_moment: 'First room: a patroller crosses your corridor and the mirror block starts one tile
+    off the useful spot. A player who leaves it there sees the patroller reverse into their corridor instead
+    of away from it and is reset to the room start, which teaches that the mirror changes an enemy''s
+    route rather than merely blocking it.'
+  status: trial
+  human_review:
+  - could just make it look like a mirror
+  - I'd really need to see the play.
+- id: 85
+  name: Locked block
+  effect: push only while holding its colour.
+  unique: checks a held key without consuming it.
+  useful: links keys to pushing, not just to locks.
+  status: rejected
+  human_review:
+  - we already have a keylock block that consume a key
+  - I don't think this adds an interetsing mechanic.
+  - It does have me question if keys should just vanish after single use since some games one you collect
+    a colour key it unlocks all doors of that colour.
+- id: 86
+  name: Raft block
+  effect: Ride across water, sinks after 10 tiles travelled.
+  mechanics:
+  - Step onto the raft from a bank and each move travels one water tile with you aboard, shallow or deep
+  - Stepping onto a bank ends the ride
+  - It cannot enter floor, void, fire or lava; a bank is the only way off
+  - After 10 tiles travelled it sinks and you respawn at your checkpoint
+  - A remaining-tiles counter appears in a conditional GUI slot under the inventory while you ride
+  unique: a vehicle with a 10-tile lifespan shown in the conditional slot under the inventory.
+  useful: crosses water with a distance budget, not just a key slot.
+  synergies:
+  - 'Deep water (41): the raft crosses deep water without the slow wading cost, but the 10-tile budget
+    still binds.'
+  demos:
+  - 'Current tile (42): current does not move a raft, so it is the controlled alternative to drifting.'
+  teaching_moment: 'First room: a twelve-tile water crossing with a banked island at eight tiles. A player
+    who rides straight for the far bank sinks two tiles short and respawns at the checkpoint, which teaches
+    that the raft''s ten tiles are a budget to be spent between banks.'
+  status: revised
+  human_review:
+  - I think to make this more interesting is that the Raft has limited use.
+  - So I think maybe has a life span of lets say 10 blocks.
+  - We would need a GUI conter to show this. I think having a conditional spot GUI for elements under
+    inventory is not a bad idea.
+- id: 87
+  name: Heavy block
+  effect: Takes two pushes per tile; power gloves make it one push.
+  mechanics:
+  - It moves only onto empty floor or a switch plate, exactly as a push block (81); water, deep water,
+    void, fire and lava block it
+  - 'First push input: Jolly shows a pushing/straining graphic and the block budges but stays, second
+    consecutive push moves it one tile'
+  - Time and enemies keep running while you strain
+  - Wearing power gloves (89) moves it in a single push
+  unique: a slow block whose first push only shows Jolly straining, the second moves it.
+  useful: pushing labour and its animation become the pressure, power gloves relieve it.
+  synergies:
+  - 'Weight switch (29): a heavy block is the costly way to hold a distant switch.'
+  demos:
+  - 'Power gloves (89, gear): before/after test room, two pushes become one.'
+  teaching_moment: 'First room: a heavy block on the way to a switch, with a patroller crossing behind
+    it. A player who starts pushing without watching the patrol is caught while straining on the first
+    push and restarts the room, which teaches that the strain is real time in which other things still
+    move.'
+  status: revised
+  human_review:
+  - We would need a graphic showing Jolly pushing, otherwise how will you know its moving
+  - I think we could then get something like power gloves to help them move these with a single push
+  - I think power gloves could have enough effect where single blocks could be pushed into a line - This
+    would be domino blocks.
+- id: 90
+  name: Dirt block
+  effect: Push into void or water to make permanent floor.
+  mechanics:
+  - On land it moves only onto empty floor or a switch plate, exactly as a push block (81)
+  - 'Void: pushed in, it is consumed and that tile becomes permanent floor'
+  - 'Shallow water and deep water: pushed in, it is consumed and that tile becomes permanent floor'
+  - 'Lava: pushed in, it is consumed and that tile becomes permanent floor'
+  - 'Fire: it cannot be pushed in; fire blocks it like a wall, because ice blocks (82) are the fire canceller'
+  unique: the only block consumed to become floor; the bridge specialist.
+  useful: builds a permanent path the push block cannot.
+  synergies:
+  - 'Void/checkpoint route (48): dirt makes a permanent shortcut back to a checkpoint.'
+  demos:
+  - 'Push block (81): side-by-side room proving dirt bridges and plain blocks do not.'
+  teaching_moment: 'First room: two dirt blocks and a two-tile water channel, arranged so that the easy
+    block can be pushed in first but then blocks the second block''s path. A player who fills the nearest
+    tile without thinking is left with a half-finished crossing and no way to place the second block,
+    so they restart a small room having learned that dirt is spent in an order and that the order has
+    to be worked out before the first push.'
+  status: revised
+  human_review:
+  - Make it a dirt block.

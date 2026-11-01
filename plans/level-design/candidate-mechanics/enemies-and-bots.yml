@@ -1,0 +1,229 @@
+group: Enemies and Bots
+description: Enemies, helpers and the antagonist.
+mechanics:
+- id: 31
+  name: Patroller
+  effect: loops a fixed path, touch resets you.
+  mechanics:
+  - Moves one tile per player move along its marked loop, forever
+  - If you step onto it or it steps onto you, you return to the level start (or checkpoint)
+  - Its loop never changes unless a mirror block redirects it
+  unique: a lethal enemy on a predictable loop.
+  useful: readable timing windows to cross a corridor.
+  synergies:
+  - 'Mirror block (84): bend the loop, then cross where it used to patrol.'
+  - 'Sticky tile (8): it moves full speed over a tile you cross at half speed.'
+  teaching_moment: 'First room: a patroller loops across the only corridor on a readable cycle. A player
+    who walks straight across is touched and returned to the room start, which teaches that the loop,
+    rather than the distance, is what has to be timed.'
+  status: trial
+  human_review: {}
+- id: 32
+  name: Chaser
+  effect: copies your moves to hunt you.
+  mechanics:
+  - After each of your moves it takes one step in the same direction you just moved, if that tile is free
+  - Otherwise it stays
+  - It is lethal on touch, so your own path steers it into walls
+  unique: the only enemy that reacts to your inputs.
+  useful: you lead it into walls and traps with your own path.
+  synergies:
+  - 'Mud tile (47): it follows your prints as well as your moves, a double trap.'
+  - 'Decoy Jolly (39): the one thing it will copy toward instead of you.'
+  teaching_moment: 'First room: a chaser in an open room with one dead end. A player who runs straight
+    for the orb leads the chaser''s copied steps into the dead end behind them and is caught, so the retry
+    teaches that your own path is the control you have over it.'
+  status: trial
+  human_review: {}
+- id: 33
+  name: Sleeper
+  effect: Sleeps until any orb is collected, then patrols a fixed loop.
+  mechanics:
+  - It sits asleep and solid on its tile (it blocks that tile) until any orb anywhere in the level is
+    collected
+  - It is not tied to one specific orb
+  - From then on it patrols a fixed marked loop at one tile per player move, lethal on touch like a patroller
+  unique: dormant until an orb pickup wakes it.
+  useful: collecting escalates danger, so orb order matters.
+  synergies:
+  - 'Alarm tile (38): one wakes sleepers by orb, the other by stepping, wake them on purpose in the wrong
+    room.'
+  - 'Bonus orb (20): an optional orb that wakes a sleeper is a real cost, not free time.'
+  teaching_moment: 'First room: the nearest orb sits in front of a sleeping enemy, with a safer orb further
+    away. A player who collects the nearest orb first wakes the sleeper across their return path and has
+    to restart the room, which teaches that any orb can be the one that wakes it and that collection order
+    is a decision.'
+  status: revised
+  human_review:
+  - How does it move? Is it a specific orb or any orb?
+- id: 34
+  name: Blocker
+  effect: A guard that shuffles to stay in your way across a doorway.
+  mechanics:
+  - It lives in a three-wide doorway and moves one tile per player move sideways to stay between you and
+    the exit, tracking your position
+  - 'It is no longer a disguised keylock: it never leaves its doorway strip, so you get past by pinning
+    it to one side with a pushed block, luring it with a decoy, or crossing behind a guard window'
+  unique: a doorway guard that moves to stay in your way, not a lock in disguise.
+  useful: get past by pinning, luring or timing it, never by collecting its orb.
+  synergies:
+  - 'Push block (81): pin it to one side of its doorway and walk the other.'
+  - 'Decoy Jolly (39): it tracks the decoy, not you, for as long as the decoy lasts.'
+  teaching_moment: 'First room: the blocker stands in a three-wide doorway with space to pin it on one
+    side. A player who tries to slip past on the side it is guarding is mirrored and touched, so they
+    restart having learned that it tracks them and has to be pinned or lured rather than dodged.'
+  status: revised
+  human_review:
+  - its basically just a key and keylock pair at a chokepoint masked as a enemy.
+  - Make it more interesting.
+- id: 35
+  name: Thief
+  effect: Flees from you, steals a key, and drops it at its burrow.
+  mechanics:
+  - It moves one tile per player move away from you and is not lethal
+  - If it starts a move next to you it snatches your most recent key, carried visibly, then runs for its
+    burrow tile and drops the key there where you can pick it back up
+  - Corner it and touch it before it reaches the burrow and it drops the key where it stands
+  unique: harms your inventory, not your position or run.
+  useful: an enemy worth avoiding even though it cannot kill you.
+  synergies:
+  - 'Ice tile (1): slide to cut off its escape line to the burrow.'
+  demos:
+  - 'Chaser (32): one hunts you, one hunts a burrow, chase it down is a real route.'
+  teaching_moment: 'First room: you carry a key across an open room the thief crosses. A player who walks
+    straight at it has the key snatched and watches it carried to a burrow they had not noticed, which
+    teaches both that the key can be recovered and where the thief is trying to go.'
+  status: revised
+  human_review:
+  - doesn't explain its movement, is there a way to get back our item?
+  - like does it deposit it in a specific location, or we have to find them hiding?
+  - Do we have to chase them donw.
+- id: 36
+  name: Mimic orb
+  effect: turns into a patroller up close.
+  mechanics:
+  - Identical to an orb until you come within one tile, when it reveals and starts a small two-to-three
+    tile patrol, lethal on touch
+  - Before it reveals, stepping on it collects nothing
+  unique: a pickup that was an enemy in disguise.
+  useful: makes the player read orbs before grabbing them.
+  synergies:
+  - 'Fake-looking rooms with Hidden orb (16): read every orb in a dark room before you commit.'
+  - 'Patroller (31): a mimic joins an existing loop, two timings to cross.'
+  teaching_moment: 'First room: three orbs in a row, of which the middle one is a mimic. A player who
+    collects in the order they meet them reveals it at arm''s length and is reset, which teaches that
+    an orb is read before it is taken.'
+  status: trial
+  human_review: {}
+- id: 37
+  name: Guard
+  effect: blocks a corridor, turns every 4 moves.
+  mechanics:
+  - It never leaves its corridor tile and rotates its facing 90 degrees every four player moves, shown
+    by an arrow
+  - Stepping onto its tile from the front it faces resets you
+  - Entering from behind, while its back is turned, you pass
+  unique: never moves, its facing cycles on a move count.
+  useful: a timed window through one corridor tile.
+  synergies:
+  - 'Mirror block (84): change when its window falls relative to your route.'
+  - 'Bounce pad (6): launch over it timed to its turn.'
+  teaching_moment: 'First room: a guard faces you at the end of its corridor when you arrive. A player
+    who walks straight in meets it from the front and is reset, so the retry teaches that its facing cycle,
+    shown by its arrow, creates the window rather than its position.'
+  status: trial
+  human_review: {}
+- id: 38
+  name: Alarm tile
+  effect: stepping on it wakes all sleepers.
+  mechanics:
+  - Stepping on it rings once and wakes every sleeper in the room immediately, then it becomes inert floor
+  - It does not wake sleepers in other rooms
+  unique: a floor tile that activates enemies room-wide.
+  useful: a mistake to avoid, or a lure to trigger on purpose.
+  synergies:
+  - 'Sleeper (33): a room where the alarm is the only floor to the orb.'
+  - 'Decoy Jolly (39): wake them all on purpose, aimed at the decoy.'
+  teaching_moment: 'First room: the direct floor to the orb is an alarm tile, with a longer way round.
+    A player who takes the direct floor wakes the room''s sleepers across their exit and restarts, which
+    teaches that some floor is a trigger and that the long way round was the route.'
+  status: trial
+  human_review: {}
+- id: 39
+  name: Decoy Jolly
+  effect: A copy of you that enemies chase instead of you, placed where you stand.
+  mechanics:
+  - You carry one decoy in a slot
+  - Walking over its pickup drops the copy on your current tile as you step off it, so deployment is walking
+    through it, no new key needed
+  - It lasts 20 moves
+  - While it stands, patrollers, chasers and blockers target the decoy tile instead of you
+  unique: redirects enemy targeting away from the player.
+  useful: buys a crossing window no movement trick can.
+  synergies:
+  - 'Blocker (34): it tracks the decoy and vacates your side of the doorway.'
+  - 'Chaser (32): plant it and lead the chaser''s copies into a wall.'
+  teaching_moment: 'First room: the decoy pickup stands just before a guarded corridor, but not yet in
+    sight of it. A player who walks through without pausing drops the copy where enemies cannot see it
+    and is chased as normal, which teaches that a decoy only works where it can be seen by what it is
+    meant to distract.'
+  status: revised
+  human_review:
+  - how do you deploy it?
+- id: 40
+  name: Mule bot
+  effect: A follower that carries 4 extra inventory slots.
+  mechanics:
+  - Your base inventory is 4 slots
+  - The bot follows the exact path you walked, one tile behind
+  - Keys it carries use its 4 slots, shown as a second HUD row
+  - If you move backwards into it you swap tiles, so it never blocks you
+  - It waits if its next path tile is a hazard and catches up along your path when it can
+  unique: a follower whose slots are inventory, not a switch holder.
+  useful: carry eight keys worth of gear in a four-slot game.
+  synergies:
+  - 'Twin lock (11): the level that only fits if the mule carries the second key.'
+  - 'Swap tile (93): swap with your own bot to get its slots past a pinch.'
+  teaching_moment: 'First room: five keys and a twin lock in a four-slot game, with the mule bot behind
+    a one-tile pinch. A player who fills their own slots first and backs into the pinch swaps places with
+    the bot unexpectedly and has to restart the arrangement, which teaches that the bot''s position and
+    its four slots are part of the inventory.'
+  status: revised
+  human_review:
+  - I think it would be better if it is like a mule bot, basically lets you hold more.
+  - Then we could restrict our inventory to just 4 slots.
+  - Adding it would give us 4 more slots.
+  - We have to consider it follows behind us.
+  - So what happens if you move backwards? you swap spots so it never gets in your way.
+- id: 78
+  name: Ghost
+  effect: Ghosts of your failed attempts replay one step behind, and there can be several.
+  mechanics:
+  - On a new attempt, a ghost replays your last failed attempt's inputs move for move, starting one step
+    behind that attempt's timeline
+  - Touching a ghost loses the attempt
+  - Every further failed attempt can add another ghost (they pass through each other), so repeated failures
+    lay down a trailing line of ghosts that narrows your route
+  - Ghosts fade when their replay ends
+  unique: your own recorded route becomes the obstacle.
+  useful: learn your last path by having to dodge it.
+  synergies:
+  - 'Checkpoint tile (48): ghosts restart from the checkpoint, not the level start.'
+  demos:
+  - 'Rewind-free long rooms in Beyond the Screen scale: ghosts punish the exact backtrack you just learned.'
+  teaching_moment: 'First room: your previous failed attempt ended by backtracking along a corridor. A
+    player who repeats the same route on the next attempt meets their own ghost coming the other way one
+    step behind and loses, which teaches that the ghost replays the attempt rather than merely following
+    the player.'
+  status: revised
+  human_review:
+  - so the ghost is one step behind, if you go backwards you die.
+  - Now think about more ghosts it can effectively form a line really limiting your movement.
+- id: 98
+  name: Taunt tile
+  effect: antagonist speaks, then moves one wall.
+  unique: a story beat that changes the map once.
+  useful: the antagonist visibly interferes, not just talks.
+  status: rejected
+  human_review:
+  - I dont get it, sounds like something for a boss battle, but not clear how it should work.

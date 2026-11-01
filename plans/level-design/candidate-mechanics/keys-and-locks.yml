@@ -1,0 +1,88 @@
+group: Keys and Locks
+description: Key and lock variants, and doors that check keys.
+mechanics:
+- id: 11
+  name: Twin lock
+  effect: needs two keys of its colour.
+  mechanics:
+  - Press into it holding one matching key and it shows it still needs one more, consuming nothing
+  - Press holding two matching keys and both are consumed and the lock dissolves to floor
+  unique: consumes two matching keys, not one.
+  useful: makes duplicate keys and inventory space matter.
+  synergies:
+  - 'Mule bot (40): an 8-key problem in a 4-slot game, the mule carries the second.'
+  demos:
+  - 'Key ring successor: duplicate keys in one room finally have a purpose.'
+  teaching_moment: 'First room: a twin lock with both its keys in the room and a single lock of the same
+    colour beyond it. A player who presses into the twin lock holding both keys, because it is the first
+    lock they meet, spends both on it and cannot open the single lock, so the restart teaches that a twin
+    lock''s cost is counted before it is paid.'
+  status: trial
+  human_review: {}
+- id: 12
+  name: Master key
+  effect: opens any lock, then breaks.
+  mechanics:
+  - A silver key that fits any lock
+  - Pressing it into a lock of any colour consumes the master key and dissolves that one lock only
+  unique: the only key that ignores colour, once.
+  useful: a choice of which colour hunt to skip.
+  synergies:
+  - 'Final door (100): spend it on the colour you are missing, or save it.'
+  - 'Twin lock (11): one master covers one of the two keys it demands.'
+  teaching_moment: 'First room: a master key with a red lock nearby, whose red key is also in the room,
+    and a blue lock further on with no blue key in sight. A player who spends the master key on the convenient
+    red lock has nothing for the blue lock and must restart, which teaches that the master key is saved
+    for the colour that cannot be found.'
+  status: trial
+  human_review: {}
+- id: 13
+  name: Rusty key
+  effect: has a chance to snap in a lock.
+  unique: the only unreliable key.
+  useful: a risky shortcut against a safe detour for a sound key.
+  status: rejected
+  human_review: {}
+- id: 24
+  name: Colour switch
+  effect: cycles a lock to the next colour.
+  unique: changes the lock instead of consuming a key.
+  useful: lets the key you hold become the right key.
+  status: rejected
+  human_review:
+  - sounds annoying.
+- id: 66
+  name: Key ring
+  effect: same-colour keys stack in one slot.
+  unique: compresses duplicate keys into one inventory slot.
+  useful: makes the twin lock affordable in a full inventory.
+  status: rejected
+  human_review:
+  - this would only be interesting if there was a between level store,
+  - then when you bought it levels could be completed based on these issues.
+- id: 88
+  name: Key crate
+  effect: break it to spill 3 keys.
+  unique: keys come from breaking a container, not the floor.
+  useful: choose when to open your key supply.
+  status: rejected
+  human_review: {}
+- id: 100
+  name: Final door
+  effect: needs one key of each colour held.
+  mechanics:
+  - The door checks your inventory, bot included, for at least one key of each colour at the same time
+  - If you hold them all it opens permanently and consumes none of them
+  - If any colour is missing it does nothing
+  unique: checks all colours held at once, consumes none.
+  useful: a finale that tests breadth, not a single colour.
+  synergies:
+  - 'Mule bot (40): all colours rarely fit in 4 base slots alone.'
+  demos:
+  - 'Master key (12): decide whether it counts as a colour before this door, a level-design ruling.'
+  teaching_moment: 'First room: the final door at the end of a corridor, with one colour''s key visible
+    back the way you came. A player who walks straight to the door is told by nothing happening that a
+    colour is missing and faces the whole corridor back, which teaches that the door is an inventory check
+    to be prepared for rather than a lock to be opened on arrival.'
+  status: trial
+  human_review: {}

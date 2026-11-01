@@ -9,7 +9,7 @@
 - [Mininal Graphical Assets](./docs/minimal-graphical-assets.md)
 - [Project Manager and Simple Game Engine](./docs/pm-and-simple-game-engine.md)
 - [Game Engine Refactor](./docs/game-engine-refactor.md)
-- [Level Designer](./docs/level-designer.md)
+- [Levle and Mechanics Planning](./docs/level-and-mechanics-planning.md)
 
 ## Asset Design Tool
 
