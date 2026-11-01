@@ -1,0 +1,13 @@
+{
+  "pack": "alarm",
+  "main": "main.js",
+  "assets": [
+    {"file": "alarm.png", "kind": "tiles", "bundled": true,
+     "shows": "alarm tile before it is stepped on, a trigger in the floor"},
+    {"file": "alarm-inert.png", "kind": "tiles", "bundled": true,
+     "shows": "alarm tile after ringing once, now inert floor"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
