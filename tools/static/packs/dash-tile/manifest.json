@@ -1,0 +1,23 @@
+{
+  "pack": "dash-tile",
+  "main": "main.js",
+  "assets": [
+    {"file": "dash-tile.png", "kind": "tiles", "bundled": true,
+     "shows": "dash tile that stores one dash when stepped on"},
+    {"file": "dash-tile-spent.png", "kind": "tiles", "bundled": true,
+     "shows": "dash tile after its dash has been stored, charge now held by the player in the HUD"},
+    {"file": "jolly-dashing.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly in the two-tile dash step, clearing the tile in between"},
+    {"file": "dash-charge.png", "kind": "gui", "bundled": true,
+     "shows": "HUD icon showing one stored dash ready to spend"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-dashing.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly in the two-tile dash step, clearing the tile in between"}
+  ],
+  "gui": [
+    {"file": "dash-charge.png", "kind": "gui", "bundled": true,
+     "shows": "HUD icon showing one stored dash ready to spend"}
+  ],
+  "blocks": []
+}
