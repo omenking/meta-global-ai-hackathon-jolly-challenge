@@ -1,0 +1,17 @@
+{
+  "pack": "toggle-switch",
+  "main": "main.js",
+  "assets": [
+    {"file": "toggle-switch-a.png", "kind": "tiles", "bundled": true,
+     "shows": "toggle switch in state A, first linked door open and second closed"},
+    {"file": "toggle-switch-b.png", "kind": "tiles", "bundled": true,
+     "shows": "toggle switch in state B after one press, first linked door closed and second open"},
+    {"file": "door-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "closed linked door blocking the doorway like wall"},
+    {"file": "door-open.png", "kind": "tiles", "bundled": true,
+     "shows": "open linked door, walkable doorway"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
