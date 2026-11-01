@@ -477,6 +477,11 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'T') {
+        const tmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const tdir = (tmeta && tmeta.turntable_dir) || 'north';
+        const ttex = textures['turntable-' + tdir + '.png'];
+        if (ttex && dt.sprite.texture !== ttex) dt.sprite.texture = ttex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
