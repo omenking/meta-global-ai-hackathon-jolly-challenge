@@ -1,0 +1,16 @@
+{
+  "pack": "fan",
+  "main": "main.js",
+  "assets": [
+    {"file": "fan-north.png", "kind": "tiles", "bundled": true, "shows": "fan wind tile with its wind direction marked north"},
+    {"file": "fan-east.png", "kind": "tiles", "bundled": true, "shows": "fan wind tile with its wind direction marked east"},
+    {"file": "fan-south.png", "kind": "tiles", "bundled": true, "shows": "fan wind tile with its wind direction marked south"},
+    {"file": "fan-west.png", "kind": "tiles", "bundled": true, "shows": "fan wind tile with its wind direction marked west"},
+    {"file": "jolly-pushed.png", "kind": "jolly_states", "bundled": true, "shows": "Jolly being pushed one tile downwind by the fan with no input made"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-pushed.png", "kind": "jolly_states", "bundled": true, "shows": "Jolly being pushed one tile downwind by the fan with no input made"}
+  ],
+  "gui": [],
+  "blocks": []
+}
