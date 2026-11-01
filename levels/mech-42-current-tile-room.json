@@ -1,0 +1,22 @@
+{
+  "name": "mech-42-current-tile-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-42-current-tile Test Level: east-flowing current (>) runs past a 1-wide banked exit at x=6 toward the east end; aiming straight at the exit from the tile below it is carried one tile past it, aiming upstream (from x=5) lands on the bank; a later bank at x=10 remains reachable so the player is never stranded mid-current",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor (bank / island)", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    ">": {"label": "current flowing east", "def": "current:current-east"}
+  },
+  "rows": [
+    "#############",
+    "######*###*##",
+    "######.###.##",
+    "#P>>>>>>>>>>#",
+    "#############",
+    "#############"
+  ]
+}
