@@ -1,0 +1,13 @@
+{
+  "pack": "ice-bridge",
+  "main": "main.js",
+  "assets": [
+    {"file": "ice-bridge.png", "kind": "tiles", "bundled": true,
+     "shows": "formed bridge over shallow water, safe while crossed without stopping"},
+    {"file": "ice-bridge-melting.png", "kind": "tiles", "bundled": true,
+     "shows": "bridge in the move where the player stands still on it, visibly melting"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
