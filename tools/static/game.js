@@ -477,6 +477,15 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if ('MABDdNn'.includes(dt.ch)) {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = !!gc && 'MABDdNn'.includes(gc);
+        const texName = { M: 'mirror-switch.png', A: 'toggle-switch-a.png',
+          B: 'toggle-switch-b.png', D: 'door-closed.png',
+          d: 'door-open.png', N: 'toggle-switch-a.png',
+          n: 'toggle-switch-b.png' }[gc];
+        const tex = texName && textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
