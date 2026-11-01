@@ -452,10 +452,20 @@
     if (statusEl) statusEl.textContent = state.status || 'playing';
     for (const dt of dynamicTiles) {
       // The gate tile stays 'G' when open: its sprite shows only
-      // while shut, revealing the floor base underneath.
-      dt.sprite.visible = dt.ch === 'G'
-        ? !state.gate_open
-        : !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
+      // while shut, revealing the floor base underneath. A crumbling
+      // tile ('C') becomes void ('V'): the same glyph follows the
+      // grid char so the hole stays visible instead of turning back
+      // into plain floor.
+      if (dt.ch === 'C') {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'C' || gc === 'V';
+        if (dt.sprite.text !== undefined && gc
+            && dt.sprite.text !== gc) dt.sprite.text = gc;
+      } else {
+        dt.sprite.visible = dt.ch === 'G'
+          ? !state.gate_open
+          : !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
+      }
     }
     retryGroup.visible = state.status === 'lost';
     // The HUD win screen is only for the last level; mid-chain a
