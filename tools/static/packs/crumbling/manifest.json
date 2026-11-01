@@ -7,7 +7,7 @@
     {"file": "crumbling-cracked.png", "kind": "tiles", "bundled": true,
      "shows": "tile while Jolly stands on it, strained but safe"},
     {"file": "void.png", "kind": "tiles", "bundled": true,
-     "shows": "hole left after the tile falls; blocks movement for the rest of the attempt"}
+     "shows": "hole left after the tile falls; stepping into it is falling and loses the attempt"}
   ],
   "jolly_states": [],
   "gui": [],

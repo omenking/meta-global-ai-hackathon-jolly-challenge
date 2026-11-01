@@ -1,12 +1,13 @@
 // Pack: crumbling tile (mech-5-crumbling-tile sanity check).
 // A crumbling tile is safe while the player stands on it. It falls
-// on the step that leaves it: the vacated tile becomes a void tile
-// (a blocker) for the rest of the attempt, so it can never be
-// re-occupied. A one-move delay instead let backtracking isolate
-// the middle tile of a bridge (void on both sides, no legal move),
-// which review-fixes-2 removed. Restart restores it because a fresh
-// initialState rebuilds the room. All state advances through the
-// pure step function; the deadline is a step count, never time.
+// on the step that leaves it, becoming void for the rest of the
+// attempt. Void is a hazard, not a blocker: stepping into a fallen
+// tile is falling, so the attempt is lost (review-fixes-3, after
+// the definition audit in the candidate entry). Earlier one-move
+// delay and blocker readings let backtracking strand or bounce off
+// the bridge; both are gone. Restart restores the tile because a
+// fresh initialState rebuilds the room. All state advances through
+// the pure step function; the deadline is a step count, never time.
 // UMD: browser global GamePackCrumbling + Node export (register fn).
 (function (root) {
   'use strict';
@@ -28,7 +29,12 @@
       } });
     api.defineTile('crumble:void', { layer: 'object',
       sprite: 'void.png', glyph: 'V',
-      blocks: function () { return true; } });
+      // Enterable, and entering is falling. Future pushable blocks
+      // still never enter void; that rule lives in the block packs
+      // (blocks.yml), not in the player movement check here.
+      onEnter: function (state, cell, actor, fx) {
+        fx.push({ type: 'lose' });
+      } });
     // The void never appears in level rows, so give its projected
     // grid char a name here (the kernel projection falls back to it).
     api.onLevelLoad(function (state) {

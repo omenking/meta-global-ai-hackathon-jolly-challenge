@@ -2,8 +2,8 @@
 
 The mechanic lives in the pure GameCore step (packs/crumbling.js);
 driven here under Node against the teaching room. Rules: safe while
-stood on, falls on the step that leaves it, void blocks re-entry,
-restart (fresh state) restores.
+stood on, falls on the step that leaves it, stepping into the void
+is falling and loses the attempt, restart (fresh state) restores.
 
 Run with: python -m unittest tools.test_mech_5_crumbling_tile -v
 """
@@ -79,7 +79,7 @@ function run(seq) {
   const snaps = [{ pos: { ...s.player }, row: s.grid[2] }];
   seq.forEach((input, i) => {
     s = core.step(s, { t_ms: (i + 1) * 100, input });
-    snaps.push({ pos: { ...s.player }, row: s.grid[2],
+    snaps.push({ pos: { ...s.player }, row: s.grid[2], status: s.status,
       orbs: core.readout(s).orbs_left });
   });
   return { snaps, final: s };
@@ -93,7 +93,7 @@ const b = run([...toBridge, 'right', 'right', 'up', 'up', 'right']);
 const c = run([...toBridge, 'right', 'left', 'right']);
 // D: cross, take the far orb, fail back over the void, long way home.
 const d = run([...toBridge, 'right', 'right', 'right', 'right',
-  'up', 'right', 'right', 'left', 'left', 'down', 'left',
+  'up', 'right', 'right', 'left', 'left', 'down',
   'down', 'down', 'down', 'down',
   'left', 'left', 'left', 'left', 'left', 'left',
   'up', 'up', 'up', 'up', 'up', 'left']);
@@ -145,20 +145,19 @@ class CrumblingMechanicTests(unittest.TestCase):
         # And it still carries the player onward.
         self.assertEqual(b[9]["pos"], {"x": 7, "y": 2})
 
-    def test_vacated_tile_cannot_be_reoccupied(self):
+    def test_stepping_into_a_vacated_tile_loses(self):
         c = self.r["c"]
         # Onto C1, straight back off: C1 fell on the leaving step, so
-        # pressing back toward it is blocked by the void.
+        # pressing back toward it steps into the void and loses.
         self.assertEqual(c[6]["pos"], {"x": 4, "y": 2})
         self.assertEqual(c[6]["row"], "#....VCC....#")
-        self.assertEqual(c[7]["pos"], {"x": 4, "y": 2})
+        self.assertEqual(c[7]["pos"], {"x": 5, "y": 2})
+        self.assertEqual(c[7]["status"], "lost")
 
-    def test_void_blocks_return_and_long_way_home_works(self):
+    def test_long_way_home_avoids_the_void_and_works(self):
         d = self.r["d"]
-        # snaps[15] pressed left from (8,2) into the void: no move.
         self.assertEqual(d[14]["pos"], {"x": 8, "y": 2})
-        self.assertEqual(d[15]["pos"], {"x": 8, "y": 2})
-        self.assertEqual(d[15]["row"], "#....VVV....#")
+        self.assertEqual(d[14]["row"], "#....VVV....#")
         # Long way home collects the return orb and reaches the start.
         self.assertEqual(self.r["dFinal"],
                          {"pos": {"x": 1, "y": 1}, "orbs": 0})
@@ -183,7 +182,7 @@ const core = require(process.argv[1]);
 const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
 const inputs = ['right', 'right', 'right', 'down',
   'right', 'right', 'right', 'right', 'up', 'right', 'right',
-  'left', 'left', 'down', 'left',
+  'left', 'left', 'down',
   'down', 'down', 'down', 'down',
   'left', 'left', 'left', 'left', 'left', 'left',
   'up', 'up', 'up', 'up', 'up', 'left'];
@@ -217,7 +216,7 @@ class SanityReplayTests(unittest.TestCase):
         self.assertEqual(self.r["liveFinal"],
                          {"pos": {"x": 1, "y": 1}, "orbs": 0})
         self.assertEqual(self.r["row"], "#....VVV....#")
-        self.assertEqual(self.r["replaySteps"], 31)
+        self.assertEqual(self.r["replaySteps"], 30)
 
 
 BACKTRACK_SCRIPT = r"""
@@ -229,10 +228,11 @@ const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
 const seq = ['down', 'right', 'right', 'right', 'right', 'right',
   'right', 'left', 'left', 'right'];
 let s = core.initialState(level, 'mech-5-crumbling-tile-room');
-const snaps = [{ pos: { ...s.player }, row: s.grid[2] }];
+const snaps = [{ pos: { ...s.player }, row: s.grid[2],
+  status: s.status }];
 seq.forEach((input, i) => {
   s = core.step(s, { t_ms: (i + 1) * 100, input });
-  snaps.push({ pos: { ...s.player }, row: s.grid[2] });
+  snaps.push({ pos: { ...s.player }, row: s.grid[2], status: s.status });
 });
 console.log(JSON.stringify({ snaps }));
 """
@@ -240,22 +240,26 @@ console.log(JSON.stringify({ snaps }));
 
 @unittest.skipUnless(shutil.which("node"), "node not available")
 class BacktrackRegressionTests(unittest.TestCase):
-    """A vacated tile must never strand the player on the bridge."""
+    """Void is a hazard: stepping into a fallen tile loses the run."""
 
     @classmethod
     def setUpClass(cls):
         cls.r = run_core(BACKTRACK_SCRIPT)
 
-    def test_backing_out_is_blocked_by_the_fallen_tile(self):
+    def test_stepping_back_into_a_fallen_tile_is_falling(self):
         snaps = self.r["snaps"]
-        # Crossed to the last bridge tile; the way back is already void.
+        # Crossed to the last bridge tile, still playing.
         self.assertEqual(snaps[7]["pos"], {"x": 7, "y": 2})
-        # Stepping back cannot re-occupy a fallen tile.
-        self.assertEqual(snaps[8]["pos"], {"x": 7, "y": 2})
-        self.assertEqual(snaps[9]["pos"], {"x": 7, "y": 2})
+        self.assertEqual(snaps[7]["status"], "playing")
+        # Pressing back steps into the void left behind and loses.
+        self.assertEqual(snaps[8]["pos"], {"x": 6, "y": 2})
+        self.assertEqual(snaps[8]["status"], "lost")
 
-    def test_forward_exit_stays_reachable(self):
-        self.assertEqual(self.r["snaps"][10]["pos"], {"x": 8, "y": 2})
+    def test_lost_run_does_not_move_again(self):
+        snaps = self.r["snaps"]
+        self.assertEqual(snaps[9]["pos"], {"x": 6, "y": 2})
+        self.assertEqual(snaps[9]["status"], "lost")
+        self.assertEqual(snaps[10]["pos"], {"x": 6, "y": 2})
 
 
 if __name__ == "__main__":
