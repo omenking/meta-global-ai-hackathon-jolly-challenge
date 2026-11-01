@@ -8,7 +8,7 @@
 // gate_open) computed here, never stored as kernel truth.
 (function (root) {
   'use strict';
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MulePack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -16,12 +16,14 @@
     CorePack = require('./packs/core-chips/main.js');
     WaterPack = require('./packs/proof-water/main.js');
     CrumblePack = require('./packs/crumbling/main.js');
+    MulePack = require('./packs/mule-bot/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
     CorePack = root.GamePackCoreChips;
     WaterPack = root.GamePackProofWater;
     CrumblePack = root.GamePackCrumbling;
+    MulePack = root.GamePackMuleBot;
   }
 
   function createEngine(packRegisters) {
@@ -120,7 +122,7 @@
       getTileDef: function (id) { return registry.getTile(id); } };
   }
 
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MulePack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -175,6 +177,7 @@
     getTileDef: engine.getTileDef,
     registerCorePack: CorePack, registerKeysPack: KeysPack,
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack,
+    registerMuleBotPack: MulePack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;

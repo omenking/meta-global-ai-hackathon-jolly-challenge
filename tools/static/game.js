@@ -243,6 +243,12 @@
     playerSprite.scale.set(scale);
     board.addChild(playerSprite);
   }
+  let botSprite = null;
+  if (textures['mule-bot.png']) {
+    botSprite = new PIXI.Sprite(textures['mule-bot.png']);
+    botSprite.scale.set(scale);
+    board.addChild(botSprite);
+  }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
   // Right-hand column: grey panel like the original side panel.
@@ -444,6 +450,17 @@
       const pose = state.status === 'lost' && textures['jolly-fall.png']
         ? textures['jolly-fall.png'] : textures['jolly.png'];
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
+    }
+    if (botSprite) {
+      const bot = (state.actors || []).find((a) => a.def === 'mule:bot');
+      botSprite.visible = !!bot;
+      if (bot) {
+        botSprite.position.set(bot.x * TILE, bot.y * TILE);
+        const btex = state.flags && state.flags['mule:waiting']
+          && textures['mule-bot-waiting.png']
+          ? textures['mule-bot-waiting.png'] : textures['mule-bot.png'];
+        if (btex && botSprite.texture !== btex) botSprite.texture = btex;
+      }
     }
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
