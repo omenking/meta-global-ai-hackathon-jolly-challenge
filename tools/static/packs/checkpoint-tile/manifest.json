@@ -1,0 +1,13 @@
+{
+  "pack": "checkpoint-tile",
+  "main": "main.js",
+  "assets": [
+    {"file": "checkpoint-off.png", "kind": "tiles", "bundled": true,
+     "shows": "checkpoint tile not yet touched, unlit"},
+    {"file": "checkpoint-on.png", "kind": "tiles", "bundled": true,
+     "shows": "active checkpoint, lit; only the last one touched is lit"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

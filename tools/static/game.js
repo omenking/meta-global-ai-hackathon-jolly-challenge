@@ -477,6 +477,16 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'K') {
+        // Checkpoint: lit only while it is the active respawn; the
+        // active flag is the cell meta set by the checkpoint pack.
+        const kmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const texName = kmeta && kmeta.checkpoint_active
+          ? 'checkpoint-on.png' : 'checkpoint-off.png';
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+        dt.sprite.visible = !!(state.grid[dt.y]
+          && state.grid[dt.y][dt.x] === 'K');
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
