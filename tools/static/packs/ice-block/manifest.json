@@ -1,0 +1,19 @@
+{
+  "pack": "ice-block",
+  "main": "main.js",
+  "assets": [
+    {"file": "ice-bridge.png", "kind": "tiles", "bundled": true,
+     "shows": "formed ice bridge over shallow water after the block stops there"},
+    {"file": "scorched.png", "kind": "tiles", "bundled": true,
+     "shows": "scorched floor left on the one fire tile the block cancels"},
+    {"file": "ice-block.png", "kind": "blocks", "bundled": true,
+     "shows": "intact ice block before it is pushed"},
+    {"file": "ice-block-sliding.png", "kind": "blocks", "bundled": true,
+     "shows": "ice block mid-slide, travelling the whole slide from one push"},
+    {"file": "ice-block-melting.png", "kind": "blocks", "bundled": true,
+     "shows": "ice block melting as it is consumed in fire, destroyed in lava or sunk in deep water"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

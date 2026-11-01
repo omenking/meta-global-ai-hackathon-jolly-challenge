@@ -458,7 +458,37 @@
     document.getElementById('dbg-state').textContent = JSON.stringify(state);
     const statusEl = document.getElementById('dbg-status');
     if (statusEl) statusEl.textContent = state.status || 'playing';
+    // Ice blocks move: each block sprite follows a live block
+    // position from state (row-major), instead of its start tile.
+    const iceBlocks = [];
+    if (state.objects) {
+      for (let by = 0; by < state.objects.length; by++) {
+        for (let bx = 0; bx < state.objects[by].length; bx++) {
+          if (state.objects[by][bx] === 'ice:ice-block') {
+            iceBlocks.push({ x: bx, y: by });
+          }
+        }
+      }
+    }
+    let iceIdx = 0;
     for (const dt of dynamicTiles) {
+      if (dt.ch === 'I') {
+        const bp = iceBlocks[iceIdx++];
+        dt.sprite.visible = !!bp;
+        if (bp) dt.sprite.position.set(bp.x * TILE, bp.y * TILE);
+        continue;
+      }
+      if (dt.ch === 'F' || dt.ch === '~') {
+        // Fire becomes scorched ('S'), shallow water an ice
+        // bridge ('B'): the glyph follows the grid char.
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === dt.ch
+          || gc === (dt.ch === 'F' ? 'S' : 'B');
+        if (dt.sprite.visible && dt.sprite.text !== undefined) {
+          dt.sprite.text = gc;
+        }
+        continue;
+      }
       // The gate tile stays 'G' when open: its sprite shows only
       // while shut, revealing the floor base underneath. A crumbling
       // tile ('C') becomes void ('V'): the same glyph follows the
