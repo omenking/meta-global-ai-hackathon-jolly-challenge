@@ -467,12 +467,11 @@
       if (dt.ch === 'C') {
         const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
         dt.sprite.visible = gc === 'C' || gc === 'V';
-        // Intact, armed (left, about to fall) and void each have a
-        // bundled sprite in the crumbling pack; swap with the state.
-        const meta = state.meta && state.meta[dt.x + ',' + dt.y];
+        // Intact, stood-on (strained but safe) and void each have
+        // a bundled sprite in the crumbling pack; swap with state.
+        const stoodOn = state.player.x === dt.x && state.player.y === dt.y;
         const texName = gc === 'V' ? 'void.png'
-          : (meta && meta.crumble_deadline
-            ? 'crumbling-cracked.png' : 'crumbling.png');
+          : (stoodOn ? 'crumbling-cracked.png' : 'crumbling.png');
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {

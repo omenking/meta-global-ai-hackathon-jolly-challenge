@@ -2,8 +2,8 @@
 
 The mechanic lives in the pure GameCore step (packs/crumbling.js);
 driven here under Node against the teaching room. Rules: safe while
-stood on, falls one move after leaving, void blocks, stepping back
-in time disarms, restart (fresh state) restores.
+stood on, falls on the step that leaves it, void blocks re-entry,
+restart (fresh state) restores.
 
 Run with: python -m unittest tools.test_mech_5_crumbling_tile -v
 """
@@ -89,8 +89,8 @@ const toBridge = ['right', 'right', 'right', 'down'];
 const a = run([...toBridge, 'right', 'right', 'right', 'right', 'up']);
 // B: stand on the middle bridge tile and push into the wall twice.
 const b = run([...toBridge, 'right', 'right', 'up', 'up', 'right']);
-// C: step off the first bridge tile and straight back on.
-const c = run([...toBridge, 'right', 'left', 'right', 'up', 'right']);
+// C: step onto the first bridge tile, straight back off, retry it.
+const c = run([...toBridge, 'right', 'left', 'right']);
 // D: cross, take the far orb, fail back over the void, long way home.
 const d = run([...toBridge, 'right', 'right', 'right', 'right',
   'up', 'right', 'right', 'left', 'left', 'down', 'left',
@@ -123,34 +123,35 @@ class CrumblingMechanicTests(unittest.TestCase):
         self.assertEqual(self.r["a"][4]["pos"], {"x": 4, "y": 2})
         self.assertEqual(self.r["a"][4]["row"], "#....CCC....#")
 
-    def test_falls_one_move_after_leaving_not_on_leaving(self):
+    def test_falls_on_the_step_that_leaves_it(self):
         a = self.r["a"]
-        # On C2 (6,2): the tile just left (5,2) is still standing.
+        # On C2 (6,2): the tile just left (5,2) has already fallen.
+        # (The one-move delay stranded backtracking players mid-bridge;
+        # see BacktrackRegressionTests.)
         self.assertEqual(a[6]["pos"], {"x": 6, "y": 2})
-        self.assertEqual(a[6]["row"], "#....CCC....#")
-        # On C3 (7,2), one move later: (5,2) has fallen to void.
-        self.assertEqual(a[7]["row"], "#....VCC....#")
-        # Off the bridge at (8,2): (6,2) has fallen, (7,2) has not yet.
-        self.assertEqual(a[8]["row"], "#....VVC....#")
-        # One more move: the whole bridge is void.
+        self.assertEqual(a[6]["row"], "#....VCC....#")
+        self.assertEqual(a[7]["row"], "#....VVC....#")
+        # Off the bridge at (8,2): the whole bridge is void.
+        self.assertEqual(a[8]["row"], "#....VVV....#")
         self.assertEqual(a[9]["row"], "#....VVV....#")
 
     def test_safe_while_standing_on_it(self):
         b = self.r["b"]
         # Two blocked pushes into the wall: still on C2, and C2 itself
-        # is intact (the tile behind, already left, has fallen).
+        # is intact (the tile behind fell on the step that left it).
         self.assertEqual(b[8]["pos"], {"x": 6, "y": 2})
         self.assertEqual(b[8]["row"], "#....VCC....#")
         self.assertEqual(b[8]["row"][6], "C")
         # And it still carries the player onward.
         self.assertEqual(b[9]["pos"], {"x": 7, "y": 2})
 
-    def test_stepping_back_on_disarms_the_fall(self):
+    def test_vacated_tile_cannot_be_reoccupied(self):
         c = self.r["c"]
-        # Off C1 and back on, then a blocked push: C1 never fell.
-        self.assertEqual(c[8]["pos"], {"x": 5, "y": 2})
-        self.assertEqual(c[8]["row"], "#....CCC....#")
-        self.assertEqual(c[9]["pos"], {"x": 6, "y": 2})
+        # Onto C1, straight back off: C1 fell on the leaving step, so
+        # pressing back toward it is blocked by the void.
+        self.assertEqual(c[6]["pos"], {"x": 4, "y": 2})
+        self.assertEqual(c[6]["row"], "#....VCC....#")
+        self.assertEqual(c[7]["pos"], {"x": 4, "y": 2})
 
     def test_void_blocks_return_and_long_way_home_works(self):
         d = self.r["d"]
@@ -217,6 +218,44 @@ class SanityReplayTests(unittest.TestCase):
                          {"pos": {"x": 1, "y": 1}, "orbs": 0})
         self.assertEqual(self.r["row"], "#....VVV....#")
         self.assertEqual(self.r["replaySteps"], 31)
+
+
+BACKTRACK_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+// The human playtest sequence that stranded the player mid-bridge:
+// cross all three tiles, step back, try to step back again, then
+// try to leave forward (session ...20261101200208-8nug8j, steps 1-10).
+const seq = ['down', 'right', 'right', 'right', 'right', 'right',
+  'right', 'left', 'left', 'right'];
+let s = core.initialState(level, 'mech-5-crumbling-tile-room');
+const snaps = [{ pos: { ...s.player }, row: s.grid[2] }];
+seq.forEach((input, i) => {
+  s = core.step(s, { t_ms: (i + 1) * 100, input });
+  snaps.push({ pos: { ...s.player }, row: s.grid[2] });
+});
+console.log(JSON.stringify({ snaps }));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class BacktrackRegressionTests(unittest.TestCase):
+    """A vacated tile must never strand the player on the bridge."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(BACKTRACK_SCRIPT)
+
+    def test_backing_out_is_blocked_by_the_fallen_tile(self):
+        snaps = self.r["snaps"]
+        # Crossed to the last bridge tile; the way back is already void.
+        self.assertEqual(snaps[7]["pos"], {"x": 7, "y": 2})
+        # Stepping back cannot re-occupy a fallen tile.
+        self.assertEqual(snaps[8]["pos"], {"x": 7, "y": 2})
+        self.assertEqual(snaps[9]["pos"], {"x": 7, "y": 2})
+
+    def test_forward_exit_stays_reachable(self):
+        self.assertEqual(self.r["snaps"][10]["pos"], {"x": 8, "y": 2})
 
 
 if __name__ == "__main__":
