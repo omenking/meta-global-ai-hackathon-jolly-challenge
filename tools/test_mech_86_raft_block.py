@@ -278,5 +278,58 @@ class YamlTestCaseTests(unittest.TestCase):
                                 "test_restart_restores_raft_and_budget"))
 
 
+SANITY_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+const inputs = ['right', 'right', 'down', 'down',
+  ...Array(8).fill('right'), 'up', 'down',
+  ...Array(5).fill('right'), 'up', 'up', 'right', 'right'];
+const log = inputs.map((input, i) => ({ t_ms: (i + 1) * 100, input }));
+let live = core.initialState(level, 'mech-86-raft-block-room');
+for (const stepIn of log) live = core.step(live, stepIn);
+const replayed = core.replay(level, 'mech-86-raft-block-room', log);
+const replayed2 = core.replay(level, 'mech-86-raft-block-room',
+  JSON.parse(JSON.stringify(log)));
+const sinkInputs = ['right', 'right', 'down', 'down',
+  ...Array(12).fill('right')];
+const sinkLog = sinkInputs.map((input, i) => ({ t_ms: (i + 1) * 100, input }));
+let sinkLive = core.initialState(level, 'mech-86-raft-block-room');
+for (const stepIn of sinkLog) sinkLive = core.step(sinkLive, stepIn);
+const sinkReplay = core.replay(level, 'mech-86-raft-block-room', sinkLog);
+console.log(JSON.stringify({
+  liveFinal: { pos: { ...live.player }, status: live.status,
+    orbs: core.readout(live).orbs_left },
+  liveDigest: core.stateDigest(live),
+  replayDigest: core.stateDigest(replayed[replayed.length - 1]),
+  replay2Digest: core.stateDigest(replayed2[replayed2.length - 1]),
+  replaySteps: replayed.length - 1,
+  sinkFinal: { pos: { ...sinkLive.player },
+    sinks: sinkLive.counters['raft:sinks'] },
+  sinkDigest: core.stateDigest(sinkLive),
+  sinkReplayDigest: core.stateDigest(sinkReplay[sinkReplay.length - 1]),
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class SanityReplayTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(SANITY_SCRIPT)
+
+    def test_full_playthrough_replays_to_same_end_state(self):
+        self.assertEqual(self.r["replayDigest"], self.r["liveDigest"])
+        self.assertEqual(self.r["replay2Digest"], self.r["liveDigest"])
+        self.assertEqual(self.r["liveFinal"],
+                         {"pos": {"x": 18, "y": 1}, "status": "won",
+                          "orbs": 0})
+        self.assertEqual(self.r["replaySteps"], 23)
+
+    def test_sink_run_replays_to_same_end_state(self):
+        self.assertEqual(self.r["sinkReplayDigest"], self.r["sinkDigest"])
+        self.assertEqual(self.r["sinkFinal"],
+                         {"pos": {"x": 3, "y": 1}, "sinks": 1})
+
+
 if __name__ == "__main__":
     unittest.main()
