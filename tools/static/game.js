@@ -477,6 +477,17 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'D' || dt.ch === 'S') {
+        const gc2 = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = dt.ch === 'S' ? gc2 === 'S'
+          : (gc2 === 'D' || gc2 === 'O');
+        const tmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const texName2 = dt.ch === 'S'
+          ? ((tmeta && tmeta.timer_running)
+            ? 'timer-switch-running.png' : 'timer-switch-ready.png')
+          : (gc2 === 'O' ? 'door-open.png' : 'door-closed.png');
+        const tex2 = textures[texName2];
+        if (tex2 && dt.sprite.texture !== tex2) dt.sprite.texture = tex2;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
