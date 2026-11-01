@@ -243,6 +243,23 @@
     playerSprite.scale.set(scale);
     board.addChild(playerSprite);
   }
+  // Non-player actors (sleepers etc.): one sprite each, drawn
+  // with the sprite of the actor def and repositioned from state
+  // on every step, like the player sprite below. A sleeper swaps
+  // to its awake sprite once any orb has woken it.
+  const actorSprites = [];
+  for (const actor of state.actors || []) {
+    if (actor.id === 'player') continue;
+    const def = window.GameCore.getTileDef
+      ? window.GameCore.getTileDef(actor.def) : null;
+    const tex = def && def.sprite ? textures[def.sprite] : null;
+    if (!tex) continue;
+    const spr = new PIXI.Sprite(tex);
+    spr.scale.set(scale);
+    spr.position.set(actor.x * TILE, actor.y * TILE);
+    board.addChild(spr);
+    actorSprites.push({ id: actor.id, def: actor.def, sprite: spr });
+  }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
   // Right-hand column: grey panel like the original side panel.
@@ -444,6 +461,17 @@
       const pose = state.status === 'lost' && textures['jolly-fall.png']
         ? textures['jolly-fall.png'] : textures['jolly.png'];
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
+    }
+    for (const as of actorSprites) {
+      const actor = (state.actors || []).find((a) => a.id === as.id);
+      if (!actor) continue;
+      as.sprite.position.set(actor.x * TILE, actor.y * TILE);
+      if (as.def === 'sleeper:sleeper') {
+        const texName = state.flags && state.flags['sleeper:awake']
+          ? 'sleeper-awake.png' : 'sleeper-asleep.png';
+        const tex = textures[texName];
+        if (tex && as.sprite.texture !== tex) as.sprite.texture = tex;
+      }
     }
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
