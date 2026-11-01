@@ -1,0 +1,28 @@
+{
+  "name": "mech-63-magnet-glove-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-63-magnet-glove Test Level: magnet glove pickup by the spawn, metal block sealing the orb nook at (6,2); wall at (4,2) blocks the pulling line along the block's row (the first position reached pulls nothing), the clear pulling line is the block's column from below, where the block is exactly 3 tiles away; pulling it down frees the nook orb, then the gate opens to the portal",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"},
+    "g": {"base": "floor_default.png", "label": "magnet glove", "text": "g", "def": "magnet:glove"},
+    "M": {"base": "floor_default.png", "label": "metal block", "text": "M", "def": "magnet:metal-block"}
+  },
+  "rows": [
+    "#############",
+    "#P.g.#*#....#",
+    "#...#.M.....#",
+    "#...........#",
+    "#...........#",
+    "#...........#",
+    "#...........#",
+    "#.........GX#",
+    "#############"
+  ]
+}
