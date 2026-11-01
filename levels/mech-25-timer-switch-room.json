@@ -1,0 +1,25 @@
+{
+  "name": "mech-25-timer-switch-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-25-timer-switch Test Level: timer switch (S) at corridor start, orb (*) on the way, timer door (D) at far end with exit warp (X) beyond; sprint succeeds in 5s (t_ms), orb detour spending the window fails and re-press retries",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "S": {"base": "floor_default.png", "label": "timer switch", "sprite": "timer-switch-ready.png", "def": "timer:switch", "link": "timer1"},
+    "D": {"base": "floor_default.png", "label": "timer door (closed)", "sprite": "door-closed.png", "def": "timer:door-closed", "link": "timer1"},
+    "X": {"base": "floor_default.png", "label": "exit warp", "sprite": "portal.png"}
+  },
+  "rows": [
+    "#################",
+    "#P.S...*......DX#",
+    "#...............#",
+    "#...............#",
+    "#...............#",
+    "#...............#",
+    "#################"
+  ]
+}
