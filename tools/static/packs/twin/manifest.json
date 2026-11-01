@@ -1,0 +1,13 @@
+{
+  "pack": "twin",
+  "main": "main.js",
+  "assets": [
+    {"file": "jolly-twin.png", "kind": "jolly_states", "bundled": true,
+     "shows": "second Jolly in a distinct tint, moving under the same input as the first"},
+    {"file": "twin-mode.png", "kind": "gui", "bundled": true,
+     "shows": "HUD marker showing twin mode, one input driving both Jollys"}
+  ],
+  "jolly_states": ["jolly-twin.png"],
+  "gui": ["twin-mode.png"],
+  "blocks": []
+}

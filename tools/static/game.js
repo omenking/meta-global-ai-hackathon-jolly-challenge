@@ -237,6 +237,12 @@
   // the player sprite + marker below are a view of state — they are
   // repositioned from state.player on every step.
   let state = window.GameCore.initialState(level, levelName);
+  let twinSprite = null;
+  if (textures['jolly-twin.png']) {
+    twinSprite = new PIXI.Sprite(textures['jolly-twin.png']);
+    twinSprite.scale.set(scale);
+    board.addChild(twinSprite);
+  }
   let playerSprite = null;
   if (textures['jolly.png']) {
     playerSprite = new PIXI.Sprite(textures['jolly.png']);
@@ -444,6 +450,11 @@
       const pose = state.status === 'lost' && textures['jolly-fall.png']
         ? textures['jolly-fall.png'] : textures['jolly.png'];
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
+    }
+    if (twinSprite) {
+      const twin = (state.actors || []).find((a) => a.def === 'twin:second');
+      twinSprite.visible = !!twin;
+      if (twin) twinSprite.position.set(twin.x * TILE, twin.y * TILE);
     }
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
