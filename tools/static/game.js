@@ -440,9 +440,14 @@
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
         state.player.y * TILE);
-      // Fallen pose while the run is lost, normal pose otherwise.
+      // Fallen pose while the run is lost, wading pose while
+      // standing on deep water, normal pose otherwise.
+      const onDeep = state.terrain && state.terrain[state.player.y] &&
+        state.terrain[state.player.y][state.player.x] === 'deep:water';
       const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png'] : textures['jolly.png'];
+        ? textures['jolly-fall.png']
+        : (onDeep && textures['jolly-wading.png']
+          ? textures['jolly-wading.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     marker.clear();

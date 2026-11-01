@@ -1,0 +1,16 @@
+{
+  "pack": "deep-water",
+  "main": "main.js",
+  "assets": [
+    {"file": "deep-water.png", "kind": "tiles", "bundled": true,
+     "shows": "dark deep water, distinct from shallow water"},
+    {"file": "jolly-wading.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly half-submerged on the first of the two moves a deep tile costs"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-wading.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly half-submerged on the first of the two moves a deep tile costs"}
+  ],
+  "gui": [],
+  "blocks": []
+}
