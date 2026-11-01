@@ -1,0 +1,27 @@
+{
+  "name": "mech-34-blocker-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-34-blocker Test Level: blocker (B) stands mid three-wide doorway (D B D in the divider row) tracking the player sideways; naive slip at the guarded column is mirrored and touched (lost), feint to one side then cross at the other during the guard window, collect the orb and take the portal",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"},
+    "D": {"label": "blocker doorway strip", "def": "blocker:doorway"},
+    "B": {"base": "floor_default.png", "label": "blocker", "sprite": "blocker.png", "def": "blocker:blocker", "terrain": "blocker:doorway"}
+  },
+  "rows": [
+    "#############",
+    "#P..........#",
+    "#...........#",
+    "#...........#",
+    "#####DBD#####",
+    "#...........#",
+    "#.....*.....#",
+    "#..........X#",
+    "#############"
+  ]
+}
