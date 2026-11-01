@@ -1,0 +1,13 @@
+{
+  "pack": "patroller",
+  "main": "main.js",
+  "assets": [
+    {"file": "patroller.png", "kind": "tiles", "bundled": true,
+     "shows": "patroller on its marked loop, lethal on touch"},
+    {"file": "patroller-loop.png", "kind": "tiles", "bundled": true,
+     "shows": "marked loop tiles a patroller follows, readable before crossing"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
