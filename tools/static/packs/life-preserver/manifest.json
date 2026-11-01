@@ -1,0 +1,21 @@
+{
+  "pack": "life-preserver",
+  "main": "main.js",
+  "assets": [
+    {"file": "life-preserver.png", "kind": "tiles", "bundled": true,
+     "shows": "life preserver pickup resting on the near bank before it is collected"},
+    {"file": "life-preserver-collected.png", "kind": "tiles", "bundled": true,
+     "shows": "empty near bank after the preserver has been picked up and the slot is filled"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-life-preserver.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly floating on water while wearing the held life preserver"},
+    {"file": "jolly-wading-deep.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly half-submerged on the first of the two moves a deep tile costs while wearing the preserver"}
+  ],
+  "gui": [
+    {"file": "life-preserver-slot.png", "kind": "gui", "bundled": true,
+     "shows": "life preserver icon filling one inventory slot for the rest of the level"}
+  ],
+  "blocks": []
+}

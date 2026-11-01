@@ -5,18 +5,51 @@
   "source": "mech-61-life-preserver Test Level: life preserver on near bank, shallow then deep water; wading into deep without it returns to checkpoint, with it each deep tile costs two moves",
   "tile": 64,
   "legend": {
-    ".": {"label": "floor", "sprite": "floor_default.png"},
-    "#": {"label": "wall", "sprite": "wall.png"},
-    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
-    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
-    "X": {"label": "warp", "sprite": "portal.png"},
-    "L": {"base": "floor_default.png", "label": "life preserver", "sprite": "life-preserver.png", "def": "preserver:preserver"},
-    "~": {"base": "floor_default.png", "label": "water", "sprite": "life-preserver.png", "def": "preserver:water"},
-    "D": {"base": "floor_default.png", "label": "deep water", "sprite": "life-preserver.png", "def": "preserver:deep"}
+    ".": {
+      "label": "floor",
+      "sprite": "floor_default.png"
+    },
+    "#": {
+      "label": "wall",
+      "sprite": "wall.png"
+    },
+    "P": {
+      "base": "floor_default.png",
+      "label": "player (Jolly)",
+      "sprite": "jolly.png"
+    },
+    "*": {
+      "base": "floor_default.png",
+      "label": "chip (orb)",
+      "sprite": "orb.png"
+    },
+    "X": {
+      "label": "warp",
+      "sprite": "portal.png"
+    },
+    "L": {
+      "base": "floor_default.png",
+      "label": "life preserver",
+      "sprite": "life-preserver.png",
+      "def": "preserver:preserver"
+    },
+    "~": {
+      "base": "floor_default.png",
+      "label": "water",
+      "sprite": "life-preserver.png",
+      "def": "preserver:water"
+    },
+    "D": {
+      "base": "floor_default.png",
+      "label": "deep water",
+      "sprite": "life-preserver.png",
+      "def": "preserver:deep"
+    }
   },
   "rows": [
     "#############",
     "#P.L~~DDD.*X#",
+    "#...~~DDD...#",
     "#############"
   ]
 }
