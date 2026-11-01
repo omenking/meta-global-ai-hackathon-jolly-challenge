@@ -1,0 +1,25 @@
+{
+  "name": "mech-16-hidden-orb-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-16-hidden-orb Test Level: dark room whose gate needs a hidden orb at (9,1) outside entrance light (radius 2 from spawn at 1,1); naive lit route reaches gate with counter still showing one, corrected search walks the light through the room to reveal and collect it",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "H": {"base": "floor_default.png", "label": "hidden orb", "sprite": "hidden-orb.png", "def": "hidden:hidden-orb"},
+    "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"}
+  },
+  "rows": [
+    "###########",
+    "#P.......H#",
+    "#.........#",
+    "#.........#",
+    "#####G#####",
+    "#.........#",
+    "#....X....#",
+    "###########"
+  ]
+}
