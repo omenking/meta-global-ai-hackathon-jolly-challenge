@@ -1,0 +1,11 @@
+{
+  "pack": "lava-tile",
+  "main": "main.js",
+  "assets": [
+    {"file": "lava.png", "kind": "tiles", "bundled": true,
+     "shows": "fixed lava, permanent and uncancellable"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
