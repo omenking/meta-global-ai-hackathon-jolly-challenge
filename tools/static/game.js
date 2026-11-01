@@ -691,10 +691,14 @@
     : 0;
   (function clockLoop() {
     if (!window.__replayActive) {
-      const elapsed = sessionElapsedMs() / 1000;
+      // A finished run is frozen: after death (or the win) the clock
+      // shows the finishing moment, never the still-running page clock.
+      const finished = state.status === 'lost' || state.status === 'won';
+      const elapsed = finished ? state.elapsed_s : sessionElapsedMs() / 1000;
       drawHud(elapsed, state.time_limit_s);
       const dbg = document.getElementById('dbg-timer');
-      if (dbg) dbg.textContent = elapsed.toFixed(1) + 's (live clock)';
+      if (dbg) dbg.textContent = elapsed.toFixed(1) +
+        (finished ? 's (frozen)' : 's (live clock)');
       if (sessionStartTs !== null && state.status !== 'lost' &&
           state.time_limit_s !== null && state.time_limit_s !== undefined &&
           elapsed >= state.time_limit_s) {
@@ -890,7 +894,14 @@
     showReplay: showReplay, forkFromReplay: forkFromReplay,
     togglePlay: () => { if (replayTimer) pauseReplay(); else playReplay(); },
     seekTime: (seconds) => { if (window.__replayRecords) { pauseReplay(); showReplay(window.GameReplay.stepIndexAtTime(window.__replayRecords, seconds)); } },
-    getClock: () => ({ started: sessionStartTs !== null, status: state.status, elapsed_s: sessionElapsedMs() / 1000, time_limit_s: state.time_limit_s, time_left_s: Math.max(0, state.time_limit_s - sessionElapsedMs() / 1000) }),
+    getClock: () => {
+      const fin = state.status === 'lost' || state.status === 'won';
+      const el = fin ? state.elapsed_s : sessionElapsedMs() / 1000;
+      return { started: sessionStartTs !== null, status: state.status,
+        elapsed_s: el, time_limit_s: state.time_limit_s,
+        time_left_s: state.time_limit_s === null
+          ? null : Math.max(0, state.time_limit_s - el) };
+    },
     restart: restartLevel,
     getReplay: () => ({ playing: replayTimer !== null, playhead_ms: playheadMs, id: replayId, index: replayIndex,
       duration_ms: window.__replayRecords ? (window.GameReplay.stepsOf(window.__replayRecords).slice(-1)[0] || { t_ms: 0 }).t_ms : 0,

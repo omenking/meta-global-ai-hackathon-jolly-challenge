@@ -100,6 +100,14 @@ console.log(JSON.stringify({
   liveDigest: core.stateDigest(live[live.length - 1]),
   replaySteps: replayed.map((s) => [s.t_ms, s.status]),
   isLost: core.isLost(atZero), readoutStatus: core.readout(atZero).status,
+  deathDigest: (() => { const c = JSON.parse(JSON.stringify(atZero));
+    delete c.last_effects; return core.stateDigest(c); })(),
+  afterDigest: (() => { const c = JSON.parse(JSON.stringify(after));
+    delete c.last_effects; return core.stateDigest(c); })(),
+  afterClock: { t_ms: after.t_ms, elapsed_s: after.elapsed_s,
+    left: after.time_left_s, steps: after.steps },
+  deathClock: { t_ms: atZero.t_ms, elapsed_s: atZero.elapsed_s,
+    left: atZero.time_left_s, steps: atZero.steps },
 }));
 """
 
@@ -123,6 +131,14 @@ class LoseAtZeroTests(unittest.TestCase):
                          self.result["startPos"])
         self.assertEqual(self.result["afterStatus"], "lost")
         self.assertEqual(self.result["afterPos"], self.result["atZeroPos"])
+
+    def test_death_freezes_the_clock_and_the_state(self):
+        # A later input after the loss must not advance anything:
+        # death stops the timer and freezes the game.
+        self.assertEqual(self.result["afterDigest"],
+                         self.result["deathDigest"])
+        self.assertEqual(self.result["afterClock"],
+                         self.result["deathClock"])
 
     def test_timeout_loss_replays_as_loss_at_same_moment(self):
         self.assertEqual(self.result["replayStatus"], "lost")

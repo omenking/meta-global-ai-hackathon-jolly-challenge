@@ -162,6 +162,10 @@
       }
       if (input.t_ms < state.t_ms) throw new Error('input t_ms must not go backwards');
       const next = cloneState(state);
+      // A finished run is frozen: death (or the win) stops the
+      // timer and nothing about the state advances afterwards, so
+      // a later input returns the state exactly as it finished.
+      if (state.status === 'won' || state.status === 'lost') return next;
       const elapsed = input.t_ms / 1000;
       next.t_ms = input.t_ms; next.elapsed_s = elapsed;
       next.time_left_s = next.time_limit_s === null ? null
@@ -170,8 +174,6 @@
       next.last_input = input.input === undefined ? null : input.input;
       const expired = next.time_limit_s !== null && next.time_limit_s !== undefined
         && elapsed >= next.time_limit_s;
-      const finished = state.status === 'won' || state.status === 'lost';
-      if (finished) return next;
       if (expired) {
         // Kernel owns the clock only; whether expiry loses is a pack
         // rule delivered through tick hooks (core pack: lose).
