@@ -8,6 +8,12 @@ tile per second at most, blocked downwind means no push that
 second, and restart (fresh state) restores the room.
 
 Run with: python -m unittest tools.test_mech_10_fan_tile -v
+
+Sanity-check (mech-10-fan-tile/sanity-check): the SanityReplayTests
+below replay the full 30-step solution log (ride the wind across,
+collect both orbs, fight the wind back) and assert the replay digest
+matches the live playthrough; the teaching-room screenshot is filed
+as feature evidence on the board.
 """
 import json
 import shutil
