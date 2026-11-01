@@ -467,11 +467,14 @@
       if (dt.ch === 'C') {
         const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
         dt.sprite.visible = gc === 'C' || gc === 'V';
-        // Intact, stood-on (strained but safe) and void each have
-        // a bundled sprite in the crumbling pack; swap with state.
-        const stoodOn = state.player.x === dt.x && state.player.y === dt.y;
+        // Intact, minor, major and void each have a bundled sprite
+        // in the crumbling pack; the visible stage follows the
+        // count of step-ons stored in the cell meta.
+        const cmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const cstage = (cmeta && cmeta.crumble_stage) || 0;
         const texName = gc === 'V' ? 'void.png'
-          : (stoodOn ? 'crumbling-cracked.png' : 'crumbling.png');
+          : (cstage >= 2 ? 'crumbling-major.png'
+            : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {

@@ -45,7 +45,8 @@ class PackFolderTests(unittest.TestCase):
             (crumbling / "manifest.json").read_text(encoding="utf-8"))
         bundled = [a for a in manifest["assets"] if a["bundled"]]
         self.assertEqual([a["file"] for a in bundled],
-                         ["crumbling.png", "crumbling-cracked.png", "void.png"])
+                         ["crumbling.png", "crumbling-minor.png",
+                          "crumbling-major.png", "void.png"])
         for entry in bundled:
             path = crumbling / "assets" / entry["file"]
             self.assertTrue(path.is_file(), entry["file"])
@@ -75,7 +76,8 @@ console.log(JSON.stringify({
         cls.by_name = {a["name"]: a["url"] for a in cls.result["paths"]}
 
     def test_bundled_assets_load_from_their_pack(self):
-        for name in ("crumbling.png", "crumbling-cracked.png", "void.png"):
+        for name in ("crumbling.png", "crumbling-minor.png",
+                     "crumbling-major.png", "void.png"):
             self.assertIn(name, self.result["names"])
             self.assertEqual(self.by_name[name],
                              f"packs/crumbling/assets/{name}")

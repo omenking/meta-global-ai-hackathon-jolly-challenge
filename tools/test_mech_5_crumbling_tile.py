@@ -2,8 +2,9 @@
 
 The mechanic lives in the pure GameCore step (packs/crumbling.js);
 driven here under Node against the teaching room. Rules: safe while
-stood on, falls on the step that leaves it, stepping into the void
-is falling and loses the attempt, restart (fresh state) restores.
+stood on; stepping on it advances minor then major, stepping onto
+a major tile makes it fall and loses the attempt; restart (fresh
+state) restores every stage.
 
 Run with: python -m unittest tools.test_mech_5_crumbling_tile -v
 """
@@ -76,11 +77,14 @@ const core = require(process.argv[1]);
 const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
 function run(seq) {
   let s = core.initialState(level, 'mech-5-crumbling-tile-room');
-  const snaps = [{ pos: { ...s.player }, row: s.grid[2] }];
+  const snap = () => ({ pos: { ...s.player }, row: s.grid[2],
+    status: s.status, orbs: core.readout(s).orbs_left,
+    stages: [5, 6, 7].map((x) =>
+      (s.meta[x + ',2'] || {}).crumble_stage || 0) });
+  const snaps = [snap()];
   seq.forEach((input, i) => {
     s = core.step(s, { t_ms: (i + 1) * 100, input });
-    snaps.push({ pos: { ...s.player }, row: s.grid[2], status: s.status,
-      orbs: core.readout(s).orbs_left });
+    snaps.push(snap());
   });
   return { snaps, final: s };
 }
@@ -89,8 +93,8 @@ const toBridge = ['right', 'right', 'right', 'down'];
 const a = run([...toBridge, 'right', 'right', 'right', 'right', 'up']);
 // B: stand on the middle bridge tile and push into the wall twice.
 const b = run([...toBridge, 'right', 'right', 'up', 'up', 'right']);
-// C: step onto the first bridge tile, straight back off, retry it.
-const c = run([...toBridge, 'right', 'left', 'right']);
+// C: on and off the first bridge tile until its third step-on.
+const c = run([...toBridge, 'right', 'left', 'right', 'left', 'right']);
 // D: cross, take the far orb, fail back over the void, long way home.
 const d = run([...toBridge, 'right', 'right', 'right', 'right',
   'up', 'right', 'right', 'left', 'left', 'down',
@@ -123,41 +127,38 @@ class CrumblingMechanicTests(unittest.TestCase):
         self.assertEqual(self.r["a"][4]["pos"], {"x": 4, "y": 2})
         self.assertEqual(self.r["a"][4]["row"], "#....CCC....#")
 
-    def test_falls_on_the_step_that_leaves_it(self):
+    def test_stage_advances_on_step_on_never_on_leaving(self):
         a = self.r["a"]
-        # On C2 (6,2): the tile just left (5,2) has already fallen.
-        # (The one-move delay stranded backtracking players mid-bridge;
-        # see BacktrackRegressionTests.)
-        self.assertEqual(a[6]["pos"], {"x": 6, "y": 2})
-        self.assertEqual(a[6]["row"], "#....VCC....#")
-        self.assertEqual(a[7]["row"], "#....VVC....#")
-        # Off the bridge at (8,2): the whole bridge is void.
-        self.assertEqual(a[8]["row"], "#....VVV....#")
-        self.assertEqual(a[9]["row"], "#....VVV....#")
+        # Each first step-on makes its tile minor; leaving changes
+        # nothing, so the crossed bridge is all minor, none void.
+        self.assertEqual(a[6]["stages"], [1, 1, 0])
+        self.assertEqual(a[7]["stages"], [1, 1, 1])
+        self.assertEqual(a[8]["pos"], {"x": 8, "y": 2})
+        self.assertEqual(a[8]["row"], "#....CCC....#")
+        self.assertEqual(a[9]["stages"], [1, 1, 1])
 
     def test_safe_while_standing_on_it(self):
         b = self.r["b"]
-        # Two blocked pushes into the wall: still on C2, and C2 itself
-        # is intact (the tile behind fell on the step that left it).
+        # Two blocked pushes: no new step-on, so no stage advance,
+        # and the tile still carries the player onward.
         self.assertEqual(b[8]["pos"], {"x": 6, "y": 2})
-        self.assertEqual(b[8]["row"], "#....VCC....#")
-        self.assertEqual(b[8]["row"][6], "C")
-        # And it still carries the player onward.
+        self.assertEqual(b[8]["stages"], [1, 1, 0])
         self.assertEqual(b[9]["pos"], {"x": 7, "y": 2})
 
-    def test_stepping_into_a_vacated_tile_loses(self):
+    def test_third_step_on_falls_and_loses(self):
         c = self.r["c"]
-        # Onto C1, straight back off: C1 fell on the leaving step, so
-        # pressing back toward it steps into the void and loses.
-        self.assertEqual(c[6]["pos"], {"x": 4, "y": 2})
-        self.assertEqual(c[6]["row"], "#....VCC....#")
+        # Second step-on: major (stage 2), still safe to stand on.
         self.assertEqual(c[7]["pos"], {"x": 5, "y": 2})
-        self.assertEqual(c[7]["status"], "lost")
+        self.assertEqual(c[7]["stages"], [2, 0, 0])
+        self.assertEqual(c[7]["status"], "playing")
+        # Third step-on steps onto a major tile: fall and loss.
+        self.assertEqual(c[9]["pos"], {"x": 5, "y": 2})
+        self.assertEqual(c[9]["status"], "lost")
 
     def test_long_way_home_avoids_the_void_and_works(self):
         d = self.r["d"]
         self.assertEqual(d[14]["pos"], {"x": 8, "y": 2})
-        self.assertEqual(d[14]["row"], "#....VVV....#")
+        self.assertEqual(d[14]["row"], "#....CCC....#")
         # Long way home collects the return orb and reaches the start.
         self.assertEqual(self.r["dFinal"],
                          {"pos": {"x": 1, "y": 1}, "orbs": 0})
@@ -215,7 +216,7 @@ class SanityReplayTests(unittest.TestCase):
         self.assertEqual(self.r["replay2Digest"], self.r["liveDigest"])
         self.assertEqual(self.r["liveFinal"],
                          {"pos": {"x": 1, "y": 1}, "orbs": 0})
-        self.assertEqual(self.r["row"], "#....VVV....#")
+        self.assertEqual(self.r["row"], "#....CCC....#")
         self.assertEqual(self.r["replaySteps"], 30)
 
 
@@ -240,26 +241,28 @@ console.log(JSON.stringify({ snaps }));
 
 @unittest.skipUnless(shutil.which("node"), "node not available")
 class BacktrackRegressionTests(unittest.TestCase):
-    """Void is a hazard: stepping into a fallen tile loses the run."""
+    """Stages advance on step-on: minor, major, then fall."""
 
     @classmethod
     def setUpClass(cls):
         cls.r = run_core(BACKTRACK_SCRIPT)
 
-    def test_stepping_back_into_a_fallen_tile_is_falling(self):
+    def test_backtrack_once_advances_to_major_but_stays_safe(self):
         snaps = self.r["snaps"]
-        # Crossed to the last bridge tile, still playing.
         self.assertEqual(snaps[7]["pos"], {"x": 7, "y": 2})
         self.assertEqual(snaps[7]["status"], "playing")
-        # Pressing back steps into the void left behind and loses.
+        # Back onto the middle tile: its second step-on (major).
         self.assertEqual(snaps[8]["pos"], {"x": 6, "y": 2})
-        self.assertEqual(snaps[8]["status"], "lost")
+        self.assertEqual(snaps[8]["status"], "playing")
+        self.assertEqual(snaps[9]["pos"], {"x": 5, "y": 2})
+        self.assertEqual(snaps[9]["status"], "playing")
 
-    def test_lost_run_does_not_move_again(self):
+    def test_stepping_onto_a_major_tile_falls_and_loses(self):
         snaps = self.r["snaps"]
-        self.assertEqual(snaps[9]["pos"], {"x": 6, "y": 2})
-        self.assertEqual(snaps[9]["status"], "lost")
+        # Forward again steps onto the now-major middle tile: it
+        # falls under the player and the attempt is lost.
         self.assertEqual(snaps[10]["pos"], {"x": 6, "y": 2})
+        self.assertEqual(snaps[10]["status"], "lost")
 
 
 if __name__ == "__main__":
