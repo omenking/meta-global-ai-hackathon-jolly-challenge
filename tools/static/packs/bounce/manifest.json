@@ -1,0 +1,15 @@
+{
+  "pack": "bounce",
+  "main": "main.js",
+  "assets": [
+    {"file": "bounce-pad.png", "kind": "tiles", "bundled": true,
+     "shows": "bounce pad at rest, ready to be stepped on"},
+    {"file": "bounce-pad-compressed.png", "kind": "tiles", "bundled": true,
+     "shows": "bounce pad compressed for its one move with the player standing on it, exposed before the launch"},
+    {"file": "jolly-launching.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly airborne in the two-tile launch, clearing the tile in between"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
