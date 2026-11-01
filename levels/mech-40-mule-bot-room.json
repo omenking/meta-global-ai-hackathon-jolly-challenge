@@ -1,0 +1,30 @@
+{
+  "name": "mech-40-mule-bot-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-40-mule-bot Test Level: five-plus red keys and a twin lock in a four-slot game (4 player + 4 mule slots), mule bot M starting one tile behind the player P, one-tile pinch gap in the divider; filling your own slots first and backing into the bot swaps tiles instead of blocking, the bot carries the keys past four, twin locks consume two, orb and portal beyond; water hazard pool the bot must never step onto",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "M": {"base": "floor_default.png", "label": "mule bot", "sprite": "mule-bot.png", "actor": "mule:bot", "terrain": "core:floor"},
+    "r": {"base": "floor_default.png", "label": "key red", "sprite": "key_red.png", "key_color": "red"},
+    "R": {"label": "lock red (twin lock)", "sprite": "wall_keyhole_red.png", "lock_color": "red"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"},
+    "~": {"base": "floor_default.png", "label": "water hazard", "def": "water:water"}
+  },
+  "rows": [
+    "###################",
+    "#MP.r.r.r.r.r.r.r.#",
+    "#..r...........r..#",
+    "#.................#",
+    "#########.#########",
+    "#........RR.......#",
+    "#.........*...X...#",
+    "#....~~~..........#",
+    "#.................#",
+    "###################"
+  ]
+}
