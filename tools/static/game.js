@@ -477,6 +477,11 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'M') {
+        const mmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const texName = mmeta && mmeta.mud_print ? 'mud-prints.png' : 'mud.png';
+        const mtex = textures[texName];
+        if (mtex && dt.sprite.texture !== mtex) dt.sprite.texture = mtex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open

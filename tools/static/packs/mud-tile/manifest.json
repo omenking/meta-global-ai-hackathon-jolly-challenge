@@ -1,0 +1,13 @@
+{
+  "pack": "mud-tile",
+  "main": "main.js",
+  "assets": [
+    {"file": "mud.png", "kind": "tiles", "bundled": true,
+     "shows": "plain mud with no scent prints yet"},
+    {"file": "mud-prints.png", "kind": "tiles", "bundled": true,
+     "shows": "mud carrying the ordered scent prints an enemy can follow"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
