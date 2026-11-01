@@ -1,0 +1,25 @@
+{
+  "name": "mech-78-ghost-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-78-ghost Test Level: upper corridor ends in a ghost pit (H); a failed attempt there is replayed one step behind as a ghost on the next attempt, so repeating the route and backtracking meets your own ghost coming the other way, while the lower bypass corridor reaches the warp untouched",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"},
+    "H": {"base": "floor_default.png", "label": "ghost pit (ends the attempt)", "text": "H", "def": "ghost:pit"}
+  },
+  "rows": [
+    "###############",
+    "#P..........*H#",
+    "#.###########.#",
+    "#.............#",
+    "#.*.........*.#",
+    "#.............#",
+    "#............X#",
+    "###############"
+  ]
+}
