@@ -477,6 +477,27 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'E' || dt.ch === 'W') {
+        // Weight switch: the door sprite follows whether any plate
+        // is weighted (block left on it, or the player standing on
+        // it); the plate sprite shows the block-weighted state.
+        let weighted = false;
+        for (let wy = 0; wy < state.terrain.length && !weighted; wy++) {
+          for (let wx = 0; wx < state.terrain[wy].length; wx++) {
+            if (state.terrain[wy][wx] !== 'weight:plate') continue;
+            if (state.objects[wy][wx] === 'weight:block' ||
+                (state.player.x === wx && state.player.y === wy)) {
+              weighted = true; break;
+            }
+          }
+        }
+        dt.sprite.visible = true;
+        const wName = dt.ch === 'E'
+          ? (weighted ? 'door-open.png' : 'door-closed.png')
+          : (state.objects[dt.y][dt.x] === 'weight:block'
+            ? 'weight-switch-weighted.png' : 'weight-switch-empty.png');
+        const wTex = textures[wName];
+        if (wTex && dt.sprite.texture !== wTex) dt.sprite.texture = wTex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
