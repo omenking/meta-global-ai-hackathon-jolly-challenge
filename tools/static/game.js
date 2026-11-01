@@ -440,9 +440,16 @@
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
         state.player.y * TILE);
-      // Fallen pose while the run is lost, normal pose otherwise.
+      // Fallen pose while the run is lost, straining pose while the
+      // player is mid-strain on a sticky tile, normal pose otherwise.
+      const pActor = state.actors &&
+        state.actors.find((a) => a.id === 'player');
+      const straining = !!(pActor && pActor.flags &&
+        pActor.flags.sticky_strained);
       const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png'] : textures['jolly.png'];
+        ? textures['jolly-fall.png']
+        : (straining && textures['jolly-straining.png']
+          ? textures['jolly-straining.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     marker.clear();

@@ -119,6 +119,20 @@
         { x: x, y: y, def: obj, meta: cellMeta(state, x, y) }, actor)) return false;
       return true;
     }
+    // Generic exit veto: the tile an actor stands on (terrain or
+    // object) may define blocksExit(state, cell, actor, dir) to
+    // refuse this move attempt (e.g. a tile that costs extra inputs
+    // to leave). The kernel knows no specific tile; packs own the
+    // rule and any state it records on the actor.
+    function canLeave(state, actor, dirName) {
+      const terr = tileAt(state, 'terrain', actor.x, actor.y);
+      if (terr && terr.blocksExit && terr.blocksExit(state,
+        { x: actor.x, y: actor.y, def: terr, meta: cellMeta(state, actor.x, actor.y) }, actor, dirName)) return false;
+      const obj = tileAt(state, 'objects', actor.x, actor.y);
+      if (obj && obj.blocksExit && obj.blocksExit(state,
+        { x: actor.x, y: actor.y, def: obj, meta: cellMeta(state, actor.x, actor.y) }, actor, dirName)) return false;
+      return true;
+    }
     function applyEffects(state, effects) {
       let win = false, lose = false;
       for (const fx of effects || []) {
@@ -151,6 +165,7 @@
       if (!d) return null;
       const nx = actor.x + d.x, ny = actor.y + d.y;
       if (!canEnter(state, actor, nx, ny)) return null;
+      if (!canLeave(state, actor, dirName)) return null;
       actor.x = nx; actor.y = ny; actor.dir = dirName;
       return { x: nx, y: ny };
     }
@@ -253,7 +268,7 @@
       return states;
     }
     return { initialState: initialState, step: step, replay: replay,
-      tileAt: tileAt, hasItem: hasItem, canEnter: canEnter,
+      tileAt: tileAt, hasItem: hasItem, canEnter: canEnter, canLeave: canLeave,
       DIRECTIONS: DIRECTIONS, DEFAULT_TIME_LIMIT_S: DEFAULT_TIME_LIMIT_S,
       INVENTORY_CAP: INVENTORY_CAP };
   }

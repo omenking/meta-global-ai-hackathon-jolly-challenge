@@ -1,0 +1,16 @@
+{
+  "pack": "sticky",
+  "main": "main.js",
+  "assets": [
+    {"file": "sticky.png", "kind": "tiles", "bundled": true,
+     "shows": "sticky tile, reusable ground that costs two inputs to cross"},
+    {"file": "jolly-straining.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly straining on a sticky tile on the first input, not yet able to step off"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-straining.png", "bundled": true,
+     "shows": "Jolly straining on a sticky tile on the first input, not yet able to step off"}
+  ],
+  "gui": [],
+  "blocks": []
+}
