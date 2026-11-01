@@ -215,6 +215,48 @@ class StickyMechanicTests(unittest.TestCase):
         self.assertIn("packs/sticky/main.js", html)
 
 
+SANITY_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+const inputs = ['right', 'right', 'right', 'down',
+  'right', 'right', 'right', 'right', 'right', 'right', 'right',
+  'up', 'right', 'right', 'left', 'left',
+  'down', 'down', 'down', 'down', 'down',
+  'left', 'left', 'left', 'left', 'left', 'left',
+  'left', 'up', 'up', 'up', 'up', 'up'];
+const log = inputs.map((input, i) => ({ t_ms: (i + 1) * 100, input }));
+let live = core.initialState(level, 'mech-8-sticky-tile-room');
+for (const stepIn of log) live = core.step(live, stepIn);
+const replayed = core.replay(level, 'mech-8-sticky-tile-room', log);
+const replayed2 = core.replay(level, 'mech-8-sticky-tile-room',
+  JSON.parse(JSON.stringify(log)));
+console.log(JSON.stringify({
+  liveFinal: { pos: { ...live.player },
+    orbs: core.readout(live).orbs_left },
+  liveDigest: core.stateDigest(live),
+  replayDigest: core.stateDigest(replayed[replayed.length - 1]),
+  replay2Digest: core.stateDigest(replayed2[replayed2.length - 1]),
+  replaySteps: replayed.length - 1,
+  row: replayed[replayed.length - 1].grid[2],
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class SanityReplayTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(SANITY_SCRIPT)
+
+    def test_full_playthrough_replays_to_same_end_state(self):
+        self.assertEqual(self.r["replayDigest"], self.r["liveDigest"])
+        self.assertEqual(self.r["replay2Digest"], self.r["liveDigest"])
+        self.assertEqual(self.r["liveFinal"],
+                         {"pos": {"x": 1, "y": 1}, "orbs": 0})
+        self.assertEqual(self.r["row"], "#....SSS....#")
+        self.assertEqual(self.r["replaySteps"], 33)
+
+
 class BlockedByPatrollerTests(unittest.TestCase):
     """YAML cases whose check needs the patroller (mechanic 31)."""
 
