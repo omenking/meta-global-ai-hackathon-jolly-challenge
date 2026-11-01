@@ -1,0 +1,17 @@
+{
+  "pack": "bomb-block",
+  "main": "main.js",
+  "assets": [
+    {"file": "cracked-wall.png", "kind": "tiles", "bundled": true,
+     "shows": "wall tile about to be cracked by the bomb block, shown before the explosion"},
+    {"file": "floor-after-blast.png", "kind": "tiles", "bundled": true,
+     "shows": "ordinary floor left where the cracked wall tile stood after the explosion"},
+    {"file": "bomb-block.png", "kind": "blocks", "bundled": true,
+     "shows": "intact bomb block before it is pushed into a wall"},
+    {"file": "bomb-block-exploding.png", "kind": "blocks", "bundled": true,
+     "shows": "bomb block exploding against the wall it cracks, consumed by the blast"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
