@@ -1,0 +1,20 @@
+{
+  "pack": "current",
+  "main": "main.js",
+  "assets": [
+    {"file": "current-north.png", "kind": "tiles", "bundled": true,
+     "shows": "water current tile with its downstream direction marked north"},
+    {"file": "current-east.png", "kind": "tiles", "bundled": true,
+     "shows": "water current tile with its downstream direction marked east"},
+    {"file": "current-south.png", "kind": "tiles", "bundled": true,
+     "shows": "water current tile with its downstream direction marked south"},
+    {"file": "current-west.png", "kind": "tiles", "bundled": true,
+     "shows": "water current tile with its downstream direction marked west"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-swimming.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly swimming with a life preserver, carried one tile downstream at the start of each move"}
+  ],
+  "gui": [],
+  "blocks": []
+}

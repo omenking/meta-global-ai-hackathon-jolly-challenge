@@ -186,6 +186,19 @@
 
       const effects = [];
       const player = next.actors.find((a) => a.id === 'player') || next.actors[0];
+      // Phase 1.5 pre-move terrain: a terrain def may force one
+      // move before the voluntary move (e.g. a current carrying a
+      // swimmer downstream). One tile only, through tryMove, so
+      // walls block it; only on a directional (move) input.
+      if (player && DIRECTIONS[input.input]) {
+        const terr = tileAt(next, 'terrain', player.x, player.y);
+        if (terr && terr.onBeforeMove) {
+          const dir = terr.onBeforeMove(next,
+            { x: player.x, y: player.y, def: terr, meta: cellMeta(next, player.x, player.y) },
+            player, effects);
+          if (dir) tryMove(next, player, dir);
+        }
+      }
       // Phase 2 intent + phase 3 move (player from input; other actors
       // via registered deterministic controllers).
       const intents = [];
