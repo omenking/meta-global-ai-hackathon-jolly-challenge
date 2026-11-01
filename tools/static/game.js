@@ -108,6 +108,14 @@
   spriteNames.add('jolly-fall.png');
   // Pack-carried assets: loaded packs declare the sprite/icon names
   // they need (keys, locks, items); no hardcoded colour list here.
+  // Bundled assets load from their pack folder, shared assets from
+  // level-sprites/; the registry decides which URL each name gets.
+  const urlByName = {};
+  if (window.GameCore.assetPathsForLevel) {
+    for (const a of window.GameCore.assetPathsForLevel(level)) {
+      urlByName[a.name] = a.url;
+    }
+  }
   if (window.GameCore.assetsForLevel) {
     for (const name of window.GameCore.assetsForLevel(level)) spriteNames.add(name);
   }
@@ -115,7 +123,7 @@
   const missing = new Set();
   await Promise.all([...spriteNames].map(async (name) => {
     try {
-      textures[name] = await PIXI.Assets.load('level-sprites/' + name);
+      textures[name] = await PIXI.Assets.load(urlByName[name] || 'level-sprites/' + name);
     } catch (err) {
       missing.add(name);
     }
@@ -452,10 +460,28 @@
     if (statusEl) statusEl.textContent = state.status || 'playing';
     for (const dt of dynamicTiles) {
       // The gate tile stays 'G' when open: its sprite shows only
-      // while shut, revealing the floor base underneath.
-      dt.sprite.visible = dt.ch === 'G'
-        ? !state.gate_open
-        : !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
+      // while shut, revealing the floor base underneath. A crumbling
+      // tile ('C') becomes void ('V'): the same glyph follows the
+      // grid char so the hole stays visible instead of turning back
+      // into plain floor.
+      if (dt.ch === 'C') {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'C' || gc === 'V';
+        // Intact, minor, major and void each have a bundled sprite
+        // in the crumbling pack; the visible stage follows the
+        // count of step-ons stored in the cell meta.
+        const cmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const cstage = (cmeta && cmeta.crumble_stage) || 0;
+        const texName = gc === 'V' ? 'void.png'
+          : (cstage >= 2 ? 'crumbling-major.png'
+            : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else {
+        dt.sprite.visible = dt.ch === 'G'
+          ? !state.gate_open
+          : !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
+      }
     }
     retryGroup.visible = state.status === 'lost';
     // The HUD win screen is only for the last level; mid-chain a
@@ -665,10 +691,14 @@
     : 0;
   (function clockLoop() {
     if (!window.__replayActive) {
-      const elapsed = sessionElapsedMs() / 1000;
+      // A finished run is frozen: after death (or the win) the clock
+      // shows the finishing moment, never the still-running page clock.
+      const finished = state.status === 'lost' || state.status === 'won';
+      const elapsed = finished ? state.elapsed_s : sessionElapsedMs() / 1000;
       drawHud(elapsed, state.time_limit_s);
       const dbg = document.getElementById('dbg-timer');
-      if (dbg) dbg.textContent = elapsed.toFixed(1) + 's (live clock)';
+      if (dbg) dbg.textContent = elapsed.toFixed(1) +
+        (finished ? 's (frozen)' : 's (live clock)');
       if (sessionStartTs !== null && state.status !== 'lost' &&
           state.time_limit_s !== null && state.time_limit_s !== undefined &&
           elapsed >= state.time_limit_s) {
@@ -864,7 +894,14 @@
     showReplay: showReplay, forkFromReplay: forkFromReplay,
     togglePlay: () => { if (replayTimer) pauseReplay(); else playReplay(); },
     seekTime: (seconds) => { if (window.__replayRecords) { pauseReplay(); showReplay(window.GameReplay.stepIndexAtTime(window.__replayRecords, seconds)); } },
-    getClock: () => ({ started: sessionStartTs !== null, status: state.status, elapsed_s: sessionElapsedMs() / 1000, time_limit_s: state.time_limit_s, time_left_s: Math.max(0, state.time_limit_s - sessionElapsedMs() / 1000) }),
+    getClock: () => {
+      const fin = state.status === 'lost' || state.status === 'won';
+      const el = fin ? state.elapsed_s : sessionElapsedMs() / 1000;
+      return { started: sessionStartTs !== null, status: state.status,
+        elapsed_s: el, time_limit_s: state.time_limit_s,
+        time_left_s: state.time_limit_s === null
+          ? null : Math.max(0, state.time_limit_s - el) };
+    },
     restart: restartLevel,
     getReplay: () => ({ playing: replayTimer !== null, playhead_ms: playheadMs, id: replayId, index: replayIndex,
       duration_ms: window.__replayRecords ? (window.GameReplay.stepsOf(window.__replayRecords).slice(-1)[0] || { t_ms: 0 }).t_ms : 0,

@@ -10,7 +10,8 @@
       if (!ch || !e) return null;
       if (e.key_color) {
         const color = e.key_color, itemId = 'keys:key-' + color;
-        api.defineAsset('key_' + color + '.png');
+        api.defineAsset('key_' + color + '.png',
+          { pack: 'keys-locks', bundled: false });
         api.defineItem(itemId, { icon: 'key_' + color + '.png', readout: color });
         api.defineTile(itemId, { layer: 'object', sprite: 'key_' + color + '.png',
           // Full 8-slot inventory: the key stays and blocks, as before.
@@ -24,7 +25,8 @@
       if (e.lock_color) {
         const color = e.lock_color, tileId = 'keys:lock-' + color,
           itemId = 'keys:key-' + color;
-        api.defineAsset('wall_keyhole_' + color + '.png');
+        api.defineAsset('wall_keyhole_' + color + '.png',
+          { pack: 'keys-locks', bundled: false });
         api.defineTile(tileId, { layer: 'object',
           sprite: 'wall_keyhole_' + color + '.png',
           blocks: function (state) {

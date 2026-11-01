@@ -1,0 +1,19 @@
+{
+  "pack": "keys-locks",
+  "main": "main.js",
+  "assets": [
+    {"file": "key_red.png", "kind": "items", "bundled": false, "shows": "red key"},
+    {"file": "key_gold.png", "kind": "items", "bundled": false, "shows": "gold key"},
+    {"file": "key_green.png", "kind": "items", "bundled": false, "shows": "green key"},
+    {"file": "key_blue.png", "kind": "items", "bundled": false, "shows": "blue key"},
+    {"file": "key_silver.png", "kind": "items", "bundled": false, "shows": "silver key"},
+    {"file": "wall_keyhole_red.png", "kind": "tiles", "bundled": false, "shows": "red lock"},
+    {"file": "wall_keyhole_gold.png", "kind": "tiles", "bundled": false, "shows": "gold lock"},
+    {"file": "wall_keyhole_green.png", "kind": "tiles", "bundled": false, "shows": "green lock"},
+    {"file": "wall_keyhole_blue.png", "kind": "tiles", "bundled": false, "shows": "blue lock"},
+    {"file": "wall_keyhole_silver.png", "kind": "tiles", "bundled": false, "shows": "silver lock"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

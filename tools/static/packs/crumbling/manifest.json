@@ -1,0 +1,17 @@
+{
+  "pack": "crumbling",
+  "main": "main.js",
+  "assets": [
+    {"file": "crumbling.png", "kind": "tiles", "bundled": true,
+     "shows": "intact crumbling tile, safe to stand on"},
+    {"file": "crumbling-minor.png", "kind": "tiles", "bundled": true,
+     "shows": "tile after the player first leaves it, one crossing spent"},
+    {"file": "crumbling-major.png", "kind": "tiles", "bundled": true,
+     "shows": "tile after the player leaves it a second time; leaving it once more drops it to void"},
+    {"file": "void.png", "kind": "tiles", "bundled": true,
+     "shows": "hole left after the tile falls; stepping into it is falling and loses the attempt"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

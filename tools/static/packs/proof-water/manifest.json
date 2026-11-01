@@ -1,0 +1,10 @@
+{
+  "pack": "proof-water",
+  "main": "main.js",
+  "assets": [
+    {"file": "key.png", "kind": "items", "bundled": false, "shows": "flipper item icon"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
