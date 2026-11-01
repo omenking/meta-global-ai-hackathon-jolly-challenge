@@ -1,0 +1,13 @@
+{
+  "pack": "teleport",
+  "main": "main.js",
+  "assets": [
+    {"file": "teleport-pad-a.png", "kind": "tiles", "bundled": true,
+     "shows": "teleport pad with mark A, paired only with the other mark A pad"},
+    {"file": "teleport-pad-b.png", "kind": "tiles", "bundled": true,
+     "shows": "teleport pad with mark B, distinct from mark A so pairs can be told apart"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
