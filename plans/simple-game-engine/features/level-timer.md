@@ -3,6 +3,7 @@ title: Level timer and restart
 summary: A real counting countdown that ends the run at zero, with restart.
 status: completed
 priority: high
+epic: base-game
 requires:
   - ./game-shell.md
 unblocks:

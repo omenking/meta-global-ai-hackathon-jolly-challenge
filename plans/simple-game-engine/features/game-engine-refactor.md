@@ -3,6 +3,7 @@ title: Game engine refactor: kernel + packs
 summary: Kernel + pack registry refactor: layered grid, generic state, camera to 64x64, keys/locks and core mechanics as packs.
 status: completed
 priority: high
+epic: base-game
 requires:
   []
 unblocks:

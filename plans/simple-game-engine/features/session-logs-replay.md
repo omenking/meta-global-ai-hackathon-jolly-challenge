@@ -3,6 +3,7 @@ title: Session logs, replay and forks
 summary: Find, annotate, replay and fork recorded play sessions from the game UI.
 status: completed
 priority: high
+epic: base-game
 requires:
   - ./player-movement.md
 unblocks:

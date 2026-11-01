@@ -284,6 +284,7 @@ def _normalize_feature(entry: object) -> dict:
         "summary": entry.get("summary") or "",
         "status": status,
         "priority": priority,
+        "epic": (entry.get("epic") or None),
         "requires": _norm_str_list(entry.get("requires"), "feature requires"),
         "spec": spec,
         "branch": entry.get("branch"),
@@ -298,6 +299,94 @@ def _normalize_feature(entry: object) -> dict:
         "comments": [_normalize_comment(c) for c in (entry.get("comments") or [])],
         "tasks": tasks,
     }
+
+
+def _normalize_epic(entry: object) -> dict:
+    if not isinstance(entry, dict):
+        raise StoreError("each epic must be a mapping")
+    eid = _check_slug("epic", entry.get("id"))
+    title = entry.get("title") or ""
+    if not isinstance(title, str) or not title.strip():
+        raise StoreError(f"epic {eid!r} title must not be empty")
+    return {
+        "id": eid,
+        "title": title.strip(),
+        "summary": entry.get("summary") or "",
+        "archived": bool(entry.get("archived", False)),
+        "created": entry.get("created") or "",
+        "updated": entry.get("updated") or "",
+    }
+
+
+def get_epic(data: dict, eid: str) -> dict:
+    for e in data.get("epics", []):
+        if e["id"] == eid:
+            return e
+    raise StoreError(f"epic {eid!r} does not exist")
+
+
+def find_epic(data: dict, eid: str) -> dict | None:
+    for e in data.get("epics", []):
+        if e["id"] == eid:
+            return e
+    return None
+
+
+def create_epic(data: dict, eid: str | None, title: str,
+                summary: str = "") -> dict:
+    if not isinstance(title, str) or not title.strip():
+        raise StoreError("epic title must not be empty")
+    eid = _check_slug("epic", eid or _slugify(title))
+    if find_epic(data, eid) is not None:
+        raise StoreError(f"epic {eid!r} already exists")
+    now = _now()
+    epic = _normalize_epic({"id": eid, "title": title.strip(),
+                            "summary": summary or "", "archived": False,
+                            "created": now, "updated": now})
+    data.setdefault("epics", []).append(epic)
+    return epic
+
+
+def update_epic(data: dict, eid: str, fields: dict) -> dict:
+    epic = get_epic(data, eid)
+    for key, value in (fields or {}).items():
+        if key == "title":
+            if not isinstance(value, str) or not value.strip():
+                raise StoreError("epic title must not be empty")
+            epic["title"] = value.strip()
+        elif key == "summary":
+            epic["summary"] = value or ""
+    _touch(epic)
+    return epic
+
+
+def archive_epic(data: dict, eid: str) -> dict:
+    epic = get_epic(data, eid)
+    epic["archived"] = True
+    _touch(epic)
+    return epic
+
+
+def epic_progress(data: dict, eid: str) -> dict:
+    feats = [f for f in data.get("features", [])
+             if f.get("epic") == eid and not f.get("archived")]
+    done = sum(1 for f in feats if f["status"] == "completed")
+    tdone = ttotal = 0
+    for f in feats:
+        p = feature_progress(f)
+        tdone += p["done"]
+        ttotal += p["total"]
+    return {"features": len(feats), "completed": done,
+            "tasks_done": tdone, "tasks_total": ttotal}
+
+
+def _check_epic(data: dict, epic: object) -> str | None:
+    if epic is None or epic == "":
+        return None
+    eid = _check_slug("epic", epic)
+    if find_epic(data, eid) is None:
+        raise StoreError(f"feature epic unknown epic {eid!r}")
+    return eid
 
 
 def _split_header(text: str) -> tuple[str, str]:
@@ -350,8 +439,16 @@ DEFAULT_HEADER = (
 
 
 def load_pm(path: Path = PM_PATH) -> tuple[dict, str]:
-    """Return (data, header); data is {\"features\": [feature, ...]}."""
+    """Return (data, header); data is {\"features\": [...], \"epics\": [...]}."""
     raw, header = _load_yaml(path)
+    raw_epics = raw.get("epics") or []
+    if not isinstance(raw_epics, list):
+        raise StoreError("pm 'epics' must be a list")
+    epics = [_normalize_epic(e) for e in raw_epics]
+    eids = [e["id"] for e in epics]
+    if len(eids) != len(set(eids)):
+        raise StoreError("duplicate epic ids in pm store")
+    known_epics = set(eids)
     raw_features = raw.get("features") or []
     if isinstance(raw_features, dict):
         raw_features = list(raw_features.values())
@@ -367,7 +464,10 @@ def load_pm(path: Path = PM_PATH) -> tuple[dict, str]:
             if req not in known:
                 raise StoreError(
                     f"feature {f['id']!r} requires unknown feature {req!r}")
-    return {"features": features}, header
+        if f.get("epic") is not None and f["epic"] not in known_epics:
+            raise StoreError(
+                f"feature {f['id']!r} epic unknown epic {f['epic']!r}")
+    return {"features": features, "epics": epics}, header
 
 
 def save_pm(data: dict, header: str, path: Path = PM_PATH) -> None:
@@ -453,7 +553,8 @@ def create_feature(data: dict, fid: str | None, title: str,
                    summary: str = "", priority: str = "medium",
                    status: str = "proposed", requires: object = None,
                    spec: dict | None = None, test_level: object = None,
-                   branch: str | None = None, worktree: str | None = None) -> dict:
+                   branch: str | None = None, worktree: str | None = None,
+                   epic: object = None) -> dict:
     if not isinstance(title, str) or not title.strip():
         raise StoreError("feature title must not be empty")
     fid = _check_slug("feature", fid or _slugify(title))
@@ -477,7 +578,8 @@ def create_feature(data: dict, fid: str | None, title: str,
     now = _now()
     feature = _normalize_feature({
         "id": fid, "title": title.strip(), "summary": summary or "",
-        "status": status, "priority": priority, "requires": reqs,
+        "status": status, "priority": priority, "epic": _check_epic(data, epic),
+        "requires": reqs,
         "spec": spec_clean, "branch": branch, "worktree": worktree,
         "test_level": test_level, "review": {"decision": "pending", "by": None, "at": None},
         "merged": None, "sessions": [], "archived": False,
@@ -490,7 +592,7 @@ def create_feature(data: dict, fid: str | None, title: str,
 def update_feature(data: dict, fid: str, fields: dict) -> dict:
     feature = get_feature(data, fid)
     allowed = {"title", "summary", "status", "priority", "requires",
-               "spec", "test_level", "branch", "worktree", "merged"}
+               "spec", "test_level", "branch", "worktree", "merged", "epic"}
     for key, value in (fields or {}).items():
         if key not in allowed:
             continue
@@ -519,6 +621,8 @@ def update_feature(data: dict, fid: str, fields: dict) -> dict:
                     feature["spec"][k] = value[k] or ""
         elif key == "merged":
             feature["merged"] = value
+        elif key == "epic":
+            feature["epic"] = _check_epic(data, value)
         else:
             feature[key] = value
     _touch(feature)
@@ -784,6 +888,7 @@ def export_feature_md(feature: dict, data: dict) -> str:
     lines.append(f"summary: {feature.get('summary') or ''}")
     lines.append(f"status: {feature['status']}")
     lines.append(f"priority: {feature['priority']}")
+    lines.append(f"epic: {feature.get('epic') or ''}")
     reqs = feature.get("requires") or []
     lines.append("requires:")
     for r in reqs:

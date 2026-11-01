@@ -164,6 +164,14 @@ def _pm_not_found(fid: str):
     return {"error": f"feature {fid!r} not found"}
 
 
+def _pm_epic_view(epic: dict) -> dict:
+    view = dict(epic)
+    view["progress"] = pm_store.epic_progress(STATE.pm, epic["id"])
+    view["features"] = [f["id"] for f in STATE.pm.get("features", [])
+                        if f.get("epic") == epic["id"] and not f.get("archived")]
+    return view
+
+
 def _save_pm_evidence(fid: str, filename: object, data: bytes) -> dict:
     cleaned = validate_upload(filename, len(data))
     folder = pm_store.EVIDENCE_ROOT / "features" / fid
@@ -864,6 +872,17 @@ class Handler(BaseHTTPRequestHandler):
                                              records[0],
                                              engine_version=game_sessions.ENGINE_VERSION),
                                          "summary": game_sessions.summarize(records)})
+            if parts == ["api", "pm", "epics"]:
+                with STATE_LOCK:
+                    payload = [_pm_epic_view(e) for e in STATE.pm.get("epics", [])]
+                return _send(self, 200, {"epics": payload})
+            if len(parts) == 4 and parts[:3] == ["api", "pm", "epics"]:
+                eid = urllib.parse.unquote(parts[3])
+                with STATE_LOCK:
+                    epic = pm_store.find_epic(STATE.pm, eid)
+                    if epic is None:
+                        return _send(self, 404, {"error": f"epic {eid!r} not found"})
+                    return _send(self, 200, _pm_epic_view(epic))
             if parts == ["api", "pm", "features"]:
                 with STATE_LOCK:
                     payload = [_pm_feature_view(f) for f in STATE.pm["features"]]
@@ -1056,6 +1075,13 @@ class Handler(BaseHTTPRequestHandler):
                     written = pm_store.export_all(STATE.pm, PM_EXPORT_DIR)
                 return _send(self, 200,
                              {"exported": [str(p.relative_to(ROOT)) for p in written]})
+            if parts == ["api", "pm", "epics"]:
+                with STATE_LOCK:
+                    epic = pm_store.create_epic(
+                        STATE.pm, body.get("id"), body.get("title", ""),
+                        summary=body.get("summary", ""))
+                    STATE.save_pm()
+                    return _send(self, 201, _pm_epic_view(epic))
             if parts == ["api", "pm", "features"]:
                 with STATE_LOCK:
                     feature = pm_store.create_feature(
@@ -1067,7 +1093,8 @@ class Handler(BaseHTTPRequestHandler):
                         spec=body.get("spec"),
                         test_level=body.get("test_level"),
                         branch=body.get("branch"),
-                        worktree=body.get("worktree"))
+                        worktree=body.get("worktree"),
+                        epic=body.get("epic"))
                     STATE.save_pm()
                     return _send(self, 201, _pm_feature_view(feature))
             if len(parts) == 5 and parts[:3] == ["api", "pm", "features"] and parts[4] == "tasks":
@@ -1249,6 +1276,15 @@ class Handler(BaseHTTPRequestHandler):
                         preferred=preferred if isinstance(preferred, bool) else None)
                     STATE.save_all()
                 return _send(self, 200, {"key": key, **record})
+            if len(parts) == 4 and parts[:3] == ["api", "pm", "epics"]:
+                eid = urllib.parse.unquote(parts[3])
+                body = _read_json(self)
+                with STATE_LOCK:
+                    if pm_store.find_epic(STATE.pm, eid) is None:
+                        return _send(self, 404, {"error": f"epic {eid!r} not found"})
+                    epic = pm_store.update_epic(STATE.pm, eid, body)
+                    STATE.save_pm()
+                    return _send(self, 200, _pm_epic_view(epic))
             if len(parts) == 4 and parts[:3] == ["api", "pm", "features"]:
                 fid = urllib.parse.unquote(parts[3])
                 body = _read_json(self)
@@ -1314,6 +1350,14 @@ class Handler(BaseHTTPRequestHandler):
         parsed = urllib.parse.urlparse(self.path)
         parts = [p for p in parsed.path.split("/") if p]
         try:
+            if len(parts) == 4 and parts[:3] == ["api", "pm", "epics"]:
+                eid = urllib.parse.unquote(parts[3])
+                with STATE_LOCK:
+                    if pm_store.find_epic(STATE.pm, eid) is None:
+                        return _send(self, 404, {"error": f"epic {eid!r} not found"})
+                    epic = pm_store.archive_epic(STATE.pm, eid)
+                    STATE.save_pm()
+                    return _send(self, 200, _pm_epic_view(epic))
             if len(parts) == 4 and parts[:3] == ["api", "pm", "features"]:
                 fid = urllib.parse.unquote(parts[3])
                 with STATE_LOCK:

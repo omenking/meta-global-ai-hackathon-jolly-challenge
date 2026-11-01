@@ -3,6 +3,7 @@ title: Fixed world scale with camera
 summary: Same tile and Jolly size in every level at the movement-room scale; camera scrolls without rescaling the world or touching the HUD.
 status: completed
 priority: high
+epic: base-game
 requires:
   - ./game-engine-refactor.md
   - ./hud.md

@@ -3,6 +3,7 @@ title: Player movement and collision
 summary: Move Jolly one tile per keypress with wall, lock and gate collision.
 status: completed
 priority: urgent
+epic: base-game
 requires:
   - ./game-shell.md
 unblocks:

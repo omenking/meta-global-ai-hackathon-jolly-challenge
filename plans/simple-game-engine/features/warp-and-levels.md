@@ -3,6 +3,7 @@ title: Warp and level progression
 summary: Stepping on the warp behind the open gate loads the next level.
 status: completed
 priority: medium
+epic: base-game
 requires:
   - ./orbs-and-gate.md
 unblocks:

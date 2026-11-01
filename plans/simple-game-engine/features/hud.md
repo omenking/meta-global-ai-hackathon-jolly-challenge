@@ -3,6 +3,7 @@ title: HUD: timer, orbs, level and inventory
 summary: Live heads-up display per the full-level UI reference.
 status: completed
 priority: medium
+epic: base-game
 requires:
   - ./game-shell.md
 unblocks:

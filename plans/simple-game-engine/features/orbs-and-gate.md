@@ -3,6 +3,7 @@ title: Orbs and gate
 summary: Collect all orbs to open the gate that blocks the warp.
 status: completed
 priority: high
+epic: base-game
 requires:
   - ./player-movement.md
 unblocks:

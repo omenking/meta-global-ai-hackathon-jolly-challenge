@@ -3,6 +3,7 @@ title: Game shell and deterministic core
 summary: A playable game page with a deterministic step function and session recording from the first build.
 status: completed
 priority: urgent
+epic: base-game
 requires:
   []
 unblocks:

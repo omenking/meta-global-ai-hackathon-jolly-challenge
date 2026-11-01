@@ -3,6 +3,7 @@ title: Keys and locks
 summary: Pick up coloured keys into 8 inventory slots; matching locks dissolve and consume the key.
 status: completed
 priority: high
+epic: base-game
 requires:
   - ./player-movement.md
 unblocks:

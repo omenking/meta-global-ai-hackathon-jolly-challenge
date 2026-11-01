@@ -41,6 +41,12 @@ function parseRoute(pathname) {
   if (parts[0] !== 'pm') return { view: 'home' };
   if (parts.length === 1) return { view: 'list' };
   if (parts[1] === 'board') return { view: 'board' };
+  if (parts[1] === 'epics' && !parts[2]) return { view: 'epics' };
+  if (parts[1] === 'epics' && parts[2] === 'new') return { view: 'epic-new' };
+  if (parts[1] === 'epics' && parts[2]) {
+    if (parts[3] === 'edit') return { view: 'epic-edit', eid: parts[2] };
+    return { view: 'epic-show', eid: parts[2] };
+  }
   if (parts[1] === 'features' && parts[2] === 'new') return { view: 'feature-new' };
   if (parts[1] === 'features' && parts[2]) {
     const fid = parts[2];
@@ -57,6 +63,7 @@ function parseRoute(pathname) {
   return { view: 'list' };
 }
 
+export const epicPath = (eid) => `/pm/epics/${encodeURIComponent(eid)}`;
 export const featurePath = (fid) => `/pm/features/${encodeURIComponent(fid)}`;
 export const taskPath = (fid, tid) => `${featurePath(fid)}/tasks/${encodeURIComponent(tid)}`;
 
@@ -290,44 +297,22 @@ function PmToolbar({ features, query, setQuery, statusFilter, setStatusFilter,
   );
 }
 
-function FeatureCard({ feature, showArchived }) {
-  const tasks = sortTasks(feature.tasks).filter((t) => showArchived || !t.archived);
+function FeatureRow({ feature }) {
+  const progress = feature.progress || { done: 0, total: 0 };
   return (
-    <Card className="p-5">
-      <div className="flex flex-wrap items-center gap-2">
-        <a className="text-lg font-semibold hover:underline" {...linkProps(featurePath(feature.id))}>
-          {feature.title}
-        </a>
-        <StatusChip status={feature.status} />
-        <PriorityChip priority={feature.priority} />
-        {feature.review?.decision === 'approved_for_merge'
-          && <Chip color="success" variant="soft">approved — awaiting merge</Chip>}
-        {feature.archived && <Chip variant="soft">archived</Chip>}
-        <Progress progress={feature.progress} />
-        <span className="flex-1" />
-        <Button size="md" variant="outline" onPress={() => navigate(featurePath(feature.id))}>View</Button>
-        <Button size="md" variant="outline" onPress={() => navigate(`${featurePath(feature.id)}/edit`)}>Edit</Button>
-      </div>
-      <p className="mt-1 text-base text-neutral-600 dark:text-neutral-300">{feature.summary}</p>
-      <p className="text-sm text-neutral-500">
-        {feature.id} · requires: {(feature.requires || []).join(', ') || '—'}
-        {' '}· unblocks: {(feature.unblocks || []).join(', ') || '—'}
-        {' '}· branch: {feature.branch || '—'}
-      </p>
-      <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
-        {tasks.map((t) => (
-          <div key={t.id} className="flex flex-wrap items-center gap-2 py-2">
-            <a className="text-base hover:underline" {...linkProps(taskPath(feature.id, t.id))}>{t.title}</a>
-            <TaskStatusChip task={t} />
-            <PriorityChip priority={t.priority} />
-            <span className="text-sm text-neutral-500">
-              {feature.id}/{t.id}{t.commit ? ` · ${t.commit}` : ''}{t.archived ? ' · archived' : ''}
-            </span>
-          </div>
-        ))}
-        {!tasks.length && <p className="py-1 text-base text-neutral-500">No tasks.</p>}
-      </div>
-    </Card>
+    <a {...linkProps(featurePath(feature.id))}
+      className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-500 dark:hover:bg-neutral-800/60">
+      <span className="min-w-0 flex-1 truncate text-base">
+        <span className="font-medium">{feature.title}</span>
+        <span className="ml-2 text-sm text-neutral-500">{feature.id}</span>
+      </span>
+      <span className="hidden w-44 shrink-0 truncate text-sm text-neutral-500 md:block">{feature.epic || '—'}</span>
+      <span className="flex w-24 shrink-0 justify-center"><StatusChip status={feature.status} /></span>
+      <span className="flex w-20 shrink-0 justify-center"><PriorityChip priority={feature.priority} /></span>
+      <span className="w-14 shrink-0 text-right text-sm tabular-nums text-neutral-500">
+        {progress.done}/{progress.total}
+      </span>
+    </a>
   );
 }
 
@@ -393,6 +378,135 @@ function Board({ features, showArchived, featureFilter, setFeatureFilter, reload
         })}
       </div>
       <p className="text-sm text-neutral-500">Drag a card to another column to change its status. List and board are two views of the same tasks.</p>
+    </div>
+  );
+}
+
+function EpicsPage({ epics, showArchived }) {
+  const visible = (epics || []).filter((e) => showArchived || !e.archived);
+  return (
+    <div className="space-y-4">
+      <PageLinks items={[['← Board list', '/pm'], ['Kanban', '/pm/board']]} />
+      <div className="flex flex-wrap items-center gap-2">
+        <h1 className="text-2xl font-semibold">Epics</h1>
+        <span className="flex-1" />
+        <Button size="md" onPress={() => navigate('/pm/epics/new')}>New epic</Button>
+      </div>
+      <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
+        <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-500 dark:border-neutral-700" aria-hidden="true">
+          <span className="min-w-0 flex-1">Epic</span>
+          <span className="w-28 text-center">Features</span>
+          <span className="w-28 text-right">Tasks done</span>
+        </div>
+        <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+          {visible.map((e) => {
+            const p = e.progress || { features: 0, completed: 0, tasks_done: 0, tasks_total: 0 };
+            return (
+              <a key={e.id} {...linkProps(epicPath(e.id))}
+                className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-500 dark:hover:bg-neutral-800/60">
+                <span className="min-w-0 flex-1 truncate text-base">
+                  <span className="font-medium">{e.title}</span>
+                  <span className="ml-2 text-sm text-neutral-500">{e.id}</span>
+                </span>
+                {e.archived && <Chip variant="soft">archived</Chip>}
+                <span className="w-28 shrink-0 text-center text-sm tabular-nums text-neutral-500">{p.completed}/{p.features}</span>
+                <span className="w-28 shrink-0 text-right text-sm tabular-nums text-neutral-500">{p.tasks_done}/{p.tasks_total}</span>
+              </a>
+            );
+          })}
+        </div>
+        {!visible.length && <p className="p-5 text-base">No epics yet. Use New epic.</p>}
+      </div>
+    </div>
+  );
+}
+
+function EpicShow({ epic, features, reload, setError }) {
+  const mine = (features || []).filter((f) => f.epic === epic.id && !f.archived);
+  const p = epic.progress || { features: mine.length, completed: 0, tasks_done: 0, tasks_total: 0 };
+  return (
+    <div className="space-y-4">
+      <PageLinks items={[['← Epics', '/pm/epics'], ['Board list', '/pm'], ['Kanban', '/pm/board']]} />
+      <Card className="p-5">
+        <div className="flex flex-wrap items-start gap-3">
+          <div className="min-w-60 flex-1">
+            <h1 className="text-2xl font-semibold leading-snug">{epic.title}</h1>
+            <p className="mt-1 text-base text-neutral-600 dark:text-neutral-300">{epic.summary || 'No summary yet.'}</p>
+            <p className="mt-1 text-sm text-neutral-500">{epic.id} · {p.completed}/{p.features} features completed · {p.tasks_done}/{p.tasks_total} tasks done</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button size="md" onPress={() => navigate(`${epicPath(epic.id)}/edit`)}>Edit epic</Button>
+            <Button size="md" variant="danger-soft" onPress={async () => {
+              try { await api('DELETE', `${PM}/epics/${encodeURIComponent(epic.id)}`); await reload(); navigate('/pm/epics'); }
+              catch (e) { setError(e.message); }
+            }}>Archive</Button>
+          </div>
+        </div>
+      </Card>
+      <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
+        <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-500 dark:border-neutral-700" aria-hidden="true">
+          <span className="min-w-0 flex-1">Feature</span>
+          <span className="hidden w-44 md:block">Epic</span>
+          <span className="w-24 text-center">Status</span>
+          <span className="w-20 text-center">Priority</span>
+          <span className="w-14 text-right">Done</span>
+        </div>
+        <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+          {mine.map((f) => <FeatureRow key={f.id} feature={f} />)}
+        </div>
+        {!mine.length && <p className="p-5 text-base">No features in this epic yet. Assign one from its Edit feature page.</p>}
+      </div>
+    </div>
+  );
+}
+
+function EpicNew({ reload, setError }) {
+  const [form, setForm] = useState({ id: '', title: '', summary: '' });
+  const [busy, setBusy] = useState(false);
+  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+  return (
+    <div className="mx-auto max-w-2xl space-y-4">
+      <PageLinks items={[['← Epics', '/pm/epics']]} />
+      <Card className="space-y-4 p-5">
+        <h1 className="text-2xl font-semibold">New epic</h1>
+        <Field label="Id (optional, slug)"><input className={inputCls} placeholder="base-game" value={form.id} onChange={set('id')} /></Field>
+        <Field label="Title"><input className={inputCls} value={form.title} onChange={set('title')} /></Field>
+        <Field label="Summary"><input className={inputCls} value={form.summary} onChange={set('summary')} /></Field>
+        <div className="flex gap-2">
+          <Button size="md" variant="outline" onPress={() => navigate('/pm/epics')}>Cancel</Button>
+          <Button size="md" isPending={busy} onPress={async () => {
+            setBusy(true);
+            try {
+              const created = await api('POST', `${PM}/epics`, { id: form.id || undefined, title: form.title, summary: form.summary });
+              await reload(); navigate(epicPath(created.id));
+            } catch (e) { setError(e.message); setBusy(false); }
+          }}>Create epic</Button>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function EpicEdit({ epic, reload, setError }) {
+  const [form, setForm] = useState({ title: epic.title, summary: epic.summary || '' });
+  const [busy, setBusy] = useState(false);
+  const back = epicPath(epic.id);
+  return (
+    <div className="mx-auto max-w-2xl space-y-4">
+      <PageLinks items={[['← Back to epic', back], ['Epics', '/pm/epics']]} />
+      <Card className="space-y-4 p-5">
+        <h1 className="text-2xl font-semibold">Edit epic</h1>
+        <Field label="Title"><input className={inputCls} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></Field>
+        <Field label="Summary"><input className={inputCls} value={form.summary} onChange={(e) => setForm({ ...form, summary: e.target.value })} /></Field>
+        <div className="flex gap-2">
+          <Button size="md" variant="outline" onPress={() => navigate(back)}>Cancel</Button>
+          <Button size="md" isPending={busy} onPress={async () => {
+            setBusy(true);
+            try { await api('PUT', `${PM}/epics/${encodeURIComponent(epic.id)}`, form); await reload(); navigate(back); }
+            catch (e) { setError(e.message); setBusy(false); }
+          }}>Save changes</Button>
+        </div>
+      </Card>
     </div>
   );
 }
@@ -587,6 +701,8 @@ function FeatureShow({ feature, reload, setError }) {
             <h2 className="text-lg font-semibold">Details</h2>
             <dl className="mt-2 grid gap-x-4 gap-y-2 text-base sm:grid-cols-2 xl:grid-cols-1">
               <div><dt className="font-semibold">Feature id</dt><dd>{feature.id}</dd></div>
+              <div><dt className="font-semibold">Epic</dt><dd>{feature.epic
+                ? <a className="text-blue-700 hover:underline dark:text-blue-300" {...linkProps(epicPath(feature.epic))}>{feature.epic}</a> : '—'}</dd></div>
               <div><dt className="font-semibold">Test level</dt><dd>{feature.test_level || '—'}</dd></div>
               <div><dt className="font-semibold">Requires</dt><dd>{(feature.requires || []).join(', ') || '—'}</dd></div>
               <div><dt className="font-semibold">Unblocks</dt><dd>{(feature.unblocks || []).join(', ') || '—'}</dd></div>
@@ -602,10 +718,10 @@ function FeatureShow({ feature, reload, setError }) {
   );
 }
 
-function FeatureEdit({ feature, reload, setError }) {
+function FeatureEdit({ feature, epics, reload, setError }) {
   const [form, setForm] = useState({
     title: feature.title, summary: feature.summary || '', status: feature.status,
-    priority: feature.priority, test_level: feature.test_level || '',
+    priority: feature.priority, test_level: feature.test_level || '', epic: feature.epic || '',
     requires: (feature.requires || []).join(', '), spec: { ...(feature.spec || {}) },
   });
   const [busy, setBusy] = useState(false);
@@ -629,6 +745,12 @@ function FeatureEdit({ feature, reload, setError }) {
               {PRIORITIES.map((s) => <option key={s}>{s}</option>)}
             </select>
           </Field>
+          <Field label="Epic">
+            <select className={inputCls} value={form.epic} onChange={set('epic')}>
+              <option value="">— no epic —</option>
+              {(epics || []).filter((e) => !e.archived).map((e) => <option key={e.id} value={e.id}>{e.title} ({e.id})</option>)}
+            </select>
+          </Field>
           <Field label="Test level"><input className={inputCls} value={form.test_level} onChange={set('test_level')} /></Field>
           <Field label="Requires (comma-separated feature ids)">
             <input className={inputCls} value={form.requires} onChange={set('requires')} />
@@ -647,7 +769,7 @@ function FeatureEdit({ feature, reload, setError }) {
             try {
               await api('PUT', `${PM}/features/${encodeURIComponent(feature.id)}`, {
                 title: form.title, summary: form.summary, status: form.status,
-                priority: form.priority, test_level: form.test_level || null,
+                priority: form.priority, epic: form.epic || null, test_level: form.test_level || null,
                 requires: form.requires.split(',').map((s) => s.trim()).filter(Boolean),
                 spec: form.spec,
               });
@@ -660,8 +782,8 @@ function FeatureEdit({ feature, reload, setError }) {
   );
 }
 
-function FeatureNew({ reload, setError }) {
-  const [form, setForm] = useState({ id: '', title: '', summary: '', priority: 'medium' });
+function FeatureNew({ epics, reload, setError }) {
+  const [form, setForm] = useState({ id: '', title: '', summary: '', priority: 'medium', epic: '' });
   const [busy, setBusy] = useState(false);
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
   return (
@@ -679,6 +801,12 @@ function FeatureNew({ reload, setError }) {
             {PRIORITIES.map((s) => <option key={s}>{s}</option>)}
           </select>
         </Field>
+        <Field label="Epic">
+          <select className={inputCls} value={form.epic} onChange={set('epic')}>
+            <option value="">— no epic —</option>
+            {(epics || []).filter((e) => !e.archived).map((e) => <option key={e.id} value={e.id}>{e.title} ({e.id})</option>)}
+          </select>
+        </Field>
         <p className="text-base text-neutral-500">New features start at proposed and need human approval before implementation.</p>
         <div className="flex gap-2">
           <Button size="md" variant="outline" onPress={() => navigate('/pm')}>Cancel</Button>
@@ -687,7 +815,7 @@ function FeatureNew({ reload, setError }) {
             try {
               const created = await api('POST', `${PM}/features`, {
                 id: form.id || undefined, title: form.title,
-                summary: form.summary, priority: form.priority,
+                summary: form.summary, priority: form.priority, epic: form.epic || undefined,
               });
               await reload(); navigate(featurePath(created.id));
             } catch (e) { setError(e.message); setBusy(false); }
@@ -823,7 +951,7 @@ function TaskNew({ feature, reload, setError }) {
   );
 }
 
-function Pm({ route, features, reload, setError }) {
+function Pm({ route, features, epics, reload, setError }) {
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [showArchived, setShowArchived] = useState(false);
@@ -845,8 +973,27 @@ function Pm({ route, features, reload, setError }) {
       || (f.tasks || []).some((t) => t.title.toLowerCase().includes(q) || t.id.includes(q));
   }), [features, showArchived, statusFilter, query]);
 
+  if (route.view === 'epics') {
+    return <EpicsPage epics={epics} showArchived={showArchived} />;
+  }
+  if (route.view === 'epic-new') {
+    return <EpicNew reload={reload} setError={setError} />;
+  }
+  if (route.view === 'epic-show' || route.view === 'epic-edit') {
+    const epic = (epics || []).find((x) => x.id === route.eid);
+    if (!epic) {
+      return (
+        <Card className="p-5 text-base">
+          No epic named {route.eid}.{' '}
+          <a className="underline" {...linkProps('/pm/epics')}>Back to epics</a>
+        </Card>
+      );
+    }
+    if (route.view === 'epic-edit') return <EpicEdit epic={epic} reload={reload} setError={setError} />;
+    return <EpicShow epic={epic} features={features} reload={reload} setError={setError} />;
+  }
   if (route.view === 'feature-new') {
-    return <FeatureNew reload={reload} setError={setError} />;
+    return <FeatureNew epics={epics} reload={reload} setError={setError} />;
   }
   if (['feature-show', 'feature-edit', 'task-new',
     'task-show', 'task-edit'].includes(route.view)) {
@@ -860,7 +1007,7 @@ function Pm({ route, features, reload, setError }) {
       );
     }
     if (route.view === 'feature-show') return <FeatureShow feature={f} reload={reload} setError={setError} />;
-    if (route.view === 'feature-edit') return <FeatureEdit feature={f} reload={reload} setError={setError} />;
+    if (route.view === 'feature-edit') return <FeatureEdit feature={f} epics={epics} reload={reload} setError={setError} />;
     if (route.view === 'task-new') return <TaskNew feature={f} reload={reload} setError={setError} />;
     const task = (f.tasks || []).find((t) => t.id === route.tid);
     if (!task) {
@@ -883,6 +1030,8 @@ function Pm({ route, features, reload, setError }) {
           onPress={() => navigate('/pm')}>List</Button>
         <Button size="md" variant={route.view === 'board' ? 'primary' : 'outline'}
           onPress={() => navigate('/pm/board')}>Board</Button>
+        <Button size="md" variant={route.view.startsWith('epic') ? 'primary' : 'outline'}
+          onPress={() => navigate('/pm/epics')}>Epics</Button>
       </div>
       <PmToolbar features={visible} query={query} setQuery={setQuery}
         statusFilter={statusFilter} setStatusFilter={setStatusFilter}
@@ -894,9 +1043,18 @@ function Pm({ route, features, reload, setError }) {
             featureFilter={featureFilter} setFeatureFilter={setFeatureFilter}
             reload={reload} setError={setError} />
         : (
-          <div className="space-y-3">
-            {visible.map((f) => <FeatureCard key={f.id} feature={f} showArchived={showArchived} />)}
-            {!visible.length && <Card className="p-5 text-base">No features match. Use Seed or New feature.</Card>}
+          <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
+            <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-500 dark:border-neutral-700" aria-hidden="true">
+              <span className="min-w-0 flex-1">Feature</span>
+              <span className="hidden w-44 md:block">Epic</span>
+              <span className="w-24 text-center">Status</span>
+              <span className="w-20 text-center">Priority</span>
+              <span className="w-14 text-right">Done</span>
+            </div>
+            <div className="divide-y divide-neutral-100 dark:divide-neutral-800">
+              {visible.map((f) => <FeatureRow key={f.id} feature={f} />)}
+            </div>
+            {!visible.length && <p className="p-5 text-base">No features match. Use Seed or New feature.</p>}
           </div>
         )}
     </div>
@@ -906,6 +1064,7 @@ function Pm({ route, features, reload, setError }) {
 export default function App() {
   const [route, setRoute] = useState(() => parseRoute(location.pathname));
   const [features, setFeatures] = useState([]);
+  const [epics, setEpics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [dark, setDark] = useState(() => localStorage.getItem('jolly-theme') === 'dark');
@@ -922,8 +1081,10 @@ export default function App() {
 
   const reload = useCallback(async () => {
     try {
-      const data = await api('GET', `${PM}/features`);
+      const [data, epicData] = await Promise.all([
+        api('GET', `${PM}/features`), api('GET', `${PM}/epics`)]);
       setFeatures(data.features || []);
+      setEpics(epicData.epics || []);
       setError('');
     } catch (e) { setError(e.message); } finally { setLoading(false); }
   }, []);
@@ -939,7 +1100,7 @@ export default function App() {
       {loading ? (
         <div className="flex items-center gap-2 p-6 text-base"><Spinner size="md" /> Loading board…</div>
       ) : route.view === 'home' ? <Home />
-        : <Pm route={route} features={features} reload={reload} setError={setError} />}
+        : <Pm route={route} features={features} epics={epics} reload={reload} setError={setError} />}
     </Shell>
   );
 }
