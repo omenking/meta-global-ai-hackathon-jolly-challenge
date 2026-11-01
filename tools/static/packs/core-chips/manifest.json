@@ -1,0 +1,14 @@
+{
+  "pack": "core-chips",
+  "main": "main.js",
+  "assets": [
+    {"file": "floor_default.png", "kind": "tiles", "bundled": false, "shows": "floor tile"},
+    {"file": "wall.png", "kind": "tiles", "bundled": false, "shows": "wall tile"},
+    {"file": "orb.png", "kind": "tiles", "bundled": false, "shows": "chip (orb)"},
+    {"file": "gate.png", "kind": "tiles", "bundled": false, "shows": "gate, shut while orbs remain"},
+    {"file": "portal.png", "kind": "tiles", "bundled": false, "shows": "warp (portal exit)"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

@@ -8,7 +8,7 @@
   'use strict';
   function registerWaterPack(api) {
     // Glyphs are this pack's assets: levels no longer carry "~"/"F".
-    api.defineAsset('key.png');
+    api.defineAsset('key.png', { pack: 'proof-water', bundled: false });
     api.defineItem('water:flipper', { icon: 'key.png', readout: 'flipper' });
     api.defineTile('water:water', { layer: 'terrain', glyph: '~',
       onEnterTerrain: function (state, cell, actor, fx) {

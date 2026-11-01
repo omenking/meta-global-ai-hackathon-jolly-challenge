@@ -174,7 +174,7 @@ class CrumblingMechanicTests(unittest.TestCase):
         self.assertIn("gc === 'C' || gc === 'V'", js)
         html = (ROOT / "tools" / "static" / "game.html").read_text(
             encoding="utf-8")
-        self.assertIn("packs/crumbling.js", html)
+        self.assertIn("packs/crumbling/main.js", html)
 
 
 SANITY_SCRIPT = r"""

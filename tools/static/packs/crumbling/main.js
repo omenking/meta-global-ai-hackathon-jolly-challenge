@@ -10,7 +10,13 @@
 (function (root) {
   'use strict';
   function registerCrumblingPack(api) {
-    api.defineTile('crumble:crumbling', { layer: 'object', glyph: 'C',
+    // Bundled assets (see manifest.json): generated placeholders from
+    // tools/make_placeholder_sprites.sh until real art lands.
+    for (const name of ['crumbling.png', 'crumbling-cracked.png', 'void.png']) {
+      api.defineAsset(name, { pack: 'crumbling', bundled: true });
+    }
+    api.defineTile('crumble:crumbling', { layer: 'object',
+      sprite: 'crumbling.png', glyph: 'C',
       onEnter: function (state, cell, actor, fx) {
         fx.push({ type: 'setMeta', x: cell.x, y: cell.y,
           key: 'crumble_deadline', value: 0 });
@@ -19,7 +25,8 @@
         fx.push({ type: 'setMeta', x: cell.x, y: cell.y,
           key: 'crumble_deadline', value: state.steps + 1 });
       } });
-    api.defineTile('crumble:void', { layer: 'object', glyph: 'V',
+    api.defineTile('crumble:void', { layer: 'object',
+      sprite: 'void.png', glyph: 'V',
       blocks: function () { return true; } });
     // The void never appears in level rows, so give its projected
     // grid char a name here (the kernel projection falls back to it).

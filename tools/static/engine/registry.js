@@ -5,15 +5,29 @@
 (function (root) {
   'use strict';
   function createRegistry() {
-    const tiles = new Map(), items = new Map(), assets = new Set();
+    const tiles = new Map(), items = new Map(), assets = new Map();
     const levelDefHooks = [], levelHooks = [], tickHooks = [], controllers = new Map();
     const api = {
       defineTile: function (id, def) { tiles.set(id, Object.assign({ id: id }, def)); },
       defineItem: function (id, def) { items.set(id, Object.assign({ id: id }, def)); },
       // Packs bring their own assets: sprite/icon file names a pack
       // needs are declared here so preload/render never hardcode them.
-      defineAsset: function (name) { if (name) assets.add(name); },
-      assetNames: function () { return [...assets]; },
+      // A bundled asset lives in the pack folder and loads from
+      // packs/<pack>/assets/<name>; anything else is shared art and
+      // loads from level-sprites/<name>. The manifest in each pack
+      // folder (manifest.json) lists the same files for humans.
+      defineAsset: function (name, opts) {
+        if (!name) return;
+        assets.set(name, { pack: (opts && opts.pack) || null,
+          bundled: !!(opts && opts.bundled) });
+      },
+      assetNames: function () { return [...assets.keys()]; },
+      assetPaths: function () {
+        return [...assets.entries()].map(([name, a]) => ({ name: name,
+          url: a.bundled && a.pack
+            ? 'packs/' + a.pack + '/assets/' + name
+            : 'level-sprites/' + name }));
+      },
       onLevelDefs: function (fn) { levelDefHooks.push(fn); },
       onLevelLoad: function (fn) { levelHooks.push(fn); },
       onTick: function (fn) { tickHooks.push(fn); },

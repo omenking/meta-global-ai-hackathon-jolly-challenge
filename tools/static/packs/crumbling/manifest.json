@@ -1,0 +1,15 @@
+{
+  "pack": "crumbling",
+  "main": "main.js",
+  "assets": [
+    {"file": "crumbling.png", "kind": "tiles", "bundled": true,
+     "shows": "intact crumbling tile, safe to stand on"},
+    {"file": "crumbling-cracked.png", "kind": "tiles", "bundled": true,
+     "shows": "tile in the one move after Jolly leaves it, before it falls; the fall must be readable, not hidden"},
+    {"file": "void.png", "kind": "tiles", "bundled": true,
+     "shows": "hole left after the tile falls; blocks movement for the rest of the attempt"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

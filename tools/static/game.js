@@ -108,6 +108,14 @@
   spriteNames.add('jolly-fall.png');
   // Pack-carried assets: loaded packs declare the sprite/icon names
   // they need (keys, locks, items); no hardcoded colour list here.
+  // Bundled assets load from their pack folder, shared assets from
+  // level-sprites/; the registry decides which URL each name gets.
+  const urlByName = {};
+  if (window.GameCore.assetPathsForLevel) {
+    for (const a of window.GameCore.assetPathsForLevel(level)) {
+      urlByName[a.name] = a.url;
+    }
+  }
   if (window.GameCore.assetsForLevel) {
     for (const name of window.GameCore.assetsForLevel(level)) spriteNames.add(name);
   }
@@ -115,7 +123,7 @@
   const missing = new Set();
   await Promise.all([...spriteNames].map(async (name) => {
     try {
-      textures[name] = await PIXI.Assets.load('level-sprites/' + name);
+      textures[name] = await PIXI.Assets.load(urlByName[name] || 'level-sprites/' + name);
     } catch (err) {
       missing.add(name);
     }
@@ -459,8 +467,14 @@
       if (dt.ch === 'C') {
         const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
         dt.sprite.visible = gc === 'C' || gc === 'V';
-        if (dt.sprite.text !== undefined && gc
-            && dt.sprite.text !== gc) dt.sprite.text = gc;
+        // Intact, armed (left, about to fall) and void each have a
+        // bundled sprite in the crumbling pack; swap with the state.
+        const meta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const texName = gc === 'V' ? 'void.png'
+          : (meta && meta.crumble_deadline
+            ? 'crumbling-cracked.png' : 'crumbling.png');
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open

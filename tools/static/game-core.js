@@ -12,10 +12,10 @@
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
-    KeysPack = require('./packs/keys-locks.js');
-    CorePack = require('./packs/core-chips.js');
-    WaterPack = require('./packs/proof-water.js');
-    CrumblePack = require('./packs/crumbling.js');
+    KeysPack = require('./packs/keys-locks/main.js');
+    CorePack = require('./packs/core-chips/main.js');
+    WaterPack = require('./packs/proof-water/main.js');
+    CrumblePack = require('./packs/crumbling/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -95,6 +95,12 @@
       try { kernel.initialState(level, (level && level.name) || ''); } catch (e) { /* defs registered before any throw */ }
       return registry.assetNames();
     }
+    // Same probe, with load URLs: bundled assets resolve into their
+    // pack folder, shared assets into level-sprites/.
+    function assetPathsForLevel(level) {
+      try { kernel.initialState(level, (level && level.name) || ''); } catch (e) { /* defs registered before any throw */ }
+      return registry.assetPaths();
+    }
     function levelDefMap(level) {
       const probe = kernel.initialState(level, (level && level.name) || '');
       const map = {};
@@ -109,7 +115,8 @@
     }
     return { initialState: initialState, step: step, replay: replay,
       readout: readout, kernel: kernel, registry: registry,
-      assetsForLevel: assetsForLevel, levelDefMap: levelDefMap,
+      assetsForLevel: assetsForLevel, assetPathsForLevel: assetPathsForLevel,
+      levelDefMap: levelDefMap,
       getTileDef: function (id) { return registry.getTile(id); } };
   }
 
@@ -162,7 +169,9 @@
     isWon: isWon, isOrb: isOrb, isWarp: isWarp, countOrbs: countOrbs,
     DIRECTIONS: Kernel.DIRECTIONS, VERSION: VERSION, readout: engine.readout,
     DEFAULT_TIME_LIMIT_S: 120, createEngine: createEngine,
-    assetsForLevel: engine.assetsForLevel, levelDefMap: engine.levelDefMap,
+    assetsForLevel: engine.assetsForLevel,
+    assetPathsForLevel: engine.assetPathsForLevel,
+    levelDefMap: engine.levelDefMap,
     getTileDef: engine.getTileDef,
     registerCorePack: CorePack, registerKeysPack: KeysPack,
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack,
