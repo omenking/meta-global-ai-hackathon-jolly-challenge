@@ -1,0 +1,15 @@
+{
+  "pack": "swap",
+  "main": "main.js",
+  "assets": [
+    {"file": "swap-tile.png", "kind": "tiles", "bundled": true,
+     "shows": "swap tile on the floor, reusable, shown empty before a block or bot sits on it"},
+    {"file": "swap-tile-occupied.png", "kind": "tiles", "bundled": true,
+     "shows": "swap tile with a block sitting on it, ready for the adjacent player to swap with it"},
+    {"file": "jolly-swapping.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly mid-swap, exchanging tiles with the block or bot on the swap tile"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

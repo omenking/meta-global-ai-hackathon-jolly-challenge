@@ -477,6 +477,22 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (defMap[dt.ch] === 'swap:block' ||
+          defMap[dt.ch] === 'swap:bot') {
+        // A swapped block/bot leaves its placed tile: its sprite
+        // follows the entity's current cell in state.objects.
+        let found = null;
+        for (let sy = 0; sy < state.objects.length && !found; sy++) {
+          for (let sx = 0; sx < state.objects[sy].length; sx++) {
+            if (state.objects[sy][sx] === defMap[dt.ch]) {
+              found = { x: sx, y: sy }; break;
+            }
+          }
+        }
+        dt.sprite.visible = !!found;
+        if (found && dt.sprite.isSprite) {
+          dt.sprite.position.set(found.x * TILE, found.y * TILE);
+        }
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
