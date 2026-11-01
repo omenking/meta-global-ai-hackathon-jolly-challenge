@@ -127,23 +127,23 @@ class IceBlockMechanicTests(unittest.TestCase):
     def test_adversarial_nearest_wall_overshoot(self):
         a = self.r["a"]
         # It slides the whole way past the orb lane to the far wall.
-        self.assertEqual(a[2]["grid"][1], "#P.............I#")
+        self.assertEqual(a[2]["grid"][1], "#P.iiiiiiii....I#")
         self.assertEqual(a[2]["pos"], {"x": 2, "y": 1})
         self.assertEqual(a[2]["status"], "playing")
 
     def test_slide_stops_only_at_a_blocker(self):
         c = self.r["c"]
         # Across floor and ice, stopping only beside the blocker.
-        self.assertEqual(c[14]["grid"][13], "#........II.....#")
+        self.assertEqual(c[14]["grid"][13], "#..i...i.II.....#")
         self.assertEqual(c[14]["pos"], {"x": 2, "y": 13})
         # Pushing again against the blocker: nothing moves.
-        self.assertEqual(c[-1]["grid"][13], "#........II.....#")
+        self.assertEqual(c[-1]["grid"][13], "#..i...i.II.....#")
         self.assertEqual(c[-1]["pos"], {"x": 8, "y": 13})
         self.assertEqual(c[-1]["status"], "playing")
 
     def test_local_fire_standin_cancels_to_scorched(self):
         b = self.r["b"]
-        self.assertEqual(b[4]["grid"][3], "#.......S...*X..#")
+        self.assertEqual(b[4]["grid"][3], "#..i....S...*X..#")
         self.assertEqual(b[4]["pos"], {"x": 2, "y": 3})
         # The corrected play crosses the scorched tile and wins.
         self.assertEqual(b[-1]["pos"], {"x": 13, "y": 3})
@@ -151,24 +151,24 @@ class IceBlockMechanicTests(unittest.TestCase):
 
     def test_local_shallow_standin_becomes_a_bridge(self):
         d = self.r["d"]
-        self.assertEqual(d[6]["grid"][5], "#.......B.......#")
+        self.assertEqual(d[6]["grid"][5], "#..i....B.......#")
         # Crossing the bridge and coming back stays safe.
         self.assertEqual(d[-1]["pos"], {"x": 2, "y": 5})
         self.assertEqual(d[-1]["status"], "playing")
 
     def test_deep_lava_and_void_destroy_the_block(self):
-        self.assertEqual(self.r["e"][-1]["grid"][7], "#.......D.......#")
-        self.assertEqual(self.r["f"][-1]["grid"][9], "#.......A.......#")
-        self.assertEqual(self.r["g"][-1]["grid"][11], "#.......V.......#")
+        self.assertEqual(self.r["e"][-1]["grid"][7], "#..i....D.......#")
+        self.assertEqual(self.r["f"][-1]["grid"][9], "#..i....A.......#")
+        self.assertEqual(self.r["g"][-1]["grid"][11], "#..i....V.......#")
         for key in ("e", "f", "g"):
             self.assertEqual(self.r[key][-1]["status"], "playing")
 
     def test_restart_restores_every_tile(self):
         fresh = self.r["fresh"]
-        self.assertEqual(fresh[1], "#P.I............#")
+        self.assertEqual(fresh[1], "#P.Iiiiiiii.....#")
         self.assertEqual(fresh[3], "#..I....F...*X..#")
         self.assertEqual(fresh[5], "#..I....~.......#")
-        self.assertEqual(fresh[13], "#..I......I.....#")
+        self.assertEqual(fresh[13], "#..I...i..I.....#")
 
     def test_step_is_pure(self):
         self.assertTrue(self.r["pure"])
@@ -231,7 +231,7 @@ class SanityReplayTests(unittest.TestCase):
         self.assertEqual(self.r["liveFinal"],
                          {"pos": {"x": 13, "y": 3}, "orbs": 1,
                           "status": "won"})
-        self.assertEqual(self.r["row"], "#.......S....X..#")
+        self.assertEqual(self.r["row"], "#..i....S....X..#")
         self.assertEqual(self.r["replaySteps"], 15)
 
 

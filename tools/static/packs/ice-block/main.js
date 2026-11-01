@@ -108,6 +108,7 @@
     // Moved/transformed tiles never appear in level rows at their
     // destination, so give their projected grid chars names here.
     api.onLevelLoad(function (state) {
+      state.chars.terrain['ice:ice'] = 'i';
       state.chars.object['ice:ice-block'] = 'I';
       state.chars.object['ice:scorched'] = 'S';
       state.chars.object['ice:ice-bridge'] = 'B';
