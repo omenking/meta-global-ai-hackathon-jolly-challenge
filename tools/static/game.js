@@ -445,6 +445,26 @@
         ? textures['jolly-fall.png'] : textures['jolly.png'];
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
+    // Thief actors are a view of state.actors, like the player: the
+    // sprite follows the actor, and carrying a snatched key swaps
+    // to the carrying pose so the steal is visible.
+    for (const actor of state.actors || []) {
+      if (actor.def !== 'thief:thief') continue;
+      let spr = renderState._thieves && renderState._thieves.get(actor.id);
+      if (!spr) {
+        const tex0 = textures['thief.png'];
+        if (!tex0) continue;
+        spr = new PIXI.Sprite(tex0);
+        spr.scale.set(scale);
+        board.addChild(spr);
+        (renderState._thieves = renderState._thieves
+          || new Map()).set(actor.id, spr);
+      }
+      spr.position.set(actor.x * TILE, actor.y * TILE);
+      const tex = actor.flags && actor.flags.carrying
+        ? textures['thief-carrying-key.png'] : textures['thief.png'];
+      if (tex && spr.texture !== tex) spr.texture = tex;
+    }
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
       TILE - 4, TILE - 4).stroke({ width: 3, color: 0x00c8ff });
