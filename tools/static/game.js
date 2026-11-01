@@ -477,6 +477,15 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'U') {
+        // Guard: the tile stays 'U' while its facing cycles; the
+        // visible arrow follows the facing stored in cell meta.
+        const gmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const gfacing = (gmeta && gmeta.guard_facing) || 'left';
+        dt.sprite.visible = !!(state.grid[dt.y]
+          && state.grid[dt.y][dt.x] === 'U');
+        const gtex = textures['guard-facing-' + gfacing + '.png'];
+        if (gtex && dt.sprite.texture !== gtex) dt.sprite.texture = gtex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
