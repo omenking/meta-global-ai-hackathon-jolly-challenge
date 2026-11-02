@@ -319,6 +319,17 @@
   insertHudSection(orbsReadout.group, orbsReadout.height, 1);
   const levelReadout = makeReadout('level');
   insertHudSection(levelReadout.group, levelReadout.height, 0);
+  // Bank (orb-bank pack): bonus orbs banked from the last chamber,
+  // shown between levels so the bank gate's price is known up front.
+  const bankReadout = makeReadout('bank');
+  {
+    const bankLabel = new PIXI.Text({ text: 'BANK', style: {
+      fontSize: 15, fill: 0x111111, fontWeight: 'bold' } });
+    bankLabel.anchor.set(0.5, 0);
+    bankLabel.position.set(HUD_W / 2, 0);
+    bankReadout.group.addChild(bankLabel);
+  }
+  insertHudSection(bankReadout.group, bankReadout.height, 3);
   // Inventory: no box asset exists, so the 8 slots are drawn here
   // (dark inset squares) in the column foot; held keys show their
   // colour icon from the derived key sprites.
@@ -354,7 +365,7 @@
       if (tex && inventoryIcons[i].texture !== tex) inventoryIcons[i].texture = tex;
     }
   }
-  insertHudSection(inventoryGroup, 104, 3);
+  insertHudSection(inventoryGroup, 104, 4);
   const retryGroup = new PIXI.Container();
   retryGroup.visible = false;
   const retryMsg = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
@@ -477,6 +488,13 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'K') {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'K' || gc === 'k';
+        const texName = gc === 'k' ? 'bank-gate-open.png'
+          : 'bank-gate-closed.png';
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
@@ -495,6 +513,8 @@
     }
     hudValues.orbs = window.GameHud.orbsLeft(state);
     orbsReadout.set(hudValues.orbs);
+    hudValues.bank = window.GameHud.bankCount(state);
+    bankReadout.set(hudValues.bank);
     hudValues.level = window.GameHud.levelNumber(level, state.level);
     levelReadout.set(hudValues.level);
     hudValues.inventory = window.GameHud.inventorySlots(

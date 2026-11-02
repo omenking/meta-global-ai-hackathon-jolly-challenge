@@ -72,7 +72,17 @@
     return slots;
   }
 
-  const api = { digitsFor, timerSeconds, orbsLeft, levelNumber,
+  // Banked bonus orbs (orb-bank pack counter): the HUD shows the
+  // bank between levels so a bank gate's price is known up front.
+  function bankCount(state) {
+    if (state && state.counters
+        && typeof state.counters['bank:bank'] === 'number') {
+      return state.counters['bank:bank'];
+    }
+    return 0;
+  }
+
+  const api = { digitsFor, timerSeconds, orbsLeft, bankCount, levelNumber,
     inventorySlots, keyColor, INVENTORY_SLOTS, KEY_COLORS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameHud = api;

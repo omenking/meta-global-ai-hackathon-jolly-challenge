@@ -1,0 +1,15 @@
+{
+  "pack": "orb-bank",
+  "main": "main.js",
+  "assets": [
+    {"file": "bank-gate-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "bank gate shut with its stated bank cost unpaid"},
+    {"file": "bank-gate-open.png", "kind": "tiles", "bundled": true,
+     "shows": "bank gate opened by deducting its stated cost from the bank"},
+    {"file": "bank-counter.png", "kind": "gui", "bundled": true,
+     "shows": "HUD bank counter showing the bonus orbs banked from the last level"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
