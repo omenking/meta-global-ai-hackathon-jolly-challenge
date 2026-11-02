@@ -181,6 +181,17 @@ class IceBlockMechanicTests(unittest.TestCase):
                       (ROOT / "tools" / "static" / "game.html")
                       .read_text(encoding="utf-8"))
 
+    def test_block_sprite_is_raised_above_the_destination_floor(self):
+        # Regression (qa-verification): board sprites are added in
+        # row-major order, so a destination floor drawn after the
+        # block's origin covers the block after an east/south slide;
+        # the block looked picked up. The 'I' render branch must
+        # bring its sprite to the front of its parent.
+        js = (ROOT / "tools" / "static" / "game.js").read_text(
+            encoding="utf-8")
+        branch = js.split("dt.ch === 'I'", 1)[1].split("dt.ch === 'F'", 1)[0]
+        self.assertIn("setChildIndex", branch)
+
     @unittest.skip("blocked-by: 43 (fire tile) is not built on main; "
                    "the pack's local ice:fire stand-in is covered by "
                    "test_local_fire_standin_cancels_to_scorched")

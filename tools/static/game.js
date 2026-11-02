@@ -475,7 +475,14 @@
       if (dt.ch === 'I') {
         const bp = iceBlocks[iceIdx++];
         dt.sprite.visible = !!bp;
-        if (bp) dt.sprite.position.set(bp.x * TILE, bp.y * TILE);
+        if (bp) {
+          dt.sprite.position.set(bp.x * TILE, bp.y * TILE);
+          // Board sprites are added row-major, so floors east/south
+          // of the origin were added after this sprite and would
+          // cover it after such a slide (it looked picked up).
+          if (dt.sprite.parent) dt.sprite.parent.setChildIndex(
+            dt.sprite, dt.sprite.parent.children.length - 1);
+        }
         continue;
       }
       if (dt.ch === 'F' || dt.ch === '~') {
