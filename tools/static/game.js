@@ -442,7 +442,10 @@
         state.player.y * TILE);
       // Fallen pose while the run is lost, normal pose otherwise.
       const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png'] : textures['jolly.png'];
+        ? textures['jolly-fall.png']
+        : (state.counters && state.counters['lantern:held'] > 0
+          && textures['jolly-with-lantern.png']
+          ? textures['jolly-with-lantern.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     marker.clear();
@@ -477,6 +480,15 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === '*' && state.counters
+          && typeof state.counters['lantern:radius'] === 'number') {
+        // Lantern room: an orb is drawn only inside the light
+        // radius (two tiles, four with the lantern); it still
+        // exists and collects by walking onto it either way.
+        const lanternPack = window.GamePackLantern;
+        dt.sprite.visible = !!(state.grid[dt.y]
+          && state.grid[dt.y][dt.x] === dt.ch)
+          && lanternPack.isLit(state, dt.x, dt.y);
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open

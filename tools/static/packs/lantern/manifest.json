@@ -1,0 +1,21 @@
+{
+  "pack": "lantern",
+  "main": "main.js",
+  "assets": [
+    {"file": "lantern.png", "kind": "tiles", "bundled": true,
+     "shows": "lantern pickup resting on the floor before it is collected"},
+    {"file": "lantern-room-floor.png", "kind": "tiles", "bundled": true,
+     "shows": "floor inside the widened four-tile radius the lantern gives"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-with-lantern.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly carrying the lantern, lit out to four tiles"},
+    {"file": "jolly-without-lantern.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly at the base two-tile radius for comparison before pickup or after leaving the room"}
+  ],
+  "gui": [
+    {"file": "lantern-held.png", "kind": "gui", "bundled": true,
+     "shows": "lantern held for this room, with no fuel gauge because time does not consume it here"}
+  ],
+  "blocks": []
+}
