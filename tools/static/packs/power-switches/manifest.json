@@ -1,0 +1,17 @@
+{
+  "pack": "power-switches",
+  "main": "main.js",
+  "assets": [],
+  "jolly_states": [],
+  "gui": [
+    {"file": "power-counter-0.png", "kind": "gui", "bundled": true,
+     "shows": "switch counter at 0/3, no wired switch on and the elevator not called"},
+    {"file": "power-counter-1.png", "kind": "gui", "bundled": true,
+     "shows": "switch counter at 1/3, one wired switch on and the elevator not called"},
+    {"file": "power-counter-2.png", "kind": "gui", "bundled": true,
+     "shows": "switch counter at 2/3, two wired switches on and the elevator not called"},
+    {"file": "power-counter-3.png", "kind": "gui", "bundled": true,
+     "shows": "switch counter at 3/3, all three wired switches on together and the elevator called"}
+  ],
+  "blocks": []
+}

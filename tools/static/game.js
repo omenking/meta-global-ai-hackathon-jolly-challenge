@@ -355,6 +355,23 @@
     }
   }
   insertHudSection(inventoryGroup, 104, 3);
+  // Power switches recipe: the 0/3 to 3/3 counter lives in the HUD
+  // column and swaps among the pack's four bundled counter images;
+  // it appears only on levels whose state carries the counter.
+  let powerSprite = null;
+  if (textures['power-counter-0.png']) {
+    const powerGroup = new PIXI.Container();
+    const powerLabel = new PIXI.Text({ text: 'POWER', style: {
+      fontSize: 15, fill: 0x111111, fontWeight: 'bold' } });
+    powerLabel.anchor.set(0.5, 0);
+    powerLabel.position.set(HUD_W / 2, 0);
+    powerGroup.addChild(powerLabel);
+    powerSprite = new PIXI.Sprite(textures['power-counter-0.png']);
+    powerSprite.width = 120; powerSprite.height = 120;
+    powerSprite.position.set((HUD_W - 120) / 2, 22);
+    powerGroup.addChild(powerSprite);
+    insertHudSection(powerGroup, 150, 4);
+  }
   const retryGroup = new PIXI.Container();
   retryGroup.visible = false;
   const retryMsg = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
@@ -477,6 +494,10 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'E') {
+        // Elevator gate: shut sprite shows until the recipe counter
+        // calls the elevator at 3/3, then the doorway reads open.
+        dt.sprite.visible = !(state.flags && state.flags['power:called']);
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
@@ -492,6 +513,12 @@
     if (finishKey !== renderState._finishKey) {
       renderState._finishKey = finishKey;
       layoutHud();
+    }
+    if (powerSprite && state.counters
+        && typeof state.counters['power:count'] === 'number') {
+      const ptex = textures['power-counter-'
+        + state.counters['power:count'] + '.png'];
+      if (ptex && powerSprite.texture !== ptex) powerSprite.texture = ptex;
     }
     hudValues.orbs = window.GameHud.orbsLeft(state);
     orbsReadout.set(hudValues.orbs);
