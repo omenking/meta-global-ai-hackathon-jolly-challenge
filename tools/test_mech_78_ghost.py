@@ -241,5 +241,41 @@ class GhostReplayTests(unittest.TestCase):
         self.assertEqual(self.r["deaths"], 2)
 
 
+SANITY_SCRIPT = r"""
+const core = require(process.argv[1]);
+const level = JSON.parse(require('fs').readFileSync(process.argv[2], 'utf8'));
+const inputs = [...Array(12).fill('right'), 'right', 'right', 'left',
+  'down', 'down', ...Array(12).fill('right'), 'down', 'down', 'down'];
+const log = inputs.map((input, i) => ({ t_ms: (i + 1) * 100, input }));
+let live = core.initialState(level, 'mech-78-ghost-room');
+for (const stepIn of log) live = core.step(live, stepIn);
+const replayed = core.replay(level, 'mech-78-ghost-room', log);
+const replayed2 = core.replay(level, 'mech-78-ghost-room',
+  JSON.parse(JSON.stringify(log)));
+console.log(JSON.stringify({
+  liveFinal: { pos: { ...live.player },
+    orbs: core.readout(live).orbs_left },
+  liveDigest: core.stateDigest(live),
+  replayDigest: core.stateDigest(replayed[replayed.length - 1]),
+  replay2Digest: core.stateDigest(replayed2[replayed2.length - 1]),
+  replaySteps: replayed.length - 1,
+}));
+"""
+
+
+@unittest.skipUnless(shutil.which("node"), "node not available")
+class SanityReplayTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.r = run_core(SANITY_SCRIPT)
+
+    def test_full_playthrough_replays_to_same_end_state(self):
+        self.assertEqual(self.r["replayDigest"], self.r["liveDigest"])
+        self.assertEqual(self.r["replay2Digest"], self.r["liveDigest"])
+        self.assertEqual(self.r["liveFinal"],
+                         {"pos": {"x": 13, "y": 6}, "orbs": 3})
+        self.assertEqual(self.r["replaySteps"], 32)
+
+
 if __name__ == "__main__":
     unittest.main()
