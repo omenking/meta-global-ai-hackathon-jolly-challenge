@@ -189,7 +189,15 @@
       // Phase 2 intent + phase 3 move (player from input; other actors
       // via registered deterministic controllers).
       const intents = [];
-      if (player && DIRECTIONS[input.input]) intents.push({ actor: player, dir: input.input });
+      if (player && DIRECTIONS[input.input]) {
+        // Pack before-move hooks (e.g. magnet pull) may veto the
+        // player's move and act in its place, inside this same step.
+        let vetoed = false;
+        for (const fn of registry._beforeMoveHooks) {
+          if (fn(next, player, input.input) === false) vetoed = true;
+        }
+        if (!vetoed) intents.push({ actor: player, dir: input.input });
+      }
       for (const actor of next.actors) {
         if (player && actor.id === player.id) continue;
         const ctrl = registry.getController(actor.def);
