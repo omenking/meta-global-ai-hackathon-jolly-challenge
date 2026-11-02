@@ -349,7 +349,11 @@
       const color = slots[i];
       const tex = color && textures['key_' + color + '.png']
         ? textures['key_' + color + '.png']
-        : (color ? textures['key.png'] : null);
+        : (color && textures[color + '-slot.png'])
+          ? textures[color + '-slot.png']
+          : (color && textures[color + '.png'])
+            ? textures[color + '.png']
+            : (color ? textures['key.png'] : null);
       inventoryIcons[i].visible = !!tex;
       if (tex && inventoryIcons[i].texture !== tex) inventoryIcons[i].texture = tex;
     }
@@ -440,9 +444,14 @@
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
         state.player.y * TILE);
-      // Fallen pose while the run is lost, normal pose otherwise.
+      // Fallen pose while the run is lost, gloved pose while the
+      // power gloves are held, normal pose otherwise.
+      const gloved = (state.inventory || []).some(
+        (e) => e.item === 'gloves:gloves');
       const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png'] : textures['jolly.png'];
+        ? textures['jolly-fall.png']
+        : (gloved && textures['jolly-power-gloves.png']
+          ? textures['jolly-power-gloves.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     marker.clear();
@@ -477,11 +486,37 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'B' || dt.ch === 'H') {
+        // Pushable blocks move: this sprite is pooled below.
+        dt.sprite.visible = false;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
           : !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
       }
+    }
+    // Pooled block sprites follow the blocks' current grid cells
+    // (creation order matches the row-major scan of state.grid).
+    for (const bch of ['B', 'H']) {
+      const pool = dynamicTiles.filter((dt) => dt.ch === bch);
+      if (!pool.length) continue;
+      const cells = [];
+      for (let gy = 0; gy < state.grid.length; gy++) {
+        for (let gx = 0; gx < state.grid[gy].length; gx++) {
+          if (state.grid[gy][gx] === bch) cells.push({ x: gx, y: gy });
+        }
+      }
+      pool.forEach((dt, i) => {
+        const cell = cells[i];
+        dt.sprite.visible = !!cell;
+        if (!cell) return;
+        if (dt.sprite.text !== undefined) {
+          dt.sprite.position.set(cell.x * TILE + TILE / 2,
+            cell.y * TILE + TILE / 2);
+        } else {
+          dt.sprite.position.set(cell.x * TILE, cell.y * TILE);
+        }
+      });
     }
     retryGroup.visible = state.status === 'lost';
     // The HUD win screen is only for the last level; mid-chain a

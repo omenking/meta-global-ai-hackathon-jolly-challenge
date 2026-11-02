@@ -1,0 +1,31 @@
+{
+  "pack": "power-gloves",
+  "main": "main.js",
+  "assets": [
+    {"file": "power-gloves.png", "kind": "tiles", "bundled": true,
+     "shows": "power gloves pickup before they are collected into a slot"},
+    {"file": "power-gloves-collected.png", "kind": "tiles", "bundled": true,
+     "shows": "empty pickup tile after the gloves have been taken"},
+    {"file": "jolly-power-gloves.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly wearing the held power gloves"},
+    {"file": "jolly-power-gloves-pushing.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly moving a heavy block in a single push with no strain graphic"},
+    {"file": "jolly-line-push.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly shoving the first block of a line so the whole line shifts one tile"},
+    {"file": "power-gloves-slot.png", "kind": "gui", "bundled": true,
+     "shows": "power gloves icon filling one inventory slot while held"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-power-gloves.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly wearing the held power gloves"},
+    {"file": "jolly-power-gloves-pushing.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly moving a heavy block in a single push with no strain graphic"},
+    {"file": "jolly-line-push.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly shoving the first block of a line so the whole line shifts one tile"}
+  ],
+  "gui": [
+    {"file": "power-gloves-slot.png", "kind": "gui", "bundled": true,
+     "shows": "power gloves icon filling one inventory slot while held"}
+  ],
+  "blocks": []
+}
