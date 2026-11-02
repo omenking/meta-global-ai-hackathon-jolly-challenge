@@ -1,0 +1,11 @@
+{
+  "pack": "guarded-orb",
+  "main": "main.js",
+  "assets": [
+    {"file": "guarded-orb.png", "kind": "tiles", "bundled": true,
+     "shows": "guarded orb on floor, ready to step away when the player comes within two tiles"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
