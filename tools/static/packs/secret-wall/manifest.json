@@ -1,0 +1,18 @@
+{
+  "pack": "secret-wall",
+  "main": "main.js",
+  "assets": [
+    {"file": "secret-wall.png", "kind": "tiles", "bundled": true,
+     "shows": "secret wall drawn exactly as an ordinary wall, with no visible difference before it is found"},
+    {"file": "secret-wall-faded.png", "kind": "tiles", "bundled": true,
+     "shows": "same secret wall after the first walk-through, sprite faded so the opening is known"},
+    {"file": "wall.png", "kind": "tiles", "bundled": true,
+     "shows": "ordinary solid wall for comparison, never enterable from any side"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-through-wall.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly midway through the secret wall, inside what is drawn as solid wall"}
+  ],
+  "gui": [],
+  "blocks": []
+}
