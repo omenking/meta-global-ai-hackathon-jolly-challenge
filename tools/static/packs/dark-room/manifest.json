@@ -1,0 +1,15 @@
+{
+  "pack": "dark-room",
+  "main": "main.js",
+  "assets": [
+    {"file": "dark-room-floor.png", "kind": "tiles", "bundled": true,
+     "shows": "floor inside the two-tile light radius, drawn normally around Jolly"},
+    {"file": "darkness.png", "kind": "tiles", "bundled": true,
+     "shows": "tile beyond the light radius, not drawn at all and shown as darkness"},
+    {"file": "jolly-in-dark.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly at the centre of the two-tile lit radius in a dark room"}
+  ],
+  "jolly_states": ["jolly-in-dark.png"],
+  "gui": [],
+  "blocks": []
+}
