@@ -1,0 +1,30 @@
+{
+  "name": "mech-55-map-tile-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-55-map-tile Test Level: map tile (M) at the entrance to a branching room; the short north branch ends at a blue lock (B) with no blue key in the room, the long south branch holds the red key (r) for the red lock (R) into the orb chamber; gate (G) guards the warp (X) until the orb is collected",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"},
+    "M": {"base": "floor_default.png", "label": "map tile", "text": "M", "def": "map:map"},
+    "r": {"base": "floor_default.png", "label": "key red", "sprite": "key_red.png", "key_color": "red"},
+    "R": {"label": "lock red", "sprite": "wall_keyhole_red.png", "lock_color": "red"},
+    "B": {"label": "lock blue", "sprite": "wall_keyhole_blue.png", "lock_color": "blue"}
+  },
+  "rows": [
+    "#################",
+    "#P.M......B...*.#",
+    "#.........#.....#",
+    "#.........#.....#",
+    "#.........#.....#",
+    "#.........#.....#",
+    "#.........#.....#",
+    "#....r....R...GX#",
+    "#################"
+  ]
+}
