@@ -237,6 +237,11 @@
   // the player sprite + marker below are a view of state — they are
   // repositioned from state.player on every step.
   let state = window.GameCore.initialState(level, levelName);
+  // Peep hole (mech-60): the next room (rows above the divider) is
+  // drawn black until entered in person; while peeping the shade
+  // lifts and the camera pans up. View only — state stays kernel.
+  const peepShade = new PIXI.Graphics();
+  board.addChild(peepShade);
   let playerSprite = null;
   if (textures['jolly.png']) {
     playerSprite = new PIXI.Sprite(textures['jolly.png']);
@@ -436,13 +441,32 @@
   }
   function renderState() {
     computeCam(state.player);
+    // Peep pan: while the preview runs, shift the view up toward
+    // the next room (clamped at the level edge).
+    const peepFlags = state.flags || {};
+    if (peepFlags['peep:active']) {
+      camPos = { x: camPos.x, y: Math.max(0, camPos.y - 3),
+        w: camPos.w, h: camPos.h };
+    }
     updateBoardTransform();
+    // Black next room until entered in person or peeped into.
+    peepShade.clear();
+    const dividerY = peepFlags['peep:divider_y'];
+    if (typeof dividerY === 'number' && dividerY > 0
+        && !peepFlags['peep:active']
+        && !peepFlags['peep:entered_next']) {
+      peepShade.rect(0, 0, COLS * TILE, dividerY * TILE)
+        .fill(0x000000);
+    }
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
         state.player.y * TILE);
-      // Fallen pose while the run is lost, normal pose otherwise.
+      // Fallen pose while the run is lost, peeping pose while the
+      // peep preview holds Jolly on the hole, normal pose otherwise.
       const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png'] : textures['jolly.png'];
+        ? textures['jolly-fall.png']
+        : ((state.flags || {})['peep:active'] && textures['jolly-peeping.png']
+          ? textures['jolly-peeping.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     marker.clear();
@@ -477,6 +501,11 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'H') {
+        dt.sprite.visible = true;
+        const ptex = textures[(state.flags || {})['peep:active']
+          ? 'peep-hole-active.png' : 'peep-hole.png'];
+        if (ptex && dt.sprite.texture !== ptex) dt.sprite.texture = ptex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
