@@ -1,0 +1,16 @@
+{
+  "pack": "orb-pouch",
+  "main": "main.js",
+  "assets": [
+    {"file": "orb-door-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "orb-door shut with its stated pouch cost unpaid"},
+    {"file": "orb-door-open.png", "kind": "tiles", "bundled": true,
+     "shows": "orb-door opened by spending its stated pouch cost"}
+  ],
+  "jolly_states": [],
+  "gui": [
+    {"file": "pouch-counter.png", "kind": "gui", "bundled": true,
+     "shows": "pouch counter counting collected orbs up, with the spent total the gate reads"}
+  ],
+  "blocks": []
+}
