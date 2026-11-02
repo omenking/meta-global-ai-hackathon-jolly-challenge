@@ -1,0 +1,28 @@
+{
+  "name": "mech-52-lantern-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-52-lantern Test Level: dark lantern room (top) with lantern L near entrance at (3,1), orb at (9,1) revealed at the widened four-tile radius from the search lane but not at the base two-tile radius; room exit E in the divider at (5,4) ends the lantern, gate G and portal X in the next room below; leaving by E before searching loses the widened light with the orb still inside",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "L": {"base": "floor_default.png", "label": "lantern pickup", "sprite": "lantern.png", "def": "lantern:lantern"},
+    "E": {"base": "floor_default.png", "label": "room exit (lantern ends here)", "sprite": "gate.png", "def": "lantern:exit"},
+    "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"}
+  },
+  "rows": [
+    "#############",
+    "#P.L.....*..#",
+    "#...........#",
+    "#...........#",
+    "#####E#######",
+    "#...........#",
+    "#####G#######",
+    "#....X......#",
+    "#############"
+  ]
+}
