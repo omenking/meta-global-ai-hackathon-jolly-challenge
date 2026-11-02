@@ -373,6 +373,17 @@ class PackWiringTests(unittest.TestCase):
         self.assertIn("dt.ch === 'B'", js)
         self.assertIn("push-block-on-switch.png", js)
 
+    def test_block_sprite_is_raised_above_the_destination_floor(self):
+        # Regression (qa-verification): board sprites are added in
+        # row-major order, so a destination floor drawn after the
+        # block's origin covers the block after an east/south push;
+        # the block looked picked up. The 'B' render branch must
+        # bring its sprite to the front of its parent.
+        js = (ROOT / "tools" / "static" / "game.js").read_text(
+            encoding="utf-8")
+        branch = js.split("dt.ch === 'B'", 1)[1].split("dt.ch === 'D'", 1)[0]
+        self.assertIn("setChildIndex", branch)
+
     @unittest.skipUnless(shutil.which("node"), "node not available")
     def test_bundled_assets_load_from_the_pack(self):
         script = r"""

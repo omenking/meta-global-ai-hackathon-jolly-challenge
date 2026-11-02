@@ -489,6 +489,11 @@
         dt.sprite.visible = bx >= 0;
         if (bx >= 0) {
           dt.sprite.position.set(bx * TILE, by * TILE);
+          // Board sprites are added row-major, so floors east/south
+          // of the origin were added after this sprite and would
+          // cover it after such a push (it looked picked up).
+          if (dt.sprite.parent) dt.sprite.parent.setChildIndex(
+            dt.sprite, dt.sprite.parent.children.length - 1);
           const onSwitch = state.terrain[by][bx] === 'blocks:switch-plate';
           const bTex = textures[onSwitch
             ? 'push-block-on-switch.png' : 'push-block.png'];
