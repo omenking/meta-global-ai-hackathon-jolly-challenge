@@ -10,7 +10,7 @@
     "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
     "H": {"base": "floor_default.png", "label": "heavy orb", "sprite": "heavy-orb.png", "def": "heavy:orb"},
     "S": {"label": "scale tile", "sprite": "scale.png", "def": "heavy:scale"},
-    "~": {"label": "water", "sprite": "water.png", "def": "water:water"},
+    "~": {"base": "floor_default.png", "label": "water", "def": "water:water"},
     "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
     "X": {"base": "floor_default.png", "label": "warp", "sprite": "portal.png"}
   },
