@@ -1,0 +1,11 @@
+{
+  "pack": "hidden-orb",
+  "main": "main.js",
+  "assets": [
+    {"file": "hidden-orb.png", "kind": "tiles", "bundled": true,
+     "shows": "hidden orb revealed inside the light radius; outside the radius it is not drawn at all, so there is no hidden sprite"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
