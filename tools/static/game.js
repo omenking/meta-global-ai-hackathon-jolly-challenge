@@ -434,6 +434,10 @@
     timeReadout.set(left);
     hudTimer.text = String(hudValues.timer).padStart(3, '0');
   }
+  // Info-tile banner: shown once, on the step that first reads a
+  // tile (the info:shown counter increments); hidden once the
+  // player steps off the tile. View-only: state stays in GameCore.
+  let bannerCountSeen = 0;
   function renderState() {
     computeCam(state.player);
     updateBoardTransform();
@@ -477,6 +481,17 @@
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'i') {
+        // Info tile: fresh and spent forms share the grid char
+        // 'i'; the spent look follows the cell meta (info_read),
+        // like the crumbling stages above.
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'i';
+        const imeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const texName = (imeta && imeta.info_read)
+          ? 'info-read.png' : 'info.png';
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
@@ -501,6 +516,25 @@
       window.GameCore.readout(state).inventory);
     setInventory(hudValues.inventory);
     drawHud(state.elapsed_s, state.time_limit_s);
+    const bannerEl = document.getElementById('info-banner');
+    if (bannerEl) {
+      const bShown = (state.counters && state.counters['info:shown']) || 0;
+      if (bShown < bannerCountSeen) bannerCountSeen = bShown;
+      if (bShown > bannerCountSeen) {
+        bannerCountSeen = bShown;
+        const cellMeta = state.meta &&
+          state.meta[state.player.x + ',' + state.player.y];
+        const text = (cellMeta && cellMeta.banner) ||
+          (state.flags && state.flags['info:banner']) || '';
+        if (text) {
+          bannerEl.textContent = text;
+          bannerEl.style.display = 'block';
+        }
+      }
+      const pm = state.meta &&
+        state.meta[state.player.x + ',' + state.player.y];
+      if (!(pm && pm.banner)) bannerEl.style.display = 'none';
+    }
   }
   renderState();
 
@@ -918,6 +952,11 @@
       : null,
     getHud: () => ({ timer: hudValues.timer, orbs: hudValues.orbs,
       level: hudValues.level, inventory: hudValues.inventory.slice() }),
+    getInfoBanner: () => {
+      const el = document.getElementById('info-banner');
+      return { visible: !!el && el.style.display === 'block',
+        text: el ? el.textContent : '' };
+    },
     isRetryBarVisible: () => retryGroup.visible,
     isWinScreenVisible: () => winGroup.visible,
     isSummaryVisible: () => summaryEl.classList.contains('open'),

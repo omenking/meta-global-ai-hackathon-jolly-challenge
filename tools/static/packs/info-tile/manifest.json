@@ -1,0 +1,15 @@
+{
+  "pack": "info-tile",
+  "main": "main.js",
+  "assets": [
+    {"file": "info.png", "kind": "tiles", "bundled": true,
+     "shows": "marked info tile before it has been stepped on"},
+    {"file": "info-read.png", "kind": "tiles", "bundled": true,
+     "shows": "info tile after its one trigger, spent for this attempt and still walkable"},
+    {"file": "info-banner.png", "kind": "gui", "bundled": true,
+     "shows": "one-line banner teaching the next mechanic, over the live room"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

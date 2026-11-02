@@ -60,6 +60,11 @@
   @media (prefers-reduced-motion: reduce) {
     #wipe { transition: none; }
   }
+  #info-banner { display: none; position: fixed; top: 64px; left: 50%;
+           transform: translateX(-50%); z-index: 15; background: #1d2f45;
+           color: #fff; border: 2px solid #e8e3d3; border-radius: 6px;
+           padding: 10px 18px; font-size: 15px; max-width: 80vw;
+           text-align: center; }
   body.embed { overflow: hidden; background: #111; }
   body.embed header, body.embed #panel { display: none; }
   body.embed main { padding: 0; }
@@ -134,6 +139,7 @@
     </div>
   </div>
 </main>
+<div id="info-banner" role="note"></div>
 <div id="level-summary" role="dialog" aria-modal="true" aria-labelledby="summary-title">
   <div class="summary-card">
     <h2 id="summary-title">Level complete!</h2>
@@ -157,6 +163,7 @@
 <script src="packs/keys-locks/main.js"></script>
 <script src="packs/proof-water/main.js"></script>
 <script src="packs/crumbling/main.js"></script>
+<script src="packs/info-tile/main.js"></script>
 <script src="game-core.js"></script>
 <script src="view/board.js"></script>
 <script src="game-hud.js"></script>
