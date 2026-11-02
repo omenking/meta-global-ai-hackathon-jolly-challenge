@@ -20,6 +20,7 @@
       inventory: (s.inventory || []).map((e) => ({ item: e.item })),
       counters: Object.assign({}, s.counters), flags: Object.assign({}, s.flags),
       steps: s.steps, t_ms: s.t_ms, elapsed_s: s.elapsed_s,
+      effective_elapsed_s: s.effective_elapsed_s,
       time_limit_s: s.time_limit_s, time_left_s: s.time_left_s,
       status: s.status, next_level: s.next_level, last_input: s.last_input,
       last_effects: [] };
@@ -99,6 +100,7 @@
         actors: [{ id: 'player', def: 'core:player', x: spawn.x, y: spawn.y,
           dir: null, flags: {} }].concat(spawns),
         inventory: [], counters: {}, flags: {}, steps: 0, t_ms: 0, elapsed_s: 0,
+        effective_elapsed_s: 0,
         time_limit_s: limit, time_left_s: limit, status: 'playing',
         next_level: (level && typeof level.next === 'string' && level.next) ? level.next : null,
         last_input: null, last_effects: [] };
@@ -132,6 +134,8 @@
           if (i >= 0) state.inventory.splice(i, 1);
         } else if (fx.type === 'incCounter') {
           state.counters[fx.key] = (state.counters[fx.key] || 0) + (fx.by || 0);
+        } else if (fx.type === 'setCounter') {
+          state.counters[fx.key] = fx.value;
         } else if (fx.type === 'setMeta') {
           const k = key(fx.x, fx.y);
           state.meta[k] = Object.assign({}, state.meta[k]);
@@ -167,13 +171,22 @@
       // a later input returns the state exactly as it finished.
       if (state.status === 'won' || state.status === 'lost') return next;
       const elapsed = input.t_ms / 1000;
+      // Effective elapsed: packs may freeze or slow the level
+      // timer through timer hooks, derived from the previous
+      // state's recorded data and this input's t_ms only.
+      let effective = elapsed;
+      for (const fn of registry._timerHooks) {
+        const v = fn(state, input.t_ms, effective);
+        if (typeof v === 'number' && v >= 0) effective = v;
+      }
       next.t_ms = input.t_ms; next.elapsed_s = elapsed;
+      next.effective_elapsed_s = effective;
       next.time_left_s = next.time_limit_s === null ? null
-        : Math.max(0, next.time_limit_s - elapsed);
+        : Math.max(0, next.time_limit_s - effective);
       next.steps = state.steps + 1;
       next.last_input = input.input === undefined ? null : input.input;
       const expired = next.time_limit_s !== null && next.time_limit_s !== undefined
-        && elapsed >= next.time_limit_s;
+        && effective >= next.time_limit_s;
       if (expired) {
         // Kernel owns the clock only; whether expiry loses is a pack
         // rule delivered through tick hooks (core pack: lose).

@@ -314,6 +314,16 @@
   }
   const timeReadout = makeReadout('time');
   const hudTimer = timeReadout.text;
+  // Frozen timer display (hourglass pack gui asset): shown over
+  // the time readout while the level timer is frozen.
+  const frozenBadge = textures['timer-frozen.png']
+    ? new PIXI.Sprite(textures['timer-frozen.png']) : null;
+  if (frozenBadge) {
+    frozenBadge.width = 40; frozenBadge.height = 40;
+    frozenBadge.position.set(HUD_W - 48, 28);
+    frozenBadge.visible = false;
+    timeReadout.group.addChild(frozenBadge);
+  }
   addHudSection(timeReadout.group, timeReadout.height);
   const orbsReadout = makeReadout('orbs');
   insertHudSection(orbsReadout.group, orbsReadout.height, 1);
@@ -464,7 +474,13 @@
       // tile ('C') becomes void ('V'): the same glyph follows the
       // grid char so the hole stays visible instead of turning back
       // into plain floor.
-      if (dt.ch === 'C') {
+      if (dt.ch === 'H') {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'H' || gc === 'h';
+        const texName = gc === 'h' ? 'hourglass-spent.png' : 'hourglass.png';
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'C') {
         const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
         dt.sprite.visible = gc === 'C' || gc === 'V';
         // Intact, minor, major and void each have a bundled sprite
@@ -493,6 +509,9 @@
       renderState._finishKey = finishKey;
       layoutHud();
     }
+    if (frozenBadge) {
+      frozenBadge.visible = window.GameCore.readout(state).timer_frozen;
+    }
     hudValues.orbs = window.GameHud.orbsLeft(state);
     orbsReadout.set(hudValues.orbs);
     hudValues.level = window.GameHud.levelNumber(level, state.level);
@@ -500,7 +519,8 @@
     hudValues.inventory = window.GameHud.inventorySlots(
       window.GameCore.readout(state).inventory);
     setInventory(hudValues.inventory);
-    drawHud(state.elapsed_s, state.time_limit_s);
+    drawHud(typeof state.effective_elapsed_s === 'number'
+      ? state.effective_elapsed_s : state.elapsed_s, state.time_limit_s);
   }
   renderState();
 
@@ -668,11 +688,31 @@
   // Idle expiry: when the live clock reaches the limit, record the
   // loss as a step at exactly the limit so replay loses at the same
   // recorded moment — never from an unrecorded wall-clock read alone.
+  // Effective (timer-hook adjusted) elapsed for the live clock:
+  // an hourglass freeze holds the display at its collection value
+  // for 10 real seconds, then it resumes from that value. Display
+  // only; state advances solely through recorded step t_ms.
+  function displayElapsedS(wallS) {
+    const c = state.counters || {};
+    if (!c['hourglass:collected']) return wallS;
+    const collect = (c['hourglass:collect_ms'] || 0) / 1000;
+    const offset = (c['hourglass:offset_ms'] || 0) / 1000;
+    const frozen = Math.min(Math.max(wallS - collect, 0), 10);
+    return wallS - offset - frozen;
+  }
+  function expiryTMs() {
+    const c = state.counters || {};
+    let extra = 0;
+    if (c['hourglass:collected']) {
+      extra = (c['hourglass:offset_ms'] || 0) / 1000 + 10;
+    }
+    return Math.round((state.time_limit_s + extra) * 1000);
+  }
   function expireNow() {
     if (state.status === 'lost' || state.status === 'won' ||
         state.time_limit_s === null ||
         state.time_limit_s === undefined) return;
-    applyStep({ t_ms: Math.round(state.time_limit_s * 1000), input: 'timeout' });
+    applyStep({ t_ms: expiryTMs(), input: 'timeout' });
   }
 
   // Keyboard: WASD/arrows register an input, advance the pure step
@@ -694,7 +734,10 @@
       // A finished run is frozen: after death (or the win) the clock
       // shows the finishing moment, never the still-running page clock.
       const finished = state.status === 'lost' || state.status === 'won';
-      const elapsed = finished ? state.elapsed_s : sessionElapsedMs() / 1000;
+      const elapsed = finished
+        ? (typeof state.effective_elapsed_s === 'number'
+          ? state.effective_elapsed_s : state.elapsed_s)
+        : displayElapsedS(sessionElapsedMs() / 1000);
       drawHud(elapsed, state.time_limit_s);
       const dbg = document.getElementById('dbg-timer');
       if (dbg) dbg.textContent = elapsed.toFixed(1) +
@@ -788,7 +831,9 @@
       }
       window.__keepPlayhead = false;
       const cur = replayStates[replayIndex];
-      drawHud(cur.elapsed_s + (playheadMs - cur.t_ms) / 1000, cur.time_limit_s);
+      drawHud((typeof cur.effective_elapsed_s === 'number'
+        ? cur.effective_elapsed_s : cur.elapsed_s)
+        + (playheadMs - cur.t_ms) / 1000, cur.time_limit_s);
       if (replayIndex >= replayStates.length - 1 &&
           playheadMs >= cur.t_ms) { pauseReplay(); return; }
       replayTimer = requestAnimationFrame(loop);
@@ -896,7 +941,10 @@
     seekTime: (seconds) => { if (window.__replayRecords) { pauseReplay(); showReplay(window.GameReplay.stepIndexAtTime(window.__replayRecords, seconds)); } },
     getClock: () => {
       const fin = state.status === 'lost' || state.status === 'won';
-      const el = fin ? state.elapsed_s : sessionElapsedMs() / 1000;
+      const el = fin
+        ? (typeof state.effective_elapsed_s === 'number'
+          ? state.effective_elapsed_s : state.elapsed_s)
+        : displayElapsedS(sessionElapsedMs() / 1000);
       return { started: sessionStartTs !== null, status: state.status,
         elapsed_s: el, time_limit_s: state.time_limit_s,
         time_left_s: state.time_limit_s === null
