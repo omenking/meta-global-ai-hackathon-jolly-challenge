@@ -1,0 +1,17 @@
+{
+  "pack": "still",
+  "main": "main.js",
+  "assets": [
+    {"file": "still.png", "kind": "tiles", "bundled": true,
+     "shows": "still tile unoccupied, timer running normally beside it"},
+    {"file": "still-held.png", "kind": "tiles", "bundled": true,
+     "shows": "still tile with the player standing on it and the timer held"},
+    {"file": "jolly-still.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly standing still on the still tile while thinking, making no input"},
+    {"file": "timer-held.png", "kind": "gui", "bundled": true,
+     "shows": "paused timer display with the held icon shown while the player stands on the still tile"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

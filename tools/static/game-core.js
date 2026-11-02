@@ -8,7 +8,7 @@
 // gate_open) computed here, never stored as kernel truth.
 (function (root) {
   'use strict';
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, StillPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -16,12 +16,14 @@
     CorePack = require('./packs/core-chips/main.js');
     WaterPack = require('./packs/proof-water/main.js');
     CrumblePack = require('./packs/crumbling/main.js');
+    StillPack = require('./packs/still/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
     CorePack = root.GamePackCoreChips;
     WaterPack = root.GamePackProofWater;
     CrumblePack = root.GamePackCrumbling;
+    StillPack = root.GamePackStill;
   }
 
   function createEngine(packRegisters) {
@@ -120,7 +122,10 @@
       getTileDef: function (id) { return registry.getTile(id); } };
   }
 
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack]);
+  // Still registers first: its tick holds elapsed_s while the
+  // player stands on a still tile, and the core expiry check must
+  // read the held value, not the raw recorded elapsed time.
+  const engine = createEngine([StillPack, CorePack, KeysPack, WaterPack, CrumblePack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -175,6 +180,7 @@
     getTileDef: engine.getTileDef,
     registerCorePack: CorePack, registerKeysPack: KeysPack,
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack,
+    registerStillPack: StillPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
