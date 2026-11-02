@@ -1,0 +1,26 @@
+{
+  "name": "mech-58-info-tile-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-58-info-tile Test Level: info tile at (3,1) on the direct route from the spawn (1,1) to the gate (8,1), carrying the banner 'Collect both chips first - the gate only opens when none are left.' A player who steps over it without reading walks straight to the gate and finds it shut with both chips (3,3) and (5,5) still uncollected; reading it and collecting both chips first opens the gate to the exit portal (11,1). The chain-switch order demo (mechanic 28) is not built on main, so the room realises the same naive-fails / corrected-succeeds teaching shape with the core gate and chips.",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"},
+    "i": {"base": "floor_default.png", "label": "info tile", "sprite": "info.png", "def": "info:tile", "text": "?", "banner": "Collect both chips first - the gate only opens when none are left."}
+  },
+  "rows": [
+    "#############",
+    "#P.i....G..X#",
+    "#.......#...#",
+    "#..*....#...#",
+    "#.......#...#",
+    "#....*..#...#",
+    "#.......#...#",
+    "#############"
+  ]
+}
