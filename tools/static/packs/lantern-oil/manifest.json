@@ -1,0 +1,23 @@
+{
+  "pack": "lantern-oil",
+  "main": "main.js",
+  "assets": [
+    {"file": "lantern-oil.png", "kind": "tiles", "bundled": true,
+     "shows": "lantern oil pickup before it is collected to refill the lantern"},
+    {"file": "lantern-oil-collected.png", "kind": "tiles", "bundled": true,
+     "shows": "empty pickup tile after the oil has been collected and spent"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-lantern-full.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly carrying the lantern at full light after collecting oil"},
+    {"file": "jolly-lantern-low.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly carrying the lantern shrunk back to the base radius without oil"}
+  ],
+  "gui": [
+    {"file": "lantern-fuel-gauge-full.png", "kind": "gui", "bundled": true,
+     "shows": "conditional HUD gauge at full immediately after oil is collected, shown only in a dark room"},
+    {"file": "lantern-fuel-gauge-low.png", "kind": "gui", "bundled": true,
+     "shows": "conditional HUD gauge nearly spent as the light shrinks back toward the base radius"}
+  ],
+  "blocks": []
+}
