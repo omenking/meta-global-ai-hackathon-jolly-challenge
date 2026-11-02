@@ -1,0 +1,25 @@
+{
+  "name": "mech-20-bonus-orb-room",
+  "time_limit": 10,
+  "test": true,
+  "source": "mech-20-bonus-orb Test Level: bonus orb (B) down a short detour east of the counted orb on a tight 10s timer; priced fast detour banks +10s and still opens the gate, unpriced slow detour lets the timer end on the way back",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "B": {"base": "floor_default.png", "label": "bonus orb", "text": "B", "def": "bonus:bonus-orb"},
+    "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"}
+  },
+  "rows": [
+    "###########",
+    "#P.*..B...#",
+    "#.........#",
+    "#####G#####",
+    "#.........#",
+    "#....X....#",
+    "###########"
+  ]
+}
