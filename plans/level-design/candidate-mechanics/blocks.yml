@@ -23,6 +23,43 @@ mechanics:
     A player who pushes it in the first direction that moves it usually corners it against a wall, where
     it cannot be pulled back, so the switch can never be held and the small room must be restarted, which
     teaches that a push is chosen by its destination.'
+  definitions:
+  - 'floor: walkable ground; a push block moves only onto it and the player stands safely on it (ground term, defined here for this file)'
+  - 'wall: never enterable from any side; it blocks the player and every push and never harms (ground term, defined here for this file)'
+  - 'void: a hole where floor used to be; a push block never enters it and entering it as the player is falling and loses the attempt, or returns to the active checkpoint per mechanic 48 in terrain-and-hazards.yml where one is placed (ground term, defined here for this file)'
+  - 'hazard: any tile whose entry harms the player or blocks a block outright in this file, namely fire per mechanic 43 in terrain-and-hazards.yml and lava per mechanic 44 in terrain-and-hazards.yml; a push block never enters or covers a hazard (ground term, defined here for this file)'
+  - 'push block: block defined here; pressing toward it moves it exactly one tile only onto empty floor or a switch plate, it can never be pulled, and it occupies its tile so enemies cannot move through it'
+  - 'switch plate: plate that a block holds down while it sits on it, namely floor switch per mechanic 21 in switches-and-doors.yml or weight switch per mechanic 29 in switches-and-doors.yml'
+  - 'lock: a locked tile that has not been opened; it blocks a push exactly like a wall in this mechanic'
+  - 'closed gate: a gate that has not been opened; it blocks a push exactly like a wall in this mechanic'
+  - 'block: any other block in this file; it blocks a push exactly like a wall in this mechanic'
+  - 'enemy: patroller or other enemy per mechanic 31 in enemies-and-bots.yml; an enemy blocks a push and cannot move through a push block'
+  - 'water: shallow water per mechanic 50 in terrain-and-hazards.yml; a push block never enters or covers it'
+  - 'deep water: dark water per mechanic 41 in terrain-and-hazards.yml; a push block never enters or covers it'
+  - 'fire: hazard per mechanic 43 in terrain-and-hazards.yml; a push block never enters or covers it, cancelling fire belongs to the ice block per mechanic 82 in this file'
+  - 'lava: hazard per mechanic 44 in terrain-and-hazards.yml; a push block never enters or covers it, filling lava belongs to the dirt block per mechanic 90 in this file'
+  - 'dirt block: block consumed to become floor per mechanic 90 in this file; a push block explicitly does not do this'
+  - 'ice block: sliding block per mechanic 82 in this file; a push block explicitly does not slide or cancel fire'
+  assets:
+    tiles: []
+    jolly_states: []
+    gui: []
+    blocks:
+    - file: push-block.png
+      shows: plain push block on floor, movable one tile at a time
+    - file: push-block-on-switch.png
+      shows: push block sitting on a switch plate, holding that switch down
+  test_cases:
+  - name: solution hold the switch
+    check: 'blocked-by: 21 (floor switch): push the block onto the switch plate and walk through the held door; the block holds the switch for as long as it sits there'
+  - name: adversarial cornered block
+    check: 'push the block in the first direction that moves it so it corners against a wall; it cannot be pulled back, the switch can never be held, and restarting the small room restores it, never a stranded state'
+  - name: blocked push stays put
+    check: 'push the block toward a wall, a lock, a closed gate, another block and an enemy in turn; the block and the player both stay on every blocked push'
+  - name: hazards block the push
+    check: 'push the block toward water, deep water, void, fire and lava in turn; it never enters or covers any of them and both stay put'
+  - name: restart and replay
+    check: 'restart restores the block to its placed tile and clears the held switch, and a recorded pushing session replays to the same end state'
   status: revised
   human_review:
   - I could see it holding a button.
@@ -47,6 +84,49 @@ mechanics:
   teaching_moment: 'First room: an ice block on ice with an orb lane beside its slide line. A player who
     pushes it toward the nearest wall watches it slide the whole way past the lane and stop somewhere
     useless, so they restart and learn that an ice block only stops where a braking wall has been arranged.'
+  definitions:
+  - 'floor: walkable ground the ice block slides over, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'wall: never enterable tile that stops the slide, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'void: hole the ice block falls into and is destroyed by, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'hazard: fire per mechanic 43 in terrain-and-hazards.yml or lava per mechanic 44 in terrain-and-hazards.yml in this mechanic; fire is cancelled by the block and lava is not (ground term, defined in mechanic 81 in this file)'
+  - 'ice block: block defined here; one push slides it in the push direction over floor and ice until a wall, lock, gate or block stops it'
+  - 'ice: slippery tile per mechanic 1 in movement-tiles.yml; the block slides over it without stopping'
+  - 'lock: a locked tile that has not been opened; it stops the slide exactly like a wall in this mechanic'
+  - 'gate: a gate that has not been opened; it stops the slide exactly like a wall in this mechanic'
+  - 'block: any other block in this file; it stops the slide exactly like a wall in this mechanic'
+  - 'fire: hazard per mechanic 43 in terrain-and-hazards.yml; the block slides in, melts, is consumed, and that one fire tile becomes scorched floor'
+  - 'scorched floor: safe floor left after fire burns out or is cancelled, per mechanic 43 in terrain-and-hazards.yml'
+  - 'lava: hazard per mechanic 44 in terrain-and-hazards.yml; the block slides in, melts, is destroyed, and the lava stays lava'
+  - 'shallow water: surface water per mechanic 50 in terrain-and-hazards.yml; the block stops there and becomes an ice bridge per mechanic 50 in terrain-and-hazards.yml'
+  - 'deep water: dark water per mechanic 41 in terrain-and-hazards.yml; the block sinks, melts, is destroyed, no bridge forms and the water stays'
+  - 'ice bridge: keep-moving bridge formed from this block in shallow water, per mechanic 50 in terrain-and-hazards.yml'
+  - 'push block: block that moves one tile per push per mechanic 81 in this file; an ice block explicitly travels the whole slide in one push instead'
+  assets:
+    tiles:
+    - file: ice-bridge.png
+      shows: formed ice bridge over shallow water after the block stops there
+    - file: scorched.png
+      shows: scorched floor left on the one fire tile the block cancels
+    jolly_states: []
+    gui: []
+    blocks:
+    - file: ice-block.png
+      shows: intact ice block before it is pushed
+    - file: ice-block-sliding.png
+      shows: ice block mid-slide, travelling the whole slide from one push
+    - file: ice-block-melting.png
+      shows: ice block melting as it is consumed in fire, destroyed in lava or sunk in deep water
+  test_cases:
+  - name: solution slide to cancel fire
+    check: 'blocked-by: 43 (fire tile): slide the ice block into the fire on the route; the block melts and is consumed and that one fire tile becomes scorched floor the player can cross'
+  - name: adversarial nearest-wall overshoot
+    check: 'push the block toward the nearest wall as in the teaching moment; it slides the whole way past the orb lane to a useless stop, and restarting the small room restores it, never a stranded state'
+  - name: slide stops only at a blocker
+    check: 'slide the block across floor and ice; it does not stop on open floor or ice and stops only at a wall, lock, gate or other block'
+  - name: water and void boundaries
+    check: 'blocked-by: 50 (ice bridge): sliding into shallow water forms a bridge, sliding into deep water or void destroys the block and leaves the deep water or void unchanged'
+  - name: restart and replay
+    check: 'restart restores the ice block and every fire, water and void tile to their placed states, and a recorded slide session replays to the same end state'
   status: trial
   human_review:
   - yes a block that slides until it collides with a wall.
@@ -71,6 +151,46 @@ mechanics:
   teaching_moment: 'First room: one bomb block facing two walls, only one of which hides the exit. A player
     who pushes it into the nearest wall spends the bomb on solid rock and must restart, which teaches
     that the wall a bomb is spent on is a choice rather than a formality.'
+  definitions:
+  - 'floor: walkable ground the bomb block moves onto, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'wall: never enterable tile in this mechanic except that a bomb push into it cracks it to floor, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'void: hole the bomb block never enters, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'hazard: water, deep water, fire or lava tile that blocks this block outright, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'bomb block: block defined here; it moves only onto empty floor or a switch plate exactly as a push block, and a push that would drive it into a wall explodes it instead'
+  - 'push block: plain movable block per mechanic 81 in this file; the bomb block follows its one-tile movement and blocking rules except for the wall explosion'
+  - 'switch plate: plate a block can sit on, namely floor switch per mechanic 21 in switches-and-doors.yml or weight switch per mechanic 29 in switches-and-doors.yml'
+  - 'water: shallow water per mechanic 50 in terrain-and-hazards.yml; it blocks the bomb block and is never entered or covered'
+  - 'deep water: dark water per mechanic 41 in terrain-and-hazards.yml; it blocks the bomb block and is never entered or covered'
+  - 'fire: hazard per mechanic 43 in terrain-and-hazards.yml; it blocks the bomb block and is never entered or covered'
+  - 'lava: hazard per mechanic 44 in terrain-and-hazards.yml; it blocks the bomb block and is never entered or covered'
+  - 'lock: a locked tile that has not been opened; the bomb block only cracks walls, so a lock blocks it and is never exploded'
+  - 'closed gate: a gate that has not been opened; the bomb block only cracks walls, so a closed gate blocks it and is never exploded'
+  - 'block: any other block in this file; the bomb block only cracks walls, so another block blocks it and is never exploded'
+  - 'secret wall: wall that only pretends to be solid per mechanic 59 in vision-and-information.yml; a bomb creates a real opening in a real wall instead'
+  assets:
+    tiles:
+    - file: cracked-wall.png
+      shows: wall tile about to be cracked by the bomb block, shown before the explosion
+    - file: floor-after-blast.png
+      shows: ordinary floor left where the cracked wall tile stood after the explosion
+    jolly_states: []
+    gui: []
+    blocks:
+    - file: bomb-block.png
+      shows: intact bomb block before it is pushed into a wall
+    - file: bomb-block-exploding.png
+      shows: bomb block exploding against the wall it cracks, consumed by the blast
+  test_cases:
+  - name: solution crack the exit wall
+    check: 'push the bomb block into the wall hiding the exit; that wall tile becomes floor, the bomb block is consumed, and the player walks out through the opening'
+  - name: adversarial spend it on solid rock
+    check: 'push the bomb block into the nearest wall as in the teaching moment; it is spent on solid rock with no exit behind it and restarting the small room restores it, never a stranded state'
+  - name: only walls crack
+    check: 'push the bomb block toward a lock, a closed gate and another block in turn; none of them explodes or opens and the bomb block is not consumed'
+  - name: hazards block the bomb block
+    check: 'push the bomb block toward water, deep water, void, fire and lava in turn; it never enters or covers any of them and is not consumed'
+  - name: restart and replay
+    check: 'restart restores the bomb block and every cracked wall to its placed state, and a recorded explosion session replays to the same end state'
   status: trial
   human_review:
   - It acts like a block but it would look like a bomb.
@@ -91,6 +211,41 @@ mechanics:
     off the useful spot. A player who leaves it there sees the patroller reverse into their corridor instead
     of away from it and is reset to the room start, which teaches that the mirror changes an enemy''s
     route rather than merely blocking it.'
+  definitions:
+  - 'floor: walkable ground the mirror block moves onto, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'wall: never enterable tile that blocks a push, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'void: hole the mirror block never enters, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'hazard: water, deep water, fire or lava tile that blocks this block outright, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'mirror block: block defined here; it moves only onto empty floor or a switch plate exactly as a push block, and an enemy that moves into it reverses direction instead of passing'
+  - 'push block: plain movable block per mechanic 81 in this file; the mirror block follows its one-tile movement and blocking rules'
+  - 'switch plate: plate a block can sit on, namely floor switch per mechanic 21 in switches-and-doors.yml or weight switch per mechanic 29 in switches-and-doors.yml'
+  - 'water: shallow water per mechanic 50 in terrain-and-hazards.yml; it blocks the mirror block and is never entered or covered'
+  - 'deep water: dark water per mechanic 41 in terrain-and-hazards.yml; it blocks the mirror block and is never entered or covered'
+  - 'fire: hazard per mechanic 43 in terrain-and-hazards.yml; it blocks the mirror block and is never entered or covered'
+  - 'lava: hazard per mechanic 44 in terrain-and-hazards.yml; it blocks the mirror block and is never entered or covered'
+  - 'enemy: patroller per mechanic 31 in enemies-and-bots.yml or guard per mechanic 37 in enemies-and-bots.yml; it reverses direction on moving into the mirror block and never passes through it'
+  - 'patroller: enemy on a fixed loop per mechanic 31 in enemies-and-bots.yml; the mirror block edits its loop without touching the player'
+  - 'guard: enemy on a cycle per mechanic 37 in enemies-and-bots.yml; the mirror block reflects its cycle to open a timed window'
+  assets:
+    tiles: []
+    jolly_states: []
+    gui: []
+    blocks:
+    - file: mirror-block.png
+      shows: mirror block with its reflective face showing the direction enemies will be turned back toward
+    - file: mirror-block-reversing.png
+      shows: mirror block in the move an enemy moves into it and reverses direction
+  test_cases:
+  - name: solution bend the patroller away
+    check: 'blocked-by: 31 (patroller): push the mirror block one tile into the useful spot; the patroller reverses there and its loop no longer crosses the orb corridor'
+  - name: adversarial mirror left off the spot
+    check: 'blocked-by: 31 (patroller): leave the mirror where it starts as in the teaching moment; the patroller reverses into the player corridor and the player is reset to the room start, never a stranded state'
+  - name: enemy reverses, never passes
+    check: 'blocked-by: 31, 37 (patroller, guard): an enemy moving into the mirror block reverses direction on that move and does not enter or pass through its tile, while the player is unaffected by the mirror face'
+  - name: push rules match the push block
+    check: 'blocked-by: 21 (floor switch): the mirror block moves only onto empty floor or a switch plate and is blocked by water, deep water, void, fire and lava exactly as a push block'
+  - name: restart and replay
+    check: 'restart restores the mirror block and the enemy loop to their placed states, and a recorded reversal session replays to the same end state'
   status: trial
   human_review:
   - could just make it look like a mirror
@@ -125,6 +280,48 @@ mechanics:
   teaching_moment: 'First room: a twelve-tile water crossing with a banked island at eight tiles. A player
     who rides straight for the far bank sinks two tiles short and respawns at the checkpoint, which teaches
     that the raft''s ten tiles are a budget to be spent between banks.'
+  definitions:
+  - 'floor: solid ground the raft cannot enter, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'wall: never enterable tile; the raft is a block on water and never enters a wall in this mechanic, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'void: hole the raft cannot enter, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'hazard: fire per mechanic 43 in terrain-and-hazards.yml or lava per mechanic 44 in terrain-and-hazards.yml in this mechanic; the raft never enters either (ground term, defined in mechanic 81 in this file)'
+  - 'raft block: vehicle block defined here; the player steps onto it from a bank, each move travels one water tile with the player aboard, and stepping onto a bank ends the ride'
+  - 'bank: floor tile beside water that the player steps from onto the raft and steps back onto to end the ride; a bank is the only way off the raft'
+  - 'water: shallow water per mechanic 50 in terrain-and-hazards.yml or deep water per mechanic 41 in terrain-and-hazards.yml; the raft travels one tile per move on either'
+  - 'shallow water: surface water per mechanic 50 in terrain-and-hazards.yml; the raft crosses it at one tile per move'
+  - 'deep water: dark water per mechanic 41 in terrain-and-hazards.yml; the raft crosses it at one tile per move without the two-move wading cost of crossing on foot'
+  - 'fire: hazard per mechanic 43 in terrain-and-hazards.yml; the raft cannot enter it'
+  - 'lava: hazard per mechanic 44 in terrain-and-hazards.yml; the raft cannot enter it'
+  - 'checkpoint: respawn set by touch per mechanic 48 in terrain-and-hazards.yml; when the raft sinks the player respawns there'
+  - 'current: moving water per mechanic 42 in movement-tiles.yml; it does not move a raft, so the raft is the controlled alternative to drifting'
+  - 'remaining-tiles counter: count of water tiles the raft can still travel, shown in the conditional GUI slot under the inventory while the player rides and reaching zero on water sinks the raft'
+  - 'inventory: the held-items display; the conditional GUI slot under it appears only while the player rides the raft'
+  assets:
+    tiles: []
+    jolly_states:
+    - file: jolly-riding-raft.png
+      shows: Jolly aboard the raft, travelling one water tile per move
+    - file: jolly-sinking-raft.png
+      shows: Jolly on the raft in the move it sinks after its last travelled tile
+    gui:
+    - file: raft-counter.png
+      shows: conditional GUI slot under the inventory showing the water tiles the raft can still travel while the player rides
+    blocks:
+    - file: raft-block.png
+      shows: raft floating at a bank before the player steps aboard
+    - file: raft-block-sinking.png
+      shows: raft sinking after travelling its last tile, before the player respawns at the checkpoint
+  test_cases:
+  - name: solution island-hopping crossing
+    check: 'blocked-by: 41 (deep water), 48 (checkpoint): ride eight tiles to the banked island, end the ride there, then ride on to the far bank; neither leg exceeds the ten-tile budget'
+  - name: adversarial ride straight for the far bank
+    check: 'blocked-by: 48 (checkpoint): ride straight across the twelve-tile crossing as in the teaching moment; the raft sinks two tiles short and the player respawns at the checkpoint, never stranded on water'
+  - name: ten-tile boundary
+    check: 'ride on open water counting the GUI counter down one per water tile; after the tenth travelled tile the raft sinks unless that move steps onto a bank, which ends the ride safely instead'
+  - name: banks are the only exit
+    check: 'blocked-by: 42 (current tile): while riding, moves toward floor, void, fire and lava do not leave the water, current does not move the raft, and only stepping onto a bank ends the ride'
+  - name: restart and replay
+    check: 'restart restores the raft to its placed bank with its full ten-tile budget, and a recorded ride-and-sink session replays to the same end state'
   status: revised
   human_review:
   - I think to make this more interesting is that the Raft has limited use.
@@ -151,6 +348,46 @@ mechanics:
     it. A player who starts pushing without watching the patrol is caught while straining on the first
     push and restarts the room, which teaches that the strain is real time in which other things still
     move.'
+  definitions:
+  - 'floor: walkable ground the heavy block moves onto, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'wall: never enterable tile that blocks a push, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'void: hole the heavy block never enters, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'hazard: water, deep water, fire or lava tile that blocks this block outright, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'heavy block: block defined here; it moves only onto empty floor or a switch plate exactly as a push block, but the first push input only budges it and the second consecutive push moves it one tile'
+  - 'push block: plain movable block per mechanic 81 in this file; the heavy block follows its destination and blocking rules and differs only in costing two pushes per tile'
+  - 'push input: one press toward the block in this mechanic; the first shows Jolly straining and budges the block without moving it, the second consecutive one moves it one tile, and time and enemies keep running through both'
+  - 'switch plate: plate a block can sit on, namely floor switch per mechanic 21 in switches-and-doors.yml or weight switch per mechanic 29 in switches-and-doors.yml'
+  - 'water: shallow water per mechanic 50 in terrain-and-hazards.yml; it blocks the heavy block and is never entered or covered'
+  - 'deep water: dark water per mechanic 41 in terrain-and-hazards.yml; it blocks the heavy block and is never entered or covered'
+  - 'fire: hazard per mechanic 43 in terrain-and-hazards.yml; it blocks the heavy block and is never entered or covered'
+  - 'lava: hazard per mechanic 44 in terrain-and-hazards.yml; it blocks the heavy block and is never entered or covered'
+  - 'power gloves: gear per mechanic 89 in gear-and-items.yml; wearing them moves a heavy block in a single push with no straining push first'
+  - 'weight switch: switch that needs a block left on it per mechanic 29 in switches-and-doors.yml; a heavy block is the costly way to hold it'
+  - 'enemy: patroller or other enemy per mechanic 31 in enemies-and-bots.yml; enemies keep moving while the player strains on the first push'
+  assets:
+    tiles: []
+    jolly_states:
+    - file: jolly-straining.png
+      shows: Jolly showing the pushing and straining graphic on the first push, while the heavy block budges but stays
+    - file: jolly-pushing-heavy.png
+      shows: Jolly completing the second consecutive push as the heavy block moves one tile
+    gui: []
+    blocks:
+    - file: heavy-block.png
+      shows: heavy block at rest before any push input
+    - file: heavy-block-budging.png
+      shows: heavy block budging in place on the first push input, not yet moved to a new tile
+  test_cases:
+  - name: solution two pushes onto the switch
+    check: 'blocked-by: 29 (weight switch): push the heavy block twice per tile until it sits on the distant switch and holds it; each tile costs exactly two consecutive push inputs'
+  - name: adversarial caught while straining
+    check: 'blocked-by: 31 (patroller): start pushing without watching the patrol as in the teaching moment; the patroller keeps moving during the straining push and catches the player, who restarts the room, never a stranded state'
+  - name: first push budges, second moves
+    check: 'push once and the block budges but stays on its tile while Jolly strains; push again consecutively and it moves exactly one tile onto empty floor or a switch plate'
+  - name: blocked destinations and gloves boundary
+    check: 'blocked-by: 89 (power gloves): pushes toward water, deep water, void, fire and lava never move the block, and wearing power gloves moves it in one push instead of two'
+  - name: restart and replay
+    check: 'restart restores the heavy block to its placed tile with no budge pending, and a recorded two-push session replays to the same end state'
   status: revised
   human_review:
   - We would need a graphic showing Jolly pushing, otherwise how will you know its moving
@@ -177,6 +414,41 @@ mechanics:
     tile without thinking is left with a half-finished crossing and no way to place the second block,
     so they restart a small room having learned that dirt is spent in an order and that the order has
     to be worked out before the first push.'
+  definitions:
+  - 'floor: walkable ground the dirt block moves onto on land, and the permanent ground a spent dirt block becomes in void or water, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'wall: never enterable tile that blocks a push; on land fire blocks the dirt block exactly like a wall in this mechanic, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'void: hole the dirt block is pushed into and fills, per mechanic 81 in this file (ground term, defined there for this file)'
+  - 'hazard: fire per mechanic 43 in terrain-and-hazards.yml or lava per mechanic 44 in terrain-and-hazards.yml in this mechanic; lava is filled by the block and fire is not (ground term, defined in mechanic 81 in this file)'
+  - 'dirt block: block defined here; on land it moves only onto empty floor or a switch plate exactly as a push block, and pushed into void, shallow water, deep water or lava it is consumed and that tile becomes permanent floor'
+  - 'push block: plain movable block per mechanic 81 in this file; on land the dirt block follows its one-tile movement and blocking rules and explicitly cannot bridge where the dirt block can'
+  - 'switch plate: plate a block can sit on, namely floor switch per mechanic 21 in switches-and-doors.yml or weight switch per mechanic 29 in switches-and-doors.yml'
+  - 'shallow water: surface water per mechanic 50 in terrain-and-hazards.yml; a dirt block pushed in is consumed and that tile becomes permanent floor'
+  - 'deep water: dark water per mechanic 41 in terrain-and-hazards.yml; a dirt block pushed in is consumed and that tile becomes permanent floor'
+  - 'lava: hazard per mechanic 44 in terrain-and-hazards.yml; a dirt block pushed in is consumed and that tile becomes permanent floor'
+  - 'fire: hazard per mechanic 43 in terrain-and-hazards.yml; a dirt block cannot be pushed in and fire blocks it like a wall, because the ice block per mechanic 82 in this file is the fire canceller'
+  - 'ice block: sliding block per mechanic 82 in this file; it is the fire canceller where the dirt block is blocked by fire'
+  - 'permanent floor: ordinary floor created where a dirt block was consumed; it stays floor for the rest of the attempt and the player walks on it normally'
+  - 'checkpoint: respawn set by touch per mechanic 48 in terrain-and-hazards.yml; a filled tile can make a permanent shortcut back toward it'
+  assets:
+    tiles:
+    - file: dirt-filled-floor.png
+      shows: permanent floor left where a dirt block was consumed in void, water or lava
+    jolly_states: []
+    gui: []
+    blocks:
+    - file: dirt-block.png
+      shows: intact dirt block on land before it is pushed into void, water or lava
+  test_cases:
+  - name: solution fill the channel in order
+    check: 'push the far dirt block into the two-tile water channel first and the near block second; both are consumed, both tiles become permanent floor, and the player crosses'
+  - name: adversarial fill the nearest tile first
+    check: 'fill the nearest tile first as in the teaching moment; the second block can no longer be placed, the crossing stays half-finished, and restarting the small room restores both blocks, never a stranded state'
+  - name: one block fills exactly one tile
+    check: 'push one dirt block into void, shallow water, deep water and lava in turn across trials; each push consumes exactly that one block and makes exactly that one tile permanent floor'
+  - name: fire blocks dirt
+    check: 'blocked-by: 82 (ice block): pushing a dirt block toward fire never enters or fills it and the block is not consumed; only an ice block cancels that fire'
+  - name: restart and replay
+    check: 'restart restores every dirt block and every filled tile to its placed state, and a recorded filling session replays to the same end state'
   status: revised
   human_review:
   - Make it a dirt block.

@@ -10,6 +10,8 @@ import time
 import unittest
 import urllib.request
 import json
+import tempfile
+from unittest.mock import patch
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -65,6 +67,7 @@ class WorktreeMgrTests(unittest.TestCase):
             body = r.read().decode()
         self.assertIn("Worktrees", body)
         self.assertIn("/api/worktrees", body)
+        self.assertIn("/api/worktrees/start", body)
 
     def test_stop_refuses_self_and_non_server(self):
         with self.assertRaises(ValueError):
@@ -108,6 +111,35 @@ class WorktreeMgrTests(unittest.TestCase):
         finally:
             if proc.poll() is None:
                 proc.kill()
+
+
+class LaunchTests(unittest.TestCase):
+    def test_launch_reuse_and_stop(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "tools").mkdir()
+            (root / "tools/server.py").write_text(
+                "import sys\nfrom http.server import HTTPServer, SimpleHTTPRequestHandler\n"
+                "HTTPServer(('127.0.0.1', int(sys.argv[2])), SimpleHTTPRequestHandler).serve_forever()\n")
+            registered = [{"path": str(root), "exists": True, "bare": False, "prunable": False}]
+            with patch.object(worktree_mgr, "list_worktrees", return_value=registered):
+                srv = worktree_mgr.start_server(root, str(root))
+                try:
+                    self.assertTrue(worktree_mgr._listening(srv["port"]))
+                    self.assertEqual(worktree_mgr.start_server(root, str(root)), srv)
+                finally:
+                    worktree_mgr.stop_server(srv["pid"], os.getpid())
+
+    def test_reject_unregistered_and_missing_script(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch.object(worktree_mgr, "list_worktrees", return_value=[]):
+                with self.assertRaisesRegex(ValueError, "not registered"):
+                    worktree_mgr.start_server(root, str(root))
+            registered = [{"path": str(root), "exists": True, "bare": False, "prunable": False}]
+            with patch.object(worktree_mgr, "list_worktrees", return_value=registered):
+                with self.assertRaisesRegex(ValueError, "no tools/server.py"):
+                    worktree_mgr.start_server(root, str(root))
 
 
 if __name__ == "__main__":

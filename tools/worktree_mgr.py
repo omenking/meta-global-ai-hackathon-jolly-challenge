@@ -1,8 +1,7 @@
-"""Discover git worktrees and tools/server.py processes; stop servers.
+"""Discover git worktrees and manage tools/server.py processes.
 
 Used by the /worktrees page in tools/server.py. Scope is deliberately
-narrow (per user choice): view + open + stop servers only. This module
-never removes worktrees, branches, or files.
+This module never removes worktrees, branches, or files.
 """
 from __future__ import annotations
 
@@ -13,8 +12,69 @@ import re
 import signal
 import socket
 import subprocess
+import sys
+import tempfile
+import threading
 import time
 from pathlib import Path
+
+_launch_lock = threading.Lock()
+
+
+def start_server(root: Path, path: str) -> dict:
+    """Launch only a registered worktree, reusing an existing live server."""
+    if not isinstance(path, str) or not path:
+        raise ValueError("path must identify a registered worktree")
+    target = Path(path).resolve()
+    with _launch_lock:
+        registered = list_worktrees(root)
+        if not any(Path(w["path"]).resolve() == target and w["exists"]
+                   and not w["bare"] and not w["prunable"] for w in registered):
+            raise ValueError("worktree is missing or is not registered with this repository")
+        script = target / "tools" / "server.py"
+        if not script.is_file():
+            raise ValueError("this worktree has no tools/server.py to launch")
+        servers = list_servers()
+        for srv in servers:
+            if Path(srv["cwd"]).resolve() == target and srv["listening"]:
+                return {"pid": srv["pid"], "port": srv["port"], "url": srv["url"]}
+        reserved = {s["port"] for s in servers}
+        for port in range(8322, 9322):
+            if port in reserved:
+                continue
+            try:
+                with socket.socket() as sock:
+                    sock.bind(("127.0.0.1", port))
+                break
+            except OSError:
+                continue
+        else:
+            raise ValueError("no available server port")
+        # Use this server's interpreter so worktrees share its installed dependencies.
+        with tempfile.TemporaryFile(mode="w+b") as log:
+            proc = subprocess.Popen(
+                [sys.executable, "tools/server.py", "--port", str(port)],
+                cwd=target, stdin=subprocess.DEVNULL, stdout=log,
+                stderr=subprocess.STDOUT, start_new_session=True)
+            deadline = time.monotonic() + 15
+            while time.monotonic() < deadline:
+                if proc.poll() is not None:
+                    log.seek(0)
+                    detail = log.read().decode(errors="replace")[-3000:]
+                    raise ValueError("server failed to start: " + detail)
+                if _listening(port):
+                    # Reap it when stopped later without blocking this request.
+                    threading.Thread(target=proc.wait, daemon=True).start()
+                    return {"pid": proc.pid, "port": port,
+                            "url": f"http://127.0.0.1:{port}/"}
+                time.sleep(0.1)
+            proc.terminate()
+            try:
+                proc.wait(timeout=2)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                proc.wait()
+            raise ValueError("server did not become ready within 15 seconds")
 
 
 def _labels_path(root: Path) -> Path:

@@ -19,6 +19,42 @@ mechanics:
     wades straight in without picking it up is returned to the checkpoint as soon as the water deepens,
     which teaches that the preserver is the permission and that deep water will still cost two moves a
     tile once they have it.'
+  definitions:
+  - 'life preserver: gear defined here; picking it up fills one inventory slot, it is held for the rest of the level, and while held water tiles are walkable'
+  - 'inventory slot: carried-gear space defined here for this file; the preserver occupies one slot for the rest of the level, so that slot cannot hold a key'
+  - 'water: surface water defined here for this mechanic; while the preserver is held it is walkable, and its deep form still costs two moves per tile'
+  - 'deep water: dark water per mechanic 41 in terrain-and-hazards.yml; without a preserver entering it sends the player to the checkpoint, with one each tile costs two moves'
+  - 'checkpoint: respawn set by touch per mechanic 48 in terrain-and-hazards.yml; entering deep water without a preserver returns the player there'
+  - 'hazard: a tile whose entry does not simply block but loses or returns the attempt (ground term, defined here for this file); in this mechanic deep water without a preserver is the hazard, returning the player to the checkpoint'
+  - 'key: carried lock-opening item that would otherwise use the inventory slot the preserver occupies for the rest of the level'
+  - 'bank: the dry edge tile beside water where the preserver rests and the crossing starts; standing there is safe and does not enter the water'
+  - 'raft block: rideable block per mechanic 86 in blocks.yml; the demo contrast, the raft is the 10-tile budget route where the preserver is the slot-cost route'
+  assets:
+    tiles:
+    - file: life-preserver.png
+      shows: life preserver pickup resting on the near bank before it is collected
+    - file: life-preserver-collected.png
+      shows: empty near bank after the preserver has been picked up and the slot is filled
+    jolly_states:
+    - file: jolly-life-preserver.png
+      shows: Jolly floating on water while wearing the held life preserver
+    - file: jolly-wading-deep.png
+      shows: Jolly half-submerged on the first of the two moves a deep tile costs while wearing the preserver
+    gui:
+    - file: life-preserver-slot.png
+      shows: life preserver icon filling one inventory slot for the rest of the level
+    blocks: []
+  test_cases:
+  - name: solution crossing with preserver
+    check: 'pick up the preserver from the near bank, then cross the deep water to the far side; every deep tile costs two moves and the preserver stays in its slot'
+  - name: adversarial wading in without it
+    check: 'blocked-by: 48 (checkpoint): wading straight into deep water without picking up the preserver returns the player to the checkpoint as soon as the water deepens, exactly as the teaching moment warns'
+  - name: boundary two moves per deep tile
+    check: 'blocked-by: 41 (deep water): with the preserver held, the first move on a deep tile wades in place and only the second move crosses it, one move per tile on ordinary water'
+  - name: boundary slot held for the level
+    check: picking up the preserver fills one inventory slot for the rest of the level, so that slot cannot hold a key on the far side
+  - name: restart and replay
+    check: restart restores the preserver to the near bank with the slot empty, and a recorded crossing session replays to the same end state
   status: revised
   human_review:
   - I dont want flippers. make it a life preserver
@@ -36,6 +72,41 @@ mechanics:
   teaching_moment: 'First room: an orb sits in the middle of an ice strip that ends at a wall. A player
     who slides in without the cleats passes the orb and stops at the wall unable to come back for it,
     so the retry teaches that cleats change ice from a slide into floor you can stop on.'
+  definitions:
+  - 'ice cleats: gear defined here; while held in a slot, ice tiles behave as normal floor, with no slide, and the player can stop and turn on them'
+  - 'inventory slot: carried-gear space per mechanic 61 in this file; the cleats occupy one slot while held'
+  - 'ice tile: sliding floor per mechanic 1 in movement-tiles.yml; without cleats stepping on it slides the player until a wall, lock or block stops them'
+  - 'floor: walkable ground; standing, waiting and turning on it are always safe (ground term, defined here for this file)'
+  - 'wall: never enterable from any side; it only blocks and never harms, and on ice it is the braking stop at the end of a slide (ground term, defined here for this file)'
+  - 'slide: the unchecked movement on ice per mechanic 1 in movement-tiles.yml; cleats cancel it in this mechanic so ice is crossed at the normal one move per tile'
+  - 'orb: walking onto it collects it; it is counted by the gate and never enters the inventory, including an orb stopped for in the middle of ice while wearing cleats'
+  - 'ice block: pushable sliding block per mechanic 82 in blocks.yml; cleats let the player stand on ice to push it along the ice'
+  assets:
+    tiles:
+    - file: ice-cleats.png
+      shows: ice cleats pickup before it is collected into a slot
+    - file: ice-cleats-collected.png
+      shows: empty pickup tile after the cleats have been taken
+    jolly_states:
+    - file: jolly-ice-cleats-on-ice.png
+      shows: Jolly stopped and turned on ice while wearing the cleats, not sliding
+    - file: jolly-ice-cleats.png
+      shows: Jolly wearing the held ice cleats on ordinary floor, movement unchanged
+    gui:
+    - file: ice-cleats-slot.png
+      shows: ice cleats icon filling one inventory slot while held
+    blocks: []
+  test_cases:
+  - name: solution mid-ice orb with cleats
+    check: 'blocked-by: 1 (ice tile): wearing the cleats, walk onto the ice, stop on the mid-ice orb to collect it, turn on the ice and walk back off it'
+  - name: adversarial slide without cleats
+    check: 'blocked-by: 1 (ice tile): sliding in without the cleats passes the mid-ice orb and stops only at the far wall as the teaching moment warns; the player is left at the wall end and resolves by restarting the small room, never stranded on the ice'
+  - name: boundary stop and turn on ice
+    check: standing still and turning on an ice tile while wearing cleats never starts a slide, and every ice tile costs the normal one move
+  - name: pushing from ice with cleats
+    check: 'blocked-by: 82 (ice block): standing on ice in cleats, push an ice block along the ice without sliding after it'
+  - name: restart and replay
+    check: restart restores the cleats to their pickup tile with the slot empty, and a recorded mid-ice collection replays to the same end state
   status: trial
   human_review: {}
 - id: 63
@@ -56,6 +127,46 @@ mechanics:
     a clear line in the other. A player who pulls from the first position they reach either pulls nothing
     or pulls the block off its switch, which teaches that the glove works along a clear line and that
     the line is chosen by where you stand.'
+  definitions:
+  - 'magnet glove: gear defined here; held in a slot, pressing toward a metal block in a clear line within 3 tiles slides that block one tile toward the player while the player stays'
+  - 'inventory slot: carried-gear space per mechanic 61 in this file; the glove occupies one slot while held'
+  - 'metal block: block that the glove can pull, the push block per mechanic 81 in blocks.yml in its metal form; pushed it follows that mechanic, pulled here it slides one tile toward the player'
+  - 'clear line: the straight row or column between player and block with no wall in between, defined here; the pulling line is chosen by where the player stands'
+  - 'wall: never enterable and never pullable through, per mechanic 62 in this file; a wall in the line means no pull happens'
+  - 'floor: walkable ground per mechanic 62 in this file; a pulled block slides over it one tile toward the player'
+  - 'hazard: tile whose entry loses or returns the attempt per mechanic 61 in this file; the glove retrieves a block from across it without the player entering it'
+  - 'gap: the intervening space between player and block across which the block is retrieved, defined here; a clear line over a gap still pulls, a wall in that line does not'
+  - 'weight switch: plate that needs a block left on it per mechanic 29 in switches-and-doors.yml; the glove can pull a block onto it from across a hazard'
+  assets:
+    tiles:
+    - file: magnet-glove.png
+      shows: magnet glove pickup before it is collected into a slot
+    - file: magnet-glove-collected.png
+      shows: empty pickup tile after the glove has been taken
+    jolly_states:
+    - file: jolly-magnet-glove.png
+      shows: Jolly wearing the held magnet glove
+    - file: jolly-magnet-pulling.png
+      shows: Jolly staying in place with the glove raised while a metal block slides one tile toward them
+    gui:
+    - file: magnet-glove-slot.png
+      shows: magnet glove icon filling one inventory slot while held
+    blocks:
+    - file: metal-block.png
+      shows: metal block that can be pushed normally or pulled one tile toward a glove wearer in a clear line
+  test_cases:
+  - name: solution pull in a clear line
+    check: 'blocked-by: 81 (push block): stand in the clear line within 3 tiles of the metal block and press toward it; the block slides one tile toward the player and the player stays, repeated until it is retrieved'
+  - name: adversarial pull from the wrong line
+    check: pulling from the first position reached, where a wall is in the line, pulls nothing as the teaching moment warns; the player resolves by moving to the clear line and pulling from there, never stranded and the block unmoved until then
+  - name: boundary three tiles and one-tile pull
+    check: a block exactly 3 tiles away in a clear line is pulled one tile toward the player, and a block 4 tiles away is not pulled and the player instead moves normally
+  - name: boundary wall blocks the pull
+    check: with a wall anywhere in the line within 3 tiles no pull happens and the block stays, however many times the player presses toward it
+  - name: adversarial pulling a block off its switch
+    check: 'blocked-by: 29 (weight switch): pulling a block that is holding a weight switch moves it off the plate and the held door closes; pushing or pulling it back on restores the hold, so the room resolves and never strands the player'
+  - name: restart and replay
+    check: restart restores the glove and every metal block to their placed tiles, and a recorded pull session replays to the same end state
   status: trial
   human_review: {}
 - id: 65
@@ -74,6 +185,44 @@ mechanics:
     A player who walks past the oil to save time finds their light shrunk before the far orbs appear and
     has to feel their way back, which teaches that oil is the route through a dark room rather than a
     bonus beside it.'
+  definitions:
+  - 'lantern oil: consumable defined here; collecting it refills the lantern to full, and it is spent on collection rather than held in a slot'
+  - 'inventory slot: carried-gear space per mechanic 61 in this file; oil is spent on collection and does not occupy it'
+  - 'lantern: carried light per mechanic 52 in vision-and-information.yml; oil here is its fuel partner, restoring the widened light it gives'
+  - 'dark room: room where only tiles near Jolly are lit per mechanic 51 in vision-and-information.yml; in it the lantern burns down over time'
+  - 'light: the lit radius around Jolly in a dark room, defined here for this mechanic; at full it is the lantern radius, and without oil it shrinks back to the base radius'
+  - 'base radius: the smallest lit radius the light shrinks back to without oil, defined here; the light never goes out completely, it returns to this radius'
+  - 'HUD gauge: the conditional gauge shown only in a dark room, defined here; it shows how much lantern light remains and returns to full when oil is collected'
+  - 'hidden orb: orb only visible inside the light radius per mechanic 16 in orbs.yml; a full light is what makes a thorough search for one affordable'
+  - 'orb: walking onto it collects it when it is visible inside the light; it is counted by the gate and never enters the inventory'
+  assets:
+    tiles:
+    - file: lantern-oil.png
+      shows: lantern oil pickup before it is collected to refill the lantern
+    - file: lantern-oil-collected.png
+      shows: empty pickup tile after the oil has been collected and spent
+    jolly_states:
+    - file: jolly-lantern-full.png
+      shows: Jolly carrying the lantern at full light after collecting oil
+    - file: jolly-lantern-low.png
+      shows: Jolly carrying the lantern shrunk back to the base radius without oil
+    gui:
+    - file: lantern-fuel-gauge-full.png
+      shows: conditional HUD gauge at full immediately after oil is collected, shown only in a dark room
+    - file: lantern-fuel-gauge-low.png
+      shows: conditional HUD gauge nearly spent as the light shrinks back toward the base radius
+    blocks: []
+  test_cases:
+  - name: solution oil route through the dark room
+    check: 'blocked-by: 51 (dark room): collect the oil near the entrance to restore the lantern to full, then search beyond it and collect the far orbs while the gauge still shows light remaining'
+  - name: adversarial walking past the oil
+    check: 'blocked-by: 52 (lantern): walking past the oil to save time lets the light shrink back to the base radius before the far orbs appear as the teaching moment warns; the player feels their way back along the walked route to the oil and collects it, never stranded because the base light never goes out'
+  - name: boundary oil restores to full
+    check: 'blocked-by: 52 (lantern): collecting oil at any remaining level restores the lantern and its HUD gauge to full in one collection, not by one step'
+  - name: boundary shrink stops at base radius
+    check: 'blocked-by: 51 (dark room): without oil the light shrinks back to the base radius and stops there, and tiles inside that radius stay visible and walkable'
+  - name: restart and replay
+    check: restart restores the oil to its pickup tile and the lantern to its placed state, and a recorded dark-room session replays to the same end state
   status: trial
   human_review: {}
 - id: 68
@@ -119,6 +268,51 @@ mechanics:
     the line without checking the far end either jams it against the wall or, without the gloves, moves
     only the first block, which teaches that the line only shifts when the tile beyond the far block is
     free.'
+  definitions:
+  - 'power gloves: gear defined here; held in a slot, a heavy block moves in one push instead of two with the strain graphic skipped, and pushing a normal block into a line of blocks shifts the whole line one tile'
+  - 'inventory slot: carried-gear space per mechanic 61 in this file; the gloves occupy one slot while held'
+  - 'heavy block: block that takes two pushes per tile per mechanic 87 in blocks.yml; with the gloves held here it moves in one push'
+  - 'strain graphic: the pushing and straining display on the first of the two pushes a heavy block needs per mechanic 87 in blocks.yml; the gloves skip it because the one push moves the block'
+  - 'push block: plain movable block per mechanic 81 in blocks.yml; here pushing one into a line is what starts the line shift'
+  - 'line of blocks: two or more blocks in a straight row treated as one shifting unit in this mechanic, defined here; the whole line shifts one tile or none of it does'
+  - 'switch plate: plate a block can rest on, the floor switch per mechanic 21 in switches-and-doors.yml or the weight switch per mechanic 29 in switches-and-doors.yml; a line may shift only if the tile beyond the far block is this or empty floor'
+  - 'floor: walkable ground per mechanic 62 in this file; a line shifts only onto empty floor or a switch plate beyond the far block'
+  - 'wall: never enterable blocker per mechanic 62 in this file; a wall beyond the far block stops the whole line'
+  - 'void: a hole where floor used to be; entering it is falling, so the attempt is lost, or the player returns to the active checkpoint per mechanic 48 in terrain-and-hazards.yml (ground term, defined here for this file)'
+  - 'hazard: tile whose entry loses or returns the attempt per mechanic 61 in this file; water, deep water, void, fire and lava beyond the far block each stop the whole line here'
+  - 'lock: a closed lock tile, defined here for this mechanic; beyond the far block it stops the whole line exactly as a wall does'
+  - 'water: surface water per mechanic 61 in this file; beyond the far block it stops the whole line'
+  - 'deep water: dark water per mechanic 41 in terrain-and-hazards.yml; beyond the far block it stops the whole line'
+  - 'fire: hazard per mechanic 43 in terrain-and-hazards.yml; beyond the far block it stops the whole line'
+  - 'lava: fixed lethal hazard per mechanic 44 in terrain-and-hazards.yml; beyond the far block it stops the whole line'
+  assets:
+    tiles:
+    - file: power-gloves.png
+      shows: power gloves pickup before they are collected into a slot
+    - file: power-gloves-collected.png
+      shows: empty pickup tile after the gloves have been taken
+    jolly_states:
+    - file: jolly-power-gloves.png
+      shows: Jolly wearing the held power gloves
+    - file: jolly-power-gloves-pushing.png
+      shows: Jolly moving a heavy block in a single push with no strain graphic
+    - file: jolly-line-push.png
+      shows: Jolly shoving the first block of a line so the whole line shifts one tile
+    gui:
+    - file: power-gloves-slot.png
+      shows: power gloves icon filling one inventory slot while held
+    blocks: []
+  test_cases:
+  - name: solution one-push heavy block and line shift
+    check: 'blocked-by: 87 (heavy block): wearing the gloves, move the heavy block one tile in one push with no strain graphic, then shove a line of blocks one tile onto its switch plate'
+  - name: adversarial shoving a line into a wall
+    check: shoving the three-block line without checking the far end, where a wall is one tile beyond the far block, shifts nothing as the teaching moment warns; every block stays in place and the player resolves by approaching from the other side or restarting the small room, never stranded
+  - name: boundary far tile decides the whole line
+    check: 'blocked-by: 81 (push block): the line shifts one tile only when the tile beyond the far block is empty floor or a switch plate, and a wall, lock, block, water, deep water, void, fire or lava there stops the whole line with no block moving'
+  - name: boundary heavy block one push not two
+    check: 'blocked-by: 87 (heavy block): with the gloves a heavy block moves on the first push, and without them the first push only shows the strain graphic and the second consecutive push moves it'
+  - name: restart and replay
+    check: restart restores the gloves and every block to their placed tiles, and a recorded line-push session replays to the same end state
   status: revised
   human_review:
   - I think this is just a default behaviour of power gloves feature I proposed in Heavy block human review

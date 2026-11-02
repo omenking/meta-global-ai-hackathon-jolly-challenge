@@ -17,6 +17,43 @@ mechanics:
     one move. A player who steps on the switch, sees the door open, and steps off toward it arrives after
     it has closed, which teaches that the door is held rather than latched and that something has to stay
     on the plate.'
+  definitions:
+  - 'floor: walkable ground; standing, waiting and turning on it are always safe (ground term, defined here for this file)'
+  - 'wall: never enterable from any side; it only blocks and never harms (ground term, defined here for this file)'
+  - 'door: a doorway tile in this mechanic; closed it blocks like wall, open it is walkable floor, and in this mechanic it is open only while the plate is occupied'
+  - 'plate: the floor switch itself; you, a bot or a block standing on it presses it and holds its linked door open, and stepping off lets it close on the next move'
+  - 'block: a pushable block per mechanic 81 in blocks.yml; while it sits on the plate it holds the door open exactly as the player does'
+  - 'bot: a moving non-player occupant, for example a patroller per mechanic 31 in enemies-and-bots.yml; while it stands on the plate it holds the door open exactly as the player does'
+  - 'move: one player input that attempts one step; the door closes on the next move after the plate is vacated, not in the same step off it'
+  - 'twin Jolly: a second Jolly moved by the same input per mechanic 92 in movement-tiles.yml; two plates can be held by two Jollys on one input'
+  assets:
+    tiles:
+    - file: floor-switch-unpressed.png
+      shows: floor switch plate with nothing on it, linked door closed
+    - file: floor-switch-pressed.png
+      shows: floor switch plate pressed flat under an occupant, linked door open
+    - file: door-closed.png
+      shows: closed door blocking the doorway like wall
+    - file: door-open.png
+      shows: open door, walkable doorway with the frame held open
+    jolly_states:
+    - file: jolly-on-plate.png
+      shows: Jolly standing on the floor switch plate holding the door open
+    gui: []
+    blocks:
+    - file: push-block.png
+      shows: push block that can be left on the plate to hold the door, per mechanic 81 in blocks.yml
+  test_cases:
+  - name: solution block holds the door
+    check: 'blocked-by: 81 (push block): push a block onto the plate, walk through the held-open door and collect the far side; the door stays open while the block remains'
+  - name: adversarial step off and hurry
+    check: step on the plate to open the door, step off toward it and keep walking; the door closes on the next move before the player arrives, and the player returns to the plate or leaves a block on it, never stranded
+  - name: boundary closes on the next move
+    check: vacate the plate and make exactly one more move; the door is still open during the step off and closed from the next move onward
+  - name: boundary held while occupied
+    check: stand on the plate and push into a wall twice; the door stays open for every move the plate stays occupied and no move is spent closing it
+  - name: restart and replay
+    check: restart restores the plate unpressed, the door closed and any block to its placed tile, and a recorded session replays to the same end state
   status: trial
   human_review: {}
 - id: 22
@@ -34,6 +71,38 @@ mechanics:
   teaching_moment: 'First room: a toggle switch between two doors, one open and one closed. A player who
     presses it a second time to be sure swaps the doors back and finds their exit closed again, which
     teaches that the state persists and that pressing is itself the thing to count.'
+  definitions:
+  - 'floor: walkable ground per mechanic 21 in this file'
+  - 'wall: never enterable per mechanic 21 in this file'
+  - 'door: doorway per mechanic 21 in this file; here each of the two linked doors swaps on every press, open becomes closed and closed becomes open'
+  - 'toggle switch: a switch defined here; stepping on it swaps its two linked doors at once and the swapped state persists after the player leaves'
+  - 'press: stepping onto the toggle switch; each entry onto it is one press and one swap, and standing on it does not repeat the swap'
+  - 'mirror switch: per mechanic 30 in this file; one mirror press inverts every switch state in the room at once'
+  - 'one-way door: a door passable from one side only per mechanic 4 in movement-tiles.yml; a toggle can change which of its two doors stands open before the player goes through'
+  assets:
+    tiles:
+    - file: toggle-switch-a.png
+      shows: toggle switch in state A, first linked door open and second closed
+    - file: toggle-switch-b.png
+      shows: toggle switch in state B after one press, first linked door closed and second open
+    - file: door-closed.png
+      shows: closed linked door blocking the doorway like wall
+    - file: door-open.png
+      shows: open linked door, walkable doorway
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution press once and walk away
+    check: step on the toggle once so the exit door swaps open, leave the switch and walk through; the open state persists with nobody on the switch
+  - name: adversarial second press to be sure
+    check: press the toggle, then step on it again before leaving; the doors swap back and the exit is closed again, and the player presses once more to reopen it, never stranded
+  - name: boundary second press restores the start
+    check: press twice in succession; after the second press both doors are exactly as placed, open for closed and closed for open
+  - name: boundary state persists off the switch
+    check: press once, leave and make ten moves elsewhere in the room; neither door changes until the next press
+  - name: restart and replay
+    check: restart restores both doors and the toggle to their placed states, and a recorded two-press session replays to the same end state
   status: trial
   human_review: {}
 - id: 23
@@ -60,6 +129,42 @@ mechanics:
     orb on the way. A player who presses the switch and collects the orb on the way arrives as the countdown
     ends and the door closes, which teaches that the five seconds are spent by everything done inside
     them.'
+  definitions:
+  - 'floor: walkable ground per mechanic 21 in this file'
+  - 'wall: never enterable per mechanic 21 in this file'
+  - 'door: doorway per mechanic 21 in this file; here pressing the timer switch opens it for the countdown and at zero it closes again'
+  - 'timer switch: a switch defined here; pressing it opens its linked door and starts a visible 5-second countdown on the door, and pressing again resets that countdown to five'
+  - 'countdown: the remaining seconds shown on the door in this mechanic; everything the player does inside the five seconds spends them, including collecting an orb on the way'
+  - 'second: one real second of the countdown, not one move; the window runs in real seconds after the player leaves the switch'
+  - 'orb: walking onto it collects it; it is counted by the gate and never enters the inventory'
+  - 'sticky tile: floor that costs extra moves per mechanic 8 in movement-tiles.yml; it spends moves inside the same five seconds without pausing the countdown'
+  - 'hourglass: gear per mechanic 69 in time-gates-and-exits.yml; it freezes the player clock while this door countdown keeps its own time'
+  assets:
+    tiles:
+    - file: timer-switch-ready.png
+      shows: timer switch ready to press, linked door closed and no countdown running
+    - file: timer-switch-running.png
+      shows: timer switch just pressed, linked door open and countdown started
+    - file: door-closed.png
+      shows: closed timer door blocking the doorway like wall
+    - file: door-open.png
+      shows: open timer door, walkable doorway while the countdown runs
+    jolly_states: []
+    gui:
+    - file: timer-countdown.png
+      shows: visible 5-second countdown on the door, showing the seconds left before it closes
+    blocks: []
+  test_cases:
+  - name: solution sprint through in time
+    check: press the switch and run straight to the far door, entering while seconds remain; the player is through before the countdown reaches zero
+  - name: adversarial orb on the way
+    check: press the switch, stop to collect the orb on the way and then continue; the detour spends the five seconds, the door closes on arrival, and the player returns to press again, never stranded
+  - name: boundary five seconds exactly
+    check: press the switch and wait at the door; it stays open through the fifth second and closes at zero, and a step attempted after zero is blocked
+  - name: boundary re-press resets the countdown
+    check: press, let three seconds run, press again; the countdown returns to five full seconds from the second press, not two
+  - name: restart and replay
+    check: restart restores the switch ready, the door closed and no countdown running, and a recorded sprint session replays to the same end state
   status: trial
   human_review: {}
 - id: 26
@@ -87,6 +192,39 @@ mechanics:
     a patroller outside it. A player who presses it as soon as they reach it, before they are ready to
     leave, opens the exit permanently and gives the patroller a way in, which teaches that an irreversible
     press is made last rather than first.'
+  definitions:
+  - 'floor: walkable ground per mechanic 21 in this file'
+  - 'wall: never enterable per mechanic 21 in this file'
+  - 'door: doorway per mechanic 21 in this file; here the first press fires it permanently open for the rest of the attempt and it never closes again in that attempt'
+  - 'one-time switch: a switch defined here; its first press fires its linked door permanently and the switch then breaks and can never be pressed again in the attempt'
+  - 'broken: the spent state of this switch after its one press; pressing or standing on a broken switch does nothing and mirror switches leave it unaffected per mechanic 30 in this file'
+  - 'patroller: enemy on a fixed loop per mechanic 31 in enemies-and-bots.yml; opening the exit early can give it a way into the room'
+  - 'remote door: a door far from its switch, including off-screen; this switch is how such a door is opened because its one press is permanent, which is why a separate remote switch was not kept'
+  - 'chain switch: sequence of switches per mechanic 28 in this file; a one-time switch can serve as its last link because that link never needs pressing again'
+  assets:
+    tiles:
+    - file: one-time-switch-intact.png
+      shows: one-time switch never yet pressed, linked door still closed
+    - file: one-time-switch-broken.png
+      shows: broken one-time switch after its single press, visibly spent and inert
+    - file: door-closed.png
+      shows: closed door blocking the doorway like wall before the press
+    - file: door-open.png
+      shows: open door after the one press, permanently open for the attempt
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution press last and leave
+    check: clear the room first, press the one-time switch as the last act and walk out through the permanently open exit; the door stays open for the rest of the attempt
+  - name: adversarial press as soon as reached
+    check: 'blocked-by: 31 (patroller): press the switch on arrival before preparing to leave; the exit opens permanently and the patroller outside gains a way in, and the player must still route to the now-open exit or restart the small room, never stranded'
+  - name: boundary first press only
+    check: press the broken switch a second and a third time; nothing changes, the switch stays broken and the door stays open
+  - name: boundary never resets in the attempt
+    check: press once, make twenty moves elsewhere and return; the switch is still broken and the door still open without any further press
+  - name: restart and replay
+    check: restart restores the switch intact and its door closed as placed, and a recorded press-and-exit session replays to the same end state
   status: trial
   human_review:
   - can serve remote switch purpose as well.
@@ -106,6 +244,39 @@ mechanics:
   teaching_moment: 'First room: three switches with clear order marks and an info tile beside the first.
     A player who presses the nearest switch first because it is nearest resets the chain and lights nothing,
     which teaches that the order, rather than the pressing, is the puzzle.'
+  definitions:
+  - 'floor: walkable ground per mechanic 21 in this file'
+  - 'wall: never enterable per mechanic 21 in this file'
+  - 'door: doorway per mechanic 21 in this file; here it opens only when the last switch of the chain is pressed in order'
+  - 'chain switch: one of an ordered set of switches defined here; pressing them in their marked order lights each in turn and the last one opens the linked door'
+  - 'order mark: the number or mark carried by each chain switch showing its place in the sequence; the marks, not proximity, say which switch is next'
+  - 'lit: the state of a chain switch pressed correctly in turn; lit switches stay lit until an out-of-order press resets all of them to unlit'
+  - 'info tile: a tile that teaches the order per mechanic 58 in vision-and-information.yml; stepping on it shows the sequence the room is teaching'
+  - 'one-time switch: per mechanic 27 in this file; as the last link it opens the door on its one press and never needs pressing again'
+  assets:
+    tiles:
+    - file: chain-switch-unlit.png
+      shows: chain switch not yet lit, order mark visible and unlit
+    - file: chain-switch-lit.png
+      shows: chain switch lit after its correct press in the sequence
+    - file: door-closed.png
+      shows: closed chain door blocking the doorway like wall until the last press
+    - file: door-open.png
+      shows: open chain door after the final switch is pressed in order
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution press in marked order
+    check: press the chain switches in their marked order from first to last; each lights in turn and the last press opens the linked door
+  - name: adversarial nearest switch first
+    check: press the nearest switch first because it is nearest; the chain resets, nothing lights, and the player starts again from the first marked switch, never stranded
+  - name: boundary out-of-order resets all
+    check: light the first two switches, then press the last before the third; every switch in the chain goes unlit at once, including the two already lit
+  - name: boundary door only at the last one
+    check: press every switch except the last in order; the door stays closed, and pressing the final switch in order is the exact move that opens it
+  - name: restart and replay
+    check: restart restores every chain switch unlit and the door closed, and a recorded in-order session replays to the same end state
   status: trial
   human_review: {}
 - id: 29
@@ -124,6 +295,46 @@ mechanics:
   teaching_moment: 'First room: a weight switch beside its door, with a block in the room. A player who
     stands on the plate, sees the door open, and steps off to use it watches it close exactly as the floor
     switch did, which teaches that what this plate wants left on it is the block.'
+  definitions:
+  - 'floor: walkable ground per mechanic 21 in this file'
+  - 'wall: never enterable per mechanic 21 in this file'
+  - 'door: doorway per mechanic 21 in this file; here it is open only while a block sits on the weight switch, or while the player stands on it without leaving it held'
+  - 'weight switch: a plate defined here; it is active only while a block sits on it, the player standing on it also activates it but cannot leave it held, and removing the block closes the door'
+  - 'plate: the weight switch itself as a floor plate; what it wants left on it is a block, which is the permanent hold the floor switch cannot give'
+  - 'floor switch: the held-only-while-occupied switch per mechanic 21 in this file; this plate differs by keeping a left block as a lasting occupant'
+  - 'block: a pushable block per mechanic 81 in blocks.yml; left on the plate it holds the door open after the player walks away'
+  - 'heavy block: a block taking two pushes to move per mechanic 87 in blocks.yml; left on the plate it holds it at the price of that labour'
+  - 'power gloves: gear per mechanic 89 in gear-and-items.yml; with them a block can be line-pushed straight onto the plate'
+  assets:
+    tiles:
+    - file: weight-switch-empty.png
+      shows: weight switch plate with nothing on it, linked door closed
+    - file: weight-switch-weighted.png
+      shows: weight switch plate held down by a block left on it, linked door open
+    - file: door-closed.png
+      shows: closed door blocking the doorway like wall
+    - file: door-open.png
+      shows: open door, walkable doorway while the plate is weighted
+    jolly_states:
+    - file: jolly-on-weight-switch.png
+      shows: Jolly standing on the weight switch, holding the door only while present
+    gui: []
+    blocks:
+    - file: push-block.png
+      shows: push block that can be left on the plate as the permanent hold, per mechanic 81 in blocks.yml
+    - file: heavy-block.png
+      shows: heavy block that can be left on the plate after two pushes, per mechanic 87 in blocks.yml
+  test_cases:
+  - name: solution leave a block on the plate
+    check: 'blocked-by: 81 (push block): push a block onto the weight switch, walk away and through the door; the door stays open while the block remains on the plate'
+  - name: adversarial stand and step off
+    check: stand on the plate to open the door, step off toward it and keep walking; the door closes exactly as the floor switch did, and the player returns to fetch the block, never stranded
+  - name: boundary removing the block closes it
+    check: 'blocked-by: 81 (push block): with the door held by a block, push the block off the plate; the door closes on the next move and reopens only when a block is left on it again'
+  - name: boundary player holds only while present
+    check: stand on the plate and push into a wall twice, then step off; the door is open for every occupied move and closed after leaving, with no lasting hold from the player alone
+  - name: restart and replay
+    check: restart restores the plate empty, the door closed and every block to its placed tile, and a recorded block-and-exit session replays to the same end state
   status: trial
   human_review: {}
 - id: 30
@@ -142,6 +353,41 @@ mechanics:
     the entrance. A player who presses the mirror switch to see what it does finds every setting inverted
     and their nearly finished room undone, which teaches that its scope is the whole room and that it
     is pressed, if at all, before anything else is set.'
+  definitions:
+  - 'floor: walkable ground per mechanic 21 in this file'
+  - 'wall: never enterable per mechanic 21 in this file'
+  - 'door: doorway per mechanic 21 in this file; here doors change only because the switches linked to them are inverted, since the mirror switch is not a door opener itself'
+  - 'mirror switch: a switch defined here; one press inverts every switch state in the room at once, toggles and their doors included, and broken one-time switches are unaffected'
+  - 'switch state: whether a switch in the room currently stands set or unset, open-linked or closed-linked; one mirror press flips each such state to its opposite exactly once'
+  - 'toggle switch: a two-door swapping switch per mechanic 22 in this file; a mirror press swaps each toggle in the room as if it had been pressed'
+  - 'one-time switch: the irreversible switch per mechanic 27 in this file; once broken it is unaffected by a mirror press and its door stays as fired'
+  - 'chain switch: an ordered sequence per mechanic 28 in this file; a mirror press that would disturb a lit chain is a trap rather than a help'
+  assets:
+    tiles:
+    - file: mirror-switch.png
+      shows: mirror switch, one press inverts every switch state in the room
+    - file: toggle-switch-a.png
+      shows: toggle switch in state A before or after a mirror press
+    - file: toggle-switch-b.png
+      shows: toggle switch in state B, inverted from state A by the mirror press
+    - file: door-closed.png
+      shows: closed door blocking the doorway like wall after inversion
+    - file: door-open.png
+      shows: open door, walkable doorway after inversion
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution mirror a wrong room right
+    check: 'blocked-by: 22 (toggle switch): set three toggles wrong, press the mirror once; every toggle and its doors invert together and the room stands right without visiting each switch'
+  - name: adversarial mirror by the entrance
+    check: 'blocked-by: 22 (toggle switch): press the mirror on entering a room of toggles already set mostly right; every setting inverts and the nearly finished room is undone, and the player presses it again or resets each toggle, never stranded'
+  - name: boundary broken one-time switches unaffected
+    check: 'blocked-by: 27 (one-time switch): break a one-time switch, then press the mirror; the broken switch and its fired door are unchanged while every unbroken switch inverts'
+  - name: boundary one press inverts each switch once
+    check: 'blocked-by: 22 (toggle switch): press the mirror once and check every switch in the room; each has flipped exactly once, and a second press restores the room as placed'
+  - name: restart and replay
+    check: restart restores every switch and door to its placed state, and a recorded mirror session replays to the same end state
   status: trial
   human_review: {}
 - id: 79
@@ -160,6 +406,39 @@ mechanics:
     the counter in the HUD. A player who plays efficiently arrives in the low forties to a closed door
     and has to find moves to spend, which teaches that this door is measuring the length of the route
     rather than the player''s speed or keys.'
+  definitions:
+  - 'floor: walkable ground per mechanic 21 in this file'
+  - 'wall: never enterable per mechanic 21 in this file'
+  - 'door: doorway per mechanic 21 in this file; here the move door opens permanently on the 50th move input of the attempt and stays open after it, with no switch, key or timer involved'
+  - 'move door: a door defined here; it counts move inputs and opens permanently on exactly the 50th move input of the attempt'
+  - 'move: one player input that attempts one step in this mechanic; every such input counts toward the fifty, including moves spent pushing or detouring'
+  - 'move counter: the count of move inputs shown in the HUD in this mechanic; it starts at zero for the attempt and the door opens when it reaches fifty'
+  - 'attempt: one try at the level from its start or last restart; the fifty moves are counted inside a single attempt'
+  - 'ghost: a replay of the player moves per mechanic 78 in enemies-and-bots.yml; in a ghost level the counted moves are the ones being replayed'
+  - 'sticky tile: floor that costs extra moves per mechanic 8 in movement-tiles.yml; those extra moves still count toward the fifty'
+  - 'heavy block: a block taking two pushes to move per mechanic 87 in blocks.yml; every push input counts toward the fifty'
+  assets:
+    tiles:
+    - file: move-door-closed.png
+      shows: move door closed before the 50th move, move count still short
+    - file: move-door-open.png
+      shows: move door open from the 50th move onward, permanently open
+    jolly_states: []
+    gui:
+    - file: move-counter.png
+      shows: move counter in the HUD showing move inputs this attempt, opening the door at fifty
+    blocks: []
+  test_cases:
+  - name: solution plan a fifty-move route
+    check: walk a planned route of exactly fifty move inputs ending at the move door; the 50th input opens it and the player walks through
+  - name: adversarial efficient route arrives early
+    check: play the direct route of about forty moves to the door; it is still closed in the low forties, and the player spends the remaining moves on detours or pushing and returns, never stranded
+  - name: boundary forty-ninth and fiftieth moves
+    check: make 49 move inputs and try the door, then make one more; it is closed at 49 and opens on exactly the 50th move input
+  - name: boundary open stays open
+    check: after the door opens on the 50th move, make twenty more moves and return; the door is still open with no further counting needed
+  - name: restart and replay
+    check: restart restores the door closed and the counter to zero, and a recorded fifty-move session replays to the same end state
   status: trial
   human_review: {}
 - id: 80

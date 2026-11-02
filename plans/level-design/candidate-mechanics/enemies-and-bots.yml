@@ -16,6 +16,37 @@ mechanics:
   teaching_moment: 'First room: a patroller loops across the only corridor on a readable cycle. A player
     who walks straight across is touched and returned to the room start, which teaches that the loop,
     rather than the distance, is what has to be timed.'
+  definitions:
+  - 'floor: walkable ground; standing, waiting and turning on it are always safe (ground term, defined here for this file)'
+  - 'wall: never enterable from any side; it only blocks and never harms (ground term, defined here for this file)'
+  - 'void: a hole where floor used to be; entering it is falling, so the attempt is lost, or the player returns to the active checkpoint per mechanic 48 in terrain-and-hazards.yml where one is placed (ground term, defined here for this file)'
+  - 'hazard: any tile or enemy touch whose resolution loses the attempt or returns the player to the level start or to the active checkpoint per mechanic 48 in terrain-and-hazards.yml (ground term, defined here for this file)'
+  - 'patroller: enemy defined here; it moves one tile per player move along its marked loop forever and is lethal on touch'
+  - 'loop: the marked fixed path a patroller follows; it never changes unless a mirror block redirects it'
+  - 'touch: stepping onto the patroller or the patroller stepping onto the player; it returns the player to the level start, or to the active checkpoint where one is placed'
+  - 'checkpoint: respawn set by touch per mechanic 48 in terrain-and-hazards.yml; a patroller touch returns there instead of the level start where one is active'
+  - 'mirror block: block per mechanic 84 in blocks.yml; the only thing that redirects a patroller loop'
+  - 'sticky tile: tile per mechanic 8 in movement-tiles.yml; the patroller moves full speed over a tile the player crosses at half speed'
+  assets:
+    tiles:
+    - file: patroller.png
+      shows: patroller on its marked loop, lethal on touch
+    - file: patroller-loop.png
+      shows: marked loop tiles a patroller follows, readable before crossing
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: timed corridor crossing
+    check: 'wait on floor for the patroller to pass, then cross the corridor in the gap and reach the far side'
+  - name: adversarial straight crossing
+    check: 'walk straight across without timing the loop and be touched; the player returns to the level start or active checkpoint and can retry, never left stranded'
+  - name: one tile per player move
+    check: 'make three player moves and the patroller advances exactly three tiles along its loop, no more and no fewer'
+  - name: loop only changes by mirror
+    check: 'blocked-by: 84 (mirror block): without a mirror block the loop is unchanged after any number of moves; a mirror block redirects it and the crossing point moves with it'
+  - name: restart and replay
+    check: 'restart restores the patroller to its placed loop position, and a recorded crossing session replays to the same end state'
   status: trial
   human_review: {}
 - id: 32
@@ -33,6 +64,35 @@ mechanics:
   teaching_moment: 'First room: a chaser in an open room with one dead end. A player who runs straight
     for the orb leads the chaser''s copied steps into the dead end behind them and is caught, so the retry
     teaches that your own path is the control you have over it.'
+  definitions:
+  - 'floor: walkable ground per mechanic 31 in this file; the chaser steps only onto free floor'
+  - 'wall: never enterable per mechanic 31 in this file; a copied step into a wall is blocked and the chaser stays'
+  - 'hazard: enemy touch that loses the attempt or returns the player per mechanic 31 in this file'
+  - 'chaser: enemy defined here; after each player move it takes one step in the same direction the player just moved, if that tile is free, otherwise it stays, and it is lethal on touch'
+  - 'touch: stepping onto the chaser or the chaser stepping onto the player; it loses the attempt or returns the player to the level start or active checkpoint per mechanic 48 in terrain-and-hazards.yml'
+  - 'checkpoint: respawn per mechanic 48 in terrain-and-hazards.yml; a chaser touch returns there where one is active'
+  - 'mud tile: terrain per mechanic 47 in terrain-and-hazards.yml; in mud the chaser follows the print order instead of copying moves'
+  - 'decoy Jolly: copy per mechanic 39 in this file; the one thing the chaser copies toward instead of the player'
+  assets:
+    tiles:
+    - file: chaser.png
+      shows: chaser ready to copy the player last move, lethal on touch
+    - file: chaser-blocked.png
+      shows: chaser held against a wall after a copied step that was not free
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: lead it into a wall
+    check: 'move so the copied steps drive the chaser into a wall or dead end, then cross to the orb while it stays'
+  - name: adversarial straight run
+    check: 'run straight for the orb and lead the chaser into the dead end behind the player as the teaching moment warns; being caught returns the player to the level start or checkpoint and the room can be retried, never stranded'
+  - name: one copied step per move
+    check: 'make one player move and the chaser takes exactly one step in that direction; push the copy into a wall and the chaser stays on its tile'
+  - name: mud print following
+    check: 'blocked-by: 47 (mud tile): an enemy entering mud follows the print order instead of its copy rule until the prints end'
+  - name: restart and replay
+    check: 'restart restores the chaser to its placed tile, and a recorded session replays to the same end state'
   status: trial
   human_review: {}
 - id: 33
@@ -53,6 +113,39 @@ mechanics:
     away. A player who collects the nearest orb first wakes the sleeper across their return path and has
     to restart the room, which teaches that any orb can be the one that wakes it and that collection order
     is a decision.'
+  definitions:
+  - 'floor: walkable ground per mechanic 31 in this file; an asleep sleeper sits solid on its floor tile and blocks it'
+  - 'wall: never enterable per mechanic 31 in this file'
+  - 'hazard: enemy touch that loses the attempt or returns the player per mechanic 31 in this file'
+  - 'sleeper: enemy defined here; it sits asleep and solid on its tile until any orb anywhere in the level is collected, then it patrols a fixed marked loop at one tile per player move and is lethal on touch'
+  - 'orb: walking onto it collects it; it is counted by the gate and never enters the inventory, and collecting any orb wakes every sleeper'
+  - 'loop: the marked fixed path the sleeper patrols once awake, as a patroller per mechanic 31 in this file'
+  - 'patroller: enemy per mechanic 31 in this file; the woken sleeper patrols and is lethal on touch like one'
+  - 'checkpoint: respawn per mechanic 48 in terrain-and-hazards.yml; a woken sleeper touch returns there where one is active'
+  - 'alarm tile: tile per mechanic 38 in this file; the other way to wake sleepers, by stepping rather than by orb'
+  - 'bonus orb: optional orb per mechanic 20 in orbs.yml; collecting it still wakes a sleeper, so it is a real cost'
+  assets:
+    tiles:
+    - file: sleeper-asleep.png
+      shows: sleeper asleep and solid on its tile, blocking it before any orb is collected
+    - file: sleeper-awake.png
+      shows: sleeper awake and patrolling its marked loop, lethal on touch
+    - file: sleeper-loop.png
+      shows: marked loop tiles the sleeper patrols once awake
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: collect then cross in the gap
+    check: 'collect an orb to wake the sleeper, then time the crossing of its loop and reach the exit'
+  - name: adversarial nearest orb first
+    check: 'collect the nearest orb first as the teaching moment warns and wake the sleeper across the return path; being touched returns the player to the level start or checkpoint and the room can be retried in the other order, never stranded'
+  - name: any orb wakes it
+    check: 'collect the safer far orb without touching the near one and the sleeper still wakes; before any orb is collected its tile is solid and cannot be entered'
+  - name: alarm wakes by stepping
+    check: 'blocked-by: 38 (alarm tile): stepping on the alarm wakes the sleeper without any orb, the stepping counterpart to waking by orb'
+  - name: restart and replay
+    check: 'restart restores the sleeper asleep on its placed tile with no orb collected, and a recorded session replays to the same end state'
   status: revised
   human_review:
   - How does it move? Is it a specific orb or any orb?
@@ -72,6 +165,38 @@ mechanics:
   teaching_moment: 'First room: the blocker stands in a three-wide doorway with space to pin it on one
     side. A player who tries to slip past on the side it is guarding is mirrored and touched, so they
     restart having learned that it tracks them and has to be pinned or lured rather than dodged.'
+  definitions:
+  - 'floor: walkable ground per mechanic 31 in this file'
+  - 'wall: never enterable per mechanic 31 in this file'
+  - 'hazard: enemy touch that loses the attempt or returns the player per mechanic 31 in this file'
+  - 'blocker: guard defined here; it lives in a three-wide doorway and moves one tile per player move sideways to stay between the player and the exit, tracking the player position'
+  - 'doorway strip: the three-wide doorway the blocker never leaves; it can only shuffle sideways inside that strip'
+  - 'touch: stepping onto the blocker or the blocker stepping onto the player; it returns the player to the level start or active checkpoint per mechanic 48 in terrain-and-hazards.yml'
+  - 'checkpoint: respawn per mechanic 48 in terrain-and-hazards.yml; a blocker touch returns there where one is active'
+  - 'push block: block per mechanic 81 in blocks.yml; pushing one in pins the blocker to one side of its doorway'
+  - 'decoy Jolly: copy per mechanic 39 in this file; the blocker tracks the decoy, not the player, for as long as the decoy lasts'
+  assets:
+    tiles:
+    - file: blocker.png
+      shows: blocker standing in its three-wide doorway, tracking the player
+    - file: blocker-doorway.png
+      shows: three-wide doorway strip the blocker never leaves
+    jolly_states: []
+    gui: []
+    blocks:
+    - file: push-block.png
+      shows: push block that can pin the blocker to one side of its doorway
+  test_cases:
+  - name: pin and walk the other side
+    check: 'blocked-by: 81 (push block): push a block to pin the blocker to one side of the doorway and walk through the other side'
+  - name: adversarial slip past the guarded side
+    check: 'try to slip past on the side the blocker is guarding as the teaching moment warns; it mirrors the player, touch returns the player to the level start or checkpoint, and the room can be retried by pinning or luring, never stranded'
+  - name: one sideways tile per move inside the strip
+    check: 'make a player move and the blocker shuffles exactly one tile sideways inside its three-wide strip; it never leaves the strip and never moves toward or away from the player'
+  - name: decoy draws the tracking
+    check: 'blocked-by: 39 (decoy Jolly): while the decoy stands the blocker tracks the decoy tile and vacates the player side of the doorway'
+  - name: restart and replay
+    check: 'restart restores the blocker to its placed doorway tile, and a recorded session replays to the same end state'
   status: revised
   human_review:
   - its basically just a key and keylock pair at a chokepoint masked as a enemy.
@@ -93,6 +218,37 @@ mechanics:
   teaching_moment: 'First room: you carry a key across an open room the thief crosses. A player who walks
     straight at it has the key snatched and watches it carried to a burrow they had not noticed, which
     teaches both that the key can be recovered and where the thief is trying to go.'
+  definitions:
+  - 'floor: walkable ground per mechanic 31 in this file; the thief flees across it one tile per player move'
+  - 'wall: never enterable per mechanic 31 in this file; it corners the thief as it corners the player'
+  - 'thief: enemy defined here; it moves one tile per player move away from the player and is not lethal, so it can never lose the attempt by touch'
+  - 'key: the most recent key in the player inventory; if the thief starts a move next to the player it snatches that key and carries it visibly'
+  - 'burrow: the thief own tile defined here; it runs for the burrow after a snatch and drops the key there, where the player can pick it back up'
+  - 'touch: reaching the thief and touching it before it reaches the burrow; it drops the key where it stands and the key can be picked back up'
+  - 'ice tile: tile per mechanic 1 in movement-tiles.yml; sliding on it cuts off the thief escape line to the burrow'
+  - 'chaser: enemy per mechanic 32 in this file; the demo contrast, one hunts the player and one hunts a burrow'
+  assets:
+    tiles:
+    - file: thief.png
+      shows: thief fleeing empty-handed, not lethal on touch
+    - file: thief-carrying-key.png
+      shows: thief carrying the snatched key visibly while running for its burrow
+    - file: thief-burrow.png
+      shows: burrow tile where the thief drops the stolen key for the player to pick back up
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: corner it and recover the key
+    check: 'cut off the burrow line, touch the thief before it reaches the burrow, and it drops the key where it stands for the player to pick back up'
+  - name: adversarial straight walk at it
+    check: 'walk straight at the thief carrying a key as the teaching moment warns; it snatches the key and carries it to the burrow, and the key is recovered at the burrow, so the player is never left without a legal move or a way to get the key back'
+  - name: snatch only from beside the player
+    check: 'the thief snatches only when it starts a move next to the player, it takes the most recent key only, and it moves exactly one tile per player move away'
+  - name: slide to cut it off
+    check: 'blocked-by: 1 (ice tile): slide on ice to cut off the escape line to the burrow and touch the thief before it deposits the key'
+  - name: restart and replay
+    check: 'restart restores the thief, the burrow and every key to their placed state, and a recorded session replays to the same end state'
   status: revised
   human_review:
   - doesn't explain its movement, is there a way to get back our item?
@@ -113,6 +269,37 @@ mechanics:
   teaching_moment: 'First room: three orbs in a row, of which the middle one is a mimic. A player who
     collects in the order they meet them reveals it at arm''s length and is reset, which teaches that
     an orb is read before it is taken.'
+  definitions:
+  - 'floor: walkable ground per mechanic 31 in this file'
+  - 'wall: never enterable per mechanic 31 in this file'
+  - 'hazard: enemy touch that loses the attempt or returns the player per mechanic 31 in this file'
+  - 'mimic orb: enemy defined here; it is identical to an orb until the player comes within one tile, when it reveals and starts a small two-to-three tile patrol and is lethal on touch'
+  - 'orb: a real orb; walking onto it collects it and it is counted by the gate, while stepping on an unrevealed mimic collects nothing'
+  - 'reveal: the change within one tile of the player; before it the mimic cannot be collected and after it the mimic patrols instead of sitting as an orb'
+  - 'patrol: the small two-to-three tile loop the revealed mimic follows, as a patroller per mechanic 31 in this file'
+  - 'patroller: enemy per mechanic 31 in this file; a revealed mimic can join an existing loop as a second timing to cross'
+  - 'hidden orb: orb per mechanic 16 in orbs.yml; the demo contrast for reading every orb before committing'
+  - 'checkpoint: respawn per mechanic 48 in terrain-and-hazards.yml; a revealed mimic touch returns there where one is active'
+  assets:
+    tiles:
+    - file: mimic-orb.png
+      shows: mimic disguised as an orb, identical to a real orb at a distance
+    - file: mimic-revealed.png
+      shows: mimic revealed within one tile, patrolling and lethal on touch
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: reveal then time the patrol
+    check: 'approach until the mimic reveals at one tile, then treat it as a patroller, time its two-to-three tile patrol and cross to collect the real orbs'
+  - name: adversarial collect in order
+    check: 'collect the orbs in the order they are met as the teaching moment warns and reveal the middle mimic at arm length; touch returns the player to the level start or checkpoint and the room can be retried by reading the orbs first, never stranded'
+  - name: reveal distance and no early collect
+    check: 'stepping onto the mimic before reveal collects nothing, and it reveals exactly when the player first comes within one tile, never earlier'
+  - name: joins an existing loop
+    check: 'blocked-by: 31 (patroller): a revealed mimic joining a patroller loop gives two timings to cross, and both stay on their own loops'
+  - name: restart and replay
+    check: 'restart restores the mimic disguised as an orb on its placed tile, and a recorded session replays to the same end state'
   status: trial
   human_review: {}
 - id: 37
@@ -131,6 +318,40 @@ mechanics:
   teaching_moment: 'First room: a guard faces you at the end of its corridor when you arrive. A player
     who walks straight in meets it from the front and is reset, so the retry teaches that its facing cycle,
     shown by its arrow, creates the window rather than its position.'
+  definitions:
+  - 'floor: walkable ground per mechanic 31 in this file; the guard never leaves its corridor tile'
+  - 'wall: never enterable per mechanic 31 in this file'
+  - 'hazard: entering the guard tile from the front it faces, which resets the player per mechanic 31 in this file'
+  - 'guard: enemy defined here; it never leaves its corridor tile and rotates its facing 90 degrees every four player moves, shown by an arrow'
+  - 'facing: the direction the arrow shows; stepping onto the guard tile from the front it faces resets the player, entering from behind while its back is turned lets the player pass'
+  - 'corridor tile: the one tile the guard holds; it rotates in place and never patrols away from it'
+  - 'checkpoint: respawn per mechanic 48 in terrain-and-hazards.yml; meeting the guard from the front returns there where one is active instead of resetting to the level start'
+  - 'mirror block: block per mechanic 84 in blocks.yml; it changes when the guard window falls relative to the player route'
+  - 'bounce pad: tile per mechanic 6 in movement-tiles.yml; launching over the guard is timed to its turn'
+  assets:
+    tiles:
+    - file: guard-facing-up.png
+      shows: guard on its corridor tile facing up, arrow showing the facing
+    - file: guard-facing-right.png
+      shows: guard on its corridor tile facing right, arrow showing the facing
+    - file: guard-facing-down.png
+      shows: guard on its corridor tile facing down, arrow showing the facing
+    - file: guard-facing-left.png
+      shows: guard on its corridor tile facing left, arrow showing the facing
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: pass from behind in the window
+    check: 'wait for the arrow to turn the guard back, then enter its tile from behind and pass through the corridor'
+  - name: adversarial straight walk in
+    check: 'walk straight in while the guard faces the player as the teaching moment warns; meeting it from the front resets the player to the level start or checkpoint and the room can be retried in the window, never stranded'
+  - name: turns every four moves
+    check: 'make four player moves and the facing rotates exactly 90 degrees once; three moves leave it unchanged and the guard never leaves its tile'
+  - name: launch over in the window
+    check: 'blocked-by: 6 (bounce pad): launch over the guard timed to its turn and land beyond it without entering from the front'
+  - name: restart and replay
+    check: 'restart restores the guard to its placed tile and starting facing, and a recorded session replays to the same end state'
   status: trial
   human_review: {}
 - id: 38
@@ -147,6 +368,34 @@ mechanics:
   teaching_moment: 'First room: the direct floor to the orb is an alarm tile, with a longer way round.
     A player who takes the direct floor wakes the room''s sleepers across their exit and restarts, which
     teaches that some floor is a trigger and that the long way round was the route.'
+  definitions:
+  - 'floor: walkable ground per mechanic 31 in this file; after ringing once the alarm becomes inert floor'
+  - 'wall: never enterable per mechanic 31 in this file'
+  - 'hazard: enemy touch that loses the attempt or returns the player per mechanic 31 in this file; the alarm itself never harms the player directly'
+  - 'alarm tile: floor tile defined here; stepping on it rings once and wakes every sleeper in the room immediately, then it becomes inert floor'
+  - 'sleeper: enemy per mechanic 33 in this file; the alarm wakes it by stepping, where collecting an orb wakes it by pickup'
+  - 'room: the single room the alarm is in; it wakes sleepers in this room only and never sleepers in other rooms'
+  - 'decoy Jolly: copy per mechanic 39 in this file; waking every sleeper on purpose can be aimed at the decoy'
+  assets:
+    tiles:
+    - file: alarm.png
+      shows: alarm tile before it is stepped on, a trigger in the floor
+    - file: alarm-inert.png
+      shows: alarm tile after ringing once, now inert floor
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: long way round stays quiet
+    check: 'take the longer way round, collect the orb without stepping on the alarm, and every sleeper in the room stays asleep'
+  - name: adversarial direct floor wakes the room
+    check: 'take the direct floor to the orb as the teaching moment warns and wake the room sleepers across the exit; being touched returns the player to the level start or checkpoint and the room can be retried by the long way, never stranded'
+  - name: rings once and only in this room
+    check: 'step on the alarm and every sleeper in this room wakes at once, no sleeper in another room wakes, and stepping on it a second time does nothing because it is now inert floor'
+  - name: wake them at the decoy
+    check: 'blocked-by: 39 (decoy Jolly): trigger the alarm on purpose with a decoy placed and the woken sleepers target the decoy instead of the player'
+  - name: restart and replay
+    check: 'restart restores the alarm live and every sleeper asleep, and a recorded session replays to the same end state'
   status: trial
   human_review: {}
 - id: 39
@@ -167,6 +416,38 @@ mechanics:
     sight of it. A player who walks through without pausing drops the copy where enemies cannot see it
     and is chased as normal, which teaches that a decoy only works where it can be seen by what it is
     meant to distract.'
+  definitions:
+  - 'floor: walkable ground per mechanic 31 in this file; the decoy stands on the floor tile where it is dropped'
+  - 'wall: never enterable per mechanic 31 in this file'
+  - 'hazard: enemy touch that loses the attempt or returns the player per mechanic 31 in this file; while the decoy stands, enemies resolve that touch against the decoy tile instead'
+  - 'decoy Jolly: copy defined here; walking over its pickup drops the copy on the player current tile as the player steps off it, it lasts 20 moves, and while it stands patrollers, chasers and blockers target the decoy tile instead of the player'
+  - 'pickup: the tile the player walks over to deploy; deployment is walking through it with no new key, and the copy is left on the tile the player steps off'
+  - 'slot: the one inventory slot the undeployed decoy is carried in; the player carries one decoy'
+  - 'patroller: enemy per mechanic 31 in this file; while the decoy stands it follows its loop against the decoy tile instead of the player'
+  - 'chaser: enemy per mechanic 32 in this file; while the decoy stands it copies toward the decoy instead of the player'
+  - 'blocker: enemy per mechanic 34 in this file; while the decoy stands it tracks the decoy and vacates the player side of the doorway'
+  assets:
+    tiles:
+    - file: decoy-pickup.png
+      shows: decoy pickup tile the player walks over to deploy the copy
+    jolly_states:
+    - file: decoy-jolly.png
+      shows: standing decoy copy of Jolly on the tile where it was dropped
+    gui:
+    - file: decoy-slot.png
+      shows: decoy carried in its slot before deployment
+    blocks: []
+  test_cases:
+  - name: plant it in sight and cross
+    check: 'walk through the pickup where the guarded corridor can see the dropped copy, let the enemies target the decoy, and cross in the window it buys'
+  - name: adversarial drop it unseen
+    check: 'walk through the pickup before the corridor is in sight as the teaching moment warns and drop the copy where no enemy can see it; the player is chased as normal, touch returns the player to the level start or checkpoint, and the room can be retried with the decoy placed in sight, never stranded'
+  - name: lasts twenty moves
+    check: 'the decoy draws patrollers, chasers and blockers for exactly 20 moves and on the next move they target the player again; the player carries only one decoy in its slot'
+  - name: blocker vacates the doorway
+    check: 'blocked-by: 34 (blocker): while the decoy stands the blocker tracks the decoy tile and leaves the player side of the doorway open'
+  - name: restart and replay
+    check: 'restart restores the decoy to its pickup with its slot empty, and a recorded session replays to the same end state'
   status: revised
   human_review:
   - how do you deploy it?
@@ -188,6 +469,39 @@ mechanics:
     a one-tile pinch. A player who fills their own slots first and backs into the pinch swaps places with
     the bot unexpectedly and has to restart the arrangement, which teaches that the bot''s position and
     its four slots are part of the inventory.'
+  definitions:
+  - 'floor: walkable ground per mechanic 31 in this file; the mule bot follows the exact floor path the player walked'
+  - 'wall: never enterable per mechanic 31 in this file'
+  - 'hazard: any tile whose entry loses the attempt per mechanic 31 in this file; the bot waits rather than stepping onto a hazard and catches up along the player path when it can'
+  - 'mule bot: follower defined here; it follows the exact path the player walked one tile behind, it carries 4 extra inventory slots, moving backwards into it swaps tiles so it never blocks the player, and it waits if its next path tile is a hazard'
+  - 'inventory: the player base 4 slots plus the bot 4 slots shown as a second HUD row; keys the bot carries use its 4 slots'
+  - 'key: a carried item that uses one player slot or one bot slot; the bot can carry the second key a twin lock needs'
+  - 'path: the exact tiles in the order the player walked them; the bot retraces that path one tile behind and no other route'
+  - 'swap: moving backwards into the bot exchanges the player and bot tiles; the bot is never an obstacle the player can be stranded against'
+  - 'twin lock: lock per mechanic 11 in keys-and-locks.yml; the level that only fits if the mule carries the second key'
+  - 'swap tile: tile per mechanic 93 in movement-tiles.yml; swapping with the bot gets its slots past a pinch'
+  assets:
+    tiles:
+    - file: mule-bot.png
+      shows: mule bot following one tile behind the player
+    - file: mule-bot-waiting.png
+      shows: mule bot waiting because its next path tile is a hazard
+    jolly_states: []
+    gui:
+    - file: mule-slots.png
+      shows: second HUD row showing the 4 extra slots the mule bot carries
+    blocks: []
+  test_cases:
+  - name: carry the fifth key to the lock
+    check: 'blocked-by: 11 (twin lock): fill the player 4 slots, let the bot carry the next key in its own slots, and open the lock that needs more than one carried key'
+  - name: adversarial fill up then back into the pinch
+    check: 'fill the player slots first and back into the one-tile pinch as the teaching moment warns; the player swaps tiles with the bot instead of being blocked, and the room resolves by restarting the arrangement, never by a stranded state against the bot'
+  - name: four plus four slots, one tile behind
+    check: 'the player holds exactly 4 slots and the bot exactly 4 more shown as a second HUD row, the bot stays one tile behind on the exact walked path, and a further key cannot be carried'
+  - name: waits at a hazard then catches up
+    check: 'when the next path tile is a hazard the bot waits on its tile and catches up along the player path when that tile can be entered, without ever stepping onto the hazard'
+  - name: restart and replay
+    check: 'restart restores the bot behind the player start with both inventories empty, and a recorded session replays to the same end state'
   status: revised
   human_review:
   - I think it would be better if it is like a mule bot, basically lets you hold more.
@@ -215,6 +529,37 @@ mechanics:
     player who repeats the same route on the next attempt meets their own ghost coming the other way one
     step behind and loses, which teaches that the ghost replays the attempt rather than merely following
     the player.'
+  definitions:
+  - 'floor: walkable ground per mechanic 31 in this file; a ghost retraces the floor its failed attempt walked'
+  - 'wall: never enterable per mechanic 31 in this file; a ghost replay is blocked by walls exactly as the failed attempt was'
+  - 'hazard: enemy touch that loses the attempt per mechanic 31 in this file; touching a ghost loses the attempt in the same way'
+  - 'ghost: obstacle defined here; on a new attempt it replays the last failed attempt inputs move for move starting one step behind that attempt timeline, touching it loses the attempt, every further failed attempt can add another ghost, ghosts pass through each other, and a ghost fades when its replay ends'
+  - 'attempt: one run of the level from the start or the active checkpoint; a failed attempt is recorded so the next attempt can replay it as a ghost'
+  - 'replay: the move-for-move re-enactment of a recorded failed attempt, starting one step behind that attempt timeline so the ghost trails the route that made it'
+  - 'checkpoint: respawn per mechanic 48 in terrain-and-hazards.yml; ghosts restart from the checkpoint, not the level start, where one was active'
+  - 'touch: meeting a ghost on a tile; it loses the current attempt and that failed attempt can itself add a ghost to the next one'
+  assets:
+    tiles:
+    - file: ghost-start.png
+      shows: ghost at the start of its replay, one step behind the failed attempt timeline
+    jolly_states:
+    - file: ghost-jolly.png
+      shows: ghost copy of Jolly replaying the failed attempt move for move
+    - file: ghost-jolly-fading.png
+      shows: ghost fading as its replay ends
+    gui: []
+    blocks: []
+  test_cases:
+  - name: dodge your own last route
+    check: 'take a different line from the failed attempt, let the ghost retrace the old route one step behind, and reach the exit without touching it'
+  - name: adversarial repeat the same route
+    check: 'repeat the failed route as the teaching moment warns and meet the ghost coming the other way one step behind; touching it loses the attempt, which ends the run and can add a ghost to the next attempt, so the state always resolves by losing and retrying, never by being stranded'
+  - name: one step behind and fades at the end
+    check: 'the ghost starts exactly one step behind the failed attempt timeline, holds that offset for the whole replay, and fades on the move its replay ends'
+  - name: ghosts pass through each other
+    check: 'blocked-by: 48 (checkpoint): with a checkpoint active every ghost restarts from the checkpoint, several ghosts can occupy and cross the same tile because they pass through each other, and their trailing line narrows the route without blocking it outright'
+  - name: restart and replay
+    check: 'restart clears every ghost until the next failed attempt records one, and a recorded session replays to the same end state'
   status: revised
   human_review:
   - so the ghost is one step behind, if you go backwards you die.

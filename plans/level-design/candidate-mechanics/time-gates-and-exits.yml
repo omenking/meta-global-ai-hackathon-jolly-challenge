@@ -18,6 +18,36 @@ mechanics:
     room is at the end. A player who collects it as they pass spends the frozen ten seconds on the easy
     opening and reaches the hard room with the timer running normally, which teaches that because it fires
     on collection, where it is placed is the decision about when it is used.'
+  definitions:
+  - 'floor: walkable ground; standing, waiting and turning on it are always safe (ground term, defined here for this file)'
+  - 'wall: never enterable from any side; it only blocks and never harms (ground term, defined here for this file)'
+  - 'hourglass: tile defined here; stepping onto it collects it at once, it never enters the inventory and cannot be saved for later'
+  - 'timer: the level countdown in real seconds; here it stops for 10 real seconds on collection and then resumes from the value it held'
+  - 'collection: stepping onto the hourglass tile; here collection is also use, so the 10 frozen seconds start on that step'
+  - 'real seconds: time measured by the clock, not by player moves; here the freeze lasts 10 of them however many moves the player makes inside it'
+  - 'timer switch: switch that opens its door on a real-second countdown per mechanic 25 in switches-and-doors.yml; here that door countdown is not frozen while the level timer is frozen'
+  assets:
+    tiles:
+    - file: hourglass.png
+      shows: hourglass tile before collection, ready to fire on the step that collects it
+    - file: hourglass-spent.png
+      shows: floor left after the hourglass is collected and its freeze has started
+    jolly_states: []
+    gui:
+    - file: timer-frozen.png
+      shows: frozen timer display held at its collection value for the 10 frozen seconds
+    blocks: []
+  test_cases:
+  - name: solution placement before the hard room
+    check: collect the hourglass placed just before the hard room and work that room while the timer stays frozen; the timer resumes from its held value after the freeze
+  - name: adversarial early collection
+    check: collect the hourglass on the main path near the start as the teaching moment warns; the frozen 10 seconds are spent on the easy opening, the hard room is reached with the timer running normally, and restart restores the hourglass so the room never strands the player
+  - name: freeze lasts exactly 10 real seconds
+    check: at 9 real seconds after collection the timer still holds its collection value, and at 10 real seconds it resumes; making many moves or no moves inside the freeze does not change its length
+  - name: door countdown is not frozen
+    check: 'blocked-by: 25 (timer switch): collect the hourglass beside a timer-switch door and the level timer freezes while the door countdown keeps running to zero'
+  - name: restart and replay
+    check: restart restores the uncollected hourglass and the running timer, and a recorded collection session replays to the same end state
   status: trial
   human_review: {}
 - id: 71
@@ -38,6 +68,39 @@ mechanics:
     to think and then steps off in the direction they had planned discovers that the guard''s cycle had
     been waiting on their next input rather than on the clock, which teaches what the pause actually holds
     still and what it does not.'
+  definitions:
+  - 'floor: walkable ground per mechanic 69 in this file'
+  - 'still tile: tile defined here; while the player stands on it the timer is paused, and stepping off it resumes the timer at once'
+  - 'timer: the level countdown per mechanic 69 in this file; here it pauses only while the player stands on the still tile and resumes on the step off it'
+  - 'held icon: timer display state defined here; it is shown while the player stands on the still tile to show the timer is held and not counting down'
+  - 'input: one player move attempt; here enemies advance only on an input, so standing on the still tile without an input advances nothing'
+  - 'enemy: patroller or chaser per mechanics 31 and 32 in enemies-and-bots.yml; here it moves on player inputs, so it waits while the player stands still on the still tile'
+  - 'guard: enemy that never leaves its corridor tile and turns every four player moves per mechanic 37 in enemies-and-bots.yml; here its turn cycle waits for the next input while the player thinks on the still tile'
+  - 'move door: door that opens after exactly 50 moves per mechanic 79 in switches-and-doors.yml; it is the demo contrast, where standing still spends no moves at all'
+  assets:
+    tiles:
+    - file: still.png
+      shows: still tile unoccupied, timer running normally beside it
+    - file: still-held.png
+      shows: still tile with the player standing on it and the timer held
+    jolly_states:
+    - file: jolly-still.png
+      shows: Jolly standing still on the still tile while thinking, making no input
+    gui:
+    - file: timer-held.png
+      shows: paused timer display with the held icon shown while the player stands on the still tile
+    blocks: []
+  test_cases:
+  - name: solution think then move
+    check: 'blocked-by: 37 (guard): stand on the still tile in sight of the guard corridor with the timer paused, plan the crossing, then step off and cross in the planned window; the timer resumes on the step off'
+  - name: adversarial waiting for the guard to turn
+    check: 'blocked-by: 37 (guard): stand on the still tile and wait for the guard cycle to advance on its own; neither the timer nor the guard advances, the player can always step off in any open direction, and no stranded state is reached'
+  - name: pause only while standing
+    check: the timer holds while the player stands on the still tile over several real seconds and resumes from the held value on the first step off it; stepping adjacent to the tile never pauses it
+  - name: guard turns on inputs not on the pause
+    check: 'blocked-by: 37 (guard): after leaving the still tile the guard turns only once per four player moves, exactly as it does away from the tile'
+  - name: restart and replay
+    check: restart clears the held timer and restores the running clock, and a recorded stand-and-leave session replays to the same end state
   status: trial
   human_review: {}
 - id: 72
@@ -92,6 +155,43 @@ mechanics:
     with the counter in the HUD. A player who sets two of them and steps off the floor switch to go and
     look at the gate watches the counter fall back to two, which teaches that the three have to be on
     together and that one of them therefore needs a block or a bot.'
+  definitions:
+  - 'floor: walkable ground per mechanic 69 in this file'
+  - 'recipe: level construction defined here; it wires three existing switches to one gate, adds no new tile and counts only the wired switches'
+  - 'switch: existing floor, toggle or weight switch wired to the gate; here only its on or off state at this moment counts toward the counter'
+  - 'floor switch: switch held on only while the player, a bot or a block stands on it per mechanic 21 in switches-and-doors.yml; here it goes off when the player walks away unless a block or a bot is left holding it'
+  - 'toggle switch: switch that swaps its linked doors on each press and holds its state after the player leaves per mechanic 22 in switches-and-doors.yml; here it holds one of the three on states without being stood on'
+  - 'weight switch: switch held on only while a block sits on it per mechanic 29 in switches-and-doors.yml; here it holds one of the three on states after the player leaves the block on it'
+  - 'gate: exit gate defined here for this recipe; it calls the elevator only while the counter is at 3/3 and stops calling it as soon as any wired switch goes off'
+  - 'elevator: level exit defined here for this recipe; it is called by the gate only while all three wired switches are on together'
+  - 'counter: HUD count from 0/3 to 3/3 defined here; it shows how many of the three wired switches are on at this moment and falls back as soon as one of them goes off'
+  - 'block: pushable block per mechanic 81 in blocks.yml; here it can be left holding a floor switch or a weight switch on after the player leaves'
+  - 'mule bot: follower bot per mechanic 40 in enemies-and-bots.yml; here it can be left standing on a floor switch to hold it on while the player walks away'
+  - 'orb gate: the usual gate counted by orbs per mechanic 5 in terrain-and-hazards.yml; here the 3/3 switch counter replaces it as the level goal'
+  assets:
+    tiles: []
+    jolly_states: []
+    gui:
+    - file: power-counter-0.png
+      shows: switch counter at 0/3, no wired switch on and the elevator not called
+    - file: power-counter-1.png
+      shows: switch counter at 1/3, one wired switch on and the elevator not called
+    - file: power-counter-2.png
+      shows: switch counter at 2/3, two wired switches on and the elevator not called
+    - file: power-counter-3.png
+      shows: switch counter at 3/3, all three wired switches on together and the elevator called
+    blocks: []
+  test_cases:
+  - name: solution all three on together
+    check: 'blocked-by: 21 (floor switch), 22 (toggle switch), 29 (weight switch): set the toggle, leave a block on the weight switch and leave a block or a bot on the floor switch; the counter reaches 3/3 and the gate calls the elevator'
+  - name: adversarial stepping off the floor switch
+    check: 'blocked-by: 21 (floor switch), 22 (toggle switch), 29 (weight switch): set two switches, stand on the floor switch for 3/3, then step off to look at the gate as the teaching moment warns; the counter falls to 2/3, the elevator is not called, and the player recovers by leaving a block or a bot on the plate, never by a stranded state'
+  - name: two of three never calls the elevator
+    check: 'blocked-by: 21 (floor switch), 22 (toggle switch), 29 (weight switch): with any two of the three switches on the counter stays at 2/3 and the gate does not call the elevator; only the third switch on at the same moment reaches 3/3'
+  - name: losing one switch revokes the call
+    check: 'blocked-by: 21 (floor switch), 22 (toggle switch), 29 (weight switch): at 3/3 remove the block from a held switch or press the toggle again; the counter falls below 3/3 and the gate stops calling the elevator until all three are on together again'
+  - name: restart and replay
+    check: restart restores every wired switch to off and the counter to 0/3 with the elevator uncalled, and a recorded 3/3 session replays to the same end state
   status: revised
   human_review:
   - this is a new object mechanic but something we can already build from existing objects

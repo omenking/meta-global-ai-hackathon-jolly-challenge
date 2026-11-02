@@ -980,6 +980,12 @@ class Handler(BaseHTTPRequestHandler):
         parts = [p for p in parsed.path.split("/") if p]
         try:
             body = _read_json(self)
+            if parts == ["api", "worktrees", "start"]:
+                try:
+                    result = worktree_mgr.start_server(ROOT, body.get("path"))
+                except (ValueError, OSError) as exc:
+                    return _send(self, 400, {"error": str(exc)})
+                return _send(self, 200, result)
             if parts == ["api", "worktrees", "label"]:
                 try:
                     labels = worktree_mgr.set_label(

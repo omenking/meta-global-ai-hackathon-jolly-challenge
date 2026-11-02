@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Worktrees &amp; Servers — Jolly Tools</title>
+<title>Main Server &amp; Worktrees — Jolly Tools</title>
 <link rel="icon" href="data:,">
 <style>
   body { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -34,19 +34,18 @@
 </head>
 <body>
 <header>
-  <h1>Worktrees &amp; Servers</h1>
-  <p>Every git worktree of this repo and every running <code>tools/server.py</code>. <a href="/">← Jolly Tools</a></p>
+  <h1>Main Server &amp; Worktrees</h1>
+  <p>Manage the main server and launch or stop worktrees. <a href="/">← Jolly Tools</a></p>
 </header>
 <main>
   <section>
-    <h2>Running servers</h2>
+    <h2>Main server</h2>
     <div class="rowbtns" style="margin-bottom:8px">
       <button id="refresh">Refresh</button>
       <button id="stop-stale" class="danger">Stop all stale servers</button>
       <span class="muted" id="summary" style="align-self:center"></span>
     </div>
     <div id="servers"><p class="muted">Loading…</p></div>
-    <p class="muted">Stale = the server's working directory was deleted or is not a live worktree (left over from a prior run). Stopping sends SIGTERM, then SIGKILL after 2s. This page never removes worktrees or files — do that in the terminal with <code>git worktree remove &lt;path&gt;</code>.</p>
   </section>
   <section>
     <h2>Worktrees</h2>
@@ -58,6 +57,7 @@
 <script>
 (function () {
   var errEl = document.getElementById('err');
+  var launching = {};
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   function post(path, body) {
@@ -91,11 +91,15 @@
       .catch(function (e) { errEl.textContent = e.message; });
   }
   function render(data) {
+    var mainPaths = data.worktrees.filter(function (wt) { return wt.is_main; })
+      .map(function (wt) { return wt.path; });
+    var mainServers = data.servers.filter(function (srv) { return mainPaths.indexOf(srv.worktree) !== -1; });
+    var worktrees = data.worktrees.filter(function (wt) { return !wt.is_main; });
     document.getElementById('summary').textContent =
-      data.servers.length + ' server(s), ' + data.worktrees.length + ' worktree(s) — you are on :' + data.self.port;
+      worktrees.length + ' worktree(s) — you are on :' + data.self.port;
     var s = '<table><tr><th>Server</th><th>What it is</th><th>Status</th><th></th></tr>';
-    if (!data.servers.length) s += '<tr><td colspan="4" class="muted">No tools/server.py processes found.</td></tr>';
-    data.servers.forEach(function (srv, idx) {
+    if (!mainServers.length) s += '<tr><td colspan="4" class="muted">Main server is not running.</td></tr>';
+    mainServers.forEach(function (srv, idx) {
       var wtObj = data.worktrees.filter(function (x) { return x.path === srv.worktree; })[0];
       var wtName = wtObj && wtObj.is_main ? 'main checkout' : (srv.worktree_name || 'unknown worktree');
       var autoName = (srv.purpose || wtName) + ' · :' + srv.port;
@@ -123,17 +127,18 @@
     });
     serversEl.querySelectorAll('[data-rename-srv]').forEach(function (b) {
       b.addEventListener('click', function () {
-        var srv = data.servers[Number(b.dataset.renameSrv)];
+        var srv = mainServers[Number(b.dataset.renameSrv)];
         rename('servers', srv.cwd + '|' + srv.port, srv.label);
       });
     });
     var staleCount = data.servers.filter(function (x) { return x.stale && !x.is_self; }).length;
     document.getElementById('stop-stale').disabled = staleCount === 0;
+    document.getElementById('stop-stale').hidden = staleCount === 0;
 
     var w = '<table><tr><th>Worktree</th><th>What it is for</th><th>Changes</th><th>Server</th><th></th></tr>';
-    if (!data.worktrees.length) w += '<tr><td colspan="5" class="muted">No worktrees found.</td></tr>';
-    data.worktrees.forEach(function (wt, idx) {
-      var srv = wt.servers && wt.servers[0];
+    if (!worktrees.length) w += '<tr><td colspan="5" class="muted">No worktrees found.</td></tr>';
+    worktrees.forEach(function (wt, idx) {
+      var srv = wt.servers && wt.servers.filter(function (s) { return s.listening; })[0];
       var autoName = wt.is_main ? 'main checkout' : wt.name;
       var display = wt.label || (wt.feature ? wt.feature.title : autoName);
       var purpose = wt.label ? 'automatic: ' + esc(wt.feature ? wt.feature.title : autoName)
@@ -146,14 +151,44 @@
         + '<td>' + (wt.dirty === null || wt.dirty === undefined ? '—' : (wt.dirty === 0 ? 'clean' : wt.dirty + ' changed'))
         + (wt.changed_files && wt.changed_files.length ? '<div class="mono muted">' + wt.changed_files.map(esc).join('<br>') + '</div>' : '') + '</td>'
         + '<td>' + (srv ? '<a class="open" href="' + esc(srv.url) + '" target="_blank" rel="noreferrer">Open :' + srv.port + ' ↗</a>' : '<span class="muted">not running</span>') + '</td>'
-        + '<td><button data-rename-wt="' + idx + '">Name…</button></td></tr>';
+        + '<td><div class="rowbtns">' + (!srv && wt.exists && !wt.bare && !wt.prunable
+          ? '<button data-launch-wt="' + idx + '" ' + (launching[wt.path] ? 'disabled' : '') + '>'
+            + (launching[wt.path] ? 'Launching…' : 'Launch') + '</button>' : '')
+        + (wt.servers || []).map(function (server) {
+          return '<button class="danger" data-stop="' + server.pid + '" data-label="'
+            + esc(display + ' · :' + server.port) + '" '
+            + (server.is_self ? 'disabled title="Cannot stop this server from itself"' : '')
+            + '>Stop' + (wt.servers.length > 1 ? ' :' + server.port : '') + '</button>';
+        }).join('')
+        + '<button data-rename-wt="' + idx + '">Name…</button></div></td></tr>';
     });
     w += '</table>';
     var wtEl = document.getElementById('worktrees');
     wtEl.innerHTML = w;
+    wtEl.querySelectorAll('[data-stop]').forEach(function (b) {
+      b.addEventListener('click', function () { stopPid(Number(b.dataset.stop), b.dataset.label); });
+    });
+    wtEl.querySelectorAll('[data-launch-wt]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var wt = worktrees[Number(b.dataset.launchWt)];
+        launching[wt.path] = true;
+        b.disabled = true;
+        b.textContent = 'Launching…';
+        errEl.textContent = '';
+        post('/api/worktrees/start', {path: wt.path}).then(function () {
+          delete launching[wt.path];
+          load();
+        }).catch(function (e) {
+          delete launching[wt.path];
+          b.disabled = false;
+          b.textContent = 'Launch';
+          errEl.textContent = e.message;
+        });
+      });
+    });
     wtEl.querySelectorAll('[data-rename-wt]').forEach(function (b) {
       b.addEventListener('click', function () {
-        var wt = data.worktrees[Number(b.dataset.renameWt)];
+        var wt = worktrees[Number(b.dataset.renameWt)];
         rename('worktrees', wt.path, wt.label);
       });
     });

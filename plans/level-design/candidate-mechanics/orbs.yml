@@ -27,6 +27,40 @@ mechanics:
   teaching_moment: 'First room: two orbs, one of which starts its ring when it scrolls into view. A player
     who collects the nearer orb first watches the timed orb dissolve and reform, losing nothing but the
     trip, which teaches that the ring begins on sight and sets the order for them.'
+  definitions:
+  - 'floor: walkable ground the timed orb rests on; standing, waiting and turning on it are always safe (ground term, defined here for this file)'
+  - 'wall: never enterable from any side; it only blocks and never harms (ground term, defined here for this file)'
+  - 'void: a hole with no floor; entering it is falling, so the attempt is lost, or the player returns to the active checkpoint per mechanic 48 in terrain-and-hazards.yml where one is placed (ground term, defined here for this file)'
+  - 'hazard: any tile whose entry loses the attempt or returns the player to the active checkpoint per mechanic 48 in terrain-and-hazards.yml (ground term, defined here for this file)'
+  - 'orb: walking onto it collects it; it is counted by the gate and never enters the inventory'
+  - 'timed orb: orb defined here; its ring starts on sight, it must be collected within 10 seconds, and if it expires it dissolves and reforms at its start tile after 5 seconds'
+  - 'ring: the visible countdown around the timed orb showing the seconds left before it dissolves'
+  - 'camera view: the tiles currently drawn on screen; the countdown starts the first time the orb enters it, never before'
+  - 'start tile: the floor tile the timed orb is placed on; a dissolved orb reforms on this same tile'
+  - 'gate: the exit that opens when orbs-left reaches zero; a timed orb collected in time counts toward it exactly like a normal orb'
+  - 'dash tile: a stored dash spent by moving the same way twice, per mechanic 9 in movement-tiles.yml; here it is the intended way to beat the ring'
+  assets:
+    tiles:
+    - file: timed-orb.png
+      shows: timed orb not yet seen, with no ring started
+    - file: timed-orb-ringing.png
+      shows: timed orb with its countdown ring showing the seconds left
+    - file: timed-orb-reforming.png
+      shows: faint timed orb reforming on its start tile during the 5 seconds after it dissolves
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution timed orb first
+    check: 'when the timed orb scrolls into view go to it first and collect it inside the ring, then collect the nearer orb; orbs-left reaches zero and the gate opens'
+  - name: adversarial nearer orb first
+    check: 'collect the nearer orb first as the teaching moment warns and the timed orb dissolves; wait on safe floor and it reforms at its start tile after 5 seconds, so the room is still completable and never stranded'
+  - name: boundary 10 seconds to collect and 5 to reform
+    check: 'collecting before the ring reaches 10 seconds counts as normal; letting it expire dissolves it, and it is absent for exactly 5 seconds before reforming on its start tile'
+  - name: dash beats the ring
+    check: 'blocked-by: 9 (dash tile): spend a stored dash to reach the timed orb before the ring expires'
+  - name: restart and replay
+    check: 'restart restores the timed orb unseen with no ring started, and a recorded session replays to the same end state'
   status: trial
   human_review:
   - But what triggers it?
@@ -46,6 +80,35 @@ mechanics:
     A player who walks the obvious lit route reaches the gate with the counter still showing one and has
     to return, which teaches that an orb can be present without being visible and that the room is searched
     by walking the light through it.'
+  definitions:
+  - 'floor: walkable ground per mechanic 15 in this file; here the dark room floor is only drawn inside the light radius'
+  - 'wall: never enterable per mechanic 15 in this file; here walls bound the search and are only drawn inside the light radius'
+  - 'orb: walking onto it collects it per mechanic 15 in this file; here it is simply not drawn outside the light radius'
+  - 'hidden orb: orb defined here; it exists on its tile whether lit or not, and entering the light radius reveals it for as long as it stays lit'
+  - 'dark room: a room where only tiles near Jolly are lit, per mechanic 51 in vision-and-information.yml; here it is what hides the orb'
+  - 'light radius: the lit distance around Jolly, two tiles in a dark room per mechanic 51 in vision-and-information.yml; the hidden orb is drawn only inside it'
+  - 'lantern: a pickup that widens the light radius to four tiles for one room, per mechanic 52 in vision-and-information.yml; here it widens the hidden-orb search'
+  - 'lantern oil: a pickup that refills the lantern so the light does not shrink back, per mechanic 65 in gear-and-items.yml; here it makes a thorough search affordable'
+  - 'echo tile: a reusable tile that pings the direction of the nearest hidden orb, per mechanic 54 in vision-and-information.yml; here it gives a direction to walk the light toward, never a reveal'
+  - 'gate: the exit per mechanic 15 in this file; here it stays shut while the hidden orb is uncollected, so the counter still shows one at the gate'
+  assets:
+    tiles:
+    - file: hidden-orb.png
+      shows: hidden orb revealed inside the light radius; outside the radius it is not drawn at all, so there is no hidden sprite
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution walk the light through the room
+    check: 'blocked-by: 51 (dark room): walk the light radius across every part of the room until the hidden orb is revealed inside it, collect it, and the gate opens'
+  - name: adversarial lit route only
+    check: 'blocked-by: 51 (dark room): walk only the obvious lit route to the gate and the counter still shows one; return and search by walking the light through the unlit parts, so the player is never stranded'
+  - name: boundary edge of the radius
+    check: 'blocked-by: 51 (dark room): an orb two tiles away is inside the radius and drawn, at three tiles it is not drawn, and stepping so it leaves the radius hides it again'
+  - name: echo gives a direction only
+    check: 'blocked-by: 54 (echo tile): the ping points toward the hidden orb, and the orb is only revealed once the player walks the light radius onto it'
+  - name: restart and replay
+    check: 'restart restores the hidden orb uncollected on its placed tile, and a recorded search session replays to the same end state'
   status: trial
   human_review:
   - yes very good, if we can implement a room where you cannot see.
@@ -66,6 +129,38 @@ mechanics:
     player who pushes it straight ahead without checking the far side pockets it where it cannot be pulled
     back and restarts the room, which teaches that pushing an orb is chosen by where the orb will end
     up.'
+  definitions:
+  - 'floor: walkable ground per mechanic 15 in this file; here it is the pushing lane the heavy orb moves along one tile at a time'
+  - 'wall: never enterable per mechanic 15 in this file; here the heavy orb cannot be pushed into it and the push simply does not happen'
+  - 'water: a water tile the heavy orb can never enter or bridge; shallow water per mechanic 50 in terrain-and-hazards.yml and deep water per mechanic 41 in terrain-and-hazards.yml, and here both only block the push'
+  - 'orb: a pickup collected by walking onto it per mechanic 15 in this file, with the explicit difference that this orb is never walked over'
+  - 'heavy orb: orb defined here; it is a solid object the player pushes one tile at a time, and it is only collected when pushed onto a scale tile'
+  - 'scale tile: a tile defined here; a heavy orb pushed onto it locks there and counts as collected, and the orb cannot be pushed off it again'
+  - 'push block: a plain pushable block, per mechanic 81 in blocks.yml; here the heavy orb is pushed the same way, with the difference that it collects on a scale instead of holding a switch'
+  - 'magnet glove: a held glove that pulls a metal block toward the player along a clear line, per mechanic 63 in gear-and-items.yml; here it is what can pull a stranded heavy orb back'
+  - 'wall pocket: a position against a wall defined here where the heavy orb cannot be pushed out again and, without the magnet glove, only a restart frees it'
+  assets:
+    tiles:
+    - file: scale.png
+      shows: empty scale tile waiting for a heavy orb
+    - file: scale-locked.png
+      shows: scale tile with a heavy orb locked on it and counted as collected
+    jolly_states: []
+    gui: []
+    blocks:
+    - file: heavy-orb.png
+      shows: heavy orb as a solid pushable block, never walked over
+  test_cases:
+  - name: solution push onto the scale
+    check: 'push the heavy orb one tile at a time along the lane onto the scale; it locks there and counts as collected'
+  - name: adversarial pocketed orb
+    check: 'push the orb straight ahead into the wall pocket as the teaching moment warns and it cannot be pushed back out; restart the small room to restore it, so the player is never left without a legal move or a reset'
+  - name: boundary one tile and blocked pushes
+    check: 'one press moves the orb exactly one tile, and pressing it toward a wall or water moves neither the orb nor the player and enters neither'
+  - name: magnet pull recovers a stranded orb
+    check: 'blocked-by: 63 (magnet glove): pull a stranded heavy orb one tile back toward the player along a clear line so it can be pushed again'
+  - name: restart and replay
+    check: 'restart returns the heavy orb to its placed tile with the scale empty and uncollected, and a recorded session replays to the same end state'
   status: trial
   human_review: {}
 - id: 18
@@ -91,6 +186,34 @@ mechanics:
   teaching_moment: 'First room: the guarded orb in an open area with one walled corner. A player who chases
     it directly follows it around the room without ever stepping on it, until they drive it toward the
     corner almost by accident, which teaches that the orb is herded rather than caught.'
+  definitions:
+  - 'floor: walkable ground per mechanic 15 in this file; here only a free floor tile can receive the guarded orb flee step'
+  - 'wall: never enterable per mechanic 15 in this file; here a wall closes one flee direction and is what the orb is driven against to corner it'
+  - 'water: a tile the orb can never enter, per mechanic 17 in this file; here it closes a flee direction exactly like a wall'
+  - 'free floor tile: a floor tile defined here with no wall, water, block or player on it; it is the only tile the guarded orb can step onto'
+  - 'orb: a pickup collected by walking onto it per mechanic 15 in this file, with the explicit difference that this orb steps away before it can be stepped on'
+  - 'guarded orb: orb defined here; when the player comes within two tiles it steps one tile away to a free floor tile, once per player move, and it is collected only when the player finally steps onto it'
+  - 'push block: a plain pushable block, per mechanic 81 in blocks.yml; here a parked block closes the last free floor tile so the orb has nowhere to flee'
+  - 'ice: a tile the player slides on, per mechanic 1 in movement-tiles.yml; here the guarded orb can flee across it while the player needs control to turn on it'
+  - 'ice cleats: held gear that makes ice behave as normal floor, per mechanic 62 in gear-and-items.yml; here they let the player turn on the ice the orb flees across'
+  assets:
+    tiles:
+    - file: guarded-orb.png
+      shows: guarded orb on floor, ready to step away when the player comes within two tiles
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution corner then collect
+    check: 'drive the guarded orb toward the walled corner until it has no free floor tile to step to, then step onto it and it is collected'
+  - name: adversarial direct chase
+    check: 'chase the orb directly around the open room as the teaching moment warns and it steps away once per move so it is never stepped on; reposition to herd it toward the corner instead, so the player is never stranded'
+  - name: boundary two tiles and once per move
+    check: 'at three tiles away the orb stays still, at two tiles it steps exactly one tile away, and it never steps twice for one player move'
+  - name: parked block closes the escape
+    check: 'blocked-by: 81 (push block): park a block on its last free floor tile and the cornered orb can be stepped on and collected'
+  - name: restart and replay
+    check: 'restart returns the guarded orb to its placed tile, and a recorded herding session replays to the same end state with the same flee steps'
   status: trial
   human_review: {}
 - id: 20
@@ -108,6 +231,36 @@ mechanics:
     who takes the detour without counting discovers that the trip cost more than the ten seconds it repaid
     when the timer ends on the way back, which teaches that the bonus is a trade to be priced rather than
     a free reward.'
+  definitions:
+  - 'floor: walkable ground per mechanic 15 in this file; here it is the detour floor the player walks to reach the bonus orb and return'
+  - 'orb: a pickup collected by walking onto it and counted by the gate, per mechanic 15 in this file'
+  - 'bonus orb: orb defined here; drawn with a gold ring, it is not counted in orbs-left, the gate does not need it, and taking it adds 10 seconds to the timer immediately'
+  - 'gold ring: the ring drawn around the bonus orb defined here that marks it as optional before the player commits to the detour'
+  - 'orbs-left: the count of counted orbs still needed by the gate, per mechanic 15 in this file; here taking a bonus orb never changes it'
+  - 'gate: the exit per mechanic 15 in this file; here it opens on counted orbs only and never on a bonus orb alone'
+  - 'timer: the level countdown, which keeps running through a checkpoint return per mechanic 48 in terrain-and-hazards.yml; here taking a bonus orb adds exactly 10 seconds to it at once'
+  - 'sleeper: an enemy asleep until any orb is collected, per mechanic 33 in enemies-and-bots.yml; here collecting a bonus orb wakes it, so the bonus is a trade and not a gift'
+  - 'orb bank: the remembered store of banked bonus orbs, per mechanic 94 in this file; here banked bonus orbs are what carry into the next level'
+  assets:
+    tiles:
+    - file: bonus-orb.png
+      shows: bonus orb with a gold ring, distinct from a counted orb
+    jolly_states: []
+    gui:
+    - file: timer-gain.png
+      shows: timer gain indicator showing the 10 seconds added when a bonus orb is taken
+    blocks: []
+  test_cases:
+  - name: solution priced detour
+    check: 'take the bonus orb only when the detour there and back costs less than 10 seconds; the timer gains 10 seconds, orbs-left is unchanged, and the counted orbs still open the gate'
+  - name: adversarial unpriced detour
+    check: 'take the detour without counting as the teaching moment warns and the trip costs more than the 10 seconds it repays; the timer ending loses the attempt and a restart restores the room, so the player is never stranded'
+  - name: boundary exactly 10 seconds and no count
+    check: 'taking the bonus orb adds exactly 10 seconds at once, orbs-left is the same before and after, and the gate does not open on the bonus orb alone'
+  - name: bonus wakes a sleeper
+    check: 'blocked-by: 33 (sleeper): collecting the bonus orb wakes the sleeper even though the orb was optional, so the detour is priced against the patrol as well as the timer'
+  - name: restart and replay
+    check: 'restart restores the bonus orb uncollected and the timer to its placed value, and a recorded session replays to the same end state'
   status: trial
   human_review: {}
 - id: 67
@@ -128,6 +281,41 @@ mechanics:
     that needs two. A player who spends on the shortcut arrives at the scale one orb short and must go
     back for orbs they passed, which teaches that a counter that counts up is a budget and that spending
     is part of the level''s order.'
+  definitions:
+  - 'orb: a pickup collected by walking onto it, per mechanic 15 in this file; here it is collected into the pouch instead of counting orbs-left down'
+  - 'pouch: a held count defined here for a pouch level; collected orbs count up into it, scales and orb-doors spend from it, and unspent orbs are the score at the warp'
+  - 'pouch level: a level defined here where the counter counts orbs up into the pouch and the gate opens on pouch spent, not on orbs collected'
+  - 'orbs-left: the normal count down to the gate, per mechanic 15 in this file, with the explicit difference that a pouch level does not use it and counts up instead'
+  - 'scale: a tile that locks a pushed heavy orb and counts it collected, per mechanic 17 in this file; here pressing into a scale spends its stated pouch cost instead'
+  - 'orb-door: a door defined here that opens when the player presses into it and spends its stated cost from the pouch; with too few orbs held it spends nothing and stays shut'
+  - 'gate: the exit per mechanic 15 in this file, with the explicit difference that in a pouch level it opens on pouch spent, not on orbs collected'
+  - 'warp: the level exit defined here; when the player warps, every unspent pouch orb becomes score and none is kept in the pouch'
+  - 'score: the count of unspent pouch orbs at the warp defined here; it rewards finishing with orbs to spare and opens nothing itself'
+  - 'heavy orb: a solid orb pushed onto a scale to collect it, per mechanic 17 in this file; here pushing one onto a scale is the pouch made physical'
+  - 'orb bank: the remembered store of banked bonus orbs, per mechanic 94 in this file; here unspent pouch orbs bank into the next level'
+  - 'wall: never enterable per mechanic 15 in this file; here an unpaid orb-door blocks like a wall until its stated cost is spent'
+  assets:
+    tiles:
+    - file: orb-door-closed.png
+      shows: orb-door shut with its stated pouch cost unpaid
+    - file: orb-door-open.png
+      shows: orb-door opened by spending its stated pouch cost
+    jolly_states: []
+    gui:
+    - file: pouch-counter.png
+      shows: pouch counter counting collected orbs up, with the spent total the gate reads
+    blocks: []
+  test_cases:
+  - name: solution save for the scale
+    check: 'collect orbs into the pouch, go back for the orbs passed on the way, then spend two at the scale; the gate opens on pouch spent and the level is finished at the warp'
+  - name: adversarial shortcut first
+    check: 'spend one orb on the shortcut orb-door first as the teaching moment warns and arrive at the scale one orb short; go back for the orbs passed earlier and spend again, so the player is never stranded and no orb is spent twice'
+  - name: boundary exact stated costs
+    check: 'the orb-door spends exactly one orb and the scale exactly two; pressing into either with too few held spends nothing and both stay shut'
+  - name: gate reads spent, not collected
+    check: 'collect several orbs and spend none and the gate stays shut; spend the stated total and the same collected orbs open it, because only pouch spent counts'
+  - name: restart and replay
+    check: 'restart clears the pouch, every spend and the score, and a recorded pouch session replays to the same end state'
   status: revised
   human_review:
   - I think for certian level instead of having counting down the orbs, you change the critera. So here
@@ -157,6 +345,38 @@ mechanics:
     a bank gate in the next level. A player who warps past the bonus arrives at the bank gate with nothing
     banked and must take the long way round, which teaches that what is banked in one level is spent in
     another.'
+  definitions:
+  - 'orb: a pickup collected by walking onto it and counted by the gate, per mechanic 15 in this file'
+  - 'bonus orb: an optional orb with a gold ring that adds 10 seconds and is not counted in orbs-left, per mechanic 20 in this file; here it is the only income the bank takes'
+  - 'bank: a remembered count defined here; bonus orbs banked at a warp are kept between levels and shown in the HUD, and a bank gate deducts from it instead of orbs in its own level'
+  - 'warp: the level exit per mechanic 67 in this file; here a bonus orb taken before warping is banked, and one left behind is lost to the bank'
+  - 'bank gate: a gate defined here that opens by deducting its stated cost from the bank; counted orbs in its own level do not pay it'
+  - 'gate: the normal exit per mechanic 15 in this file, with the explicit difference that a bank gate reads the bank from the last level instead of orbs in its own level'
+  - 'HUD: the on-screen display defined here that shows the bank between levels, so the player knows what a bank gate can be paid with before entering it'
+  - 'orb pouch: a held count that spends collected orbs in a pouch level, per mechanic 67 in this file; here a pouch level can spend from the bank carried out of the last level'
+  - 'wall: never enterable per mechanic 15 in this file; here an unpaid bank gate blocks like a wall until the bank pays its stated cost'
+  assets:
+    tiles:
+    - file: bank-gate-closed.png
+      shows: bank gate shut with its stated bank cost unpaid
+    - file: bank-gate-open.png
+      shows: bank gate opened by deducting its stated cost from the bank
+    jolly_states: []
+    gui:
+    - file: bank-counter.png
+      shows: HUD bank counter showing the bonus orbs banked from the last level
+    blocks: []
+  test_cases:
+  - name: solution bank then spend
+    check: 'collect the bonus orb beside the warp and warp so it is banked, then pay the bank gate in the next level from the bank and take the short way through'
+  - name: adversarial warp past the bonus
+    check: 'warp past the bonus orb as the teaching moment warns and arrive at the bank gate with nothing banked; take the long way round instead, so the player is never stranded at the shut gate'
+  - name: boundary exact bank deduction
+    check: 'the bank gate deducts exactly its stated cost from the bank and counted orbs in its own level are unchanged; with the bank one short it deducts nothing and stays shut'
+  - name: only bonus orbs bank
+    check: 'finish a level with counted orbs to spare and no bonus orb taken and the bank is unchanged; only a taken bonus orb adds to it at the warp'
+  - name: restart and replay
+    check: 'restarting the later level restores the bank to what it was on entry with nothing deducted twice, and a recorded two-level session replays to the same end bank'
   status: trial
   human_review:
   - this is as higher level mechanic

@@ -16,6 +16,36 @@ mechanics:
   teaching_moment: 'First room: a dark room with an orb placed outside the light that surrounds the entrance.
     A player who follows the visible floor reaches the gate with one orb still missing and has to return,
     which teaches that the absence of a tile from view is not evidence that nothing is there.'
+  definitions:
+  - 'floor: walkable ground; standing, waiting and turning on it are always safe (ground term, defined here for this file)'
+  - 'wall: never enterable from any side; it only blocks and never harms (ground term, defined here for this file)'
+  - 'light radius: the tiles within two tiles of Jolly that are drawn in a dark room; tiles beyond it are not drawn at all, though they still exist to be walked into'
+  - 'dark room: a room defined here where only the light radius is drawn; the radius is the whole mechanic, so the layout must be learned by walking it'
+  - 'orb: walking onto it collects it; it is counted by the gate and never enters the inventory'
+  - 'gate: the level exit; it stays shut while orbs are left and opens when the last orb is collected'
+  - 'HUD: the on-screen timer and orb count; it is still shown in a dark room even though the room beyond the radius is not'
+  assets:
+    tiles:
+    - file: dark-room-floor.png
+      shows: floor inside the two-tile light radius, drawn normally around Jolly
+    - file: darkness.png
+      shows: tile beyond the light radius, not drawn at all and shown as darkness
+    jolly_states:
+    - file: jolly-in-dark.png
+      shows: Jolly at the centre of the two-tile lit radius in a dark room
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution search beyond the entrance light
+    check: walk the room beyond the entrance light, find the orb outside the starting radius, and reach the gate with no orbs left
+  - name: adversarial follow only the visible floor
+    check: following the visible floor straight to the gate leaves one orb missing as the teaching moment warns; the player walks back and searches, never stranded because every dark tile is still walkable floor or wall
+  - name: radius boundary at two tiles
+    check: a tile exactly two tiles from Jolly is drawn and a tile three tiles away is not drawn at all, and moving one tile moves that boundary with Jolly
+  - name: HUD still shows in the dark
+    check: in the dark room the timer and orb count stay readable while tiles beyond the radius stay undrawn
+  - name: restart and replay
+    check: restart restores the room and its orbs, and a recorded search session replays to the same end state
   status: trial
   human_review: {}
 - id: 52
@@ -36,6 +66,38 @@ mechanics:
     through. A player who picks up the lantern and leaves by the one-way exit before searching the room
     loses the widened light with the orb still inside, which teaches that the lantern belongs to the room
     it is found in and that the room is finished before it is left.'
+  definitions:
+  - 'lantern: pickup defined here; picking it up widens the light radius from two tiles to four for that room only'
+  - 'light radius: lit distance around Jolly per mechanic 51 in this file; the lantern widens it to four tiles and leaving the room ends the widening'
+  - 'room: the single dark room the lantern is found in; the buff is scoped to it and is not carried into the next room'
+  - 'lantern oil: refill pickup per mechanic 65 in gear-and-items.yml; with the explicit difference that the lantern in this mechanic is not consumed by time, so oil is its partner elsewhere and no fuel drains here'
+  - 'one-way door: passable in its arrow direction only, per mechanic 4 in movement-tiles.yml; leaving by it still ends the lantern for that room'
+  - 'orb: collectable counted by the gate, per mechanic 51 in this file'
+  - 'floor: walkable ground per mechanic 51 in this file'
+  assets:
+    tiles:
+    - file: lantern.png
+      shows: lantern pickup resting on the floor before it is collected
+    - file: lantern-room-floor.png
+      shows: floor inside the widened four-tile radius the lantern gives
+    jolly_states:
+    - file: jolly-with-lantern.png
+      shows: Jolly carrying the lantern, lit out to four tiles
+    - file: jolly-without-lantern.png
+      shows: Jolly at the base two-tile radius for comparison before pickup or after leaving the room
+    gui:
+    - file: lantern-held.png
+      shows: lantern held for this room, with no fuel gauge because time does not consume it here
+    blocks: []
+  test_cases:
+  - name: solution search at four tiles before leaving
+    check: 'blocked-by: 16 (hidden orb): pick up the lantern, search the room at the four-tile radius, collect the orb a two-tile search would miss, then leave'
+  - name: adversarial leave by the one-way exit first
+    check: 'blocked-by: 4 (one-way door): picking up the lantern and leaving by the one-way exit before searching ends the widened light with the orb still inside, exactly as the teaching moment warns; the room resolves by the long loop back or a restart, never by a stranded state'
+  - name: room-scope boundary
+    check: the radius is four tiles inside the room and returns to two tiles on the first tile of the next room, and waiting in place never shrinks it because time does not consume it
+  - name: restart and replay
+    check: restart restores the uncollected lantern and the two-tile radius, and a recorded session replays to the same end state
   status: trial
   human_review: {}
 - id: 53
@@ -54,6 +116,36 @@ mechanics:
     A player who walks the clear floor in the middle reaches the gate one orb short and must come back
     along the wall, which teaches that fog is searched by standing next to it rather than by looking at
     it.'
+  definitions:
+  - 'fog tile: tile defined here that never shows what is on it until the player stands next to it; after that it stays revealed for the attempt'
+  - 'adjacent: standing on a tile sharing a side with the fog tile; standing further away reveals nothing'
+  - 'revealed: a fog tile whose contents have been shown by adjacency; it stays revealed for the rest of the attempt and does not hide again'
+  - 'orb: collectable counted by the gate, per mechanic 51 in this file; an orb on a fog tile is hidden until that tile is revealed'
+  - 'gate: level exit that stays shut while orbs are left, per mechanic 51 in this file'
+  - 'mimic orb: orb that reveals as an enemy up close, per mechanic 36 in enemies-and-bots.yml; fog can hide one in plain light'
+  - 'floor: walkable ground per mechanic 51 in this file; movement through fog costs the normal one move per tile'
+  assets:
+    tiles:
+    - file: fog.png
+      shows: unrevealed fog tile hiding whatever is on it, even in a lit room
+    - file: fog-revealed.png
+      shows: fog tile after the player has stood next to it, revealed empty and staying revealed
+    - file: fog-revealed-orb.png
+      shows: fog tile revealed by adjacency with the orb on it now visible
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution search the fog along the wall
+    check: walk beside the fog along the wall to reveal it, collect the orb inside it, and reach the gate with no orbs left
+  - name: adversarial walk the clear middle floor
+    check: walking the clear floor in the middle reaches the gate one orb short as the teaching moment warns; coming back along the wall reveals the fog, so the room always resolves and never strands the player
+  - name: adjacency and persistence boundary
+    check: standing two tiles away reveals nothing, standing adjacent reveals the tile, and it stays revealed for the rest of the attempt while movement through fog stays one move per tile
+  - name: mimic hidden in fog
+    check: 'blocked-by: 36 (mimic orb): a fog tile revealed from beside it can show a mimic orb, and the reveal happens before the player steps onto it'
+  - name: restart and replay
+    check: restart hides every fog tile again, and a recorded search session replays to the same end state
   status: trial
   human_review: {}
 - id: 54
@@ -71,6 +163,38 @@ mechanics:
   teaching_moment: 'First room: a room where the echo tile pings toward a hidden orb that lies behind
     a hazard. A player who walks in the pinged direction in a straight line meets the hazard rather than
     the orb, which teaches that the ping gives a direction to search in and says nothing about the route.'
+  definitions:
+  - 'echo tile: reusable tile defined here; standing on it pings the direction of the nearest hidden orb'
+  - 'ping: an eight-direction indicator shown from the echo tile toward the nearest hidden orb; it gives a direction only, never a picture, distance or reveal'
+  - 'eight-direction indicator: one of the eight compass directions including diagonals, pointing from the echo tile toward the nearest hidden orb'
+  - 'hidden orb: orb only visible inside the light radius, per mechanic 16 in orbs.yml; the ping points to the nearest one without revealing it'
+  - 'fog tile: locally hidden tile per mechanic 53 in this file; a ping into a fog bank says which tile is worth approaching'
+  - 'hazard: any tile whose entry loses the attempt (ground term, defined here for this file); with an active checkpoint the loss returns there per mechanic 48 in terrain-and-hazards.yml, otherwise the attempt restarts'
+  - 'floor: walkable ground per mechanic 51 in this file'
+  assets:
+    tiles:
+    - file: echo.png
+      shows: echo tile ready to ping, before the player stands on it
+    - file: echo-cooling.png
+      shows: echo tile spent and not yet reusable, in the few moves after a ping
+    jolly_states:
+    - file: jolly-on-echo.png
+      shows: Jolly standing on the echo tile as the ping fires
+    gui:
+    - file: echo-ping.png
+      shows: eight-direction indicator pointing toward the nearest hidden orb, direction only with no picture or distance
+    blocks: []
+  test_cases:
+  - name: solution ping then search that way
+    check: 'blocked-by: 16 (hidden orb): stand on the echo tile, follow the pinged direction, and find the nearest hidden orb by searching that way'
+  - name: adversarial walk the pinged line straight
+    check: 'blocked-by: 16, 48 (hidden orb, checkpoint): walking in the pinged direction in a straight line meets the hazard on the way rather than the orb, exactly as the teaching moment warns; the player returns to the checkpoint or restarts and searches by another route, never stranded'
+  - name: direction-only and nearest boundary
+    check: 'blocked-by: 16 (hidden orb): the ping names one of eight directions toward the nearest hidden orb only, shows no picture, distance or route, and points to the nearer of two hidden orbs'
+  - name: reuse after a few moves
+    check: 'blocked-by: 16 (hidden orb): the tile will not ping again at once and pings again after a few moves away and back'
+  - name: restart and replay
+    check: restart restores the ready echo tile, and a recorded ping-and-search session replays to the same end state
   status: trial
   human_review: {}
 - id: 55
@@ -91,6 +215,36 @@ mechanics:
     full view. A player who glances and runs takes the branch that looked shortest and finds the lock
     they have no key for, which teaches that the glimpse has to be read before it is acted on because
     it will not come back.'
+  definitions:
+  - 'map tile: tile defined here; stepping on it consumes it and shows the whole level as an overlay for three seconds while play continues'
+  - 'overlay: the brief full-level view shown over the live room; play continues under it and it fades back after three seconds, so what was not memorised is lost'
+  - 'consumed: the map tile is spent by the step that triggers it and does not trigger again in this attempt'
+  - 'lock: a locked door or gate that needs its matching key; seeing it in the overlay does not open it'
+  - 'key: the collectable that opens its matching lock; a branch whose lock has no held key cannot be finished from the glimpse alone'
+  - 'floor: walkable ground per mechanic 51 in this file'
+  - 'wall: never enterable from any side, per mechanic 51 in this file'
+  assets:
+    tiles:
+    - file: map.png
+      shows: map tile at the room entrance before it is stepped on
+    - file: map-spent.png
+      shows: floor left after the map tile has been consumed, with nothing left to trigger
+    jolly_states: []
+    gui:
+    - file: map-overlay.png
+      shows: whole level as the brief overlay seen for three seconds while play continues
+    blocks: []
+  test_cases:
+  - name: solution read the glimpse then choose
+    check: step on the map tile, read the three-second overlay, and take the branch whose lock the held key opens to finish the room
+  - name: adversarial glance and run
+    check: glancing and running takes the branch that looked shortest and finds the lock with no key for it, exactly as the teaching moment warns; the player backtracks and takes the other branch or restarts, never stranded because the wrong branch can be walked back out of
+  - name: three-second boundary while play continues
+    check: the overlay shows the whole level for three seconds while the player keeps moving, then fades back to the normal view and does not pause or return
+  - name: consumed after one step
+    check: stepping on the spent tile a second time shows no overlay again in this attempt
+  - name: restart and replay
+    check: restart restores the unconsumed map tile, and a recorded three-second session replays to the same end state
   status: trial
   human_review: {}
 - id: 56
@@ -125,6 +279,32 @@ mechanics:
     A player who steps over it without reading, because it does not block anything, presses the switches
     in the order they reach them and resets the chain, which teaches that a tile can be in a level to
     be read rather than to be crossed.'
+  definitions:
+  - 'info tile: marked tile defined here whose only job is teaching; stepping on it shows a one-line banner and does nothing else'
+  - 'banner: the one line of text the info tile shows, teaching the next mechanic in the level; it never blocks movement'
+  - 'once per tile: each info tile triggers on its first step in an attempt and does not trigger again on later steps in that attempt'
+  - 'chain switch: switches that must fire in order, per mechanic 28 in switches-and-doors.yml; the banner can carry the order the chain needs'
+  - 'floor: walkable ground per mechanic 51 in this file; the info tile is crossed like floor and never blocks the player'
+  assets:
+    tiles:
+    - file: info.png
+      shows: marked info tile before it has been stepped on
+    - file: info-read.png
+      shows: info tile after its one trigger, spent for this attempt and still walkable
+    jolly_states: []
+    gui:
+    - file: info-banner.png
+      shows: one-line banner teaching the next mechanic, over the live room
+    blocks: []
+  test_cases:
+  - name: solution read then press in order
+    check: 'blocked-by: 28 (chain switch): step on the info tile, read the order on the banner, and press the chain switches in that order to open the linked door'
+  - name: adversarial step over without reading
+    check: 'blocked-by: 28 (chain switch): stepping over the tile without reading and pressing the switches in the order they are reached resets the chain, exactly as the teaching moment warns; the small room restarts so the banner can be read, so the player is never stranded'
+  - name: once and never blocks boundary
+    check: the tile shows its banner on the first step only, not on a second step in the same attempt, and the player walks straight across it in both directions with no stop
+  - name: restart and replay
+    check: restart restores the untriggered info tile, and a recorded read-and-press session replays to the same end state
   status: trial
   human_review: {}
 - id: 59
@@ -144,6 +324,39 @@ mechanics:
     is too thin, with a readable clue beside it. A player who treats every drawn wall as solid completes
     the room one orb short and must search the walls, which teaches that appearance and collision are
     not the same thing in this game.'
+  definitions:
+  - 'secret wall: wall defined here that is drawn exactly as a wall but has no collision, so the player walks straight through it'
+  - 'wall: never enterable from any side, per mechanic 51 in this file; a secret wall is the explicit exception that only looks like one'
+  - 'sprite fade: the secret wall sprite fades the first time the player walks through it, so the found opening stays known for the attempt'
+  - 'clue: a readable sign placed near a secret wall; a secret wall never hides a required exit without one nearby'
+  - 'orb: collectable counted by the gate, per mechanic 51 in this file; a secret wall can hide an optional orb off the main route'
+  - 'bomb block: pushable block that cracks a real wall, per mechanic 83 in blocks.yml; a bomb opening is a destroyed wall, unlike this passable one'
+  - 'teleport pair: paired pads per mechanic 3 in movement-tiles.yml; a pad room can sit behind a secret wall'
+  - 'floor: walkable ground per mechanic 51 in this file, including the floor on both sides of a secret wall'
+  assets:
+    tiles:
+    - file: secret-wall.png
+      shows: secret wall drawn exactly as an ordinary wall, with no visible difference before it is found
+    - file: secret-wall-faded.png
+      shows: same secret wall after the first walk-through, sprite faded so the opening is known
+    - file: wall.png
+      shows: ordinary solid wall for comparison, never enterable from any side
+    jolly_states:
+    - file: jolly-through-wall.png
+      shows: Jolly midway through the secret wall, inside what is drawn as solid wall
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution find the clue and walk through
+    check: read the clue beside the thin-looking wall, walk straight through the secret wall, and collect the orb behind it
+  - name: adversarial treat every wall as solid
+    check: treating every drawn wall as solid finishes the room one orb short as the teaching moment warns; searching the walls finds the passable stretch, so the player is never stranded
+  - name: first walk-through fades the sprite
+    check: the sprite is identical to a wall before the first walk-through and faded after it, and the opening stays passable in both directions
+  - name: required exit always has a clue
+    check: a secret wall hiding a required exit has a readable clue beside it, and one hiding only an optional shortcut or secret may stand alone
+  - name: restart and replay
+    check: restart restores the unfaded secret wall, and a recorded walk-through session replays to the same end state
   status: trial
   human_review: {}
 - id: 60
@@ -163,6 +376,41 @@ mechanics:
     A player who peeps, sees only part of the room, and commits through the one-way door discovers the
     enemy the pan did not reach and is returned to the checkpoint, which teaches that a preview is partial
     and that the timer kept running while it was shown.'
+  definitions:
+  - 'peep hole: tile defined here; stepping on it locks the controls and pans the camera up for two seconds into the next room, then returns the camera so the player chooses whether to go in'
+  - 'next room: the room beyond the peep hole; it is otherwise drawn black and stays unrevealed until the player enters it in person, and the two-second pan shows only part of it'
+  - 'camera pan: the temporary upward camera move into the next room; no way through is opened by looking'
+  - 'controls locked: the player cannot move while the pan is shown; the timer keeps running through those two seconds'
+  - 'timer: the level countdown, which keeps running while the preview is shown and through a checkpoint return'
+  - 'checkpoint: respawn set by touch, per mechanic 48 in terrain-and-hazards.yml; committing and dying beyond the door returns the player there'
+  - 'one-way door: passable in its arrow direction only, per mechanic 4 in movement-tiles.yml; the peep hole previews the room the player is about to commit to'
+  - 'lock: a locked door in the next room that needs its matching key, previewed before the player commits to enter'
+  - 'enemy: patroller or chaser per mechanics 31 and 32 in enemies-and-bots.yml; one outside the pan can still be waiting in the next room'
+  - 'floor: walkable ground per mechanic 51 in this file'
+  assets:
+    tiles:
+    - file: peep-hole.png
+      shows: peep hole tile in the floor before it is stepped on
+    - file: peep-hole-active.png
+      shows: peep hole while the camera is panning, controls locked for the two-second preview
+    - file: unrevealed-room.png
+      shows: next room drawn black before it is entered in person or peeped into
+    jolly_states:
+    - file: jolly-peeping.png
+      shows: Jolly held on the peep hole, unable to move while the camera is up
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution preview then choose to enter
+    check: 'blocked-by: 4 (one-way door): step on the peep hole, preview the lock in the next room for two seconds, then enter through the one-way door holding its key'
+  - name: adversarial commit on a partial preview
+    check: 'blocked-by: 4, 48 (one-way door, checkpoint): peeping, seeing only part of the room, and committing through the one-way door finds the enemy the pan did not reach and returns the player to the checkpoint, exactly as the teaching moment warns; the attempt continues from there, never stranded'
+  - name: two-second locked boundary
+    check: 'blocked-by: 4 (one-way door): controls stay locked and the timer keeps running for the full two seconds of the pan, the camera then returns, and the next room is black again until entered in person'
+  - name: peeping opens no way through
+    check: after the pan the player is still on the peep-hole side and must enter by the normal door; looking alone collects nothing and reveals nothing permanently
+  - name: restart and replay
+    check: restart restores the unused peep hole and the black next room, and a recorded peep-and-enter session replays to the same end state
   status: trial
   human_review:
   - this requires the camera to move up temporarily

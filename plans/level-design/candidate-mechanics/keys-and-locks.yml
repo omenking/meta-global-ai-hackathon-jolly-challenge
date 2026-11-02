@@ -17,6 +17,40 @@ mechanics:
     colour beyond it. A player who presses into the twin lock holding both keys, because it is the first
     lock they meet, spends both on it and cannot open the single lock, so the restart teaches that a twin
     lock''s cost is counted before it is paid.'
+  definitions:
+  - 'floor: walkable ground; standing, waiting and turning on it are always safe, and a twin lock that is paid in full dissolves to it (ground term, defined here for this file)'
+  - 'key: an item the player walks onto to hold in the inventory; in this mechanic only a key held at the moment of pressing counts toward the lock'
+  - 'colour: the colour shared by a key and this lock; only a key of the same colour counts as matching, and a key of any other colour counts for nothing here'
+  - 'matching key: a held key of this lock''s colour; one matching key shows the lock still needs one more, and two matching keys together pay it in full'
+  - 'duplicate key: a second held key of the same colour as another held key; here it is the second half of the cost rather than a spare'
+  - 'lock: a tile the player cannot enter by pressing into it; pressing tests the keys held and either leaves it locked or dissolves it to floor'
+  - 'single lock: a lock of the same colour as this one; it needs one matching key, unlike this lock which needs two at once'
+  - 'inventory: the keys the player holds, in 4 base slots per mechanic 40 in enemies-and-bots.yml; holding two matching keys takes two of those slots'
+  - 'slot: one inventory space per mechanic 40 in enemies-and-bots.yml; each key held takes one slot, so duplicate keys and inventory space matter here'
+  - 'mule bot: follower that carries 4 extra inventory slots, per mechanic 40 in enemies-and-bots.yml; it can carry the second matching key this lock needs'
+  - 'key ring: same-colour keys stack in one slot, per mechanic 66 in this file; this lock gives duplicate keys a purpose without stacking them'
+  assets:
+    tiles:
+    - file: twin-lock.png
+      shows: twin lock of its colour still needing two matching keys, with two keyholes showing
+    - file: twin-lock-needs-one.png
+      shows: twin lock after a press holding one matching key, showing it still needs one more and has consumed nothing
+    jolly_states: []
+    gui:
+    - file: matching-key.png
+      shows: held key of the twin lock colour in an inventory slot, counted toward the two the lock needs
+    blocks: []
+  test_cases:
+  - name: solution opening with two matching keys
+    check: collect both matching keys in the room, then press into the twin lock holding both; both keys are consumed, the lock dissolves to floor, and the player steps through
+  - name: adversarial spending both keys on the first lock
+    check: press into the twin lock holding both keys before opening the single lock beyond it; both keys are spent and the single lock stays locked, and restarting the small room restores both keys and both locks so the player is never stranded
+  - name: one-key boundary consumes nothing
+    check: press into the twin lock holding exactly one matching key; it shows it still needs one more, consumes nothing, stays locked, and the player still holds that key
+  - name: wrong-colour keys do not count
+    check: press into the twin lock holding two keys of other colours; neither counts as matching, nothing is consumed, and the lock still needs two matching keys
+  - name: restart and replay
+    check: restart restores the twin lock to needing two keys and returns every key to its placed state, and a recorded opening session replays to the same end state
   status: trial
   human_review: {}
 - id: 12
@@ -34,6 +68,36 @@ mechanics:
     and a blue lock further on with no blue key in sight. A player who spends the master key on the convenient
     red lock has nothing for the blue lock and must restart, which teaches that the master key is saved
     for the colour that cannot be found.'
+  definitions:
+  - 'floor: walkable ground per mechanic 11 in this file; a lock dissolved by the master key becomes it'
+  - 'master key: the silver key defined here; it fits a lock of any colour, is held in one inventory slot until spent, and is consumed and gone after opening exactly one lock'
+  - 'key: a coloured item held in the inventory per mechanic 11 in this file; an ordinary key opens only a lock of its own colour, unlike the master key'
+  - 'colour: the colour of an ordinary key and of a lock per mechanic 11 in this file, with the explicit difference that the master key ignores colour and fits any lock'
+  - 'lock: a tile the player cannot enter by pressing into it per mechanic 11 in this file; pressing the master key into one lock of any colour dissolves that one lock only'
+  - 'inventory: the keys the player holds, in 4 base slots per mechanic 40 in enemies-and-bots.yml; the unspent master key takes one of those slots'
+  - 'slot: one inventory space per mechanic 40 in enemies-and-bots.yml; saving the master key costs the slot it sits in until it is spent'
+  - 'twin lock: a lock that needs two matching keys, per mechanic 11 in this file, with the explicit difference that one master key covers one of the two keys it demands rather than a matching key'
+  - 'final door: a door that needs one key of each colour held at once, per mechanic 100 in this file; a master key spent on an earlier lock is gone before that door is checked'
+  assets:
+    tiles:
+    - file: master-key.png
+      shows: unused silver master key, distinct from every coloured key, fitting any lock once
+    jolly_states: []
+    gui:
+    - file: master-key-held.png
+      shows: silver master key held in an inventory slot, still unspent and usable on any one lock
+    blocks: []
+  test_cases:
+  - name: solution saving it for the missing colour
+    check: collect the master key and the red key in the room, open the red lock with its red key, then spend the master key on the blue lock with no blue key in sight; the blue lock dissolves, the master key is consumed, and the player passes
+  - name: adversarial spending it on the convenient lock
+    check: spend the master key on the nearby red lock whose red key is also in the room; the master key is gone and the blue lock stays locked with no blue key to open it, and restarting the small room restores the master key and both locks so the player is never stranded
+  - name: one-use boundary on any colour
+    check: press the master key into a lock of any colour; exactly that one lock dissolves to floor and the master key is consumed, and a second lock in the room is unchanged
+  - name: twin lock covers only one of two
+    check: 'blocked-by: 11 (Twin lock): one master key covers one of the two keys a twin lock demands, and the twin lock still needs one more key before it dissolves'
+  - name: restart and replay
+    check: restart restores the unspent master key and every lock it dissolved, and a recorded spending session replays to the same end state
   status: trial
   human_review: {}
 - id: 13
@@ -84,5 +148,38 @@ mechanics:
     back the way you came. A player who walks straight to the door is told by nothing happening that a
     colour is missing and faces the whole corridor back, which teaches that the door is an inventory check
     to be prepared for rather than a lock to be opened on arrival.'
+  definitions:
+  - 'floor: walkable ground per mechanic 11 in this file; the corridor back from this door stays walkable while the door is closed'
+  - 'final door: the door defined here; it does nothing while any colour is missing, and it opens permanently and consumes none of the keys it checks once one key of each colour is held at the same time'
+  - 'door: a tile the player cannot enter while it is closed; pressing into this door tests the keys held instead of spending a key as a lock would'
+  - 'key: a coloured item held in the inventory per mechanic 11 in this file; here one held key of a colour counts once toward the door and is not spent by it'
+  - 'colour: the colour of a key and of a lock per mechanic 11 in this file; this door needs every colour represented once at the same time, and a duplicate key of a colour already held adds nothing'
+  - 'inventory: the keys the player holds in 4 base slots per mechanic 40 in enemies-and-bots.yml, together with the keys the mule bot carries in its own slots; this door checks both at once'
+  - 'slot: one inventory space per mechanic 40 in enemies-and-bots.yml; holding one key of each colour at once is what makes this door a breadth test in a 4-slot game'
+  - 'mule bot: follower that carries 4 extra inventory slots, per mechanic 40 in enemies-and-bots.yml; keys it carries count toward this door exactly as keys the player carries'
+  - 'lock: a tile that consumes its key when it dissolves, per mechanic 11 in this file, with the explicit difference that this door consumes none of the keys it checks'
+  - 'master key: silver key that opens any one lock and is then consumed, per mechanic 12 in this file; whether it counts as a colour for this door is the level-design ruling named in the demos and is not settled by this entry'
+  assets:
+    tiles:
+    - file: final-door-closed.png
+      shows: closed final door needing one key of each colour held at once, unchanged while any colour is missing
+    - file: final-door-open.png
+      shows: final door opened permanently after the full colour check, passable with every checked key still held
+    jolly_states: []
+    gui:
+    - file: final-door-colour-check.png
+      shows: one held key of each colour across the player and mule bot inventory rows, none of them consumed by the door
+    blocks: []
+  test_cases:
+  - name: solution holding every colour at once
+    check: turn back along the corridor, collect the missing colour key visible there, return holding one key of each colour at the same time, and press into the door; it opens permanently, consumes none of the keys, and the player passes
+  - name: adversarial walking straight to the door
+    check: walk straight to the door with one colour missing; nothing happens and no key is consumed, and the player walks the whole corridor back for the missing key so the closed door never strands them
+  - name: last-colour boundary
+    check: press into the door holding every colour but one; it does nothing and consumes nothing, then collect the last colour and press again and it opens
+  - name: bot-held colours count
+    check: 'blocked-by: 40 (Mule bot): split the colours between the player slots and the mule bot slots so neither holds every colour alone, then press into the door; it opens permanently and consumes none of them'
+  - name: restart and replay
+    check: restart restores the final door to closed and returns every key to its placed state, and a recorded opening session replays to the same end state
   status: trial
   human_review: {}

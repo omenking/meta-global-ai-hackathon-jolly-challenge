@@ -17,6 +17,35 @@ mechanics:
   teaching_moment: 'First room: an orb halfway along an ice strip that ends at a wall. A player who slides
     straight in passes the orb and stops at the wall with no way back along the strip, so the restart
     teaches that the entry direction and the braking wall are the whole decision.'
+  definitions:
+  - 'floor: walkable ground; standing, waiting and turning on it are always safe (ground term, defined here for this file)'
+  - 'wall: never enterable from any side; it only blocks and never harms, and on ice it is a braking wall that stops a slide (ground term, defined here for this file)'
+  - 'ice: floor variant defined here; stepping onto it in a direction slides the player that way within the same input until the next tile is a wall, lock or block, with no steering or stopping midway'
+  - 'lock: a locked barrier that stops a slide like a wall until opened with its key, per mechanic 11 in keys-and-locks.yml'
+  - 'block: a pushable block that stops a slide like a wall, per mechanic 81 in blocks.yml'
+  - 'orb: walking onto it collects it, including while sliding; it is counted by the gate and never enters the inventory'
+  - 'ice block: pushable block per mechanic 82 in blocks.yml; pushed onto ice it becomes a movable braking wall'
+  - 'ice cleats: gear per mechanic 62 in gear-and-items.yml; they let the player stop and turn on ice'
+  assets:
+    tiles:
+    - file: ice.png
+      shows: ice tile, slippery floor the player slides across in the entry direction
+    jolly_states:
+    - file: jolly-sliding.png
+      shows: Jolly sliding on ice, unable to steer or stop until a braking wall, lock or block
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution entry and braking wall
+    check: slide in the chosen entry direction, collect the orbs on the line, and stop only at the braking wall beyond them
+  - name: adversarial straight slide past the orb
+    check: sliding straight in as the teaching moment warns passes the halfway orb and stops at the wall; the room resolves by the return route or a restart, never by a stranded slide
+  - name: no steering or stopping midway
+    check: pressing a different direction or no direction mid-slide changes nothing; the slide ends only at the next wall, lock or block in the entry direction
+  - name: cleats stop and turn
+    check: 'blocked-by: 62 (ice cleats): with cleats held, the player can stop and turn on ice where the bare slide could not'
+  - name: restart and replay
+    check: restart restores the placed ice and orbs, and a recorded slide session replays to the same end state
   status: trial
   human_review:
   - so they key to this is choosing the direction at the breaking wall.
@@ -37,6 +66,39 @@ mechanics:
     hazard. A player who steps onto the first belt without reading its arrow is carried off it with no
     way to step off sideways and is returned to the checkpoint, which teaches that the route is chosen
     on the normal tile before the belt takes over.'
+  definitions:
+  - 'conveyor: belt tile defined here; at the start of each move it carries the player one tile in its arrow direction, and while on it the player cannot step off sideways'
+  - 'belt: the conveyor tile defined here, named for its arrow direction'
+  - 'normal tile: plain floor where the player chooses the next move freely, per mechanic 1 in this file (floor per mechanic 1 in this file)'
+  - 'floor: walkable ground, per mechanic 1 in this file'
+  - 'hazard: any tile whose entry loses the attempt or returns the player to the checkpoint, for example deep water per mechanic 41 in terrain-and-hazards.yml (ground term, defined here for this file)'
+  - 'checkpoint: respawn set by touch, per mechanic 48 in terrain-and-hazards.yml; a belt carrying the player into a hazard returns them there'
+  - 'patroller: enemy on a fixed loop, per mechanic 31 in enemies-and-bots.yml'
+  - 'floor switch: switch held by standing on it, per mechanic 21 in switches-and-doors.yml; a belt can deposit the player onto it and then carry them off it'
+  assets:
+    tiles:
+    - file: conveyor-north.png
+      shows: conveyor belt with its arrow pointing north, carrying the player that way
+    - file: conveyor-east.png
+      shows: conveyor belt with its arrow pointing east, carrying the player that way
+    - file: conveyor-south.png
+      shows: conveyor belt with its arrow pointing south, carrying the player that way
+    - file: conveyor-west.png
+      shows: conveyor belt with its arrow pointing west, carrying the player that way
+    jolly_states:
+    - file: jolly-carried.png
+      shows: Jolly standing on a conveyor, carried one tile in the arrow direction at the start of a move
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution read the arrows on the normal tile
+    check: from the normal tile where two belts meet, enter the belt whose arrow runs to the exit and ride it off where it ends on a normal tile
+  - name: adversarial first belt without reading
+    check: stepping onto the first belt without reading its arrow carries the player toward the hazard with no sideways step off; entering the hazard returns them to the checkpoint, never a stranded belt state
+  - name: one tile per move and no sideways exit
+    check: each move on the belt carries exactly one tile in the arrow direction, sideways inputs do not leave the belt, and exit happens only where the belt ends on a normal tile
+  - name: restart and replay
+    check: restart restores the placed belts and player, and a recorded belt session replays to the same end state
   status: trial
   human_review:
   - I don't think you should be able to get off.
@@ -57,6 +119,32 @@ mechanics:
   teaching_moment: 'First room: two pads of different marks in one chamber. A player who steps on pads
     at random arrives back where they started and makes no progress, which teaches that pads are pairs
     to be identified rather than doors that simply open.'
+  definitions:
+  - 'teleport pad: pad defined here; stepping on it instantly moves the player to its paired pad of the same mark, keeping their direction, and pads work both ways'
+  - 'mark: the shared symbol or colour that pairs two pads, defined here; only pads with the same mark are twins'
+  - 'twin: the other pad of the same mark, defined here; if a block sits on it the teleport does not happen'
+  - 'block: pushable block per mechanic 81 in blocks.yml; a block sitting on the twin pad prevents the teleport'
+  - 'floor: walkable ground the player stands on before and after a teleport, per mechanic 1 in this file'
+  - 'one-way door: door passable only in its arrow direction, per mechanic 4 in this file'
+  - 'secret wall: hidden wall that must be found first, per mechanic 59 in vision-and-information.yml'
+  assets:
+    tiles:
+    - file: teleport-pad-a.png
+      shows: teleport pad with mark A, paired only with the other mark A pad
+    - file: teleport-pad-b.png
+      shows: teleport pad with mark B, distinct from mark A so pairs can be told apart
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution paired pads link chambers
+    check: step on a pad and arrive instantly on its same-mark twin keeping direction, then step on the twin to return the other way
+  - name: adversarial random pads
+    check: stepping on pads at random as the teaching moment warns returns the player to a pad they have already visited and makes no progress, but every pad still works so the room is never stranded
+  - name: blocked twin prevents teleport
+    check: 'blocked-by: 81 (push block): with a block sitting on the twin pad, stepping on this pad does not teleport and the player stays on this pad'
+  - name: restart and replay
+    check: restart restores the placed pads and blocks, and a recorded teleport session replays to the same end state
   status: trial
   human_review:
   - Yep sounds good.
@@ -74,6 +162,35 @@ mechanics:
   teaching_moment: 'First room: an orb sits beyond a one-way door, with a long loop back. A player who
     goes through for the orb and then tries to come back the way they came finds a wall and must take
     the loop, which teaches that the door''s direction is a commitment made before entering.'
+  definitions:
+  - 'one-way door: door defined here; walkable only in its arrow direction and a wall from the other three sides, shown by chevrons, and passing through never consumes anything and never resets'
+  - 'floor: walkable ground on either side of the door, per mechanic 1 in this file'
+  - 'wall: never enterable from any side, per mechanic 1 in this file; the one-way door is a wall from its three non-arrow sides'
+  - 'orb: walking onto it collects it; it is counted by the gate and never enters the inventory'
+  - 'teleport pair: paired pads that relocate the player instantly, per mechanic 3 in this file'
+  - 'crumbling tile: tile that falls after being left twice, per mechanic 5 in terrain-and-hazards.yml'
+  assets:
+    tiles:
+    - file: one-way-door-north.png
+      shows: one-way door with chevrons pointing north, passable only northward
+    - file: one-way-door-east.png
+      shows: one-way door with chevrons pointing east, passable only eastward
+    - file: one-way-door-south.png
+      shows: one-way door with chevrons pointing south, passable only southward
+    - file: one-way-door-west.png
+      shows: one-way door with chevrons pointing west, passable only westward
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution through and the long way back
+    check: pass through the door in its arrow direction, collect the orb beyond it, and return by the long loop to the start
+  - name: adversarial return the way you came
+    check: after passing through for the orb, pressing back through the door finds a wall as the teaching moment warns; the long loop resolves the room, never a stranded doorway
+  - name: wall from three sides, free in the arrow direction
+    check: the door blocks entry from each of its three non-arrow sides and allows the arrow direction every time, consuming nothing and never resetting
+  - name: restart and replay
+    check: restart restores the placed door and orb, and a recorded session replays to the same end state
   status: trial
   human_review: {}
 - id: 6
@@ -93,6 +210,36 @@ mechanics:
     straight onto it is caught while it compresses, or launches in the direction they happened to press
     and lands badly, so the retry teaches that the pause and the chosen direction are both part of the
     move.'
+  definitions:
+  - 'bounce pad: pad defined here; stepping on it compresses it for one move with the player standing on it, and the next directional input launches the player two tiles that way, clearing the tile in between'
+  - 'floor: walkable ground, per mechanic 1 in this file; the landing tile after a two-tile launch must be floor'
+  - 'void: a hole where floor used to be or a gap with no floor; entering it on foot is falling, so the attempt is lost, or the player returns to the active checkpoint per mechanic 48 in terrain-and-hazards.yml, while a launch clears a one-tile void without entering it (ground term, defined here for this file)'
+  - 'hazard: any tile whose entry loses the attempt or returns the player to the checkpoint, per mechanic 2 in this file; a launch clears a one-tile hazard but landing on one resolves as entering it'
+  - 'gap: a one-tile void or hazard cleared by a launch, treated as void or hazard per this entry'
+  - 'guard: enemy on a turning cycle, per mechanic 37 in enemies-and-bots.yml'
+  - 'checkpoint: respawn set by touch, per mechanic 48 in terrain-and-hazards.yml; a failed launch that falls returns the player there'
+  assets:
+    tiles:
+    - file: bounce-pad.png
+      shows: bounce pad at rest, ready to be stepped on
+    - file: bounce-pad-compressed.png
+      shows: bounce pad compressed for its one move with the player standing on it, exposed before the launch
+    jolly_states:
+    - file: jolly-launching.png
+      shows: Jolly airborne in the two-tile launch, clearing the tile in between
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution chosen launch over the gap
+    check: step on the pad, survive the one-move compression, and launch in the chosen direction two tiles over the gap onto floor beyond it
+  - name: adversarial caught in the pause
+    check: 'blocked-by: 37 (guard): stepping straight onto the pad as the teaching moment warns leaves the player exposed while it compresses and the guard catches them; the attempt resolves to the checkpoint or a restart, never stranded on the pad'
+  - name: exactly two tiles, landing must be floor
+    check: every launch travels exactly two tiles and clears the one tile in between; a launch whose second tile is not floor does not land the player there and resolves by falling to the checkpoint or a restart
+  - name: one-move pause boundary
+    check: the pad compresses for exactly one full move before any launch input works, and launching earlier or waiting longer does not launch
+  - name: restart and replay
+    check: restart restores the pad to its uncompressed placed state, and a recorded launch session replays to the same end state
   status: revised
   human_review:
   - its honestly just a fixed movement, the boune part is fun but no real strategy.
@@ -113,6 +260,40 @@ mechanics:
     A player who steps on it while thinking about the junction is nudged down the arrow''s lane into a
     one-way stretch and has to loop back, which teaches that the framed arrow, rather than their next
     input, decides where it sends them on foot.'
+  definitions:
+  - 'turntable: framed tile defined here; stepping onto it on foot turns its arrow 90 degrees clockwise and nudges the player one tile in the arrow direction, automatically on entry with nothing to press'
+  - 'frame: the rotating frame drawn around the tile, defined here; it shows the arrow direction the turntable will nudge the player in'
+  - 'arrow: the direction shown in the frame, defined here; on each on-foot entry it turns 90 degrees clockwise before the nudge'
+  - 'on-foot movement: a normal step the player makes, defined here; only on-foot entry triggers the turntable, never a slide or a belt ride'
+  - 'floor: walkable ground the player is nudged onto, per mechanic 1 in this file'
+  - 'ice: slippery floor the player slides across, per mechanic 1 in this file; sliding passes straight over a turntable without turning'
+  - 'conveyor: belt that carries the player one tile per move, per mechanic 2 in this file; riding it passes straight over a turntable without turning'
+  - 'bounce pad: pad that launches the player two tiles, per mechanic 6 in this file'
+  - 'one-way door: door passable only in its arrow direction, per mechanic 4 in this file'
+  assets:
+    tiles:
+    - file: turntable-north.png
+      shows: turntable in its rotating frame with the arrow pointing north
+    - file: turntable-east.png
+      shows: turntable in its rotating frame with the arrow pointing east, one clockwise turn from north
+    - file: turntable-south.png
+      shows: turntable in its rotating frame with the arrow pointing south
+    - file: turntable-west.png
+      shows: turntable in its rotating frame with the arrow pointing west
+    jolly_states: []
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution on-foot entry turns and nudges
+    check: step onto the turntable on foot, watch the arrow turn 90 degrees clockwise, and be nudged one tile in the new arrow direction onto the intended lane
+  - name: adversarial nudge while thinking
+    check: stepping on the turntable while thinking about the junction as the teaching moment warns nudges the player down the arrow lane into the one-way stretch; the loop back resolves the room, never a stranded turntable
+  - name: slides and belts pass straight over
+    check: 'blocked-by: 1 (ice tile): sliding on ice or riding a conveyor across the turntable passes straight over it, the arrow does not turn and no nudge happens'
+  - name: exactly 90 degrees per entry
+    check: four on-foot entries turn the arrow through east, south, west and back to north, one clockwise quarter turn each, and standing on the tile without re-entering turns nothing
+  - name: restart and replay
+    check: restart restores the arrow to its placed direction, and a recorded session replays to the same end state
   status: revised
   human_review:
   - not clear neough how it works, if you have bound pad, and turntable as a tile how does that work.
@@ -134,6 +315,32 @@ mechanics:
   teaching_moment: 'First room: a sticky shortcut crosses a patroller''s loop. A player who takes it is
     still straining on the first tile when the patroller, which is not slowed, reaches them, so the retry
     teaches that the shortcut costs moves rather than distance.'
+  definitions:
+  - 'sticky: floor variant defined here; entering it takes two inputs, the first strains in place and the second steps off, and the tile stays reusable'
+  - 'floor: walkable ground around the sticky tile, per mechanic 1 in this file'
+  - 'enemy: patroller or chaser per mechanics 31 and 32 in enemies-and-bots.yml; enemies are not slowed by sticky and cross it at full speed'
+  - 'patroller: enemy on a fixed loop, per mechanic 31 in enemies-and-bots.yml; it covers a sticky shortcut at full speed'
+  - 'timer switch: switch that must be reached before its timer runs out, per mechanic 25 in switches-and-doors.yml'
+  assets:
+    tiles:
+    - file: sticky.png
+      shows: sticky tile, reusable ground that costs two inputs to cross
+    jolly_states:
+    - file: jolly-straining.png
+      shows: Jolly straining on a sticky tile on the first input, not yet able to step off
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution sticky shortcut at its move cost
+    check: cross the sticky shortcut in two inputs per sticky tile, first straining in place and second stepping off, and reach the far side
+  - name: adversarial shortcut under the patroller
+    check: 'blocked-by: 31 (patroller): taking the sticky shortcut as the teaching moment warns leaves the player still straining when the unslowed patroller arrives; the death resolves to the checkpoint or a restart, never a player stuck mid-tile'
+  - name: exactly two inputs and reusable
+    check: one input never leaves a sticky tile and two always do, and crossing the same sticky tile again later costs two inputs again with no wear
+  - name: enemies are not slowed
+    check: 'blocked-by: 31 (patroller): an enemy crossing a sticky tile takes its normal one move per tile while the player beside it takes two'
+  - name: restart and replay
+    check: restart restores the placed sticky tiles, and a recorded two-input crossing replays to the same end state
   status: trial
   human_review:
   - could work for when enemies are not impacted by the sticky ness.
@@ -155,6 +362,42 @@ mechanics:
     along. A player who keeps moving in the same direction out of habit spends the stored dash into the
     far wall and has nothing left for the gap beyond it, which teaches that repeating a direction is the
     trigger and that the charge is kept by changing direction.'
+  definitions:
+  - 'dash tile: tile defined here; stepping on it stores one dash, shown in the HUD, and the charge is kept until spent'
+  - 'dash: the stored leap defined here; moving in the same direction twice in a row spends it, the second step travelling two tiles and clearing a one-tile hazard or gap'
+  - 'charge: the one stored dash, defined here; changing direction keeps it, so only repeating a direction spends it'
+  - 'HUD: the heads-up display that shows the stored dash, defined here for this mechanic'
+  - 'floor: walkable ground the player dashes across and lands on, per mechanic 1 in this file'
+  - 'wall: never enterable from any side, per mechanic 1 in this file; dashing into one spends the travel against the wall'
+  - 'hazard: any tile whose entry loses the attempt or returns the player to the checkpoint, per mechanic 2 in this file; a dash clears a one-tile hazard without entering it'
+  - 'void: a hole or gap with no floor, per mechanic 6 in this file; a dash clears a one-tile void without entering it'
+  - 'gap: a one-tile void or hazard cleared by a dash, per this entry'
+  - 'timed orb: orb that must be reached before its deadline, per mechanic 15 in orbs.yml'
+  - 'patroller: enemy on a fixed loop, per mechanic 31 in enemies-and-bots.yml'
+  assets:
+    tiles:
+    - file: dash-tile.png
+      shows: dash tile that stores one dash when stepped on
+    - file: dash-tile-spent.png
+      shows: dash tile after its dash has been stored, charge now held by the player in the HUD
+    jolly_states:
+    - file: jolly-dashing.png
+      shows: Jolly in the two-tile dash step, clearing the tile in between
+    gui:
+    - file: dash-charge.png
+      shows: HUD icon showing one stored dash ready to spend
+    blocks: []
+  test_cases:
+  - name: solution save the dash for the gap
+    check: step on the dash tile, change direction to keep the charge, then move the same way twice so the second step dashes two tiles over the gap onto floor
+  - name: adversarial habit spends the dash
+    check: keeping moving in the same direction out of habit as the teaching moment warns spends the dash into the far wall and leaves nothing for the gap; the room resolves by returning to the dash tile or a restart, never a stranded charge state
+  - name: repeat spends, change keeps
+    check: after storing a dash, changing direction any number of times keeps the HUD charge, and the first repeated direction spends it on a two-tile second step, after which no second dash remains
+  - name: clears exactly one tile
+    check: the dash step travels exactly two tiles and clears a one-tile hazard or gap, and a two-tile hazard or gap is not cleared
+  - name: restart and replay
+    check: restart clears any stored dash and restores the placed dash tile, and a recorded session replays to the same end state
   status: revised
   human_review:
   - yes but if they are simply placed then you are doing basic math.
@@ -174,6 +417,38 @@ mechanics:
   teaching_moment: 'First room: a fan-wind corridor crosses a crumbling tile, with a safe place to stand
     and read the room. A player who stands there to think is pushed a tile each second onto ground they
     did not choose, which teaches that the fan moves them even when they make no input at all.'
+  definitions:
+  - 'fan tile: wind tile defined here; it pushes the player one tile downwind every real second if that tile is free, even if the player made no input'
+  - 'wind: the push from a fan tile, defined here; its direction is marked on the tiles and standing still is a move the fan makes for the player'
+  - 'downwind: the direction marked on the fan tiles, defined here; every push moves the player one tile that way'
+  - 'free tile: floor with no wall, block or other blocker on it, defined here for this mechanic (floor and wall per mechanic 1 in this file)'
+  - 'floor: walkable ground the player is pushed across, per mechanic 1 in this file'
+  - 'sleeper: enemy that wakes on its own rule, per mechanic 33 in enemies-and-bots.yml'
+  - 'crumbling tile: tile that falls after being left twice, per mechanic 5 in terrain-and-hazards.yml; wind timing decides which crumbling tile the player leaves first'
+  assets:
+    tiles:
+    - file: fan-north.png
+      shows: fan wind tile with its wind direction marked north
+    - file: fan-east.png
+      shows: fan wind tile with its wind direction marked east
+    - file: fan-south.png
+      shows: fan wind tile with its wind direction marked south
+    - file: fan-west.png
+      shows: fan wind tile with its wind direction marked west
+    jolly_states:
+    - file: jolly-pushed.png
+      shows: Jolly being pushed one tile downwind by the fan with no input made
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution ride and fight the wind
+    check: cross the fan corridor by moving with and against the marked wind, using each one-tile push, and reach the far side
+  - name: adversarial standing to think
+    check: standing in the wind corridor to read the room as the teaching moment warns pushes the player one tile each real second onto ground they did not choose; every pushed-to tile is enterable or the push does not happen, so the player is never stranded by the wind
+  - name: one tile per real second, blocked tile no push
+    check: with no input at all the fan pushes exactly one tile per real second, and when the downwind tile is not free no push happens that second
+  - name: restart and replay
+    check: restart restores the placed fan tiles and player, and a recorded wind session replays to the same end state
   status: trial
   human_review: {}
 - id: 42
@@ -192,6 +467,41 @@ mechanics:
   teaching_moment: 'First room: the current runs past a banked exit toward deep water. A player who aims
     straight at the exit is carried one tile past it on every move and ends up swimming beyond it, so
     the retry teaches that the swim is aimed upstream of where they want to land.'
+  definitions:
+  - 'current: water movement defined here; while the player is on water with a life preserver, it carries them one tile downstream at the start of each move, then they make their own move'
+  - 'water: shallow or deep water the player swims in with a life preserver, defined here for this mechanic (shallow water per mechanic 50 in terrain-and-hazards.yml, deep water per mechanic 41 in terrain-and-hazards.yml)'
+  - 'shallow water: enterable surface water, per mechanic 50 in terrain-and-hazards.yml'
+  - 'deep water: dark water that needs a life preserver and costs two moves per tile, per mechanic 41 in terrain-and-hazards.yml'
+  - 'life preserver: gear that admits the player to water, per mechanic 61 in gear-and-items.yml; on its own it is permission, not control against the current'
+  - 'downstream: the direction the current carries the player, defined here; it is followed at the start of every move while swimming'
+  - 'bank: dry floor at the water edge the player exits onto, defined here (floor per mechanic 1 in this file)'
+  - 'island: dry floor surrounded by water the player exits onto, defined here (floor per mechanic 1 in this file)'
+  - 'floor: walkable dry ground, per mechanic 1 in this file; banks and islands are floor'
+  - 'raft block: block the player rides that ignores current, per mechanic 86 in blocks.yml'
+  assets:
+    tiles:
+    - file: current-north.png
+      shows: water current tile with its downstream direction marked north
+    - file: current-east.png
+      shows: water current tile with its downstream direction marked east
+    - file: current-south.png
+      shows: water current tile with its downstream direction marked south
+    - file: current-west.png
+      shows: water current tile with its downstream direction marked west
+    jolly_states:
+    - file: jolly-swimming.png
+      shows: Jolly swimming with a life preserver, carried one tile downstream at the start of each move
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution aim upstream of the bank
+    check: 'blocked-by: 61 (life preserver): swim aiming one tile upstream of the banked exit so the current carries the player onto it, then step out onto the bank'
+  - name: adversarial aim straight at the exit
+    check: 'blocked-by: 61 (life preserver): aiming straight at the exit as the teaching moment warns carries the player one tile past it on every move toward deep water; they can still swim to a later bank or island, never stranded mid-current'
+  - name: drift before every swimming move
+    check: 'blocked-by: 61 (life preserver): each move while swimming first carries exactly one tile downstream and then the player own move happens, and no drift happens on dry floor'
+  - name: restart and replay
+    check: restart restores the placed current and player, and a recorded swim replays to the same end state
   status: trial
   human_review: {}
 - id: 64
@@ -218,6 +528,38 @@ mechanics:
   teaching_moment: 'First room: two Jollys in connected lanes, one lane passing a hazard. A player who
     makes the obvious move for the Jolly they are watching moves the other one into the hazard with the
     same input and loses the level, which teaches that every input is checked against both positions.'
+  definitions:
+  - 'twin jolly mode: level mode defined here, not a tile; two Jollys share one input, each step both try to move, and a blocked one stays'
+  - 'jolly: one of the two player figures in this mode, defined here; both are controlled by the same input and either one losing loses the level'
+  - 'input: the single directional command both Jollys obey at once, defined here for this mode'
+  - 'floor: walkable ground either Jolly moves on, per mechanic 1 in this file'
+  - 'wall: never enterable from any side, per mechanic 1 in this file; a Jolly whose move is blocked by a wall stays while the other moves'
+  - 'orb: walking onto it with either Jolly collects it into the shared count; it never enters the inventory'
+  - 'key: walking onto it with either Jolly collects it into the shared keys, per mechanic 12 in keys-and-locks.yml'
+  - 'hazard: any tile whose entry loses the attempt, per mechanic 2 in this file; if either Jolly touches one the level is lost'
+  - 'enemy: patroller, chaser or other bot per mechanics 31 and 32 in enemies-and-bots.yml; if either Jolly touches a lethal enemy the level is lost'
+  - 'floor switch: switch held by standing on it, per mechanic 21 in switches-and-doors.yml; two Jollys can hold two switches at once'
+  - 'push block: pushable block, per mechanic 81 in blocks.yml; one Jolly can push it while the same input moves the other'
+  assets:
+    tiles: []
+    jolly_states:
+    - file: jolly-twin.png
+      shows: second Jolly in a distinct tint, moving under the same input as the first
+    gui:
+    - file: twin-mode.png
+      shows: HUD marker showing twin mode, one input driving both Jollys
+    blocks: []
+  test_cases:
+  - name: solution both lanes under one input
+    check: one input moves both Jollys through their connected lanes, collecting the shared orbs and keys, and both reach their exits together
+  - name: adversarial move for the watched jolly only
+    check: making the obvious move for the watched Jolly as the teaching moment warns moves the other Jolly into the hazard with the same input and loses the level; a restart resolves the room, never a state where only one Jolly can move
+  - name: blocked one stays, shared collection
+    check: when one Jolly is blocked by a wall it stays and the other still moves, and an orb or key either Jolly walks onto is counted once in the shared total
+  - name: either death loses for both
+    check: 'blocked-by: 31 (patroller): if either Jolly touches a lethal enemy or hazard the level is lost for both, even if the other Jolly is safe'
+  - name: restart and replay
+    check: restart restores both Jollys to their placed starts with shared counts cleared, and a recorded session replays to the same end state
   status: trial
   human_review:
   - yes and either dies you lose.  Not really a tile category but yes.
@@ -238,6 +580,34 @@ mechanics:
     A player who swaps without considering both resulting positions ends up on the far side of a block
     that now closes their way back, so the restart teaches that a swap gives you the block''s place and
     gives the block yours.'
+  definitions:
+  - 'swap tile: tile defined here; it sits under a block or bot, and standing next to it and pressing toward it exchanges the player tile with the block or bot on it, and the tile stays and can be reused'
+  - 'block: pushable block per mechanic 81 in blocks.yml; a block on a swap tile can be swapped out of a corner instead of only pushed'
+  - 'bot: a robot entity on the tile, defined here for this mechanic; the mule bot per mechanic 40 in enemies-and-bots.yml is the bot a swap can move past a pinch'
+  - 'floor: walkable ground the player and the swapped block or bot end up on, per mechanic 1 in this file'
+  - 'push block: pushable block, per mechanic 81 in blocks.yml'
+  - 'mule bot: the player own bot, per mechanic 40 in enemies-and-bots.yml'
+  - 'teleport pair: paired pads that relocate only the player, per mechanic 3 in this file; a swap is explicitly different, it exchanges two positions and moves the block or bot too'
+  assets:
+    tiles:
+    - file: swap-tile.png
+      shows: swap tile on the floor, reusable, shown empty before a block or bot sits on it
+    - file: swap-tile-occupied.png
+      shows: swap tile with a block sitting on it, ready for the adjacent player to swap with it
+    jolly_states:
+    - file: jolly-swapping.png
+      shows: Jolly mid-swap, exchanging tiles with the block or bot on the swap tile
+    gui: []
+    blocks: []
+  test_cases:
+  - name: solution swap a cornered block out
+    check: stand next to the swap tile under the cornered block, press toward it, and exchange tiles with the block so it leaves the corner and the player takes its place
+  - name: adversarial swap without checking both places
+    check: swapping without considering both resulting positions as the teaching moment warns puts the block where it closes the way back; swapping again from the other side or a restart resolves the room, never a stranded swap
+  - name: adjacent only, tile stays reusable
+    check: a swap only happens with a block or bot on the adjacent swap tile in the pressed direction, the swap tile remains afterwards, and a second swap on the same tile works again
+  - name: restart and replay
+    check: restart restores the block or bot onto its placed swap tile and the player to start, and a recorded swap session replays to the same end state
   status: revised
   human_review:
   - I can't see the strategy.
