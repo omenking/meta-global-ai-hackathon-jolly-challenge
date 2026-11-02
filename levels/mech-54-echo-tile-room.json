@@ -9,14 +9,14 @@
     "#": {"label": "wall", "sprite": "wall.png"},
     "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
     "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
-    "E": {"base": "floor_default.png", "label": "echo tile", "text": "E", "def": "echo:echo"},
+    "e": {"base": "floor_default.png", "label": "echo tile", "text": "e", "def": "echo:echo"},
     "~": {"base": "floor_default.png", "label": "water (hazard)", "def": "water:water"},
     "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
     "X": {"label": "portal (exit)", "sprite": "portal.png"}
   },
   "rows": [
     "###############",
-    "#P.E.~~*...GX.#",
+    "#P.e.~~*...GX.#",
     "#.............#",
     "#..........*..#",
     "###############"
