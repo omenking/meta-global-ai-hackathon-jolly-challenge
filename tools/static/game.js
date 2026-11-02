@@ -245,6 +245,10 @@
   }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
+  // Ghost pack: replay ghosts are a view of state.flags positions,
+  // redrawn from state on every step like the player sprite.
+  const ghostLayer = new PIXI.Container();
+  board.addChild(ghostLayer);
   // Right-hand column: grey panel like the original side panel.
   // Each readout is a label sprite over a backplate box holding
   // three blue digit sprites; values come only from GameHud helpers
@@ -448,6 +452,18 @@
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
       TILE - 4, TILE - 4).stroke({ width: 3, color: 0x00c8ff });
+    ghostLayer.removeChildren();
+    for (const g of (state.flags && state.flags.ghost_positions) || []) {
+      const texName = g.fading ? 'ghost-jolly-fading.png'
+        : (g.kind === 'start' ? 'ghost-start.png' : 'ghost-jolly.png');
+      const tex = textures[texName];
+      if (!tex) continue;
+      const spr = new PIXI.Sprite(tex);
+      spr.scale.set(scale);
+      spr.position.set(g.x * TILE, g.y * TILE);
+      if (g.fading) spr.alpha = 0.45;
+      ghostLayer.addChild(spr);
+    }
     document.getElementById('dbg-player').textContent =
       state.player.x + ', ' + state.player.y;
     document.getElementById('dbg-steps').textContent = String(state.steps);
