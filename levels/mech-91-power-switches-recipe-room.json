@@ -1,0 +1,28 @@
+{
+  "name": "mech-91-power-switches-recipe-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-91-power-switches-recipe Test Level: recipe of one floor switch (F), one weight switch (W) and one toggle (T) wired to one elevator gate (E) with a 0/3 to 3/3 HUD counter; two push blocks (B) start below the plates so either plate can be held by a block; standing on the floor switch reaches 3/3 only while stood there and stepping off toward the gate drops the counter to 2/3, while leaving blocks on both plates plus the toggle holds 3/3 and calls the elevator to the orb and warp beyond",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"},
+    "F": {"label": "floor switch (held by player or block)", "text": "F", "def": "power:floor-plate"},
+    "W": {"label": "weight switch (held only by a block)", "text": "W", "def": "power:weight-plate"},
+    "T": {"base": "floor_default.png", "label": "toggle switch (latches on each press)", "text": "T", "def": "power:toggle-off"},
+    "B": {"base": "floor_default.png", "label": "push block", "text": "B", "def": "power:block"},
+    "E": {"label": "elevator gate (called only at 3/3)", "text": "E", "def": "power:elevator-gate"}
+  },
+  "rows": [
+    "###############",
+    "#P..T...#..*X.#",
+    "#.......#.....#",
+    "#..F.W..E.....#",
+    "#..B.B..#.....#",
+    "#.......#.....#",
+    "###############"
+  ]
+}
