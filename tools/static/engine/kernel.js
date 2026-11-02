@@ -136,6 +136,15 @@
           const k = key(fx.x, fx.y);
           state.meta[k] = Object.assign({}, state.meta[k]);
           state.meta[k][fx.key] = fx.value;
+        } else if (fx.type === 'addTime') {
+          // Banked time (bonus orb): raise the limit so the gain
+          // persists; recompute time left from recorded elapsed.
+          if (state.time_limit_s !== null
+              && state.time_limit_s !== undefined) {
+            state.time_limit_s += (fx.seconds || 0);
+            state.time_left_s = Math.max(0,
+              state.time_limit_s - state.elapsed_s);
+          }
         } else if (fx.type === 'teleport') {
           const a = state.actors.find((ac) => ac.id === fx.actor);
           if (a) { a.x = fx.x; a.y = fx.y; }
