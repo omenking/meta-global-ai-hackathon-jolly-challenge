@@ -1,0 +1,17 @@
+{
+  "pack": "turntable",
+  "main": "main.js",
+  "assets": [
+    {"file": "turntable-north.png", "kind": "tiles", "bundled": true,
+     "shows": "turntable in its rotating frame with the arrow pointing north"},
+    {"file": "turntable-east.png", "kind": "tiles", "bundled": true,
+     "shows": "turntable in its rotating frame with the arrow pointing east, one clockwise turn from north"},
+    {"file": "turntable-south.png", "kind": "tiles", "bundled": true,
+     "shows": "turntable in its rotating frame with the arrow pointing south"},
+    {"file": "turntable-west.png", "kind": "tiles", "bundled": true,
+     "shows": "turntable in its rotating frame with the arrow pointing west"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
