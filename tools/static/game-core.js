@@ -79,6 +79,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DirtBlockPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PowerPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TwinPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, SwapPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -155,6 +156,7 @@
     DirtBlockPack = require('./packs/dirt-block/main.js');
     PowerPack = require('./packs/power-switches/main.js');
     TwinPack = require('./packs/twin/main.js');
+    SwapPack = require('./packs/swap/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -230,6 +232,7 @@
     DirtBlockPack = root.GamePackDirtBlock;
     PowerPack = root.GamePackPowerSwitches;
     TwinPack = root.GamePackTwin;
+    SwapPack = root.GamePackSwap;
   }
 
   function createEngine(packRegisters) {
@@ -414,6 +417,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DirtBlockPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PowerPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TwinPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, SwapPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -538,6 +542,7 @@
     registerDirtBlockPack: DirtBlockPack,
     registerPowerSwitchesPack: PowerPack,
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerTwinPack: TwinPack,
+    registerSwapPack: SwapPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;

@@ -1230,6 +1230,22 @@
         // Elevator gate: shut sprite shows until the recipe counter
         // calls the elevator at 3/3, then the doorway reads open.
         dt.sprite.visible = !(state.flags && state.flags['power:called']);
+      } else if (defMap[dt.ch] === 'swap:block' ||
+          defMap[dt.ch] === 'swap:bot') {
+        // A swapped block/bot leaves its placed tile: its sprite
+        // follows the entity's current cell in state.objects.
+        let found = null;
+        for (let sy = 0; sy < state.objects.length && !found; sy++) {
+          for (let sx = 0; sx < state.objects[sy].length; sx++) {
+            if (state.objects[sy][sx] === defMap[dt.ch]) {
+              found = { x: sx, y: sy }; break;
+            }
+          }
+        }
+        dt.sprite.visible = !!found;
+        if (found && dt.sprite.isSprite) {
+          dt.sprite.position.set(found.x * TILE, found.y * TILE);
+        }
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open

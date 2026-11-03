@@ -1,0 +1,24 @@
+{
+  "name": "mech-93-swap-tile-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-93-swap-tile Test Level: swap tile (S, block shown as B) under a block in a one-wide corridor, orb behind the player, gate + warp beyond the block; swapping first puts the block between the player and the orb, collecting the orb first then swapping succeeds",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "S": {"label": "swap tile", "text": "S", "def": "swap:floor"},
+    "B": {"label": "block on swap tile", "text": "B", "def": "swap:block", "terrain": "swap:floor"},
+    "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"}
+  },
+  "rows": [
+    "##########",
+    "##########",
+    "#*P.B..GX#",
+    "##########",
+    "##########"
+  ]
+}
