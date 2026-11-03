@@ -11,6 +11,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, IcePack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, ConveyorPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TeleportPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, OneWayPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -21,6 +22,7 @@
     IcePack = require('./packs/ice/main.js');
     ConveyorPack = require('./packs/conveyor/main.js');
     TeleportPack = require('./packs/teleport/main.js');
+    OneWayPack = require('./packs/oneway/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -30,6 +32,7 @@
     IcePack = root.GamePackIce;
     ConveyorPack = root.GamePackConveyor;
     TeleportPack = root.GamePackTeleport;
+    OneWayPack = root.GamePackOneWay;
   }
 
   function createEngine(packRegisters) {
@@ -131,6 +134,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, IcePack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, ConveyorPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TeleportPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, OneWayPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -188,6 +192,7 @@
     registerIcePack: IcePack,
     registerConveyorPack: ConveyorPack,
     registerTeleportPack: TeleportPack,
+    registerOneWayPack: OneWayPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
