@@ -1,0 +1,17 @@
+{
+  "pack": "peephole",
+  "main": "main.js",
+  "assets": [
+    {"file": "peep-hole.png", "kind": "tiles", "bundled": true,
+     "shows": "peep hole tile in the floor before it is stepped on"},
+    {"file": "peep-hole-active.png", "kind": "tiles", "bundled": true,
+     "shows": "peep hole while the camera is panning, controls locked for the two-second preview"},
+    {"file": "unrevealed-room.png", "kind": "tiles", "bundled": true,
+     "shows": "next room drawn black before it is entered in person or peeped into"},
+    {"file": "jolly-peeping.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly held on the peep hole, unable to move while the camera is up"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
