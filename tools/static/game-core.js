@@ -52,6 +52,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, CheckpointPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, IceBridgePack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DarkRoomPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LanternPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -102,6 +103,7 @@
     CheckpointPack = require('./packs/checkpoint-tile/main.js');
     IceBridgePack = require('./packs/ice-bridge/main.js');
     DarkRoomPack = require('./packs/dark-room/main.js');
+    LanternPack = require('./packs/lantern/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -151,6 +153,7 @@
     CheckpointPack = root.GamePackCheckpointTile;
     IceBridgePack = root.GamePackIceBridge;
     DarkRoomPack = root.GamePackDarkRoom;
+    LanternPack = root.GamePackLantern;
   }
 
   function createEngine(packRegisters) {
@@ -292,6 +295,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, CheckpointPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, IceBridgePack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DarkRoomPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LanternPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -390,6 +394,7 @@
     DARK_LIGHT_RADIUS: DarkRoomPack.LIGHT_RADIUS,
     isDarkVisible: DarkRoomPack.isVisible,
     isDarkStateVisible: DarkRoomPack.isStateVisible,
+    registerLanternPack: LanternPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;

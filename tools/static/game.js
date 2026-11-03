@@ -521,6 +521,9 @@
         ? textures['jolly-fall.png']
         : (onDeep && textures['jolly-wading.png']
           ? textures['jolly-wading.png'] : textures['jolly.png']);
+        : (state.counters && state.counters['lantern:held'] > 0
+          && textures['jolly-with-lantern.png']
+          ? textures['jolly-with-lantern.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     for (const as of actorSprites) {
@@ -853,6 +856,15 @@
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
         dt.sprite.visible = !!(state.grid[dt.y]
           && state.grid[dt.y][dt.x] === 'K');
+      } else if (dt.ch === '*' && state.counters
+          && typeof state.counters['lantern:radius'] === 'number') {
+        // Lantern room: an orb is drawn only inside the light
+        // radius (two tiles, four with the lantern); it still
+        // exists and collects by walking onto it either way.
+        const lanternPack = window.GamePackLantern;
+        dt.sprite.visible = !!(state.grid[dt.y]
+          && state.grid[dt.y][dt.x] === dt.ch)
+          && lanternPack.isLit(state, dt.x, dt.y);
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
