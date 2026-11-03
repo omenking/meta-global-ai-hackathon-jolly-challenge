@@ -1,0 +1,15 @@
+{
+  "pack": "heavy-orb",
+  "main": "main.js",
+  "assets": [
+    {"file": "scale.png", "kind": "tiles", "bundled": true,
+     "shows": "empty scale tile waiting for a heavy orb"},
+    {"file": "scale-locked.png", "kind": "tiles", "bundled": true,
+     "shows": "scale tile with a heavy orb locked on it and counted as collected"},
+    {"file": "heavy-orb.png", "kind": "blocks", "bundled": true,
+     "shows": "heavy orb as a solid pushable block, never walked over"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

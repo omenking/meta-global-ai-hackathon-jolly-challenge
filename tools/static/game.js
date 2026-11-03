@@ -544,6 +544,28 @@
         const present = !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === 'H');
         const lit = Math.max(Math.abs(dt.x - state.player.x), Math.abs(dt.y - state.player.y)) <= 2;
         dt.sprite.visible = present && lit;
+      } else if (dt.ch === 'H') {
+        // Heavy orb: the sprite follows the orb as it is pushed; a
+        // locked orb (heavy:orb-locked on the scale) shows the
+        // locked art instead of the loose orb art.
+        let ox = -1, oy = -1, locked = false;
+        if (state.objects) {
+          for (let yy = 0; yy < state.objects.length && ox < 0; yy++) {
+            for (let xx = 0; xx < state.objects[yy].length; xx++) {
+              const id = state.objects[yy][xx];
+              if (id === 'heavy:orb' || id === 'heavy:orb-locked') {
+                ox = xx; oy = yy; locked = id === 'heavy:orb-locked';
+                break;
+              }
+            }
+          }
+        }
+        dt.sprite.visible = ox >= 0;
+        if (ox >= 0) {
+          dt.sprite.position.set(ox * TILE, oy * TILE);
+          const tex = textures[locked ? 'scale-locked.png' : 'heavy-orb.png'];
+          if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+        }
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open

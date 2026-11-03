@@ -21,6 +21,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MasterKeyPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TimedOrbPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, HiddenPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, HeavyPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -41,6 +42,7 @@
     MasterKeyPack = require('./packs/master-key/main.js');
     TimedOrbPack = require('./packs/timed-orb/main.js');
     HiddenPack = require('./packs/hidden-orb/main.js');
+    HeavyPack = require('./packs/heavy-orb/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -60,6 +62,7 @@
     MasterKeyPack = root.GamePackMasterKey;
     TimedOrbPack = root.GamePackTimedOrb;
     HiddenPack = root.GamePackHiddenOrb;
+    HeavyPack = root.GamePackHeavyOrb;
   }
 
   function createEngine(packRegisters) {
@@ -171,6 +174,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MasterKeyPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TimedOrbPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, HiddenPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, HeavyPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
