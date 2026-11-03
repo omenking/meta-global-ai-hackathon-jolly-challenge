@@ -1118,6 +1118,24 @@
     for (; mimicIdx < mimicPool.length; mimicIdx++) mimicPool[mimicIdx].visible = false;
     if (mapOverlay) {
       mapOverlay.visible = !!(state.flags && state.flags['map_overlay_active']);
+    // Bomb blocks slide: their sprites follow the live bomb cells
+    // in state instead of the cell the level placed them on, and a
+    // consumed bomb's sprite hides. A cracked wall ('W') needs no
+    // follow: the loop above hides it once its grid char becomes
+    // floor, revealing the floor-after-blast base underneath.
+    const bombTiles = dynamicTiles.filter((dt) => dt.ch === 'B');
+    if (bombTiles.length) {
+      const bombCells = [];
+      for (let by = 0; by < state.grid.length; by++) {
+        for (let bx = 0; bx < state.grid[by].length; bx++) {
+          if (state.grid[by][bx] === 'B') bombCells.push({ x: bx, y: by });
+        }
+      }
+      bombTiles.forEach((dt, i) => {
+        const cell = bombCells[i];
+        dt.sprite.visible = !!cell;
+        if (cell) dt.sprite.position.set(cell.x * TILE, cell.y * TILE);
+      });
     }
     retryGroup.visible = state.status === 'lost';
     // The HUD win screen is only for the last level; mid-chain a

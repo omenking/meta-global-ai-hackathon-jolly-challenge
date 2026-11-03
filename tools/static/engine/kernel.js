@@ -141,6 +141,7 @@
         state.last_effects.push(fx.type);
         if (fx.type === 'removeObject') state.objects[fx.y][fx.x] = null;
         else if (fx.type === 'setObject') state.objects[fx.y][fx.x] = fx.def;
+        else if (fx.type === 'setTerrain') state.terrain[fx.y][fx.x] = fx.def;
         else if (fx.type === 'giveItem') {
           if (state.inventory.length < INVENTORY_CAP) state.inventory.push({ item: fx.item });
         } else if (fx.type === 'consumeItem') {
