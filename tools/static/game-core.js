@@ -67,6 +67,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, HourglassPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, StillPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, GhostPack;
+  let MoveDoorPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -132,6 +133,7 @@
     HourglassPack = require('./packs/hourglass/main.js');
     StillPack = require('./packs/still/main.js');
     GhostPack = require('./packs/ghost/main.js');
+    MoveDoorPack = require('./packs/movedoor/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -196,6 +198,7 @@
     HourglassPack = root.GamePackHourglass;
     StillPack = root.GamePackStill;
     GhostPack = root.GamePackGhost;
+    MoveDoorPack = root.GamePackMoveDoor;
   }
 
   function createEngine(packRegisters) {
@@ -365,6 +368,8 @@
   // read the held value, not the raw recorded elapsed time.
   const engine = createEngine([StillPack, CorePack, KeysPack, WaterPack, CrumblePack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, GhostPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack,
+    MoveDoorPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -478,6 +483,7 @@
     registerHourglassPack: HourglassPack,
     registerStillPack: StillPack,
     registerGhostPack: GhostPack,
+    registerMoveDoorPack: MoveDoorPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;

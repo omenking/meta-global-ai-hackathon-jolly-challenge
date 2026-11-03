@@ -1,0 +1,16 @@
+{
+  "pack": "movedoor",
+  "main": "main.js",
+  "assets": [
+    {"file": "move-door-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "move door closed before the 50th move, move count still short"},
+    {"file": "move-door-open.png", "kind": "tiles", "bundled": true,
+     "shows": "move door open from the 50th move onward, permanently open"}
+  ],
+  "jolly_states": [],
+  "gui": [
+    {"file": "move-counter.png", "kind": "gui", "bundled": true,
+     "shows": "move counter in the HUD showing move inputs this attempt, opening the door at fifty"}
+  ],
+  "blocks": []
+}

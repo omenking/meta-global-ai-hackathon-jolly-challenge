@@ -318,7 +318,8 @@
   hudColumn.addChild(hudBg);
   app.stage.addChild(hudColumn);
   const hudSections = [];
-  const hudValues = { timer: 0, orbs: 0, level: 0, inventory: [] };
+  const hudValues = { timer: 0, orbs: 0, level: 0, inventory: [],
+    moves: 0 };
   function addHudSection(group, height) {
     hudColumn.addChild(group);
     hudSections.push({ group: group, height: height });
@@ -401,6 +402,27 @@
   insertHudSection(orbsReadout.group, orbsReadout.height, 1);
   const levelReadout = makeReadout('level');
   insertHudSection(levelReadout.group, levelReadout.height, 0);
+  // Move counter (mech-79-move-door): shown only in move-door
+  // rooms, where the movedoor pack maintains the movedoor:moves
+  // counter; the value comes from GameCore state like every other
+  // readout, and the pack's bundled counter icon labels it.
+  let movesReadout = null;
+  if (Object.values(defMap).includes('movedoor:door')) {
+    movesReadout = makeReadout('moves');
+    if (textures['move-counter.png']) {
+      const icon = new PIXI.Sprite(textures['move-counter.png']);
+      icon.width = 44; icon.height = 44;
+      icon.position.set(HUD_W / 2 - 22, 0);
+      movesReadout.group.addChild(icon);
+    } else {
+      const movesLabel = new PIXI.Text({ text: 'MOVES', style: {
+        fontSize: 15, fill: 0x111111, fontWeight: 'bold' } });
+      movesLabel.anchor.set(0.5, 0);
+      movesLabel.position.set(HUD_W / 2, 2);
+      movesReadout.group.addChild(movesLabel);
+    }
+    insertHudSection(movesReadout.group, movesReadout.height, 2);
+  }
   // Inventory: no box asset exists, so the 8 slots are drawn here
   // (dark inset squares) in the column foot; held keys show their
   // colour icon from the derived key sprites.
@@ -1002,6 +1024,19 @@
         const tex = textures[occupied ? 'still-held.png' : 'still.png'];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
         dt.sprite.visible = true;
+      } else if (dt.ch === 'D') {
+        // Move door: the glyph stays 'D'; the bundled sprite
+        // follows the move_open meta the movedoor pack tick hook
+        // maintains (closed under fifty moves, permanently open
+        // from the 50th move onward).
+        const dmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const dtexName = dmeta && dmeta.move_open
+          ? 'move-door-open.png' : 'move-door-closed.png';
+        const dtex = textures[dtexName];
+        if (dtex && dt.sprite.texture !== dtex) {
+          dt.sprite.texture = dtex;
+        }
+        dt.sprite.visible = true;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
@@ -1038,6 +1073,11 @@
     orbsReadout.set(hudValues.orbs);
     hudValues.level = window.GameHud.levelNumber(level, state.level);
     levelReadout.set(hudValues.level);
+    if (movesReadout) {
+      hudValues.moves = (state.counters
+        && state.counters['movedoor:moves']) || 0;
+      movesReadout.set(hudValues.moves);
+    }
     hudValues.inventory = window.GameHud.inventorySlots(
       window.GameCore.readout(state).inventory);
     setInventory(hudValues.inventory);
