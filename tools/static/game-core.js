@@ -63,6 +63,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, CleatsPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MagnetPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LanternPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PouchPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -124,6 +125,7 @@
     CleatsPack = require('./packs/ice-cleats/main.js');
     MagnetPack = require('./packs/magnet-glove/main.js');
     LanternPack = require('./packs/lantern-oil/main.js');
+    PouchPack = require('./packs/orb-pouch/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -184,6 +186,7 @@
     CleatsPack = root.GamePackIceCleats;
     MagnetPack = root.GamePackMagnetGlove;
     LanternPack = root.GamePackLanternOil;
+    PouchPack = root.GamePackOrbPouch;
   }
 
   function createEngine(packRegisters) {
@@ -213,12 +216,17 @@
         }
         grid.push(row);
       }
-      const orbs = typeof state.counters['core:orbs_left'] === 'number'
+      const pouch = typeof state.counters['pouch:held'] === 'number';
+      const orbs = pouch ? state.counters['pouch:held']
+        : (typeof state.counters['core:orbs_left'] === 'number'
         ? state.counters['core:orbs_left']
-        : state.objects.flat().filter((id) => id === 'core:orb').length;
+        : state.objects.flat().filter((id) => id === 'core:orb').length);
+      const gateOpen = pouch
+        ? (state.counters['pouch:spent'] || 0) >= (state.counters['pouch:gate_cost'] || 2)
+        : orbs === 0;
       return Object.assign({}, state, { grid: grid,
         player: player ? { x: player.x, y: player.y } : { x: 0, y: 0 },
-        orbs_left: orbs, gate_open: orbs === 0,
+        orbs_left: orbs, gate_open: gateOpen,
         key_tiles: maps ? maps.keyTiles : (state.key_tiles || {}),
         lock_tiles: maps ? maps.lockTiles : (state.lock_tiles || {}) });
     }
@@ -244,7 +252,8 @@
       const orbs = typeof state.orbs_left === 'number' ? state.orbs_left
         : (state.counters || {})['core:orbs_left'];
       return { step: state.steps, position: { x: state.player.x, y: state.player.y },
-        inventory: inv, orbs_left: orbs, gate_open: orbs === 0,
+        inventory: inv, orbs_left: orbs,
+        gate_open: typeof state.gate_open === 'boolean' ? state.gate_open : orbs === 0,
         status: state.status || 'playing',
         next_level: state.next_level === undefined ? null : state.next_level,
         timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
@@ -336,6 +345,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, CleatsPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MagnetPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LanternPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PouchPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -445,6 +455,7 @@
     registerIceCleatsPack: CleatsPack,
     registerMagnetPack: MagnetPack,
     registerLanternOilPack: LanternPack,
+    registerOrbPouchPack: PouchPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
