@@ -1,0 +1,15 @@
+{
+  "pack": "timed-orb",
+  "main": "main.js",
+  "assets": [
+    {"file": "timed-orb.png", "kind": "tiles", "bundled": true,
+     "shows": "timed orb not yet seen, with no ring started"},
+    {"file": "timed-orb-ringing.png", "kind": "tiles", "bundled": true,
+     "shows": "timed orb with its countdown ring showing the seconds left"},
+    {"file": "timed-orb-reforming.png", "kind": "tiles", "bundled": true,
+     "shows": "faint timed orb reforming on its start tile during the 5 seconds after it dissolves"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
