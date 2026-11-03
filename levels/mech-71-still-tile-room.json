@@ -1,0 +1,25 @@
+{
+  "name": "mech-71-still-tile-room",
+  "time_limit": 60,
+  "test": true,
+  "source": "mech-71-still-tile Test Level: still tile (S) in an open room in sight of the crossing to the orb and warp; standing on S holds the timer, standing beside it does not, stepping off resumes the clock",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "S": {"base": "floor_default.png", "label": "still tile", "text": "S", "def": "still:still"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"}
+  },
+  "rows": [
+    "#############",
+    "#P..S.....*.#",
+    "#...........#",
+    "#.....X.....#",
+    "#...........#",
+    "#...........#",
+    "#...........#",
+    "#############"
+  ]
+}

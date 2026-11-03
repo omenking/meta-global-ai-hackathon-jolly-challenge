@@ -372,6 +372,15 @@
       } };
   }
   const timeReadout = makeReadout('time');
+  // Held icon (still pack): shown beside the timer while held.
+  const heldIcon = textures['timer-held.png']
+    ? new PIXI.Sprite(textures['timer-held.png']) : null;
+  if (heldIcon) {
+    heldIcon.width = 36; heldIcon.height = 36;
+    heldIcon.position.set(HUD_W - 44, 8);
+    heldIcon.visible = false;
+    timeReadout.group.addChild(heldIcon);
+  }
   const hudTimer = timeReadout.text;
   // Frozen timer display (hourglass pack gui asset): shown over
   // the time readout while the level timer is frozen.
@@ -575,6 +584,12 @@
         ? textures['jolly-fall.png']
         : ((state.flags || {})['peep:active'] && textures['jolly-peeping.png']
           ? textures['jolly-peeping.png'] : textures['jolly.png']);
+      // Fallen pose while the run is lost, thinking pose while the
+      // timer is held on a still tile, normal pose otherwise.
+      const pose = state.status === 'lost' && textures['jolly-fall.png']
+        ? textures['jolly-fall.png']
+        : (state.flags && state.flags['still:held'] && textures['jolly-still.png']
+          ? textures['jolly-still.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     for (const as of actorSprites) {
@@ -966,6 +981,12 @@
         const ptex = textures[(state.flags || {})['peep:active']
           ? 'peep-hole-active.png' : 'peep-hole.png'];
         if (ptex && dt.sprite.texture !== ptex) dt.sprite.texture = ptex;
+      } else if (dt.ch === 'S') {
+        // Still tile: held art while the player stands on it.
+        const occupied = state.player.x === dt.x && state.player.y === dt.y;
+        const tex = textures[occupied ? 'still-held.png' : 'still.png'];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+        dt.sprite.visible = true;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
@@ -1005,6 +1026,9 @@
     hudValues.inventory = window.GameHud.inventorySlots(
       window.GameCore.readout(state).inventory);
     setInventory(hudValues.inventory);
+    if (heldIcon) {
+      heldIcon.visible = !!(state.flags && state.flags['still:held']);
+    }
     drawHud(state.elapsed_s, state.time_limit_s);
     const bannerEl = document.getElementById('info-banner');
     if (bannerEl) {
