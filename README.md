@@ -1,5 +1,6 @@
 # Meta-Global-AI-Hackathon Jolly's Challenge
 
+- [Retrospective](./docs/retrospective.md)
 - [Technical Uncertainty](./docs/technical-uncertainty.md)
 - [Technical Limitations](.docs/technical-limitations.md)
 - [Game Environment](./docs/game-env.md)
