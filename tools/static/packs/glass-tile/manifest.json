@@ -1,0 +1,15 @@
+{
+  "pack": "glass-tile",
+  "main": "main.js",
+  "assets": [
+    {"file": "glass.png", "kind": "tiles", "bundled": true,
+     "shows": "intact glass over a drop, never yet crossed"},
+    {"file": "glass-cracked.png", "kind": "tiles", "bundled": true,
+     "shows": "glass after its first crossing, one return left"},
+    {"file": "void.png", "kind": "tiles", "bundled": true,
+     "shows": "hole after the second crossing shatters it"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
