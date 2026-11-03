@@ -440,9 +440,14 @@
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
         state.player.y * TILE);
-      // Fallen pose while the run is lost, normal pose otherwise.
+      // Fallen pose while the run is lost, launching pose on the
+      // step a bounce launch lands, normal pose otherwise.
+      const launching = state.status !== 'lost' &&
+        (state.last_effects || []).indexOf('bounceLaunch') >= 0 &&
+        textures['jolly-launching.png'];
       const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png'] : textures['jolly.png'];
+        ? textures['jolly-fall.png']
+        : (launching ? textures['jolly-launching.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     marker.clear();
@@ -475,6 +480,17 @@
         const texName = gc === 'V' ? 'void.png'
           : (cstage >= 2 ? 'crumbling-major.png'
             : (cstage === 1 ? 'crumbling-minor.png' : 'crumbling.png'));
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'B') {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'B';
+        // Rest vs compressed art follows the pad stage in cell
+        // meta (1 compressing / 2 ready both read as compressed).
+        const bmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const bstage = (bmeta && bmeta.bounce_stage) || 0;
+        const texName = bstage >= 1 ? 'bounce-pad-compressed.png'
+          : 'bounce-pad.png';
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
