@@ -14,6 +14,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, OneWayPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, BouncePack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TurntablePack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, StickyPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -27,6 +28,7 @@
     OneWayPack = require('./packs/oneway/main.js');
     BouncePack = require('./packs/bounce/main.js');
     TurntablePack = require('./packs/turntable/main.js');
+    StickyPack = require('./packs/sticky/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -39,6 +41,7 @@
     OneWayPack = root.GamePackOneWay;
     BouncePack = root.GamePackBounce;
     TurntablePack = root.GamePackTurntable;
+    StickyPack = root.GamePackSticky;
   }
 
   function createEngine(packRegisters) {
@@ -143,6 +146,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, OneWayPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, BouncePack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TurntablePack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, StickyPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -203,6 +207,7 @@
     registerOneWayPack: OneWayPack,
     registerBouncePack: BouncePack,
     registerTurntablePack: TurntablePack,
+    registerStickyPack: StickyPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
