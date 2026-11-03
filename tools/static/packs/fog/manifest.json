@@ -1,0 +1,15 @@
+{
+  "pack": "fog",
+  "main": "main.js",
+  "assets": [
+    {"file": "fog.png", "kind": "tiles", "bundled": true,
+     "shows": "unrevealed fog tile hiding whatever is on it, even in a lit room"},
+    {"file": "fog-revealed.png", "kind": "tiles", "bundled": true,
+     "shows": "fog tile after the player has stood next to it, revealed empty and staying revealed"},
+    {"file": "fog-revealed-orb.png", "kind": "tiles", "bundled": true,
+     "shows": "fog tile revealed by adjacency with the orb on it now visible"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

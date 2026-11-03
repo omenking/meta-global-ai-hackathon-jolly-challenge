@@ -865,6 +865,19 @@
         dt.sprite.visible = !!(state.grid[dt.y]
           && state.grid[dt.y][dt.x] === dt.ch)
           && lanternPack.isLit(state, dt.x, dt.y);
+      } else if (dt.ch === 'F' || dt.ch === 'f') {
+        // Fog (mech-53): unrevealed fog always shows fog.png and
+        // hides its contents; revealed fog shows the empty tile or
+        // the orb on it, and stays revealed for the attempt (the
+        // reveal itself lives in cell meta via the fog pack).
+        const gcF = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gcF === 'F' || gcF === 'f';
+        const fmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const frevealed = !!(fmeta && fmeta.fog_revealed);
+        const ftexName = !frevealed ? 'fog.png'
+          : (gcF === 'f' ? 'fog-revealed-orb.png' : 'fog-revealed.png');
+        const ftex = textures[ftexName];
+        if (ftex && dt.sprite.texture !== ftex) dt.sprite.texture = ftex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
