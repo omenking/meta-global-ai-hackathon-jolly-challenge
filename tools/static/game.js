@@ -539,6 +539,11 @@
             : 'timed-orb.png');
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'H') {
+        // Hidden orb: drawn only inside light radius (Chebyshev <=2).
+        const present = !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === 'H');
+        const lit = Math.max(Math.abs(dt.x - state.player.x), Math.abs(dt.y - state.player.y)) <= 2;
+        dt.sprite.visible = present && lit;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
