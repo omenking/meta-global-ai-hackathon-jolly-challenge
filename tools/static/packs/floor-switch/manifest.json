@@ -1,0 +1,23 @@
+{
+  "pack": "floor-switch",
+  "main": "main.js",
+  "assets": [
+    {"file": "floor-switch-unpressed.png", "kind": "tiles", "bundled": true,
+     "shows": "floor switch plate with nothing on it, linked door closed"},
+    {"file": "floor-switch-pressed.png", "kind": "tiles", "bundled": true,
+     "shows": "floor switch plate pressed flat under an occupant, linked door open"},
+    {"file": "door-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "closed door blocking the doorway like wall"},
+    {"file": "door-open.png", "kind": "tiles", "bundled": true,
+     "shows": "open door, walkable doorway with the frame held open"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-on-plate.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly standing on the floor switch plate holding the door open"}
+  ],
+  "gui": [],
+  "blocks": [
+    {"file": "push-block.png", "kind": "blocks", "bundled": true,
+     "shows": "push block that can be left on the plate to hold the door, per mechanic 81 in blocks.yml"}
+  ]
+}

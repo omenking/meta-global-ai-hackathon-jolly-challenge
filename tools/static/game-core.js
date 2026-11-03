@@ -25,6 +25,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack;
   let GuardedPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, BonusPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, FloorSwitchPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -48,6 +49,7 @@
     HeavyPack = require('./packs/heavy-orb/main.js');
     GuardedPack = require('./packs/guarded-orb/main.js');
     BonusPack = require('./packs/bonus-orb/main.js');
+    FloorSwitchPack = require('./packs/floor-switch/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -70,6 +72,7 @@
     HeavyPack = root.GamePackHeavyOrb;
     GuardedPack = root.GamePackGuardedOrb;
     BonusPack = root.GamePackBonusOrb;
+    FloorSwitchPack = root.GamePackFloorSwitch;
   }
 
   function createEngine(packRegisters) {
@@ -184,6 +187,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, HeavyPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, GuardedPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, BonusPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, FloorSwitchPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -253,6 +257,7 @@
     registerHiddenOrbPack: HiddenPack,
     registerGuardedOrbPack: GuardedPack,
     registerBonusOrbPack: BonusPack,
+    registerFloorSwitchPack: FloorSwitchPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
