@@ -8,6 +8,7 @@
     const tiles = new Map(), items = new Map(), assets = new Map();
     const levelDefHooks = [], levelHooks = [], tickHooks = [], controllers = new Map();
     const beforeMoveHooks = [];
+    const levelDefHooks = [], levelHooks = [], tickHooks = [], timerHooks = [], controllers = new Map();
     const api = {
       defineTile: function (id, def) { tiles.set(id, Object.assign({ id: id }, def)); },
       defineItem: function (id, def) { items.set(id, Object.assign({ id: id }, def)); },
@@ -36,12 +37,18 @@
       // move is attempted: fn(state, actor, dirName) may mutate the
       // (already cloned) state and returns false to veto the move.
       onBeforeMove: function (fn) { beforeMoveHooks.push(fn); },
+      // Timer hooks map (previous state, input t_ms) to the
+      // effective elapsed seconds the level timer should show;
+      // packs use them to freeze or slow the clock deterministically
+      // from recorded t_ms only (never wall-clock).
+      onTimer: function (fn) { timerHooks.push(fn); },
       defineController: function (defId, fn) { controllers.set(defId, fn); },
       getTile: function (id) { return tiles.get(id) || null; },
       getItem: function (id) { return items.get(id) || null; },
       getController: function (defId) { return controllers.get(defId) || null; },
       _levelDefHooks: levelDefHooks, _levelHooks: levelHooks, _tickHooks: tickHooks,
       _beforeMoveHooks: beforeMoveHooks,
+      _levelDefHooks: levelDefHooks, _levelHooks: levelHooks, _tickHooks: tickHooks, _timerHooks: timerHooks,
       tileIds: function () { return [...tiles.keys()]; },
     };
     api.registerPack = function (registerFn) { registerFn(api); return api; };

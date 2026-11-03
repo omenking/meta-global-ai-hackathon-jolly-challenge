@@ -1,0 +1,15 @@
+{
+  "pack": "hourglass",
+  "main": "main.js",
+  "assets": [
+    {"file": "hourglass.png", "kind": "tiles", "bundled": true,
+     "shows": "hourglass tile before collection, ready to fire on the step that collects it"},
+    {"file": "hourglass-spent.png", "kind": "tiles", "bundled": true,
+     "shows": "floor left after the hourglass is collected and its freeze has started"},
+    {"file": "timer-frozen.png", "kind": "gui", "bundled": true,
+     "shows": "frozen timer display held at its collection value for the 10 frozen seconds"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

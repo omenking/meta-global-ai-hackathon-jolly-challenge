@@ -1,0 +1,27 @@
+{
+  "name": "mech-69-hourglass-room",
+  "time_limit": 25,
+  "test": true,
+  "source": "mech-69-hourglass Test Level: early hourglass (H at 3,1) on the main path near the start wastes its 10s freeze on the easy opening; late hourglass (H at 7,3) just before the gate (G at 8,3) freezes the timer for the hard room (warp X at 11,3); two orbs on the easy side open the gate",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
+    "X": {"base": "floor_default.png", "label": "warp (exit)", "sprite": "portal.png"},
+    "H": {"base": "floor_default.png", "label": "hourglass", "text": "H", "def": "hourglass:hourglass"}
+  },
+  "rows": [
+    "###############",
+    "#P.H.*..#.....#",
+    "#.......#.....#",
+    "#......HG..X..#",
+    "#.......#.....#",
+    "#.*.....#.....#",
+    "#.......#.....#",
+    "#.......#.....#",
+    "###############"
+  ]
+}

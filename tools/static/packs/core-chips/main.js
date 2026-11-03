@@ -34,8 +34,10 @@
     // Timer rule: the kernel owns the clock; this pack decides that
     // reaching the limit loses the run (an untimed mode omits it).
     api.onTick(function (state, fx) {
+      const clock = typeof state.effective_elapsed_s === 'number'
+        ? state.effective_elapsed_s : state.elapsed_s;
       if (state.time_limit_s !== null && state.time_limit_s !== undefined
-          && state.elapsed_s >= state.time_limit_s) fx.push({ type: 'lose' });
+          && clock >= state.time_limit_s) fx.push({ type: 'lose' });
     });
     api.onLevelDefs(function (level, ch, e) {
       if (!ch) return null;
