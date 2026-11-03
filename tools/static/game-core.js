@@ -72,6 +72,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, IceBlockPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack,
     BombPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MirrorPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -141,6 +142,7 @@
     PushBlockPack = require('./packs/push-block/main.js');
     IceBlockPack = require('./packs/ice-block/main.js');
     BombPack = require('./packs/bomb-block/main.js');
+    MirrorPack = require('./packs/mirror-block/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -209,6 +211,7 @@
     PushBlockPack = root.GamePackPushBlock;
     IceBlockPack = root.GamePackIceBlock;
     BombPack = root.GamePackBombBlock;
+    MirrorPack = root.GamePackMirrorBlock;
   }
 
   function createEngine(packRegisters) {
@@ -383,6 +386,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PushBlockPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, IceBlockPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, BombPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MirrorPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -500,6 +504,7 @@
     registerPushBlockPack: PushBlockPack,
     registerIceBlockPack: IceBlockPack,
     registerBombPack: BombPack,
+    registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerMirrorPack: MirrorPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;

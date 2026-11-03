@@ -308,6 +308,19 @@
   // redrawn from state on every step like the player sprite.
   const ghostLayer = new PIXI.Container();
   board.addChild(ghostLayer);
+  // Enemy actors (mirror pack patrollers/guards) are state actors,
+  // not tiles: one labelled marker per non-player actor, following
+  // state on every render like the player sprite does.
+  const enemySprites = [];
+  for (const a of state.actors) {
+    if (a.id === 'player') continue;
+    const et = new PIXI.Text({ text: 'E', style: {
+      fontSize: 40, fill: 0xff4444, fontWeight: 'bold',
+      stroke: { color: 0x111111, width: 5 } } });
+    et.anchor.set(0.5);
+    board.addChild(et);
+    enemySprites.push({ id: a.id, sprite: et });
+  }
   // Right-hand column: grey panel like the original side panel.
   // Each readout is a label sprite over a backplate box holding
   // three blue digit sprites; values come only from GameHud helpers
@@ -1100,6 +1113,18 @@
           }
         }
         dt.sprite.visible = !held;
+      } else if (dt.ch === 'M') {
+        // The mirror block moves when pushed: its sprite follows
+        // the 'M' cell in the projected grid, not its start tile.
+        let mx = -1, my = -1;
+        for (let gy = 0; gy < state.grid.length; gy++) {
+          const gx = state.grid[gy].indexOf('M');
+          if (gx >= 0) { mx = gx; my = gy; break; }
+        }
+        dt.sprite.visible = mx >= 0;
+        if (mx >= 0 && dt.sprite.position) {
+          dt.sprite.position.set(mx * TILE, my * TILE);
+        }
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
@@ -1136,6 +1161,10 @@
         dt.sprite.visible = !!cell;
         if (cell) dt.sprite.position.set(cell.x * TILE, cell.y * TILE);
       });
+    for (const es of enemySprites) {
+      const ea = state.actors.find((a) => a.id === es.id);
+      if (ea) es.sprite.position.set(ea.x * TILE + TILE / 2, ea.y * TILE + TILE / 2);
+      es.sprite.visible = !!ea;
     }
     retryGroup.visible = state.status === 'lost';
     // The HUD win screen is only for the last level; mid-chain a
