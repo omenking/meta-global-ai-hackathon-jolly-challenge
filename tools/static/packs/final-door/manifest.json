@@ -1,0 +1,15 @@
+{
+  "pack": "final-door",
+  "main": "main.js",
+  "assets": [
+    {"file": "final-door-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "closed final door needing one key of each colour held at once, unchanged while any colour is missing"},
+    {"file": "final-door-open.png", "kind": "tiles", "bundled": true,
+     "shows": "final door opened permanently after the full colour check, passable with every checked key still held"},
+    {"file": "final-door-colour-check.png", "kind": "gui", "bundled": true,
+     "shows": "one held key of each colour across the player and mule bot inventory rows, none of them consumed by the door"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

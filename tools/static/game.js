@@ -857,6 +857,13 @@
         const texName = gc === 'h' ? 'hourglass-spent.png' : 'hourglass.png';
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+        const gcDoor = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gcDoor === 'D' || gcDoor === 'd';
+        const doorTex = textures[gcDoor === 'd'
+          ? 'final-door-open.png' : 'final-door-closed.png'];
+        if (doorTex && dt.sprite.texture !== doorTex) {
+          dt.sprite.texture = doorTex;
+        }
       } else if (dt.ch === 'C') {
         const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
         dt.sprite.visible = gc === 'C' || gc === 'V';
