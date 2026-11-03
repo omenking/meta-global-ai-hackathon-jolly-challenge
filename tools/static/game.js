@@ -777,6 +777,7 @@
       }
     }
     let iceIdx = 0;
+    renderState._dirtPos = null;
     for (const dt of dynamicTiles) {
       if (dt.ch === 'I') {
         const bp = iceBlocks[iceIdx++];
@@ -1178,6 +1179,26 @@
       } else if (dt.ch === 'B' || dt.ch === 'H') {
         // Pushable blocks move: this sprite is pooled below.
         dt.sprite.visible = false;
+      } else if (dt.ch === 'D') {
+        // The dirt blocks move and are consumed into floor: their
+        // sprites follow the dirt:dirt-block cells in live state
+        // (assigned in row order; the art is identical, so which
+        // sprite follows which block does not matter) and a sprite
+        // hides once its block has been spent filling a tile.
+        if (!renderState._dirtPos) {
+          renderState._dirtPos = [];
+          for (let gy = 0; gy < state.height; gy++) {
+            for (let gx = 0; gx < state.width; gx++) {
+              if (state.objects[gy][gx] === 'dirt:dirt-block') {
+                renderState._dirtPos.push({ x: gx, y: gy });
+              }
+            }
+          }
+          renderState._dirtSeen = 0;
+        }
+        const dPos = renderState._dirtPos[renderState._dirtSeen++];
+        dt.sprite.visible = !!dPos;
+        if (dPos) dt.sprite.position.set(dPos.x * TILE, dPos.y * TILE);
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open

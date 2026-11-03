@@ -1,0 +1,27 @@
+{
+  "name": "mech-90-dirt-block-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-90-dirt-block Test Level: two dirt blocks (D) and a two-tile shallow water channel (~~) in a wall divider; the far block in the west lane fills the west channel tile first, then the near block from the north alcove is pushed south onto the filled tile and east to fill the second tile; filling the nearest tile first with the easy alcove block leaves the crossing half-finished and the room must be restarted",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"label": "warp", "sprite": "portal.png"},
+    "D": {"base": "floor_default.png", "label": "dirt block", "def": "dirt:dirt-block"},
+    "~": {"base": "floor_default.png", "label": "shallow water", "text": "~", "def": "dirt:shallow"}
+  },
+  "rows": [
+    "#############",
+    "#P......#...#",
+    "#......D#...#",
+    "#.......#...#",
+    "#..D...~~.*X#",
+    "#......##...#",
+    "#......##...#",
+    "#......##...#",
+    "#############"
+  ]
+}
