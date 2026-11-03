@@ -906,6 +906,13 @@
         const texName = (imeta && imeta.info_read)
           ? 'info-read.png' : 'info.png';
         const tex = textures[texName];
+      } else if (dt.ch === 'S') {
+        // Secret wall: drawn as a wall until first walked through,
+        // then the faded sprite keeps the opening known ('s').
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'S' || gc === 's';
+        const tex = textures[gc === 's'
+          ? 'secret-wall-faded.png' : 'secret-wall.png'];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
