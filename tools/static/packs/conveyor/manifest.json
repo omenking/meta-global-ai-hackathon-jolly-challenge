@@ -1,0 +1,20 @@
+{
+  "pack": "conveyor",
+  "main": "main.js",
+  "assets": [
+    {"file": "conveyor-north.png", "kind": "tiles", "bundled": true,
+     "shows": "conveyor belt with its arrow pointing north, carrying the player that way"},
+    {"file": "conveyor-east.png", "kind": "tiles", "bundled": true,
+     "shows": "conveyor belt with its arrow pointing east, carrying the player that way"},
+    {"file": "conveyor-south.png", "kind": "tiles", "bundled": true,
+     "shows": "conveyor belt with its arrow pointing south, carrying the player that way"},
+    {"file": "conveyor-west.png", "kind": "tiles", "bundled": true,
+     "shows": "conveyor belt with its arrow pointing west, carrying the player that way"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-carried.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly standing on a conveyor, carried one tile in the arrow direction at the start of a move"}
+  ],
+  "gui": [],
+  "blocks": []
+}

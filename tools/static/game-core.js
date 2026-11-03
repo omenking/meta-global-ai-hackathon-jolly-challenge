@@ -9,6 +9,7 @@
 (function (root) {
   'use strict';
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, IcePack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, ConveyorPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -17,6 +18,7 @@
     WaterPack = require('./packs/proof-water/main.js');
     CrumblePack = require('./packs/crumbling/main.js');
     IcePack = require('./packs/ice/main.js');
+    ConveyorPack = require('./packs/conveyor/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -24,6 +26,7 @@
     WaterPack = root.GamePackProofWater;
     CrumblePack = root.GamePackCrumbling;
     IcePack = root.GamePackIce;
+    ConveyorPack = root.GamePackConveyor;
   }
 
   function createEngine(packRegisters) {
@@ -123,6 +126,7 @@
   }
 
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, IcePack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, ConveyorPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -178,6 +182,7 @@
     registerCorePack: CorePack, registerKeysPack: KeysPack,
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack,
     registerIcePack: IcePack,
+    registerConveyorPack: ConveyorPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;

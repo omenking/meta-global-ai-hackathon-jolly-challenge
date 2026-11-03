@@ -1,0 +1,31 @@
+{
+  "name": "mech-2-conveyor-tile-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-2-conveyor-tile Test Level: two conveyor belts meet on a normal tile; the east belt runs to the exit chamber, the south belt runs to a void hazard; the route is chosen on the normal tile before the belt takes over",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "?": {"base": "floor_default.png", "label": "info", "text": "?"},
+    "X": {"base": "floor_default.png", "label": "portal (exit)", "sprite": "portal.png"},
+    ">": {"base": "floor_default.png", "label": "conveyor east", "sprite": "conveyor-east.png", "def": "conveyor:conveyor-east"},
+    "v": {"base": "floor_default.png", "label": "conveyor south", "sprite": "conveyor-south.png", "def": "conveyor:conveyor-south"},
+    "!": {"base": "floor_default.png", "label": "void hazard", "sprite": "void.png", "def": "crumble:void"}
+  },
+  "rows": [
+    "###############",
+    "#.........#...#",
+    "#.........#.*.#",
+    "#.........#...#",
+    "#..P..?...#...#",
+    "#......>>>..X.#",
+    "#.....v####...#",
+    "#.....v####...#",
+    "#.....!####...#",
+    "#.........#...#",
+    "###############"
+  ]
+}
