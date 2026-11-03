@@ -40,6 +40,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MimicPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, GuardPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, AlarmPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DecoyPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -78,6 +79,7 @@
     MimicPack = require('./packs/mimic/main.js');
     GuardPack = require('./packs/guard/main.js');
     AlarmPack = require('./packs/alarm/main.js');
+    DecoyPack = require('./packs/decoy/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -115,6 +117,7 @@
     MimicPack = root.GamePackMimic;
     GuardPack = root.GamePackGuard;
     AlarmPack = root.GamePackAlarm;
+    DecoyPack = root.GamePackDecoy;
   }
 
   function createEngine(packRegisters) {
@@ -244,6 +247,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MimicPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, GuardPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, AlarmPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DecoyPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
