@@ -1,0 +1,32 @@
+{
+  "name": "mech-94-orb-bank-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-94-orb-bank Test Level: first chamber ends with a bonus orb (B) beside the bank warp (W) and a counted orb (*) on the direct line; warping banks taken bonus orbs only. The bank warp lands at the entry (E) of the second chamber, where a bank gate (K, cost 1) guards the short way to the exit (X) and an open long way round the south side means an empty bank never strands the player. A counted orb in the second chamber proves the gate never touches orbs-left.",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "B": {"base": "floor_default.png", "label": "bonus orb (bank income)", "sprite": "orb.png", "def": "bank:bonus-orb"},
+    "W": {"label": "bank warp (banks bonus orbs)", "sprite": "portal.png", "def": "bank:warp", "link": "bank-warp-src"},
+    "E": {"base": "floor_default.png", "label": "bank warp arrival", "sprite": "floor_default.png", "def": "bank:entry", "link": "bank-warp-in"},
+    "K": {"base": "floor_default.png", "label": "bank gate (cost 1 banked orb)", "sprite": "bank-gate-closed.png", "def": "bank:gate", "bank_cost": 1},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"}
+  },
+  "rows": [
+    "###############",
+    "#P...*......W.#",
+    "#...........B.#",
+    "#.............#",
+    "###############",
+    "#E.....*......#",
+    "#.............#",
+    "#........######",
+    "#........K..X.#",
+    "#........#....#",
+    "#.............#",
+    "###############"
+  ]
+}

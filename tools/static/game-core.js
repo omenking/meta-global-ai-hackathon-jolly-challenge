@@ -80,6 +80,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PowerPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TwinPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, SwapPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, OrbBankPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -157,6 +158,7 @@
     PowerPack = require('./packs/power-switches/main.js');
     TwinPack = require('./packs/twin/main.js');
     SwapPack = require('./packs/swap/main.js');
+    OrbBankPack = require('./packs/orb-bank/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -233,6 +235,7 @@
     PowerPack = root.GamePackPowerSwitches;
     TwinPack = root.GamePackTwin;
     SwapPack = root.GamePackSwap;
+    OrbBankPack = root.GamePackOrbBank;
   }
 
   function createEngine(packRegisters) {
@@ -303,6 +306,8 @@
         status: state.status || 'playing',
         next_level: state.next_level === undefined ? null : state.next_level,
         timer: state.time_left_s === null ? state.elapsed_s : state.time_left_s,
+        bank: (state.counters || {})['bank:bank'] || 0,
+        bank_pending: (state.counters || {})['bank:pending'] || 0,
         time_left_s: state.time_left_s, elapsed_s: state.elapsed_s,
         effective_elapsed_s: state.effective_elapsed_s,
         timer_frozen: !!((state.counters || {})['hourglass:collected']
@@ -418,6 +423,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PowerPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TwinPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, SwapPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, OrbBankPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -543,6 +549,7 @@
     registerPowerSwitchesPack: PowerPack,
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerTwinPack: TwinPack,
     registerSwapPack: SwapPack,
+    registerOrbBankPack: OrbBankPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
