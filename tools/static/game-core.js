@@ -51,6 +51,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MudPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, CheckpointPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, IceBridgePack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DarkRoomPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -100,6 +101,7 @@
     MudPack = require('./packs/mud-tile/main.js');
     CheckpointPack = require('./packs/checkpoint-tile/main.js');
     IceBridgePack = require('./packs/ice-bridge/main.js');
+    DarkRoomPack = require('./packs/dark-room/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -148,6 +150,7 @@
     MudPack = root.GamePackMudTile;
     CheckpointPack = root.GamePackCheckpointTile;
     IceBridgePack = root.GamePackIceBridge;
+    DarkRoomPack = root.GamePackDarkRoom;
   }
 
   function createEngine(packRegisters) {
@@ -288,6 +291,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MudPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, CheckpointPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, IceBridgePack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DarkRoomPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -382,6 +386,10 @@
     registerMudTilePack: MudPack,
     registerCheckpointPack: CheckpointPack,
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerIceBridgePack: IceBridgePack,
+    registerDarkRoomPack: DarkRoomPack,
+    DARK_LIGHT_RADIUS: DarkRoomPack.LIGHT_RADIUS,
+    isDarkVisible: DarkRoomPack.isVisible,
+    isDarkStateVisible: DarkRoomPack.isStateVisible,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;

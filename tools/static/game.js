@@ -282,6 +282,13 @@
     board.addChild(spr);
     mimicPool.push(spr);
   }
+  // Dark room (mech-51): tiles beyond the two-tile light radius
+  // are not drawn at all. The overlay blacks out every board tile
+  // outside the radius; the HUD column is a separate stage child
+  // and still shows. View-only: movement, orbs and the gate read
+  // GameCore state exactly as in a lit room.
+  const darkOverlay = new PIXI.Graphics();
+  board.addChild(darkOverlay);
   // Right-hand column: grey panel like the original side panel.
   // Each readout is a label sprite over a backplate box holding
   // three blue digit sprites; values come only from GameHud helpers
@@ -577,6 +584,17 @@
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
       TILE - 4, TILE - 4).stroke({ width: 3, color: 0x00c8ff });
+    darkOverlay.clear();
+    if (state.flags && state.flags['dark:room']) {
+      for (let dy = 0; dy < ROWS; dy++) {
+        for (let dx = 0; dx < COLS; dx++) {
+          const lit = window.GameCore.isDarkVisible
+            ? window.GameCore.isDarkVisible(state.player.x, state.player.y, dx, dy)
+            : Math.max(Math.abs(dx - state.player.x), Math.abs(dy - state.player.y)) <= 2;
+          if (!lit) darkOverlay.rect(dx * TILE, dy * TILE, TILE, TILE).fill(0x000000);
+        }
+      }
+    }
     document.getElementById('dbg-player').textContent =
       state.player.x + ', ' + state.player.y;
     document.getElementById('dbg-steps').textContent = String(state.steps);
