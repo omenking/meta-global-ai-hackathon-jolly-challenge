@@ -1,0 +1,15 @@
+{
+  "pack": "thief",
+  "main": "main.js",
+  "assets": [
+    {"file": "thief.png", "kind": "tiles", "bundled": true,
+     "shows": "thief fleeing empty-handed, not lethal on touch"},
+    {"file": "thief-carrying-key.png", "kind": "tiles", "bundled": true,
+     "shows": "thief carrying the snatched key visibly while running for its burrow"},
+    {"file": "thief-burrow.png", "kind": "tiles", "bundled": true,
+     "shows": "burrow tile where the thief drops the stolen key for the player to pick back up"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

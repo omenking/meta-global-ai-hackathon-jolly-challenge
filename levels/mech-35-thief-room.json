@@ -1,0 +1,27 @@
+{
+  "name": "mech-35-thief-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-35-thief Test Level: you carry a key across an open room the thief crosses; walking straight at it has the key snatched and carried to the burrow in the far corner, where it can be recovered; the corrected route keeps distance (or corners the thief) so the key reaches the red lock and warp",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "r": {"base": "floor_default.png", "label": "key red", "sprite": "key_red.png", "key_color": "red"},
+    "R": {"label": "lock red", "sprite": "wall_keyhole_red.png", "lock_color": "red"},
+    "X": {"base": "floor_default.png", "label": "warp (exit)", "sprite": "portal.png"},
+    "T": {"base": "floor_default.png", "label": "thief", "actor": "thief:thief", "terrain": "core:floor"},
+    "B": {"label": "thief burrow", "sprite": "thief-burrow.png", "def": "thief:burrow"}
+  },
+  "rows": [
+    "#############",
+    "#P.r........#",
+    "#....T......#",
+    "#...........#",
+    "#........R.X#",
+    "#..........B#",
+    "#...........#",
+    "#############"
+  ]
+}

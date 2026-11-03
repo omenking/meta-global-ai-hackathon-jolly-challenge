@@ -36,6 +36,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, ChaserPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, SleeperPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, BlockerPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, ThiefPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -70,6 +71,7 @@
     ChaserPack = require('./packs/chaser/main.js');
     SleeperPack = require('./packs/sleeper/main.js');
     BlockerPack = require('./packs/blocker/main.js');
+    ThiefPack = require('./packs/thief/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -103,6 +105,7 @@
     ChaserPack = root.GamePackChaser;
     SleeperPack = root.GamePackSleeper;
     BlockerPack = root.GamePackBlocker;
+    ThiefPack = root.GamePackThief;
   }
 
   function createEngine(packRegisters) {
@@ -228,6 +231,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, ChaserPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, SleeperPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, BlockerPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, ThiefPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -308,6 +312,7 @@
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerChaserPack: ChaserPack,
     registerSleeperPack: SleeperPack,
     registerBlockerPack: BlockerPack,
+    registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerThiefPack: ThiefPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
