@@ -246,6 +246,10 @@
   // Non-player actors (patrollers etc.): one sprite each, drawn
   // with the sprite of the actor def and repositioned from state
   // on every step, like the player sprite below.
+  // Non-player actors (sleepers etc.): one sprite each, drawn
+  // with the sprite of the actor def and repositioned from state
+  // on every step, like the player sprite below. A sleeper swaps
+  // to its awake sprite once any orb has woken it.
   const actorSprites = [];
   for (const actor of state.actors || []) {
     if (actor.id === 'player') continue;
@@ -258,6 +262,7 @@
     spr.position.set(actor.x * TILE, actor.y * TILE);
     board.addChild(spr);
     actorSprites.push({ id: actor.id, sprite: spr });
+    actorSprites.push({ id: actor.id, def: actor.def, sprite: spr });
   }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
@@ -507,6 +512,14 @@
       const tex = actor.flags && actor.flags.blocked
         ? textures['chaser-blocked.png'] : textures['chaser.png'];
       if (tex && spr.texture !== tex) spr.texture = tex;
+      if (!actor) continue;
+      as.sprite.position.set(actor.x * TILE, actor.y * TILE);
+      if (as.def === 'sleeper:sleeper') {
+        const texName = state.flags && state.flags['sleeper:awake']
+          ? 'sleeper-awake.png' : 'sleeper-asleep.png';
+        const tex = textures[texName];
+        if (tex && as.sprite.texture !== tex) as.sprite.texture = tex;
+      }
     }
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,

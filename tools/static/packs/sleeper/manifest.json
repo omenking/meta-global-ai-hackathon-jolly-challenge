@@ -1,0 +1,15 @@
+{
+  "pack": "sleeper",
+  "main": "main.js",
+  "assets": [
+    {"file": "sleeper-asleep.png", "kind": "tiles", "bundled": true,
+     "shows": "sleeper asleep and solid on its tile, blocking it before any orb is collected"},
+    {"file": "sleeper-awake.png", "kind": "tiles", "bundled": true,
+     "shows": "sleeper awake and patrolling its marked loop, lethal on touch"},
+    {"file": "sleeper-loop.png", "kind": "tiles", "bundled": true,
+     "shows": "marked loop tiles the sleeper patrols once awake"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
