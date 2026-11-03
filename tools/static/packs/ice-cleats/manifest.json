@@ -1,0 +1,27 @@
+{
+  "pack": "ice-cleats",
+  "main": "main.js",
+  "assets": [
+    {"file": "ice-cleats.png", "kind": "tiles", "bundled": true,
+     "shows": "ice cleats pickup before it is collected into a slot"},
+    {"file": "ice-cleats-collected.png", "kind": "tiles", "bundled": true,
+     "shows": "empty pickup tile after the cleats have been taken"},
+    {"file": "jolly-ice-cleats-on-ice.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly stopped and turned on ice while wearing the cleats, not sliding"},
+    {"file": "jolly-ice-cleats.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly wearing the held ice cleats on ordinary floor, movement unchanged"},
+    {"file": "ice-cleats-slot.png", "kind": "gui", "bundled": true,
+     "shows": "ice cleats icon filling one inventory slot while held"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-ice-cleats-on-ice.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly stopped and turned on ice while wearing the cleats, not sliding"},
+    {"file": "jolly-ice-cleats.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly wearing the held ice cleats on ordinary floor, movement unchanged"}
+  ],
+  "gui": [
+    {"file": "ice-cleats-slot.png", "kind": "gui", "bundled": true,
+     "shows": "ice cleats icon filling one inventory slot while held"}
+  ],
+  "blocks": []
+}
