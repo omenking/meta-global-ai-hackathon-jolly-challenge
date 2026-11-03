@@ -644,6 +644,16 @@
       const pose = raftPose ? textures['jolly-riding-raft.png']
         : (state.status === 'lost' && textures['jolly-fall.png']
         ? textures['jolly-fall.png'] : textures['jolly.png']);
+      // Fallen pose while the run is lost, normal pose otherwise;
+      // a heavy-block budge pending shows Jolly straining and the
+      // step that completes a heavy push shows the pushing pose.
+      const heavyPose = state.flags && state.flags.heavy_pending
+        && textures['jolly-straining.png'] ? textures['jolly-straining.png']
+        : (state.flags && state.flags.heavy_last_push_step === state.steps
+          && textures['jolly-pushing-heavy.png']
+          ? textures['jolly-pushing-heavy.png'] : null);
+      const pose = state.status === 'lost' && textures['jolly-fall.png']
+        ? textures['jolly-fall.png'] : (heavyPose || textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     for (const as of actorSprites) {
@@ -1140,6 +1150,16 @@
         if (mx >= 0 && dt.sprite.position) {
           dt.sprite.position.set(mx * TILE, my * TILE);
         }
+      } else if (dt.ch === 'H') {
+        // Heavy block: budging sprite while a first push is pending
+        // on this cell, resting sprite otherwise.
+        const hmeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const htex = hmeta && hmeta.heavy_budge
+          ? textures['heavy-block-budging.png']
+          : textures['heavy-block.png'];
+        if (htex && dt.sprite.texture !== htex) dt.sprite.texture = htex;
+        dt.sprite.visible = !!(state.grid[dt.y]
+          && state.grid[dt.y][dt.x] === dt.ch);
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
