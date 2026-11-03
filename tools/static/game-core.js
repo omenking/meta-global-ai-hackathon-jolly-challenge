@@ -48,6 +48,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LavaPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, SandPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, GlassPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MudPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -94,6 +95,7 @@
     LavaPack = require('./packs/lava-tile/main.js');
     SandPack = require('./packs/sand-tile/main.js');
     GlassPack = require('./packs/glass-tile/main.js');
+    MudPack = require('./packs/mud-tile/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -139,6 +141,7 @@
     LavaPack = root.GamePackLavaTile;
     SandPack = root.GamePackSandTile;
     GlassPack = root.GamePackGlassTile;
+    MudPack = root.GamePackMudTile;
   }
 
   function createEngine(packRegisters) {
@@ -276,6 +279,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LavaPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, SandPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, GlassPack, CrumblePack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MudPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -367,6 +371,7 @@
     registerLavaPack: LavaPack,
     registerSandPack: SandPack,
     registerGlassPack: GlassPack,
+    registerMudTilePack: MudPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
