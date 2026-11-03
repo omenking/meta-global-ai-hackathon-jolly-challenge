@@ -490,6 +490,23 @@
     for (const as of actorSprites) {
       const actor = (state.actors || []).find((a) => a.id === as.id);
       if (actor) as.sprite.position.set(actor.x * TILE, actor.y * TILE);
+    // Chaser actors are a view of state.actors, like the player.
+    for (const actor of state.actors || []) {
+      if (actor.def !== 'chaser:chaser') continue;
+      let spr = renderState._chasers && renderState._chasers.get(actor.id);
+      if (!spr) {
+        const tex = textures['chaser.png'];
+        if (!tex) continue;
+        spr = new PIXI.Sprite(tex);
+        spr.scale.set(scale);
+        board.addChild(spr);
+        (renderState._chasers = renderState._chasers
+          || new Map()).set(actor.id, spr);
+      }
+      spr.position.set(actor.x * TILE, actor.y * TILE);
+      const tex = actor.flags && actor.flags.blocked
+        ? textures['chaser-blocked.png'] : textures['chaser.png'];
+      if (tex && spr.texture !== tex) spr.texture = tex;
     }
     marker.clear();
     marker.rect(state.player.x * TILE + 2, state.player.y * TILE + 2,
