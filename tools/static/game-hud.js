@@ -85,6 +85,13 @@
 
   const api = { digitsFor, timerSeconds, orbsLeft, levelNumber,
     inventorySlots, keyColor, INVENTORY_SLOTS, KEY_COLORS, lanternGauge };
+  function raftCounter(state) {
+    if (!state || !state.flags || !state.flags['raft:riding']) return null;
+    const v = state.counters && state.counters['raft:remaining'];
+    return typeof v === 'number' ? v : null;
+  }
+  const api = { digitsFor, timerSeconds, orbsLeft, levelNumber, raftCounter,
+    inventorySlots, keyColor, INVENTORY_SLOTS, KEY_COLORS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameHud = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -1,0 +1,32 @@
+{
+  "pack": "raft",
+  "main": "main.js",
+  "assets": [
+    {"file": "raft-block.png", "kind": "blocks", "bundled": true,
+     "shows": "raft floating at a bank before the player steps aboard"},
+    {"file": "raft-block-sinking.png", "kind": "blocks", "bundled": true,
+     "shows": "raft sinking after travelling its last tile, before the player respawns at the checkpoint"},
+    {"file": "jolly-riding-raft.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly aboard the raft, travelling one water tile per move"},
+    {"file": "jolly-sinking-raft.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly on the raft in the move it sinks after its last travelled tile"},
+    {"file": "raft-counter.png", "kind": "gui", "bundled": true,
+     "shows": "conditional GUI slot under the inventory showing the water tiles the raft can still travel while the player rides"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-riding-raft.png", "bundled": true,
+     "shows": "Jolly aboard the raft, travelling one water tile per move"},
+    {"file": "jolly-sinking-raft.png", "bundled": true,
+     "shows": "Jolly on the raft in the move it sinks after its last travelled tile"}
+  ],
+  "gui": [
+    {"file": "raft-counter.png", "bundled": true,
+     "shows": "conditional GUI slot under the inventory showing the water tiles the raft can still travel while the player rides"}
+  ],
+  "blocks": [
+    {"file": "raft-block.png", "bundled": true,
+     "shows": "raft floating at a bank before the player steps aboard"},
+    {"file": "raft-block-sinking.png", "bundled": true,
+     "shows": "raft sinking after travelling its last tile, before the player respawns at the checkpoint"}
+  ]
+}

@@ -474,6 +474,15 @@
     }
   }
   insertHudSection(inventoryGroup, 104, 3);
+  // Conditional raft counter: only visible while riding (mech-86).
+  const raftGroup = new PIXI.Container();
+  const raftText = new PIXI.Text({ text: '', style: {
+    fontSize: 16, fill: 0x111111, fontWeight: 'bold' } });
+  raftText.anchor.set(0.5, 0);
+  raftText.position.set(HUD_W / 2, 4);
+  raftGroup.addChild(raftText);
+  raftGroup.visible = false;
+  insertHudSection(raftGroup, 36, 4);
   const retryGroup = new PIXI.Container();
   retryGroup.visible = false;
   const retryMsg = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
@@ -629,6 +638,12 @@
         ? textures['jolly-fall.png']
         : (state.flags && state.flags['still:held'] && textures['jolly-still.png']
           ? textures['jolly-still.png'] : textures['jolly.png']);
+      // Fallen pose while the run is lost, normal pose otherwise.
+      const raftPose = window.GameHud.raftCounter(state) !== null &&
+        textures['jolly-riding-raft.png'];
+      const pose = raftPose ? textures['jolly-riding-raft.png']
+        : (state.status === 'lost' && textures['jolly-fall.png']
+        ? textures['jolly-fall.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     for (const as of actorSprites) {
@@ -1194,6 +1209,9 @@
     if (heldIcon) {
       heldIcon.visible = !!(state.flags && state.flags['still:held']);
     }
+    const raftLeft = window.GameHud.raftCounter(state);
+    raftGroup.visible = raftLeft !== null;
+    if (raftLeft !== null) raftText.text = 'RAFT ' + raftLeft;
     drawHud(state.elapsed_s, state.time_limit_s);
     const bannerEl = document.getElementById('info-banner');
     if (bannerEl) {

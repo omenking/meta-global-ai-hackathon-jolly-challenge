@@ -73,6 +73,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack,
     BombPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MirrorPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, RaftPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -143,6 +144,7 @@
     IceBlockPack = require('./packs/ice-block/main.js');
     BombPack = require('./packs/bomb-block/main.js');
     MirrorPack = require('./packs/mirror-block/main.js');
+    RaftPack = require('./packs/raft/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -212,6 +214,7 @@
     IceBlockPack = root.GamePackIceBlock;
     BombPack = root.GamePackBombBlock;
     MirrorPack = root.GamePackMirrorBlock;
+    RaftPack = root.GamePackRaft;
   }
 
   function createEngine(packRegisters) {
@@ -288,6 +291,9 @@
           && state.t_ms - (state.counters || {})['hourglass:collect_ms'] >= 0
           && state.t_ms - (state.counters || {})['hourglass:collect_ms'] < 10000),
         t_ms: state.t_ms, input: state.last_input };
+        t_ms: state.t_ms, input: state.last_input,
+        raft_riding: !!(state.flags && state.flags['raft:riding']),
+        raft_remaining: (state.counters && typeof state.counters['raft:remaining'] === 'number') ? state.counters['raft:remaining'] : null };
     }
     // Pack-carried assets: probing a level registers its pack defs,
     // whose declared sprite/icon names are what the page preloads.
@@ -387,6 +393,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, IceBlockPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, BombPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MirrorPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, RaftPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -505,6 +512,7 @@
     registerIceBlockPack: IceBlockPack,
     registerBombPack: BombPack,
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerMirrorPack: MirrorPack,
+    registerRaftPack: RaftPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
