@@ -1,0 +1,18 @@
+{
+  "pack": "maptile",
+  "main": "main.js",
+  "assets": [
+    {"file": "map.png", "kind": "tiles", "bundled": true,
+     "shows": "map tile at the room entrance before it is stepped on"},
+    {"file": "map-spent.png", "kind": "tiles", "bundled": true,
+     "shows": "floor left after the map tile has been consumed, with nothing left to trigger"},
+    {"file": "map-overlay.png", "kind": "gui", "bundled": true,
+     "shows": "whole level as the brief overlay seen for three seconds while play continues"}
+  ],
+  "jolly_states": [],
+  "gui": [
+    {"file": "map-overlay.png", "kind": "gui", "bundled": true,
+     "shows": "whole level as the brief overlay seen for three seconds while play continues"}
+  ],
+  "blocks": []
+}

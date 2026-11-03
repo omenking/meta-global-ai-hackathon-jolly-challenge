@@ -289,6 +289,16 @@
   // GameCore state exactly as in a lit room.
   const darkOverlay = new PIXI.Graphics();
   board.addChild(darkOverlay);
+  // Map tile overlay (mech-55): the brief whole-level reveal is a
+  // view of state.flags only; it shows while the recorded step
+  // clock is inside the three-second window and play continues.
+  let mapOverlay = null;
+  if (textures['map-overlay.png']) {
+    mapOverlay = new PIXI.Sprite(textures['map-overlay.png']);
+    mapOverlay.width = COLS * TILE; mapOverlay.height = ROWS * TILE;
+    mapOverlay.alpha = 0.88; mapOverlay.visible = false;
+    board.addChild(mapOverlay);
+  }
   // Right-hand column: grey panel like the original side panel.
   // Each readout is a label sprite over a backplate box holding
   // three blue digit sprites; values come only from GameHud helpers
@@ -878,6 +888,12 @@
           : (gcF === 'f' ? 'fog-revealed-orb.png' : 'fog-revealed.png');
         const ftex = textures[ftexName];
         if (ftex && dt.sprite.texture !== ftex) dt.sprite.texture = ftex;
+      } else if (dt.ch === 'M') {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'M' || gc === 'm';
+        const texName = gc === 'm' ? 'map-spent.png' : 'map.png';
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
@@ -894,6 +910,9 @@
       }
     }
     for (; mimicIdx < mimicPool.length; mimicIdx++) mimicPool[mimicIdx].visible = false;
+    if (mapOverlay) {
+      mapOverlay.visible = !!(state.flags && state.flags['map_overlay_active']);
+    }
     retryGroup.visible = state.status === 'lost';
     // The HUD win screen is only for the last level; mid-chain a
     // win shows the level summary (its Next button) instead.

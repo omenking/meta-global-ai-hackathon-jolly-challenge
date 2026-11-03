@@ -55,6 +55,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LanternPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, FogPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, EchoPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MapTilePack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -108,6 +109,7 @@
     LanternPack = require('./packs/lantern/main.js');
     FogPack = require('./packs/fog/main.js');
     EchoPack = require('./packs/echo/main.js');
+    MapTilePack = require('./packs/maptile/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -160,6 +162,7 @@
     LanternPack = root.GamePackLantern;
     FogPack = root.GamePackFog;
     EchoPack = root.GamePackEcho;
+    MapTilePack = root.GamePackMapTile;
   }
 
   function createEngine(packRegisters) {
@@ -304,6 +307,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LanternPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, FogPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, EchoPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MapTilePack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -405,6 +409,7 @@
     registerLanternPack: LanternPack,
     registerFogPack: FogPack, isFogRevealed: FogPack.isRevealed,
     registerEchoPack: EchoPack,
+    registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerMapTilePack: MapTilePack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
