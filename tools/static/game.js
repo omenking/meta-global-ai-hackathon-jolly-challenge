@@ -895,6 +895,9 @@
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
         // The blocker shuffles inside its doorway strip: follow
         // its live grid position instead of its placed cell.
+        // The push block moves: its sprite follows the 'B' cell in
+        // the live grid and shows the on-switch art while the block
+        // sits on a switch plate (terrain under the block).
         let bx = -1, by = -1;
         for (let gy = 0; gy < state.grid.length && by < 0; gy++) {
           const gx = state.grid[gy].indexOf('B');
@@ -1037,6 +1040,29 @@
           dt.sprite.texture = dtex;
         }
         dt.sprite.visible = true;
+        if (bx >= 0) {
+          dt.sprite.position.set(bx * TILE, by * TILE);
+          // Board sprites are added row-major, so floors east/south
+          // of the origin were added after this sprite and would
+          // cover it after such a push (it looked picked up).
+          if (dt.sprite.parent) dt.sprite.parent.setChildIndex(
+            dt.sprite, dt.sprite.parent.children.length - 1);
+          const onSwitch = state.terrain[by][bx] === 'blocks:switch-plate';
+          const bTex = textures[onSwitch
+            ? 'push-block-on-switch.png' : 'push-block.png'];
+          if (bTex && dt.sprite.texture !== bTex) dt.sprite.texture = bTex;
+        }
+      } else if (dt.ch === 'D') {
+        // The switch gate shows only while no push block holds a
+        // switch plate down.
+        let held = false;
+        for (let gy = 0; gy < state.height && !held; gy++) {
+          for (let gx = 0; gx < state.width; gx++) {
+            if (state.objects[gy][gx] === 'blocks:push-block'
+                && state.terrain[gy][gx] === 'blocks:switch-plate') held = true;
+          }
+        }
+        dt.sprite.visible = !held;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open

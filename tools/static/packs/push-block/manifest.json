@@ -1,0 +1,13 @@
+{
+  "pack": "push-block",
+  "main": "main.js",
+  "assets": [
+    {"file": "push-block.png", "kind": "blocks", "bundled": true,
+     "shows": "plain push block on floor, movable one tile at a time"},
+    {"file": "push-block-on-switch.png", "kind": "blocks", "bundled": true,
+     "shows": "push block sitting on a switch plate, holding that switch down"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

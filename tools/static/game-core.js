@@ -68,6 +68,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, StillPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, GhostPack;
   let MoveDoorPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PushBlockPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -134,6 +135,7 @@
     StillPack = require('./packs/still/main.js');
     GhostPack = require('./packs/ghost/main.js');
     MoveDoorPack = require('./packs/movedoor/main.js');
+    PushBlockPack = require('./packs/push-block/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -199,6 +201,7 @@
     StillPack = root.GamePackStill;
     GhostPack = root.GamePackGhost;
     MoveDoorPack = root.GamePackMoveDoor;
+    PushBlockPack = root.GamePackPushBlock;
   }
 
   function createEngine(packRegisters) {
@@ -370,6 +373,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, GhostPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack,
     MoveDoorPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PushBlockPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -484,6 +488,7 @@
     registerStillPack: StillPack,
     registerGhostPack: GhostPack,
     registerMoveDoorPack: MoveDoorPack,
+    registerPushBlockPack: PushBlockPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
