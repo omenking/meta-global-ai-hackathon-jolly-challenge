@@ -1,0 +1,19 @@
+{
+  "pack": "mirror-switch",
+  "main": "main.js",
+  "assets": [
+    {"file": "mirror-switch.png", "kind": "tiles", "bundled": true,
+     "shows": "mirror switch, one press inverts every switch state in the room"},
+    {"file": "toggle-switch-a.png", "kind": "tiles", "bundled": true,
+     "shows": "toggle switch in state A before or after a mirror press"},
+    {"file": "toggle-switch-b.png", "kind": "tiles", "bundled": true,
+     "shows": "toggle switch in state B, inverted from state A by the mirror press"},
+    {"file": "door-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "closed door blocking the doorway like wall after inversion"},
+    {"file": "door-open.png", "kind": "tiles", "bundled": true,
+     "shows": "open door, walkable doorway after inversion"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
