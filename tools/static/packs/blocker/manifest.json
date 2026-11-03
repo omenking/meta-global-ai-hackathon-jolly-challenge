@@ -1,0 +1,15 @@
+{
+  "pack": "blocker",
+  "main": "main.js",
+  "assets": [
+    {"file": "blocker.png", "kind": "tiles", "bundled": true,
+     "shows": "blocker standing in its three-wide doorway, tracking the player"},
+    {"file": "blocker-doorway.png", "kind": "tiles", "bundled": true,
+     "shows": "three-wide doorway strip the blocker never leaves"},
+    {"file": "push-block.png", "kind": "blocks", "bundled": true,
+     "shows": "push block that can pin the blocker to one side of its doorway"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
