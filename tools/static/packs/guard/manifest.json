@@ -1,0 +1,17 @@
+{
+  "pack": "guard",
+  "main": "main.js",
+  "assets": [
+    {"file": "guard-facing-up.png", "kind": "tiles", "bundled": true,
+     "shows": "guard on its corridor tile facing up, arrow showing the facing"},
+    {"file": "guard-facing-right.png", "kind": "tiles", "bundled": true,
+     "shows": "guard on its corridor tile facing right, arrow showing the facing"},
+    {"file": "guard-facing-down.png", "kind": "tiles", "bundled": true,
+     "shows": "guard on its corridor tile facing down, arrow showing the facing"},
+    {"file": "guard-facing-left.png", "kind": "tiles", "bundled": true,
+     "shows": "guard on its corridor tile facing left, arrow showing the facing"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
