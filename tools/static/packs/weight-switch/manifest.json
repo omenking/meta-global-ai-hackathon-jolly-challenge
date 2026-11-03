@@ -1,0 +1,23 @@
+{
+  "pack": "weight-switch",
+  "main": "main.js",
+  "assets": [
+    {"file": "weight-switch-empty.png", "kind": "tiles", "bundled": true,
+     "shows": "weight switch plate with nothing on it, linked door closed"},
+    {"file": "weight-switch-weighted.png", "kind": "tiles", "bundled": true,
+     "shows": "weight switch plate held down by a block left on it, linked door open"},
+    {"file": "door-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "closed door blocking the doorway like wall"},
+    {"file": "door-open.png", "kind": "tiles", "bundled": true,
+     "shows": "open door, walkable doorway while the plate is weighted"},
+    {"file": "jolly-on-weight-switch.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly standing on the weight switch, holding the door only while present"},
+    {"file": "push-block.png", "kind": "blocks", "bundled": true,
+     "shows": "push block that can be left on the plate as the permanent hold, per mechanic 81 in blocks.yml"},
+    {"file": "heavy-block.png", "kind": "blocks", "bundled": true,
+     "shows": "heavy block that can be left on the plate after two pushes, per mechanic 87 in blocks.yml"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

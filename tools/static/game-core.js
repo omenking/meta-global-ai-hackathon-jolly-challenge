@@ -30,6 +30,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TimerPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, OneTimePack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, ChainPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, WeightPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -58,6 +59,7 @@
     TimerPack = require('./packs/timer-switch/main.js');
     OneTimePack = require('./packs/one-time-switch/main.js');
     ChainPack = require('./packs/chain-switch/main.js');
+    WeightPack = require('./packs/weight-switch/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -85,6 +87,7 @@
     TimerPack = root.GamePackTimerSwitch;
     OneTimePack = root.GamePackOneTimeSwitch;
     ChainPack = root.GamePackChainSwitch;
+    WeightPack = root.GamePackWeightSwitch;
   }
 
   function createEngine(packRegisters) {
@@ -204,6 +207,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TimerPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, OneTimePack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, ChainPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, WeightPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -278,6 +282,7 @@
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerTimerSwitchPack: TimerPack,
     registerOneTimeSwitchPack: OneTimePack,
     registerChainSwitchPack: ChainPack,
+    registerWeightSwitchPack: WeightPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
