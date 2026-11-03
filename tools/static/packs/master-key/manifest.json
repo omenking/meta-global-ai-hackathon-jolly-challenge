@@ -1,0 +1,13 @@
+{
+  "pack": "master-key",
+  "main": "main.js",
+  "assets": [
+    {"file": "master-key.png", "kind": "tiles", "bundled": true,
+     "shows": "unused silver master key, distinct from every coloured key, fitting any lock once"},
+    {"file": "master-key-held.png", "kind": "gui", "bundled": true,
+     "shows": "silver master key held in an inventory slot, still unspent and usable on any one lock"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

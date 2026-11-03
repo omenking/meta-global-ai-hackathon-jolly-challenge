@@ -1,0 +1,27 @@
+{
+  "name": "mech-12-master-key-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-12-master-key Test Level: master key (M) with red lock (R) nearby whose red key (r) is also in the room, blue lock (B) further on with no blue key; spending master on red leaves blue locked, saving it teaches the choice",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "M": {"base": "floor_default.png", "label": "master key", "sprite": "master-key.png", "def": "master:key"},
+    "r": {"base": "floor_default.png", "label": "key red", "sprite": "key_red.png", "key_color": "red"},
+    "R": {"label": "lock red (master-aware)", "sprite": "wall_keyhole_red.png", "def": "master:lock-red"},
+    "B": {"label": "lock blue (master-aware)", "sprite": "wall_keyhole_blue.png", "def": "master:lock-blue"}
+  },
+  "rows": [
+    "#############",
+    "#P.M........#",
+    "#..r........#",
+    "#####R#######",
+    "#...........#",
+    "#######B#####",
+    "#......*....#",
+    "#############"
+  ]
+}

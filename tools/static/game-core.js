@@ -18,6 +18,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DashPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, FanPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TwinLockPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MasterKeyPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -35,6 +36,7 @@
     DashPack = require('./packs/dash-tile/main.js');
     FanPack = require('./packs/fan/main.js');
     TwinLockPack = require('./packs/twin-lock/main.js');
+    MasterKeyPack = require('./packs/master-key/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -51,6 +53,7 @@
     DashPack = root.GamePackDashTile;
     FanPack = root.GamePackFan;
     TwinLockPack = root.GamePackTwinLock;
+    MasterKeyPack = root.GamePackMasterKey;
   }
 
   function createEngine(packRegisters) {
@@ -159,6 +162,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DashPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, FanPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TwinLockPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MasterKeyPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -223,6 +227,7 @@
     registerDashPack: DashPack,
     registerFanPack: FanPack,
     registerTwinLockPack: TwinLockPack,
+    registerMasterKeyPack: MasterKeyPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
