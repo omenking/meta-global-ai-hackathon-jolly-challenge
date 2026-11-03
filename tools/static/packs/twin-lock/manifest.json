@@ -1,0 +1,16 @@
+{
+  "pack": "twin-lock",
+  "main": "main.js",
+  "assets": [
+    {"file": "twin-lock.png", "kind": "tiles", "bundled": true,
+     "shows": "twin lock of its colour still needing two matching keys, with two keyholes showing"},
+    {"file": "twin-lock-needs-one.png", "kind": "tiles", "bundled": true,
+     "shows": "twin lock after a press holding one matching key, showing it still needs one more and has consumed nothing"}
+  ],
+  "jolly_states": [],
+  "gui": [
+    {"file": "matching-key.png", "kind": "gui", "bundled": true,
+     "shows": "held key of the twin lock colour in an inventory slot, counted toward the two the lock needs"}
+  ],
+  "blocks": []
+}
