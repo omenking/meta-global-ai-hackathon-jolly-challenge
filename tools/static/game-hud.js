@@ -72,8 +72,19 @@
     return slots;
   }
 
+  // Conditional lantern gauge: shown only in a dark room, where
+  // the lantern pack sets the lantern:fuel counter; null elsewhere.
+  function lanternGauge(state) {
+    if (!state || !state.counters
+        || typeof state.counters['lantern:fuel'] !== 'number') return null;
+    const fuel = Math.max(0, Math.min(100, state.counters['lantern:fuel']));
+    return { fuel: fuel,
+      radius: typeof state.counters['lantern:radius'] === 'number'
+        ? state.counters['lantern:radius'] : 1 };
+  }
+
   const api = { digitsFor, timerSeconds, orbsLeft, levelNumber,
-    inventorySlots, keyColor, INVENTORY_SLOTS, KEY_COLORS };
+    inventorySlots, keyColor, INVENTORY_SLOTS, KEY_COLORS, lanternGauge };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameHud = api;
 })(typeof window !== 'undefined' ? window : globalThis);

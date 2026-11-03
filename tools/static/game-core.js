@@ -62,6 +62,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LifePreserverPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, CleatsPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MagnetPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LanternPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -122,6 +123,7 @@
     LifePreserverPack = require('./packs/life-preserver/main.js');
     CleatsPack = require('./packs/ice-cleats/main.js');
     MagnetPack = require('./packs/magnet-glove/main.js');
+    LanternPack = require('./packs/lantern-oil/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -181,6 +183,7 @@
     LifePreserverPack = root.GamePackLifePreserver;
     CleatsPack = root.GamePackIceCleats;
     MagnetPack = root.GamePackMagnetGlove;
+    LanternPack = root.GamePackLanternOil;
   }
 
   function createEngine(packRegisters) {
@@ -332,6 +335,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LifePreserverPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, CleatsPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MagnetPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LanternPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -440,6 +444,7 @@
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerLifePreserverPack: LifePreserverPack,
     registerIceCleatsPack: CleatsPack,
     registerMagnetPack: MagnetPack,
+    registerLanternOilPack: LanternPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
