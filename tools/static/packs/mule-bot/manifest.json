@@ -1,0 +1,15 @@
+{
+  "pack": "mule-bot",
+  "main": "main.js",
+  "assets": [
+    {"file": "mule-bot.png", "kind": "tiles", "bundled": true,
+     "shows": "mule bot following one tile behind the player"},
+    {"file": "mule-bot-waiting.png", "kind": "tiles", "bundled": true,
+     "shows": "mule bot waiting because its next path tile is a hazard"},
+    {"file": "mule-slots.png", "kind": "gui", "bundled": true,
+     "shows": "second HUD row showing the 4 extra slots the mule bot carries"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

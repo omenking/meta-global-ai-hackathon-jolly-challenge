@@ -49,7 +49,7 @@
         const def = deps.getDef ? deps.getDef(ch) : null;
         const spriteName = (def && def.sprite) || e.sprite;
         const glyph = e.text || (def && def.glyph);
-        if (spriteName && ch !== 'P') {
+        if (spriteName && ch !== 'P' && !e.actor) {
           const spr = drawSprite(spriteName, gx, gy);
           if (spr === false) fallbackTile(gx, gy, ch);
           else if (isDynamic && spr) dynamicTiles.push({ x: gx, y: gy, ch: ch, sprite: spr });
