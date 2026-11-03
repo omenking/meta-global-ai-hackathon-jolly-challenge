@@ -506,6 +506,14 @@
         ? textures['jolly-fall.png']
         : (dashed && textures['jolly-dashing.png']
           ? textures['jolly-dashing.png'] : textures['jolly.png']);
+      // Fallen pose while the run is lost, wading pose while
+      // standing on deep water, normal pose otherwise.
+      const onDeep = state.terrain && state.terrain[state.player.y] &&
+        state.terrain[state.player.y][state.player.x] === 'deep:water';
+      const pose = state.status === 'lost' && textures['jolly-fall.png']
+        ? textures['jolly-fall.png']
+        : (onDeep && textures['jolly-wading.png']
+          ? textures['jolly-wading.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     for (const as of actorSprites) {
