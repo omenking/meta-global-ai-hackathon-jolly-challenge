@@ -59,6 +59,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, InfoPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, SecretWallPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PeepPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LifePreserverPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -116,6 +117,7 @@
     InfoPack = require('./packs/info-tile/main.js');
     SecretWallPack = require('./packs/secret-wall/main.js');
     PeepPack = require('./packs/peephole/main.js');
+    LifePreserverPack = require('./packs/life-preserver/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -172,6 +174,7 @@
     InfoPack = root.GamePackInfoTile;
     SecretWallPack = root.GamePackSecretWall;
     PeepPack = root.GamePackPeepHole;
+    LifePreserverPack = root.GamePackLifePreserver;
   }
 
   function createEngine(packRegisters) {
@@ -320,6 +323,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, InfoPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, SecretWallPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PeepPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LifePreserverPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -425,6 +429,7 @@
     registerInfoTilePack: InfoPack,
     registerSecretWallPack: SecretWallPack,
     registerPeepHolePack: PeepPack,
+    registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerLifePreserverPack: LifePreserverPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
