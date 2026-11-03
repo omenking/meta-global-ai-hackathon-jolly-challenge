@@ -1198,7 +1198,7 @@ class Handler(BaseHTTPRequestHandler):
                                 STATE.pm, fid, tid,
                                 body.get("author", "agent"), body["body"],
                                 attachments=body.get("attachments"),
-                                session_refs=body.get("session_refs"))
+                                session_refs=body.get("session_refs"), labels=body.get("labels"))
                     else:
                         task = pm_store.move_task(
                             STATE.pm, fid, tid, body.get("status", ""),
@@ -1213,7 +1213,7 @@ class Handler(BaseHTTPRequestHandler):
                     comment = pm_store.add_feature_comment(
                         STATE.pm, fid, body.get("author", "human"),
                         body.get("body", ""), attachments=body.get("attachments"),
-                        session_refs=body.get("session_refs"))
+                        session_refs=body.get("session_refs"), labels=body.get("labels"))
                     STATE.save_pm()
                     return _send(self, 201, comment)
             if len(parts) == 7 and parts[:3] == ["api", "pm", "features"] and parts[4] == "tasks" and parts[6] == "comments":
@@ -1230,7 +1230,7 @@ class Handler(BaseHTTPRequestHandler):
                     comment = pm_store.add_task_comment(
                         STATE.pm, fid, tid, body.get("author", "human"),
                         body.get("body", ""), attachments=body.get("attachments"),
-                        session_refs=body.get("session_refs"))
+                        session_refs=body.get("session_refs"), labels=body.get("labels"))
                     STATE.save_pm()
                     return _send(self, 201, comment)
             if len(parts) == 5 and parts[:3] == ["api", "pm", "features"] and parts[4] == "evidence":
@@ -1261,7 +1261,7 @@ class Handler(BaseHTTPRequestHandler):
                             STATE.pm, fid, body.get("by", "human"),
                             body.get("comment") or body.get("body"),
                             attachments=body.get("attachments"),
-                            session_refs=body.get("session_refs"))
+                            session_refs=body.get("session_refs"), labels=body.get("labels"))
                     STATE.save_pm()
                     return _send(self, 200, _pm_feature_view(feature))
             if len(parts) == 5 and parts[:3] == ["api", "pm", "features"] and parts[4] == "sessions":
@@ -1389,7 +1389,7 @@ class Handler(BaseHTTPRequestHandler):
                     comment = pm_store.update_comment(
                         feature["comments"], cid, body.get("body", ""),
                         attachments=body.get("attachments"),
-                        session_refs=body.get("session_refs"))
+                        session_refs=body.get("session_refs"), labels=body.get("labels"))
                     STATE.save_pm()
                     return _send(self, 200, comment)
             if len(parts) == 8 and parts[:3] == ["api", "pm", "features"] and parts[4] == "tasks" and parts[6] == "comments":
@@ -1408,7 +1408,7 @@ class Handler(BaseHTTPRequestHandler):
                     comment = pm_store.update_comment(
                         task["comments"], cid, body.get("body", ""),
                         attachments=body.get("attachments"),
-                        session_refs=body.get("session_refs"))
+                        session_refs=body.get("session_refs"), labels=body.get("labels"))
                     STATE.save_pm()
                     return _send(self, 200, comment)
             return _send(self, 404, {"error": "not found"})

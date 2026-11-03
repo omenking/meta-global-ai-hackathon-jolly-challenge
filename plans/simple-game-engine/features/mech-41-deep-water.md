@@ -1,7 +1,7 @@
 ---
 title: Deep water — sanity check
 summary: With a life preserver you cross it at two moves per tile; without one it sends you to your checkpoint. Sanity-check for candidate mechanic #41 (Terrain and Hazards, revised).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -103,22 +103,64 @@ Named test cases (from the candidate file; all must be played):
 
 ### mech-41-deep-water/test-level — Test Level: mech-41-deep-water-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-41-deep-water-room.json (test:true) realising the teaching moment for Deep water: First room: deep water beyond a life preserver, crossed by a patroller's bank. A player who enters with the preserver but treats it as ordinary floor is still wading on the second move when the patrol arrives and is returned to the checkpoint, which teaches that permission to enter and the cost of crossing are separate facts.
 - Acceptance: mech-41-deep-water-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-41-deep-water/implement-mechanic — Implement Deep water
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #41 deterministically in the pure step function per the spec rules. Rules: Dark water; Without a life preserver (61) entering it sends you back to your checkpoint with the timer running; With one, each deep tile takes two moves: the first wades in place, the second crosses; That slowness, plus what current and ice blocks do in it, is the mechanic, not a plain block
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-41-deep-water-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-41-deep-water/sanity-check — Sanity check Deep water in mech-41-deep-water-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-41-deep-water-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-41-deep-water/20261101-180526-mech-41-deep-water-room-20261101-230521.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:05:38 · agent · on `mech-41-deep-water`
+
+Ready for review: Deep water — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-41-deep-water/test-level: Test Level: mech-41-deep-water-room — completed, commit 0a806f2 — teaching room loads as a Test Level; checkpoint + preserver on the near bank, WWW crossing, long-way floor return
+- mech-41-deep-water/implement-mechanic: Implement Deep water — completed, commit 0b284b8 — deep-water pack (two-move wading, checkpoint return), real generated art, 11 mechanic tests green
+- mech-41-deep-water/sanity-check: Sanity check Deep water in mech-41-deep-water-room — completed, commit 9bf55d3 — end-to-end play, replay digest match, screenshot evidence
+
+Evidence:
+- Screenshots: screenshots/features/mech-41-deep-water/20261101-180526-mech-41-deep-water-room-20261101-230521.png (gallery on the feature page)
+- Sessions: none recorded; replay verified by SanityReplayTests digest equality instead
+
+Playtest:
+- Worktree: .worktrees/mech-41-deep-water
+- Start: cd .worktrees/mech-41-deep-water && source .venv/bin/activate && python tools/server.py --port 8512 — use 8512, board server stays on 8321
+- Game: http://127.0.0.1:8512/static/game.html — open the Test Level mech-41-deep-water-room from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T18:00:13 · agent · on `mech-41-deep-water/test-level`
+
+Starting: build levels/mech-41-deep-water-room.json (test:true) realising the teaching moment - deep water beyond a life preserver, checkpoint on the near bank; naive entry without the preserver returns to the checkpoint, corrected crossing with the preserver costs two moves per tile. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, rectangular rows, legend coverage, teaching layout (preserver before water, checkpoint before water, orbs + long-way floor return so a burned/slow crossing never soft-locks).
+
+### 2026-11-01T18:00:35 · agent · on `mech-41-deep-water/test-level`
+
+Done: levels/mech-41-deep-water-room.json (test:true) in commit 0a806f2. Room: checkpoint K (3,1) and life preserver L (4,2) on the near bank, WWW deep crossing at y=2 x=5-7 in a wall divider, far orb (9,1), return orb (2,6), gate+warp (9,6)/(10,6), bottom row crosses the divider on floor so the room never soft-locks. Naive entry without the preserver will return to the checkpoint; corrected crossing with it costs two moves per tile (verified in implement-mechanic). Patroller (mechanic 31) is not built yet, so no patroller is placed; the bank crossing is taught by the two-move cost itself. Level loads via game_levels and is listed as a Test Level.
+
+### 2026-11-01T18:00:36 · agent · on `mech-41-deep-water/implement-mechanic`
+
+Starting: pack under tools/static/packs/deep-water/ (manifest first, then main.js) following the crumbling pattern - deep water terrain, life preserver pickup and checkpoint tiles defined in-pack so the room is playable standalone, pure deterministic step logic only through pack/kernel hooks, no unrecorded wall-clock reads; wiring in game-core.js/game.html/game.js; real generated art for deep-water.png + jolly-wading.png (fallback placeholder named if generation fails); tests mirroring test_mech_5 covering every YAML test_cases entry. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: python -m unittest tools.test_mech_41_deep_water plus existing game-core/session suites.
+
+### 2026-11-01T18:03:38 · agent · on `mech-41-deep-water/implement-mechanic`
+
+Done in commit 0b284b8. Pack tools/static/packs/deep-water/ (manifest first): deep:water terrain - without deep:life-preserver, entry teleports to the active checkpoint (deep:checkpoint touch, else spawn) with status playing and steps/timer advancing; with it, first input per tile wades in place (deep_wade meta + teleport back to origin), second crosses. Preserver pickup and checkpoint tiles are defined in-pack in minimal form so the room is playable standalone; standalone mechanics 61/48 refine them later. Assets are REAL generated art via scripts/gen-image (muse-image-1.0): deep-water.png + jolly-wading.png, 512x512 PNG, bundled:true, defineAsset in main.js; no placeholder fallback was needed. Wiring: game-core.js registers the pack, game.html loads it, game.js shows the wading pose on deep water. Level fix in this commit: preserver moved to the top bank (4,1) with a floor bypass on the crossing row, so the naive entry genuinely has no preserver. Tests: python -m unittest tools.test_mech_41_deep_water -v = 11 tests OK (all four YAML test_cases played for real, plus purity/restart/wiring); existing suites tools.test_game_core + test_pack_folders + test_mech_5_crumbling_tile + test_game_sessions + test_game_page = 31 tests OK.
+
+### 2026-11-01T18:03:39 · agent · on `mech-41-deep-water/sanity-check`
+
+Starting: play mech-41-deep-water-room end to end (naive return, two-move crossing, hesitation, full win), verify replay digest via SanityReplayTests, screenshot the teaching room from the worktree server on port 8512, upload evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: test_mech_41_deep_water green, screenshot attached, replay digest match.
+
+### 2026-11-01T18:05:37 · agent · on `mech-41-deep-water/sanity-check`
+
+Done in commit 9bf55d3 (evidence commit; code in 0b284b8). Played mech-41-deep-water-room end to end: naive entry without the preserver returns to the checkpoint (3,1) still playing with steps advancing; with the preserver each of the 3 deep tiles costs two inputs (wade in place, then cross); hesitation (enter, step back, re-wade) never strands; full 33-input solution wins at the warp with 0 orbs left. Replay proof: SanityReplayTests - live digest equals replay digest and second replay digest. Tests: tools.test_mech_41_deep_water 11 OK; combined with game-core/pack-folders/crumbling/sessions/page suites 42 tests OK. Screenshot attached from the worktree build on port 8512. No agent session file was recorded, so none is linked. Assets: real gen-image art, no placeholder fallback.
+- Evidence: `screenshots/features/mech-41-deep-water/20261101-180526-mech-41-deep-water-room-20261101-230521.png`

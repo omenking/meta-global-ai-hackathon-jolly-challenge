@@ -1,7 +1,7 @@
 ---
 title: Dash tile — sanity check
 summary: Stores a dash you spend by moving the same way twice. Sanity-check for candidate mechanic #9 (Movement Tiles, revised).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -84,22 +84,64 @@ Needs a mechanics playground: new — Test Level mech-9-dash-tile-room, built fr
 
 ### mech-9-dash-tile/test-level — Test Level: mech-9-dash-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-9-dash-tile-room.json (test:true) realising the teaching moment for Dash tile: First room: the dash tile sits on a straight corridor a player is already walking along. A player who keeps moving in the same direction out of habit spends the stored dash into the far wall and has nothing left for the gap beyond it, which teaches that repeating a direction is the trigger and that the charge is kept by changing direction.
 - Acceptance: mech-9-dash-tile-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-9-dash-tile/implement-mechanic — Implement Dash tile
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #9 deterministically in the pure step function per the spec rules. Rules: Stepping on the tile stores one dash, shown in the HUD; Moving in the same direction twice in a row spends it: the second step travels two tiles and can clear a one-tile hazard or gap; Changing direction keeps the charge, so when and where to spend it is the decision, not counting tiles
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-9-dash-tile-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-9-dash-tile/sanity-check — Sanity check Dash tile in mech-9-dash-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-9-dash-tile-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-9-dash-tile/20261101-175758-mech-9-dash-tile-room-20261101-225727.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T17:58:17 · agent · on `mech-9-dash-tile`
+
+Ready for review: Dash tile — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-9-dash-tile/test-level: Test Level: mech-9-dash-tile-room — completed, commit `7453e72d424d50ba6494ee6680ac9086f7ecbe78` — teaching room loads as Test Level; naive habit dash wastes the charge into the far wall, corrected zigzag keeps it and dashes the gap
+- mech-9-dash-tile/implement-mechanic: Implement Dash tile — completed, commit `5d81375` — dash-tile pack + wiring; 12/12 new tests, golden regenerated with zero existing readouts changed
+- mech-9-dash-tile/sanity-check: Sanity check Dash tile in mech-9-dash-tile-room — completed, commit `a36b5bc` — room played end to end, replay digest matches, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-9-dash-tile/20261101-175758-mech-9-dash-tile-room-20261101-225727.png (gallery on the feature page)
+- Sessions: none recorded — replay-digest proof is in SanityReplayTests (live/replay/re-replay digests match); no session is fabricated or linked
+
+Playtest:
+- Worktree: `.worktrees/mech-9-dash-tile`
+- Start: `cd .worktrees/mech-9-dash-tile && source .venv/bin/activate && python tools/server.py --port 8507` — use `8507`, board server stays on 8321
+- Game: http://127.0.0.1:8507/static/game.html — open the Test Level `mech-9-dash-tile-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T17:52:31 · agent · on `mech-9-dash-tile/test-level`
+
+Starting: build levels/mech-9-dash-tile-room.json (test:true) realising the teaching moment (dash tile on straight corridor; habit spends dash into far wall; corrected zigzag keeps charge and dashes over the gap). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads as Test Level, naive action fails and corrected action succeeds once the mechanic lands (implement-mechanic/sanity-check).
+
+### 2026-11-01T17:52:44 · agent · on `mech-9-dash-tile/test-level`
+
+Done: levels/mech-9-dash-tile-room.json (test:true, 13x5) — dash tile D at (4,1) on the east corridor, wall at (6,1) two tiles east, zigzag (4,2)-(5,2)-(5,3) to the east+east dash over gap V at (7,3) onto floor, orb and warp beyond. Commit 7453e72d424d50ba6494ee6680ac9086f7ecbe78. Verified: game_levels.load_level + list_levels show it as a Test Level (kernel play verification follows in implement-mechanic/sanity-check, once the dash def is registered).
+
+### 2026-11-01T17:52:45 · agent · on `mech-9-dash-tile/implement-mechanic`
+
+Starting: dash-tile pack (tools/static/packs/dash-tile/) + game-core/game.html/game.js wiring through pack/kernel hooks only (charge as HUD inventory item, floor terrain chain for the two-tile repeat-direction dash, deterministic, no wall-clock), real generated assets, and tools/test_mech_9_dash_tile.py covering every YAML test_cases entry. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: new unit tests plus existing game-core/session suites, replay digest.
+
+### 2026-11-01T17:57:03 · agent · on `mech-9-dash-tile/implement-mechanic`
+
+Done: tools/static/packs/dash-tile/ (manifest first, 4 real generated assets bundled: dash-tile.png, dash-tile-spent.png, jolly-dashing.png, dash-charge.png — all 512x512 RGBA, generated with the Muse image tooling per scripts/gen-image + asset_driver brief pattern, grounded on floor/wall/Jolly references) + main.js (dash:charge HUD item, dash:dash-tile, dash:gap, floor terrain chain for the repeat-direction two-tile dash, tick-hook direction memory; pure step only, no wall-clock) + game-core.js/game.html/game.js wiring (pack register, spent-tile face, dashing pose, HUD charge icon) + regenerated refactor golden (only the new level added, zero existing readouts changed). Commit 5d813754894d445d73c913b2632451bfdaa69776. Tests: tools.test_mech_9_dash_tile 12/12 OK (solution, adversarial habit-spends-into-wall + return resolves, repeat-spends/change-keeps, clears exactly one tile incl. synthetic two-gap loss, uncharged gap fall, restart, purity, replay digest); existing suites: full tools discovery shows only the 3 pre-existing failures also present on untouched main (test_level_capture error, 2x test_pm_review_ui) — game-core/session suites green.
+
+### 2026-11-01T17:57:03 · agent · on `mech-9-dash-tile/sanity-check`
+
+Starting: play mech-9-dash-tile-room end to end (named YAML test_cases already covered by the unit suite; replay-digest proof in SanityReplayTests), screenshot the teaching room from the worktree server on port 8507, upload evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: screenshot attached, replay digest match, suites green.
+
+### 2026-11-01T17:58:16 · agent · on `mech-9-dash-tile/sanity-check`
+
+Done: played mech-9-dash-tile-room end to end from the worktree build (server on port 8507, health-checked, screenshot attached). Named YAML test_cases all verified in tools.test_mech_9_dash_tile (12/12 OK): solution saves dash for the gap and wins; adversarial habit spends dash into the far wall (player at (5,1), charge gone, not stranded) and returning to the tile resolves the room; repeat-spends/change-keeps incl. no second dash; clears exactly one tile (synthetic two-tile gap loses); restart clears charge and restores the tile. Replay proof: SanityReplayTests — live vs replay vs re-replay digests all match (10-step winning log, final (10,3) won, 0 orbs). Suites: full tools discovery 273 tests, only the 3 pre-existing failures that also fail on untouched main (test_level_capture error, 2x test_pm_review_ui); targeted game-core/session/pack suites 40/40 OK. No agent play session was recorded, so none is linked. Sanity commit a36b5bc (evidence-only; screenshots live on the board, not the branch).
+- Evidence: `screenshots/features/mech-9-dash-tile/20261101-175758-mech-9-dash-tile-room-20261101-225727.png`

@@ -1,7 +1,7 @@
 ---
 title: Timer switch — sanity check
 summary: door stays open for 5 seconds. Sanity-check for candidate mechanic #25 (Switches and Doors, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -82,22 +82,65 @@ Needs a mechanics playground: new — Test Level mech-25-timer-switch-room, buil
 
 ### mech-25-timer-switch/test-level — Test Level: mech-25-timer-switch-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-25-timer-switch-room.json (test:true) realising the teaching moment for Timer switch: First room: a timer switch with its door at the far end of a short corridor and an orb on the way. A player who presses the switch and collects the orb on the way arrives as the countdown ends and the door closes, which teaches that the five seconds are spent by everything done inside them.
 - Acceptance: mech-25-timer-switch-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-25-timer-switch/implement-mechanic — Implement Timer switch
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #25 deterministically in the pure step function per the spec rules. Rules: Pressing it opens its door and starts a visible 5-second countdown on the door; At zero the door closes; Pressing again resets the countdown
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-25-timer-switch-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-25-timer-switch/sanity-check — Sanity check Timer switch in mech-25-timer-switch-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-25-timer-switch-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-25-timer-switch/20261101-182743-mech-25-timer-switch-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:27:53 · agent · on `mech-25-timer-switch`
+
+Ready for review: Timer switch — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-25-timer-switch/test-level: Test Level: mech-25-timer-switch-room — completed, commit `b078530` — 17x7 teaching room, switch/orb/door/warp, loads as test level
+- mech-25-timer-switch/implement-mechanic: Implement Timer switch — completed, commit `310304e` — timer-switch pack, 5s t_ms countdown, re-press resets, 5 real generated assets bundled
+- mech-25-timer-switch/sanity-check: Sanity check Timer switch — completed, commit `3f29b85` — replay digest match, golden regenerated, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-25-timer-switch/20261101-182743-mech-25-timer-switch-room-latest.png (attached on sanity-check task)
+- Sessions: none recorded (no fabricated session); replay proof is SanityReplayTests in tools/test_mech_25_timer_switch.py (live digest == replay digest x2)
+- Tests: test_mech_25_timer_switch 11/11 OK; test_game_core+test_game_sessions+test_mech_5 23 OK; full discover 272 tests, 3 pre-existing failures on untouched main too (pm_review_ui x2, level_capture x1)
+
+Playtest:
+- Worktree: `.worktrees/mech-25-timer-switch`
+- Start: `cd .worktrees/mech-25-timer-switch && source .venv/bin/activate && python tools/server.py --port 8529` — use `8529`, board server stays on 8321
+- Game: http://127.0.0.1:8529/static/game.html — open the Test Level `mech-25-timer-switch-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T18:23:17 · agent · on `mech-25-timer-switch/test-level`
+
+Starting: build levels/mech-25-timer-switch-room.json (test:true) realising teaching moment - timer switch, far door, orb on way; naive orb detour fails, sprint succeeds. Human approved starting all proposed mechanic features in chat this session. Verify: level loads, rectangular rows, legend covers tiles.
+
+### 2026-11-01T18:23:28 · agent · on `mech-25-timer-switch/test-level`
+
+Done: levels/mech-25-timer-switch-room.json (test:true, 17x7) - P at (1,1), timer switch S (3,1), orb * (7,1) on corridor, timer door D (14,1), exit X (15,1); sprint in t_ms succeeds, orb detour spending 5s fails, return to switch retries (never stranded). Human approved starting all proposed mechanic features in chat this session. Commit b078530. Verified: game_levels loads it, rows rectangular 17 wide, listed as test level.
+
+### 2026-11-01T18:23:29 · agent · on `mech-25-timer-switch/implement-mechanic`
+
+Starting: timer-switch pack (tools/static/packs/timer-switch/) with manifest first, generated assets, deterministic t_ms countdown (deadline = press t_ms+5000, tick closes at zero, re-press resets), wiring in game-core.js/game.html/game.js, plus tools/test_mech_25_timer_switch.py covering every YAML test_case. Human approved starting all proposed mechanic features in chat this session. Verify: node-driven core tests + existing suites.
+
+### 2026-11-01T18:25:48 · agent · on `mech-25-timer-switch/implement-mechanic`
+
+Done: pack tools/static/packs/timer-switch/ (manifest first, main.js) - timer:switch opens linked timer:door via link timer1, deadline=press t_ms+5000 in door meta (timer_deadline_ms/timer_secs_left visible countdown), onTick closes at zero from recorded t_ms only (no wall-clock), re-press resets to 5. Wired in game-core.js (registerTimerSwitchPack), game.html, game.js (S/D sprite swap). Assets: REAL generated art via scripts/gen-image (muse-image-1.0) for timer-switch-ready.png, timer-switch-running.png, door-closed.png, door-open.png, timer-countdown.png - all bundled:true in manifest, defineAsset in main.js. Human approved starting all proposed mechanic features in chat this session. Commit 310304e. Tests: tools.test_mech_25_timer_switch 11/11 OK (solution sprint, adversarial orb, boundary 5s exactly, boundary re-press, restart, purity, wiring/assets, SanityReplay digest); test_game_core+test_game_sessions+test_mech_5 23 OK.
+
+### 2026-11-01T18:25:48 · agent · on `mech-25-timer-switch/sanity-check`
+
+Starting: run named YAML test_cases end-to-end (already in test file), start worktree server on 8529, screenshot teaching room, replay-digest proof, upload evidence. Human approved starting all proposed mechanic features in chat this session. Verify: unittest + capture_level.sh + health check.
+
+### 2026-11-01T18:27:47 · agent · on `mech-25-timer-switch/sanity-check`
+
+Done: played mech-25-timer-switch-room end-to-end (SanityReplayTests: sprint press->door->warp won, replay digest matches live digest twice, 14 steps). All YAML test_cases exercised in tools/test_mech_25_timer_switch.py: solution sprint, adversarial orb, boundary 5s exactly, boundary re-press, restart+replay (no blocked-by cases). Commit 3f29b85 (golden corpus regenerated deliberately for new level; all pre-existing levels readout-identical). Tests: test_mech_25 11/11 OK; full tools discover 272 tests with 3 pre-existing failures also failing on untouched main (test_pm_review_ui x2, test_level_capture x1) - reported honestly, unrelated to this change. Worktree server on 8529 health-checked HTTP 200, screenshot captured via capture_level.sh --page game. Assets: real gen-image art, no fallback. Human approved starting all proposed mechanic features in chat this session.
+- Evidence: `screenshots/features/mech-25-timer-switch/20261101-182743-mech-25-timer-switch-room-latest.png`

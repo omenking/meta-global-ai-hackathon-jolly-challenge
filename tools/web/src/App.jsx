@@ -2,6 +2,10 @@ import { Button, Card, Chip, Spinner } from '@heroui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { api, evidenceUrl, PM } from './api.js';
 import GamePage from './GamePage.jsx';
+import FeatureWorktree from './FeatureWorktree.jsx';
+import CommentAttachments, { readAttachment } from './CommentAttachments.jsx';
+import EditCommentDialog from './EditCommentDialog.jsx';
+import { pmNavigationState, pmBackLink } from './pmNavigation.js';
 
 const STATUSES = ['proposed', 'approved', 'in_progress', 'in_review', 'completed', 'blocked', 'abandoned'];
 // Tasks are agent-managed and have no in_review stage: done means completed.
@@ -24,7 +28,7 @@ const PRIORITY_COLOR = { low: 'default', medium: 'default', high: 'warning', urg
 
 export function navigate(to) {
   if (location.pathname === to) return;
-  history.pushState(null, '', to);
+  history.pushState(pmNavigationState(to, location.pathname, history.state), '', to);
   window.dispatchEvent(new PopStateEvent('popstate'));
 }
 export function linkProps(to) {
@@ -40,7 +44,7 @@ function parseRoute(pathname) {
   if (parts[0] === 'game') return { view: 'game' };
   if (parts[0] !== 'pm') return { view: 'home' };
   if (parts.length === 1) return { view: 'list' };
-  if (parts[1] === 'board') return { view: 'board' };
+  if (parts[1] === 'board') return { view: 'list' }; // Legacy bookmarks open the feature list.
   if (parts[1] === 'epics' && !parts[2]) return { view: 'epics' };
   if (parts[1] === 'epics' && parts[2] === 'new') return { view: 'epic-new' };
   if (parts[1] === 'epics' && parts[2]) {
@@ -83,7 +87,7 @@ function Progress({ progress }) {
       <span className="inline-block h-2.5 w-28 overflow-hidden rounded bg-neutral-200 dark:bg-neutral-700">
         <span className="block h-full bg-emerald-600" style={{ width: `${p.percent}%` }} />
       </span>
-      <span className="text-sm text-neutral-500">{p.done}/{p.total} tasks</span>
+      <span className="text-sm text-black dark:text-neutral-100">{p.done}/{p.total} tasks</span>
     </span>
   );
 }
@@ -95,16 +99,16 @@ function Shell({ route, dark, onToggleDark, children }) {
   );
   const pmActive = route.view !== 'home';
   return (
-    <div className="min-h-screen bg-neutral-100 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+    <div className="min-h-screen bg-neutral-100 text-black dark:bg-neutral-950 dark:text-neutral-100">
       <header className="sticky top-0 z-20 border-b border-neutral-200 bg-white/95 dark:border-neutral-800 dark:bg-neutral-900/95">
         <div className="mx-auto flex max-w-[1400px] flex-wrap items-center gap-2 px-4 py-3">
           <a className="mr-2 text-lg font-semibold" {...linkProps('/')}>Jolly Tools</a>
           {navBtn('/', 'Home', route.view === 'home')}
           {navBtn('/pm', 'Project Manager', pmActive)}
-          <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/assets">Asset Design</a>
-          <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/static/level-preview.html">Level Preview</a>
-          <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/game">Game</a>
-          <a className="px-2 text-base text-neutral-600 hover:underline dark:text-neutral-300" href="/worktrees">Worktrees</a>
+          <a className="px-2 text-base text-black hover:underline dark:text-neutral-300" href="/assets">Asset Design</a>
+          <a className="px-2 text-base text-black hover:underline dark:text-neutral-300" href="/static/level-preview.html">Level Preview</a>
+          <a className="px-2 text-base text-black hover:underline dark:text-neutral-300" href="/game">Game</a>
+          <a className="px-2 text-base text-black hover:underline dark:text-neutral-300" href="/worktrees">Worktrees</a>
           <span className="flex-1" />
           <Button size="md" variant="outline" onPress={onToggleDark}>{dark ? 'Light' : 'Dark'}</Button>
         </div>
@@ -120,7 +124,7 @@ function ToolCard({ to, href, title, desc }) {
       {href
         ? <a className="text-lg font-semibold text-blue-700 hover:underline dark:text-blue-300" href={href}>{title}</a>
         : <a className="text-lg font-semibold text-blue-700 hover:underline dark:text-blue-300" {...linkProps(to)}>{title}</a>}
-      <p className="mt-1 text-base text-neutral-600 dark:text-neutral-300">{desc}</p>
+      <p className="mt-1 text-base text-black dark:text-neutral-300">{desc}</p>
     </Card>
   );
 }
@@ -130,11 +134,11 @@ function Home() {
     <div className="mx-auto max-w-3xl space-y-4">
       <div>
         <h1 className="text-2xl font-semibold">Tools</h1>
-        <p className="text-base text-neutral-500">Local tools for the Chip&apos;s Challenge clone. Everything runs from this one server.</p>
+        <p className="text-base text-black dark:text-neutral-100">Local tools for the Chip&apos;s Challenge clone. Everything runs from this one server.</p>
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <ToolCard to="/pm" title="Project Manager"
-          desc="Feature and task board for the game engine: list, kanban, comments, and feature review." />
+          desc="Project management for the game engine: features, epics, comments, and feature review." />
         <ToolCard href="/assets" title="Asset Design Tool"
           desc="Iterate on generated tile art: versions, lottery runs, sessions, and judging." />
         <ToolCard href="/static/level-preview.html" title="Level Preview"
@@ -176,13 +180,14 @@ function PageLinks({ items }) {
 function CommentCard({ comment, scope, onEdit, onDelete }) {
   const canEdit = comment.author === 'human';
   return (
-    <div className={`rounded-lg border p-4 ${comment.author === 'agent'
-      ? 'border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/40'
-      : 'border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900'}`}>
-      <div className="text-sm text-neutral-500">
+    <div className="rounded-lg border border-neutral-200 bg-white p-4 text-black dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100">
+      <div className="text-sm text-black dark:text-neutral-100">
         {comment.created} · {comment.author} · on {scope}
         {!canEdit && ' · read-only (agent)'}
       </div>
+      {!!comment.labels?.length && <div className="mt-2 flex flex-wrap gap-1">
+        {comment.labels.map((label) => <Chip key={label} size="sm" variant="soft">{label}</Chip>)}
+      </div>}
       <div className="mt-1 whitespace-pre-wrap text-base leading-relaxed">{comment.body}</div>
       {!!(comment.attachments || []).length && (
         <div className="mt-2 flex flex-wrap gap-2">
@@ -194,7 +199,7 @@ function CommentCard({ comment, scope, onEdit, onDelete }) {
         </div>
       )}
       {!!(comment.session_refs || []).length && (
-        <div className="mt-2 text-sm text-neutral-500">
+        <div className="mt-2 text-sm text-black dark:text-neutral-100">
           {comment.session_refs.map((s, i) => (
             <div key={i}>Session {s.id} · {s.level} · {s.created_by} · {s.result}{s.path ? ` · ${s.path}` : ''}</div>
           ))}
@@ -211,29 +216,61 @@ function CommentCard({ comment, scope, onEdit, onDelete }) {
 }
 
 function Comments({ feature, task, reload }) {
-  const [body, setBody] = useState('');
-  const [atts, setAtts] = useState('');
+  const [comment, setComment] = useState('');
+  const [reviewNotice, setReviewNotice] = useState('');
+  const [editing, setEditing] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [labels, setLabels] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
-  const list = (task ? task.comments : feature.comments) || [];
+  const list = [...((task ? task.comments : feature.comments) || [])].reverse()
+    .sort((a, b) => (Date.parse(b.created) || 0) - (Date.parse(a.created) || 0));
   const scope = task ? `${feature.id}/${task.id}` : feature.id;
   const base = task
     ? `${PM}/features/${encodeURIComponent(feature.id)}/tasks/${encodeURIComponent(task.id)}/comments`
     : `${PM}/features/${encodeURIComponent(feature.id)}/comments`;
-  async function add() {
-    setBusy(true); setErr('');
+  async function submit(decision = null) {
+    if (busy || (decision && reviewNotice)) return;
+    if (files.length && !comment.trim()) {
+      setErr('Add a comment to describe the attached images.'); return;
+    }
+    if (labels.trim() && !comment.trim()) {
+      setErr('Add a comment to describe the labeled issues.'); return;
+    }
+    if (decision === 'changes_requested' && !comment.trim()) {
+      setErr('Request changes requires a comment.'); return;
+    }
+    if (!decision && !comment.trim()) {
+      setErr('Enter a comment before posting.'); return;
+    }
+    setBusy(true); setErr(''); setReviewNotice('');
     try {
-      const attachments = atts.split(',').map((s) => s.trim()).filter(Boolean);
-      await api('POST', base, { author: 'human', body, attachments });
-      setBody(''); setAtts('');
+      const attachments = [];
+      for (const item of files) {
+        let path = item.path;
+        if (!path) {
+          const uploaded = await api('POST', `${PM}/features/${encodeURIComponent(feature.id)}/evidence`,
+            { filename: item.file.name, data_b64: await readAttachment(item.file) });
+          path = uploaded.path;
+          // Keep completed uploads if a later upload or the comment request fails.
+          setFiles((current) => current.map((f) => f.id === item.id ? { ...f, path } : f));
+        }
+        attachments.push(path);
+      }
+      if (decision) {
+        await api('POST', `${PM}/features/${encodeURIComponent(feature.id)}/review`,
+          { decision, by: 'human', comment: comment.trim(), attachments, labels });
+      } else {
+        await api('POST', base, { author: 'human', body: comment, attachments, labels });
+      }
+      setComment(''); setFiles([]); setLabels('');
+      setReviewNotice(decision === 'approved_for_merge'
+        ? 'Recorded: approved for merge. Awaiting agent merge.'
+        : decision === 'changes_requested'
+          ? 'Recorded: changes requested. The feature is back in progress.'
+          : 'Comment added.');
       await reload();
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
-  }
-  async function edit(comment) {
-    const next = window.prompt('Edit comment', comment.body);
-    if (next === null) return;
-    try { await api('PUT', `${base}/${encodeURIComponent(comment.id)}`, { body: next }); await reload(); }
-    catch (e) { setErr(e.message); }
   }
   async function del(comment) {
     try { await api('DELETE', `${base}/${encodeURIComponent(comment.id)}`); await reload(); }
@@ -241,26 +278,46 @@ function Comments({ feature, task, reload }) {
   }
   return (
     <div className="space-y-3">
-      {list.map((c) => (
-        <CommentCard key={c.id} comment={c} scope={scope} onEdit={edit} onDelete={del} />
-      ))}
-      {!list.length && <p className="text-base text-neutral-500">No comments yet.</p>}
-      {err && <p className="text-base text-red-600">{err}</p>}
+      {err && <p role="alert" className="text-base text-red-600">{err}</p>}
       <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
-        <h4 className="mb-2 text-base font-semibold">Add a comment</h4>
-        <Field label="Comment (as human)">
-          <textarea className={inputCls} rows={4} value={body}
-            onChange={(e) => setBody(e.target.value)} />
+        <h4 className="mb-2 text-base font-semibold">{task ? 'Add a comment' : 'Comment & review'}</h4>
+        {!task && <p className="mb-3 text-sm text-black dark:text-neutral-100">Review decision: <strong>{feature.review?.decision || 'pending'}</strong></p>}
+        {reviewNotice && <p role="status" className="mb-3 text-base text-emerald-700 dark:text-emerald-300">{reviewNotice}</p>}
+        <Field label={task ? "Comment (as human)" : "Comment (required for Request changes)"}>
+          <textarea className={inputCls} rows={4} value={comment}
+            disabled={busy}
+            onChange={(e) => { setComment(e.target.value); setReviewNotice(''); }} />
         </Field>
         <div className="mt-3">
-          <Field label="Attachments (comma-separated evidence paths)">
-            <input className={inputCls} value={atts} onChange={(e) => setAtts(e.target.value)} />
+          <Field label="Labels (comma-separated)">
+            <input className={inputCls} value={labels} disabled={busy} placeholder="e.g. movement, graphics, map layout"
+              onChange={(e) => { setLabels(e.target.value); setReviewNotice(''); }} />
           </Field>
         </div>
-        <div className="mt-3">
-          <Button size="md" isPending={busy} onPress={add}>Add comment</Button>
+        <CommentAttachments files={files} disabled={busy} onError={setErr}
+          onChange={(next) => { setFiles(next); setReviewNotice(''); }} />
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+          <Button size="md" isPending={busy} isDisabled={busy || !comment.trim()}
+            onPress={() => submit()}>Add comment</Button>
+          {!task && <div className="ml-auto flex flex-wrap gap-2">
+            <Button size="md" variant="danger" isDisabled={busy || !!reviewNotice}
+              onPress={() => submit('changes_requested')}>Request changes</Button>
+            <Button size="md" isDisabled={busy || !!reviewNotice}
+              onPress={() => submit('approved_for_merge')}>Approve for merge</Button>
+          </div>}
         </div>
+        {!task && <p className="mt-3 text-sm text-black dark:text-neutral-100">Review actions post the comment and record your decision. Approval awaits the agent’s merge.</p>}
       </div>
+      <p className="text-sm text-black dark:text-neutral-100">Newest comments first</p>
+      {list.map((c) => (
+        <CommentCard key={c.id} comment={c} scope={scope} onEdit={setEditing} onDelete={del} />
+      ))}
+      {!list.length && <p className="text-base text-black dark:text-neutral-100">No comments yet.</p>}
+      {editing && <EditCommentDialog key={editing.id} comment={editing} onClose={() => setEditing(null)}
+        onSave={async (changes) => {
+          await api('PUT', `${base}/${encodeURIComponent(editing.id)}`, changes);
+          await reload();
+        }} />}
     </div>
   );
 }
@@ -292,7 +349,7 @@ function PmToolbar({ features, query, setQuery, statusFilter, setStatusFilter,
       <Button size="md" variant="outline" isPending={busy} onPress={onSeed}>Seed</Button>
       <Button size="md" variant="outline" isPending={busy} onPress={onExport}>Export markdown</Button>
       <Button size="md" onPress={() => navigate('/pm/features/new')}>New feature</Button>
-      <span className="pb-3 text-base text-neutral-500">{features.length} feature(s)</span>
+      <span className="pb-3 text-base text-black dark:text-neutral-100">{features.length} feature(s)</span>
     </div>
   );
 }
@@ -302,83 +359,17 @@ function FeatureRow({ feature }) {
   return (
     <a {...linkProps(featurePath(feature.id))}
       className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-500 dark:hover:bg-neutral-800/60">
-      <span className="min-w-0 flex-1 truncate text-base">
-        <span className="font-medium">{feature.title}</span>
-        <span className="ml-2 text-sm text-neutral-500">{feature.id}</span>
+      <span className="min-w-0 flex-1 text-base">
+        <span className="block truncate font-medium" title={feature.title}>{feature.title}</span>
+        <span className="mt-1 block break-all font-mono text-sm text-black dark:text-neutral-300">ID: {feature.id}</span>
       </span>
-      <span className="hidden w-44 shrink-0 truncate text-sm text-neutral-500 md:block">{feature.epic || '—'}</span>
+      <span className="hidden w-44 shrink-0 truncate text-sm text-black md:block dark:text-neutral-100">{feature.epic || '—'}</span>
       <span className="flex w-24 shrink-0 justify-center"><StatusChip status={feature.status} /></span>
       <span className="flex w-20 shrink-0 justify-center"><PriorityChip priority={feature.priority} /></span>
-      <span className="w-14 shrink-0 text-right text-sm tabular-nums text-neutral-500">
+      <span className="w-14 shrink-0 text-right text-sm tabular-nums text-black dark:text-neutral-100">
         {progress.done}/{progress.total}
       </span>
     </a>
-  );
-}
-
-function Board({ features, showArchived, featureFilter, setFeatureFilter, reload, setError }) {
-  const [over, setOver] = useState('');
-  async function handleDrop(status, count, e) {
-    e.preventDefault(); setOver('');
-    let payload;
-    try { payload = JSON.parse(e.dataTransfer.getData('text/plain')); } catch { return; }
-    try {
-      await api('POST',
-        `${PM}/features/${encodeURIComponent(payload.fid)}/tasks/${encodeURIComponent(payload.tid)}/move`,
-        { status, order: count });
-      await reload();
-    } catch (err) { setError(err.message); }
-  }
-  return (
-    <div>
-      <div className="mb-3 max-w-sm">
-        <Field label="Filter by feature">
-          <select className={inputCls} value={featureFilter}
-            onChange={(e) => setFeatureFilter(e.target.value)}>
-            <option value="">All features</option>
-            {features.map((f) => <option key={f.id} value={f.id}>{f.id}</option>)}
-          </select>
-        </Field>
-      </div>
-      <div className="pm-scroll grid auto-cols-[240px] grid-flow-col gap-3 overflow-x-auto pb-2">
-        {TASK_STATUSES.map((status) => {
-          const cards = [];
-          for (const f of features) {
-            if (featureFilter && f.id !== featureFilter) continue;
-            for (const t of sortTasks(f.tasks)) {
-              if (taskStatus(t) !== status) continue;
-              if (!showArchived && t.archived) continue;
-              cards.push({ f, t });
-            }
-          }
-          return (
-            <div key={status}
-              className={`min-h-32 rounded-lg border bg-white p-3 dark:bg-neutral-900 ${over === status
-                ? 'border-blue-500 outline-dashed outline-2 outline-blue-400'
-                : 'border-neutral-200 dark:border-neutral-700'}`}
-              onDragOver={(e) => { e.preventDefault(); setOver(status); }}
-              onDragLeave={() => setOver('')}
-              onDrop={(e) => handleDrop(status, cards.length, e)}>
-              <h3 className="mb-2 text-base font-semibold">{status} ({cards.length})</h3>
-              {cards.map(({ f, t }) => (
-                <div key={`${f.id}/${t.id}`} draggable
-                  className="mb-2 cursor-grab rounded border border-neutral-200 bg-neutral-50 p-3 dark:border-neutral-700 dark:bg-neutral-800"
-                  onDragStart={(e) => e.dataTransfer.setData('text/plain',
-                    JSON.stringify({ fid: f.id, tid: t.id }))}>
-                  <div className="text-sm text-neutral-500">{f.id}</div>
-                  <a className="text-base hover:underline" {...linkProps(taskPath(f.id, t.id))}>{t.title}</a>
-                  <div className="mt-1 flex gap-1">
-                    <PriorityChip priority={t.priority} />
-                    {t.kind === 'review-fixes' && <Chip variant="soft">review-fixes</Chip>}
-                  </div>
-                </div>
-              ))}
-            </div>
-          );
-        })}
-      </div>
-      <p className="text-sm text-neutral-500">Drag a card to another column to change its status. List and board are two views of the same tasks.</p>
-    </div>
   );
 }
 
@@ -386,14 +377,14 @@ function EpicsPage({ epics, showArchived }) {
   const visible = (epics || []).filter((e) => showArchived || !e.archived);
   return (
     <div className="space-y-4">
-      <PageLinks items={[['← Board list', '/pm'], ['Kanban', '/pm/board']]} />
+      <PageLinks items={[['← Feature list', '/pm']]} />
       <div className="flex flex-wrap items-center gap-2">
         <h1 className="text-2xl font-semibold">Epics</h1>
         <span className="flex-1" />
         <Button size="md" onPress={() => navigate('/pm/epics/new')}>New epic</Button>
       </div>
       <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
-        <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-500 dark:border-neutral-700" aria-hidden="true">
+        <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-2 text-sm font-semibold text-black dark:border-neutral-700 dark:text-neutral-100" aria-hidden="true">
           <span className="min-w-0 flex-1">Epic</span>
           <span className="w-28 text-center">Features</span>
           <span className="w-28 text-right">Tasks done</span>
@@ -406,11 +397,11 @@ function EpicsPage({ epics, showArchived }) {
                 className="flex items-center gap-3 px-4 py-2.5 hover:bg-neutral-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue-500 dark:hover:bg-neutral-800/60">
                 <span className="min-w-0 flex-1 truncate text-base">
                   <span className="font-medium">{e.title}</span>
-                  <span className="ml-2 text-sm text-neutral-500">{e.id}</span>
+                  <span className="ml-2 text-sm text-black dark:text-neutral-100">{e.id}</span>
                 </span>
                 {e.archived && <Chip variant="soft">archived</Chip>}
-                <span className="w-28 shrink-0 text-center text-sm tabular-nums text-neutral-500">{p.completed}/{p.features}</span>
-                <span className="w-28 shrink-0 text-right text-sm tabular-nums text-neutral-500">{p.tasks_done}/{p.tasks_total}</span>
+                <span className="w-28 shrink-0 text-center text-sm tabular-nums text-black dark:text-neutral-100">{p.completed}/{p.features}</span>
+                <span className="w-28 shrink-0 text-right text-sm tabular-nums text-black dark:text-neutral-100">{p.tasks_done}/{p.tasks_total}</span>
               </a>
             );
           })}
@@ -426,13 +417,13 @@ function EpicShow({ epic, features, reload, setError }) {
   const p = epic.progress || { features: mine.length, completed: 0, tasks_done: 0, tasks_total: 0 };
   return (
     <div className="space-y-4">
-      <PageLinks items={[['← Epics', '/pm/epics'], ['Board list', '/pm'], ['Kanban', '/pm/board']]} />
+      <PageLinks items={[['← Epics', '/pm/epics'], ['Feature list', '/pm']]} />
       <Card className="p-5">
         <div className="flex flex-wrap items-start gap-3">
           <div className="min-w-60 flex-1">
             <h1 className="text-2xl font-semibold leading-snug">{epic.title}</h1>
-            <p className="mt-1 text-base text-neutral-600 dark:text-neutral-300">{epic.summary || 'No summary yet.'}</p>
-            <p className="mt-1 text-sm text-neutral-500">{epic.id} · {p.completed}/{p.features} features completed · {p.tasks_done}/{p.tasks_total} tasks done</p>
+            <p className="mt-1 text-base text-black dark:text-neutral-300">{epic.summary || 'No summary yet.'}</p>
+            <p className="mt-1 text-sm text-black dark:text-neutral-100">{epic.id} · {p.completed}/{p.features} features completed · {p.tasks_done}/{p.tasks_total} tasks done</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button size="md" onPress={() => navigate(`${epicPath(epic.id)}/edit`)}>Edit epic</Button>
@@ -444,7 +435,7 @@ function EpicShow({ epic, features, reload, setError }) {
         </div>
       </Card>
       <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
-        <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-500 dark:border-neutral-700" aria-hidden="true">
+        <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-2 text-sm font-semibold text-black dark:border-neutral-700 dark:text-neutral-100" aria-hidden="true">
           <span className="min-w-0 flex-1">Feature</span>
           <span className="hidden w-44 md:block">Epic</span>
           <span className="w-24 text-center">Status</span>
@@ -513,16 +504,16 @@ function EpicEdit({ epic, reload, setError }) {
 
 function SpecShow({ spec }) {
   return (
-    <div className="grid gap-3 lg:grid-cols-2">
+    <Card className="divide-y divide-neutral-200 px-5 dark:divide-neutral-700">
       {SPEC_KEYS.map(([key, title]) => (
-        <section key={key} className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-900">
+        <section key={key} className="py-5">
           <h3 className="text-lg font-semibold">{title}</h3>
-          <div className="mt-1 whitespace-pre-wrap text-base leading-relaxed text-neutral-700 dark:text-neutral-200">
-            {(spec || {})[key] || <span className="text-neutral-400">Not written yet.</span>}
+          <div className="mt-1 whitespace-pre-wrap text-base leading-relaxed text-black dark:text-neutral-200">
+            {(spec || {})[key] || <span className="text-black dark:text-neutral-100">Not written yet.</span>}
           </div>
         </section>
       ))}
-    </div>
+    </Card>
   );
 }
 
@@ -539,56 +530,8 @@ function collectEvidence(feature) {
   return { gallery, sessions };
 }
 
-function ReviewPanel({ feature, reload, setError }) {
-  const [comment, setComment] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [notice, setNotice] = useState('');
-  const decision = feature.review?.decision || 'pending';
-  async function review(dec) {
-    if (dec === 'changes_requested' && !comment.trim()) {
-      setError('Request changes requires a comment.'); return;
-    }
-    setBusy(true); setNotice('');
-    try {
-      await api('POST', `${PM}/features/${encodeURIComponent(feature.id)}/review`,
-        { decision: dec, by: 'human', comment });
-      setComment('');
-      setNotice(dec === 'approved_for_merge'
-        ? 'Recorded: approved for merge. The agent merges; only then completed.'
-        : 'Recorded: changes requested. The feature is back in progress.');
-      await reload();
-    } catch (e) { setError(e.message); } finally { setBusy(false); }
-  }
-  return (
-    <Card className="space-y-3 p-5">
-      <h2 className="text-lg font-semibold">Review</h2>
-      <p className="text-base text-neutral-600 dark:text-neutral-300">
-        Decision: <strong>{decision}</strong>
-        {decision === 'approved_for_merge' && ' — approved, awaiting agent merge'}
-      </p>
-      {notice && <p className="rounded border border-emerald-300 bg-emerald-50 p-3 text-base text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200" role="status">{notice}</p>}
-      <Field label="Comment (required for Request changes)">
-        <textarea className={inputCls} rows={3} value={comment}
-          onChange={(e) => setComment(e.target.value)} />
-      </Field>
-      <div className="flex flex-wrap gap-2">
-        <Button size="md" variant="danger" isPending={busy} isDisabled={busy || !!notice}
-          onPress={() => review('changes_requested')}>Request changes</Button>
-        <Button size="md" isPending={busy} isDisabled={busy || !!notice}
-          onPress={() => review('approved_for_merge')}>Approve for merge</Button>
-      </div>
-      <p className="text-sm text-neutral-500">
-        Tasks are agent-managed: done tasks are completed as the agent reports
-        them, so inspect task code/commits above. Approving only records the
-        decision; the agent merges and only then the feature is completed.
-      </p>
-    </Card>
-  );
-}
-
 function EvidencePanel({ feature }) {
   const { gallery, sessions } = collectEvidence(feature);
-  const wt = feature.worktree || `.worktrees/${feature.id}`;
   return (
     <Card className="space-y-3 p-5">
       <h2 className="text-lg font-semibold">Evidence &amp; playtest</h2>
@@ -602,42 +545,32 @@ function EvidencePanel({ feature }) {
               </a>
             ))}
           </div>
-        ) : <p className="text-base text-neutral-500">No screenshot evidence yet.</p>}
+        ) : <p className="text-base text-black dark:text-neutral-100">No screenshot evidence yet.</p>}
       </div>
       <div>
         <h3 className="text-base font-semibold">Linked sessions</h3>
         {sessions.length ? sessions.map((s, i) => (
-          <p key={i} className="text-base text-neutral-600 dark:text-neutral-300">
+          <p key={i} className="text-base text-black dark:text-neutral-300">
             Session {s.id} · level {s.level} · creator {s.created_by} · result {s.result}
             {s.path ? ` · ${s.path}` : ''}
           </p>
-        )) : <p className="text-base text-neutral-500">No linked sessions yet.</p>}
-      </div>
-      <div>
-        <h3 className="text-base font-semibold">Playtest</h3>
-        <p className="text-base text-neutral-600 dark:text-neutral-300">
-          Test Level: {feature.test_level || '—'} (start it from the game menu in the
-          worktree build; the manager never starts levels). Worktree: {wt} ·
-          branch: {feature.branch || `feat/${feature.id}`}
-        </p>
-        <pre className="mt-2 overflow-x-auto rounded bg-neutral-900 p-3 text-sm text-emerald-200">
-{`cd ${wt} && python tools/server.py --port 8323
-Then open http://127.0.0.1:8323/pm/features/${feature.id} and start Test Level ${feature.test_level || '<test_level>'} from the game menu.`}
-        </pre>
+        )) : <p className="text-base text-black dark:text-neutral-100">No linked sessions yet.</p>}
       </div>
     </Card>
   );
 }
 
 function FeatureShow({ feature, reload, setError }) {
+  const [detailTab, setDetailTab] = useState('specification');
+  useEffect(() => { setDetailTab('specification'); }, [feature.id]);
   return (
     <div className="space-y-4">
-      <PageLinks items={[['← Board list', '/pm'], ['Kanban', '/pm/board']]} />
+      <PageLinks items={[pmBackLink(history.state)]} />
       <Card className="p-5">
         <div className="flex flex-wrap items-start gap-3">
           <div className="min-w-60 flex-1">
             <h1 className="text-2xl font-semibold leading-snug">{feature.title}</h1>
-            <p className="mt-1 text-base text-neutral-600 dark:text-neutral-300">{feature.summary}</p>
+            <p className="mt-1 text-base text-black dark:text-neutral-300">{feature.summary}</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button size="md" onPress={() => navigate(`${featurePath(feature.id)}/edit`)}>Edit feature</Button>
@@ -660,42 +593,71 @@ function FeatureShow({ feature, reload, setError }) {
 
       <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_400px]">
         <div className="min-w-0 space-y-4">
-          <Card className="p-5">
-            <div className="flex items-center gap-2">
-              <h2 className="flex-1 text-xl font-semibold">Tasks</h2>
-              <Button size="md" variant="outline" onPress={() => navigate(`${featurePath(feature.id)}/tasks/new`)}>New task</Button>
-            </div>
-            <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
-              {sortTasks(feature.tasks).map((t) => (
-                <div key={t.id} className="flex flex-wrap items-center gap-2 py-2.5">
-                  <a className="text-base font-medium hover:underline" {...linkProps(taskPath(feature.id, t.id))}>{t.title}</a>
-                  <TaskStatusChip task={t} />
-                  <PriorityChip priority={t.priority} />
-                  {t.kind === 'review-fixes' && <Chip variant="soft">review-fixes</Chip>}
-                  <span className="text-sm text-neutral-500">
-                    {t.id}{t.commit ? ` · ${t.commit}` : ''}{t.archived ? ' · archived' : ''}
-                  </span>
-                  <span className="flex-1" />
-                  <Button size="md" variant="outline" onPress={() => navigate(`${taskPath(feature.id, t.id)}/edit`)}>Edit</Button>
-                </div>
+
+
+          <div className="space-y-4">
+            <div role="tablist" aria-label="Feature details" className="flex flex-wrap gap-2 border-b border-neutral-200 pb-2 dark:border-neutral-700">
+              {['specification', 'tasks', 'comments'].map((tab) => (
+                <button key={tab} type="button" role="tab" id={`feature-${tab}-tab`}
+                  aria-selected={detailTab === tab} aria-controls={`feature-${tab}-panel`}
+                  tabIndex={detailTab === tab ? 0 : -1}
+                  className={`rounded px-4 py-2 text-base font-semibold focus-visible:outline-2 focus-visible:outline-blue-500 ${detailTab === tab
+                    ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
+                    : 'text-black hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800'}`}
+                  onClick={() => setDetailTab(tab)}
+                  onKeyDown={(event) => {
+                    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+                    event.preventDefault();
+                    const tabs = ['specification', 'tasks', 'comments'];
+                    const next = event.key === 'Home' ? tabs[0] : event.key === 'End' ? tabs[tabs.length - 1]
+                      : tabs[(tabs.indexOf(tab) + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
+                    setDetailTab(next);
+                    document.getElementById(`feature-${next}-tab`)?.focus();
+                  }}>
+                  {tab === 'specification' ? 'Specification' : tab === 'tasks'
+                    ? `Tasks (${feature.tasks?.length || 0})` : `Comments (${feature.comments?.length || 0})`}
+                </button>
               ))}
-              {!feature.tasks?.length && <p className="py-2 text-base text-neutral-500">No tasks yet.</p>}
             </div>
-          </Card>
-
-          <div>
-            <h2 className="mb-3 text-xl font-semibold">Specification</h2>
-            <SpecShow spec={feature.spec} />
-          </div>
-
-          <div>
-            <h2 className="mb-3 text-xl font-semibold">Comments</h2>
-            <Comments feature={feature} task={null} reload={reload} />
+            <div role="tabpanel" id="feature-specification-panel" aria-labelledby="feature-specification-tab"
+              hidden={detailTab !== 'specification'} tabIndex={0}>
+              <SpecShow spec={feature.spec} />
+            </div>
+            <div role="tabpanel" id="feature-tasks-panel" aria-labelledby="feature-tasks-tab"
+              hidden={detailTab !== 'tasks'} tabIndex={0}>
+              <Card className="p-5">
+                <div className="flex items-center gap-2">
+                  <h2 className="flex-1 text-xl font-semibold">Tasks</h2>
+                  <Button size="md" variant="outline" onPress={() => navigate(`${featurePath(feature.id)}/tasks/new`)}>New task</Button>
+                </div>
+                <div className="mt-2 divide-y divide-neutral-100 dark:divide-neutral-800">
+                  {sortTasks(feature.tasks).map((t) => (
+                    <div key={t.id} className="flex flex-wrap items-center gap-2 py-2.5">
+                      <a className="text-base font-medium hover:underline" {...linkProps(taskPath(feature.id, t.id))}>{t.title}</a>
+                      <TaskStatusChip task={t} />
+                      <PriorityChip priority={t.priority} />
+                      {t.kind === 'review-fixes' && <Chip variant="soft">review-fixes</Chip>}
+                      {t.kind === 'qa' && <Chip variant="soft" color="warning">qa</Chip>}
+                      <span className="text-sm text-black dark:text-neutral-100">
+                        {t.id}{t.commit ? ` · ${t.commit}` : ''}{t.archived ? ' · archived' : ''}
+                      </span>
+                      <span className="flex-1" />
+                      <Button size="md" variant="outline" onPress={() => navigate(`${taskPath(feature.id, t.id)}/edit`)}>Edit</Button>
+                    </div>
+                  ))}
+                  {!feature.tasks?.length && <p className="py-2 text-base text-black dark:text-neutral-100">No tasks yet.</p>}
+                </div>
+              </Card>
+            </div>
+            <div role="tabpanel" id="feature-comments-panel" aria-labelledby="feature-comments-tab"
+              hidden={detailTab !== 'comments'} tabIndex={0} className="space-y-4">
+              <Comments key={feature.id} feature={feature} task={null} reload={reload} />
+            </div>
           </div>
         </div>
 
         <div className="space-y-4 xl:sticky xl:top-20">
-          <ReviewPanel feature={feature} reload={reload} setError={setError} />
+          <FeatureWorktree key={feature.id} feature={feature} />
           <EvidencePanel feature={feature} />
           <Card className="p-5">
             <h2 className="text-lg font-semibold">Details</h2>
@@ -729,7 +691,7 @@ function FeatureEdit({ feature, epics, reload, setError }) {
   const back = featurePath(feature.id);
   return (
     <div className="mx-auto max-w-3xl space-y-4">
-      <PageLinks items={[['← Back to feature', back], ['Board list', '/pm']]} />
+      <PageLinks items={[['← Back to feature', back], ['Feature list', '/pm']]} />
       <Card className="space-y-4 p-5">
         <h1 className="text-2xl font-semibold">Edit feature</h1>
         <Field label="Title"><input className={inputCls} value={form.title} onChange={set('title')} /></Field>
@@ -788,7 +750,7 @@ function FeatureNew({ epics, reload, setError }) {
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <PageLinks items={[['← Board list', '/pm']]} />
+      <PageLinks items={[['← Feature list', '/pm']]} />
       <Card className="space-y-4 p-5">
         <h1 className="text-2xl font-semibold">New feature</h1>
         <Field label="Id (optional, slug)">
@@ -807,7 +769,7 @@ function FeatureNew({ epics, reload, setError }) {
             {(epics || []).filter((e) => !e.archived).map((e) => <option key={e.id} value={e.id}>{e.title} ({e.id})</option>)}
           </select>
         </Field>
-        <p className="text-base text-neutral-500">New features start at proposed and need human approval before implementation.</p>
+        <p className="text-base text-black dark:text-neutral-100">New features start at proposed and need human approval before implementation.</p>
         <div className="flex gap-2">
           <Button size="md" variant="outline" onPress={() => navigate('/pm')}>Cancel</Button>
           <Button size="md" isPending={busy} onPress={async () => {
@@ -830,12 +792,13 @@ function TaskShow({ feature, task, reload, setError }) {
   const back = featurePath(feature.id);
   return (
     <div className="space-y-4">
-      <PageLinks items={[['← Back to feature', back], ['Board list', '/pm'], ['Kanban', '/pm/board']]} />
+      <PageLinks items={[['← Back to feature', back], ['Feature list', '/pm']]} />
+      <FeatureWorktree key={feature.id} feature={feature} />
       <Card className="p-5">
         <div className="flex flex-wrap items-start gap-3">
           <div className="min-w-60 flex-1">
             <h1 className="text-2xl font-semibold leading-snug">{task.title}</h1>
-            <p className="mt-1 text-base text-neutral-500">{feature.id}/{task.id} · in {feature.title}</p>
+            <p className="mt-1 text-base text-black dark:text-neutral-100">{feature.id}/{task.id} · in {feature.title}</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <Button size="md" onPress={() => navigate(`${taskPath(feature.id, task.id)}/edit`)}>Edit task</Button>
@@ -851,6 +814,7 @@ function TaskShow({ feature, task, reload, setError }) {
           <TaskStatusChip task={task} />
           <PriorityChip priority={task.priority} />
           {task.kind === 'review-fixes' && <Chip variant="soft">review-fixes</Chip>}
+          {task.kind === 'qa' && <Chip variant="soft" color="warning">qa</Chip>}
           {task.archived && <Chip variant="soft">archived</Chip>}
         </div>
         <dl className="mt-4 grid gap-x-6 gap-y-2 text-base sm:grid-cols-2">
@@ -866,7 +830,7 @@ function TaskShow({ feature, task, reload, setError }) {
       </Card>
       <div>
         <h2 className="mb-3 text-xl font-semibold">Comments</h2>
-        <Comments feature={feature} task={task} reload={reload} />
+        <Comments key={`${feature.id}/${task.id}`} feature={feature} task={task} reload={reload} />
       </div>
     </div>
   );
@@ -955,7 +919,6 @@ function Pm({ route, features, epics, reload, setError }) {
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [showArchived, setShowArchived] = useState(false);
-  const [featureFilter, setFeatureFilter] = useState('');
   const [busy, setBusy] = useState(false);
 
   async function act(fn) {
@@ -1028,8 +991,6 @@ function Pm({ route, features, epics, reload, setError }) {
         <h1 className="text-2xl font-semibold">Project Manager</h1>
         <Button size="md" variant={route.view === 'list' ? 'primary' : 'outline'}
           onPress={() => navigate('/pm')}>List</Button>
-        <Button size="md" variant={route.view === 'board' ? 'primary' : 'outline'}
-          onPress={() => navigate('/pm/board')}>Board</Button>
         <Button size="md" variant={route.view.startsWith('epic') ? 'primary' : 'outline'}
           onPress={() => navigate('/pm/epics')}>Epics</Button>
       </div>
@@ -1038,13 +999,8 @@ function Pm({ route, features, epics, reload, setError }) {
         showArchived={showArchived} setShowArchived={setShowArchived}
         onSeed={() => act(() => api('POST', `${PM}/seed`))}
         onExport={() => act(() => api('POST', `${PM}/export`))} busy={busy} />
-      {route.view === 'board'
-        ? <Board features={visible} showArchived={showArchived}
-            featureFilter={featureFilter} setFeatureFilter={setFeatureFilter}
-            reload={reload} setError={setError} />
-        : (
           <div className="overflow-hidden rounded-lg border border-neutral-200 bg-white dark:border-neutral-700 dark:bg-neutral-900">
-            <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-2 text-sm font-semibold text-neutral-500 dark:border-neutral-700" aria-hidden="true">
+            <div className="flex items-center gap-3 border-b border-neutral-200 px-4 py-2 text-sm font-semibold text-black dark:border-neutral-700 dark:text-neutral-100" aria-hidden="true">
               <span className="min-w-0 flex-1">Feature</span>
               <span className="hidden w-44 md:block">Epic</span>
               <span className="w-24 text-center">Status</span>
@@ -1056,7 +1012,6 @@ function Pm({ route, features, epics, reload, setError }) {
             </div>
             {!visible.length && <p className="p-5 text-base">No features match. Use Seed or New feature.</p>}
           </div>
-        )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 ---
 title: Twin Jolly — sanity check
 summary: one input moves both at once. Sanity-check for candidate mechanic #92 (Movement Tiles, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -86,22 +86,65 @@ Needs a mechanics playground: new — Test Level mech-92-twin-jolly-room, built 
 
 ### mech-92-twin-jolly/test-level — Test Level: mech-92-twin-jolly-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-92-twin-jolly-room.json (test:true) realising the teaching moment for Twin Jolly: First room: two Jollys in connected lanes, one lane passing a hazard. A player who makes the obvious move for the Jolly they are watching moves the other one into the hazard with the same input and loses the level, which teaches that every input is checked against both positions.
 - Acceptance: mech-92-twin-jolly-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-92-twin-jolly/implement-mechanic — Implement Twin Jolly
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #92 deterministically in the pure step function per the spec rules. Rules: A level mode, not a tile: two Jollys share one input; Each step both try to move; A blocked one stays; Orbs and keys are shared, and if either Jolly touches a lethal enemy or hazard the level is lost
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-92-twin-jolly-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-92-twin-jolly/sanity-check — Sanity check Twin Jolly in mech-92-twin-jolly-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-92-twin-jolly-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-92-twin-jolly/20261101-180548-mech-92-twin-jolly-room-20261101-230533.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:06:00 · agent · on `mech-92-twin-jolly`
+
+Ready for review: Twin Jolly — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-92-twin-jolly/test-level: Test Level: mech-92-twin-jolly-room — completed, commit `b7281d5` — teaching room loads, naive east fails, corrected play wins
+- mech-92-twin-jolly/implement-mechanic: Implement Twin Jolly — completed, commit `b4c32ea` — twin pack + wiring, 11 tests OK (1 skipped-with-reason, blocked-by patroller), full suite 272 tests with only 2 pre-existing failures
+- mech-92-twin-jolly/sanity-check: Sanity check Twin Jolly — completed, commit `7873da7` — end-to-end play, replay digests match, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-92-twin-jolly/20261101-180548-mech-92-twin-jolly-room-20261101-230533.png (gallery on the feature page)
+- Sessions: none recorded, none linked
+- Assets: jolly-twin.png, twin-mode.png generated with scripts/gen-image (512x512, bundled)
+
+Playtest:
+- Worktree: `.worktrees/mech-92-twin-jolly`
+- Start: `cd .worktrees/mech-92-twin-jolly && source .venv/bin/activate && python tools/server.py --port 8510` — use `8510`, board server stays on 8321
+- Game: http://127.0.0.1:8510/static/game.html — open the Test Level `mech-92-twin-jolly-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T17:59:33 · agent · on `mech-92-twin-jolly/test-level`
+
+Starting: build Test Level mech-92-twin-jolly-room realising the teaching moment (two Jollys in connected lanes, one lane passing a hazard; naive move for the watched Jolly moves the other into the hazard and loses). Human approved starting all proposed mechanic features in chat this session. Verify: level loads from Test Levels menu; naive action fails, corrected action succeeds; joint-state BFS in the test file.
+
+### 2026-11-01T17:59:58 · agent · on `mech-92-twin-jolly/test-level`
+
+Test level built: levels/mech-92-twin-jolly-room.json (test:true), commit 5c1d348. Two lanes (P upper, Q twin lower), hazard H east of Q so naive east loses, red key + red lock prove shared collection, twin exits E. Rectangularity fixed in amend; full load/behaviour verified in implement-mechanic task once the twin pack exists.
+
+### 2026-11-01T17:59:59 · agent · on `mech-92-twin-jolly/implement-mechanic`
+
+Starting: implement Twin Jolly as pack tools/static/packs/twin/ (manifest first, deterministic controller+tick hooks only, no wall-clock) + game-core/game wiring for second actor. Human approved starting all proposed mechanic features in chat this session. Verify: tools/test_mech_92_twin_jolly.py covering every YAML test_case (solution, adversarial, boundary, restart+replay; blocked-by patroller case explicitly skipped-with-reason) plus repo suites.
+
+### 2026-11-01T18:05:21 · agent · on `mech-92-twin-jolly/implement-mechanic`
+
+Implemented Twin Jolly, commit b4c32ea (note: test-level commit amended to b7281d5). Pack tools/static/packs/twin/ (manifest first; jolly-twin.png + twin-mode.png generated with scripts/gen-image, 512x512, bundled:true, defineAsset in main.js). Controller repeats recorded input for twin:second; tick hook gives shared orb/key collection, hazard/enemy loss for both, distinct-exits win. Wired in game-core.js/game.html/game.js. Tests: python -m unittest tools.test_mech_92_twin_jolly = 11 tests OK (1 skipped-with-reason: blocked-by 31 patroller). Full discover: 272 tests, 2 failures pre-existing on main (test_pm_review_ui x2); golden regenerated with only the new level added, no existing readout changed. Level geometry fixed during implementation (wall stub + exit alcove) so wall-bumps re-sync the pair.
+
+### 2026-11-01T18:05:22 · agent · on `mech-92-twin-jolly/sanity-check`
+
+Starting: sanity check - run named test_cases end to end, screenshot the teaching room, replay-digest proof. Human approved starting all proposed mechanic features in chat this session. Verify: SanityReplayTests digest match, capture_level.sh screenshot on port 8510, evidence upload.
+
+### 2026-11-01T18:05:54 · agent · on `mech-92-twin-jolly/sanity-check`
+
+Sanity check done, commit 7873da7. Ran named test_cases end to end via tools/test_mech_92_twin_jolly.py: solution (BFS joint-state playthrough wins, both exits held, orbs 0), adversarial east loses, blocked-stays + twin-collects-key, restart+replay (SanityReplayTests digest match). Screenshot of the teaching room from the worktree build on port 8510 attached; both Jollys, hazard, key, orbs and exits visible. Assets: jolly-twin.png and twin-mode.png generated with scripts/gen-image (no placeholder fallback). No agent session recorded, so none linked.
+- Evidence: `screenshots/features/mech-92-twin-jolly/20261101-180548-mech-92-twin-jolly-room-20261101-230533.png`

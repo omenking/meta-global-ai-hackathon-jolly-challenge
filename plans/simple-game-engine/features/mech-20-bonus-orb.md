@@ -1,7 +1,7 @@
 ---
 title: Bonus orb — sanity check
 summary: optional, adds 10 seconds when taken. Sanity-check for candidate mechanic #20 (Orbs, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -80,22 +80,64 @@ Needs a mechanics playground: new — Test Level mech-20-bonus-orb-room, built f
 
 ### mech-20-bonus-orb/test-level — Test Level: mech-20-bonus-orb-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-20-bonus-orb-room.json (test:true) realising the teaching moment for Bonus orb: First room: a bonus orb down a short detour on a level with a tight timer. A player who takes the detour without counting discovers that the trip cost more than the ten seconds it repaid when the timer ends on the way back, which teaches that the bonus is a trade to be priced rather than a free reward.
 - Acceptance: mech-20-bonus-orb-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-20-bonus-orb/implement-mechanic — Implement Bonus orb
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #20 deterministically in the pure step function per the spec rules. Rules: Drawn with a gold ring, it is not counted in orbs-left and the gate does not need it; Taking it adds 10 seconds to the timer immediately
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-20-bonus-orb-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-20-bonus-orb/sanity-check — Sanity check Bonus orb in mech-20-bonus-orb-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-20-bonus-orb-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-20-bonus-orb/20261101-191134-mech-20-bonus-orb-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T19:11:52 · agent · on `mech-20-bonus-orb`
+
+Ready for review: Bonus orb — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-20-bonus-orb/test-level: Test Level: mech-20-bonus-orb-room — completed, commit 517636b — tight 10s room, bonus detour east of counted orb, naive slow detour fails / priced fast detour succeeds
+- mech-20-bonus-orb/implement-mechanic: Implement Bonus orb — completed, commit 8aad2c2 — pack banks exactly +10s via deterministic addTime effect, never counted in orbs-left; 14 tests OK (1 blocked-by-33 skip), 67 existing-suite tests OK
+- mech-20-bonus-orb/sanity-check: Sanity check Bonus orb in mech-20-bonus-orb-room — completed, commit 46a3d53 — all test_cases end to end, replay digest match, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-20-bonus-orb/20261101-191134-mech-20-bonus-orb-room-latest.png (gallery on the feature page)
+- Sessions: none recorded, so none linked (no fabricated session)
+
+Playtest:
+- Worktree: .worktrees/mech-20-bonus-orb
+- Start: cd .worktrees/mech-20-bonus-orb && source .venv/bin/activate && python tools/server.py --port 8558 — use 8558, board server stays on 8321
+- Game: http://127.0.0.1:8558/static/game.html — open the Test Level mech-20-bonus-orb-room from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T19:06:46 · agent · on `mech-20-bonus-orb/test-level`
+
+Starting: build levels/mech-20-bonus-orb-room.json (test:true) realising the Bonus orb teaching moment - bonus orb down a short detour on a tight-timer level; naive unpriced/slow detour fails on timer, priced fast detour succeeds. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads from Test Levels menu, rows/legend checks plus deterministic timer playthroughs in the mechanic test file.
+
+### 2026-11-01T19:07:15 · agent · on `mech-20-bonus-orb/test-level`
+
+Done: levels/mech-20-bonus-orb-room.json (test:true, 10s tight timer) - one counted orb, bonus orb B down the east detour, gate in the divider, portal behind it. Naive slow/unpriced detour expires on the timer; priced fast detour banks +10s and wins. Commit 517636b. Verified: JSON parses, rows rectangular, legend covers every char, exactly one P/*/B/G/X. Full playthrough proof lands with the mechanic test file in implement-mechanic.
+
+### 2026-11-01T19:07:17 · agent · on `mech-20-bonus-orb/implement-mechanic`
+
+Starting: Bonus orb pack (tools/static/packs/bonus-orb with manifest first, bundled assets, defineAsset + bonus:bonus-orb tile) plus the minimal deterministic timer support it needs (addTime effect in the kernel, +10s exactly, orbs-left untouched), wired into game-core.js and game.html like crumbling. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: tools/test_mech_20_bonus_orb.py mirroring test_mech_5 covering every YAML test_case (solution, adversarial, boundary, restart+replay; sleeper case skipped-with-reason as blocked-by 33), plus existing game-core/session suites green.
+
+### 2026-11-01T19:10:17 · agent · on `mech-20-bonus-orb/implement-mechanic`
+
+Done: pack tools/static/packs/bonus-orb (manifest first; bundled real generated art bonus-orb.png + timer-gain.png, 512x512 RGBA; defineAsset + bonus:bonus-orb tile emitting removeObject + addTime 10s), kernel addTime effect raising time_limit_s deterministically from recorded t_ms, wired in game-core.js + game.html like crumbling. Commit 8aad2c2. Tests: python -m unittest tools.test_mech_20_bonus_orb -v = 14 tests OK (skipped=1: bonus-wakes-a-sleeper explicitly skipped as blocked-by 33, sleeper not built). Existing suites tools.test_game_core/test_level_timer/test_mech_5_crumbling_tile/test_pack_folders/test_orbs_and_gate/test_session_replay/test_game_sessions = 67 tests OK (after gitignored prep_level_sprites.sh in the worktree).
+
+### 2026-11-01T19:10:18 · agent · on `mech-20-bonus-orb/sanity-check`
+
+Starting: run every named test_case end to end in mech-20-bonus-orb-room, screenshot the teaching room from the worktree build on port 8558, verify replay digest, attach PM evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Assets: real generated art already bundled in the pack (no placeholder fallback needed). Verify: screenshot attached to this task, replay digest match in tools.test_mech_20_bonus_orb SanityReplayTests, suites still green.
+
+### 2026-11-01T19:11:42 · agent · on `mech-20-bonus-orb/sanity-check`
+
+Done: every named test_case exercised end to end in mech-20-bonus-orb-room via tools.test_mech_20_bonus_orb (14 tests OK, skipped=1 blocked-by 33 sleeper with explicit reason; SanityReplayTests replay digest matches live, final won at (5,5) with limit 20). Screenshot attached: teaching room renders the gold-ring bonus orb east of the counted orb, TIME 010, ORBS 001 (bonus not counted), gate and portal placed, 14 sprites none missing. Worktree server on port 8558 health-checked (game.html 200) for the capture. Assets: real generated art bundled in the pack (bonus-orb.png, timer-gain.png); no placeholder fallback was needed. No agent session file was recorded, so none is linked. Commit 46a3d53.
+- Evidence: `screenshots/features/mech-20-bonus-orb/20261101-191134-mech-20-bonus-orb-room-latest.png`

@@ -1,7 +1,7 @@
 ---
 title: Fog tile — sanity check
 summary: hides orbs until you stand adjacent. Sanity-check for candidate mechanic #53 (Vision and Information, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -81,22 +81,64 @@ Needs a mechanics playground: new — Test Level mech-53-fog-tile-room, built fr
 
 ### mech-53-fog-tile/test-level — Test Level: mech-53-fog-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-53-fog-tile-room.json (test:true) realising the teaching moment for Fog tile: First room: a lit room with fog along one wall and the gate's last orb inside it. A player who walks the clear floor in the middle reaches the gate one orb short and must come back along the wall, which teaches that fog is searched by standing next to it rather than by looking at it.
 - Acceptance: mech-53-fog-tile-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-53-fog-tile/implement-mechanic — Implement Fog tile
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #53 deterministically in the pure step function per the spec rules. Rules: A fog tile never shows what is on it until you stand next to it, after which it stays revealed for the attempt; Movement through fog is normal, so it hides in lit rooms where a dark room would be too much
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-53-fog-tile-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-53-fog-tile/sanity-check — Sanity check Fog tile in mech-53-fog-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-53-fog-tile-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-53-fog-tile/20261101-192146-mech-53-fog-tile-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T19:22:09 · agent · on `mech-53-fog-tile`
+
+Ready for review: Fog tile — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-53-fog-tile/test-level: Test Level: mech-53-fog-tile-room — completed, commit `af044ce17e0bf93d06e635d955fb826883b4616b` — lit teaching room, fog along south wall, gate's last orb hidden in fog; naive clear-floor route reaches gate one orb short, wall search succeeds
+- mech-53-fog-tile/implement-mechanic: Implement Fog tile — completed, commit `4c348515` — fog pack (manifest + 3 gen-image assets bundled), adjacency reveal persists for the attempt, normal movement through fog; unit tests 10 OK + 1 blocked-by-36 skip
+- mech-53-fog-tile/sanity-check: Sanity check Fog tile in mech-53-fog-tile-room — completed, commit `a09bc6c` — SanityReplayTests replay digest matches live playthrough (48 tests OK in touched suites, 1 skipped)
+
+Evidence:
+- Screenshots: screenshots/features/mech-53-fog-tile/20261101-192146-mech-53-fog-tile-room-latest.png (attached on the sanity-check task; gallery on the feature page)
+- Sessions: none recorded — no session is linked; replay evidence is the SanityReplayTests digest proof in tools/test_mech_53_fog_tile.py
+
+Playtest:
+- Worktree: `.worktrees/mech-53-fog-tile`
+- Start: `cd .worktrees/mech-53-fog-tile && source .venv/bin/activate && python tools/server.py --port 8563` — use `8563`, board server stays on 8321
+- Game: http://127.0.0.1:8563/static/game.html — open the Test Level `mech-53-fog-tile-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T19:10:59 · agent · on `mech-53-fog-tile/test-level`
+
+Starting: build levels/mech-53-fog-tile-room.json (test:true) realising the fog teaching moment (fog along one wall, gate last orb inside fog; naive clear-middle route reaches gate one orb short, corrected wall search reveals fog and succeeds). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, layout assertions in unit tests.
+
+### 2026-11-01T19:11:14 · agent · on `mech-53-fog-tile/test-level`
+
+Done: built levels/mech-53-fog-tile-room.json (test:true, 15x9). Lit room, fog FFFf along south wall at y=5 with gate's last orb hidden at (4,5), visible orb at (6,1), gate (11,1) + warp (12,1). Naive clear-middle route (y=3, two tiles from fog) reaches gate one orb short and reveals nothing; corrected wall route (y=4 adjacent) reveals fog and succeeds. Commit af044ce17e0bf93d06e635d955fb826883b4616b. Verified: game_levels.load_level + list_levels find it as a test level.
+
+### 2026-11-01T19:11:16 · agent · on `mech-53-fog-tile/implement-mechanic`
+
+Starting: fog pack under tools/static/packs/fog/ (manifest first, generated assets, main.js via pack/kernel hooks only), wiring in game-core.js/game.html/game.js, plus tools/test_mech_53_fog_tile.py covering every YAML test_cases entry (mimic-in-fog blocked-by 36 gets explicit skipped-with-reason). Fog reveals by orthogonal adjacency, persists in cell meta for the attempt, movement through fog is normal, no wall-clock reads. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: unit tests under Node + existing game-core/session suites.
+
+### 2026-11-01T19:20:18 · agent · on `mech-53-fog-tile/implement-mechanic`
+
+Done: fog pack at tools/static/packs/fog/ (manifest first; 3 real generated assets via scripts/gen-image: fog.png, fog-revealed.png, fog-revealed-orb.png, all bundled:true, declared via defineAsset). main.js: fog:fog + fog:fog-orb tiles, reveal by orthogonal adjacency (Manhattan<=1) in the pure tick hook + spawn adjacency on load, fog_revealed persists in cell meta for the attempt, fog-orb counts to the gate and collecting leaves revealed empty fog, movement through fog never blocks. Wiring: game-core.js (FogPack + isFogRevealed), game.html script tag, game.js fog sprite states. Golden regenerated deliberately (only adds mech-53-fog-tile-room, no existing readout changed). Commit 4c3485109984724655372fd1b097e7ddd7dabb88. Tests: python -m unittest tools.test_mech_53_fog_tile -> 10 tests OK, 1 skipped (mimic-in-fog blocked-by 36). Existing touched suites (game-core/sessions/replay/pack-folders/crumbling/refactor) green except 2 pre-existing test_pm_review_ui failures on untouched PM UI code (also failing on clean main).
+
+### 2026-11-01T19:20:19 · agent · on `mech-53-fog-tile/sanity-check`
+
+Starting: run named YAML test_cases end to end, add SanityReplayTests (replay digest proof), screenshot the teaching room from the worktree server on port 8563, upload evidence. Assets were generated with scripts/gen-image (no placeholder fallback). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: full test file + screenshot attached + replay digest match.
+
+### 2026-11-01T19:21:54 · agent · on `mech-53-fog-tile/sanity-check`
+
+Done: played mech-53-fog-tile-room end to end via the named YAML test_cases. SanityReplayTests: solution sequence (19 steps, wall search reveals fog, collect fog orb, exit) replays to the same end state, live digest == replay digest == replay2 digest, final (12,1) won orbs 0. Commit a09bc6c483d59719328ca7ca4a81d1b0d16b76f6. Full file: python -m unittest tools.test_mech_53_fog_tile tools.test_game_core tools.test_game_sessions tools.test_session_replay tools.test_pack_folders tools.test_mech_5_crumbling_tile tools.test_refactor_regression -> 48 tests OK, 1 skipped (mimic-in-fog blocked-by 36, explicit skip with reason). Assets: 3 real images generated with scripts/gen-image (no placeholder fallback). Screenshot attached shows the lit teaching room with the unrevealed fog row hiding its orb, visible orb, gate and warp. No agent play session was recorded, so none is linked.
+- Evidence: `screenshots/features/mech-53-fog-tile/20261101-192146-mech-53-fog-tile-room-latest.png`

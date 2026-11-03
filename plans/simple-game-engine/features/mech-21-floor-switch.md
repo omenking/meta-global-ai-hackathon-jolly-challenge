@@ -1,7 +1,7 @@
 ---
 title: Floor switch — sanity check
 summary: holds a door open while stood on. Sanity-check for candidate mechanic #21 (Switches and Doors, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -83,22 +83,66 @@ Needs a mechanics playground: new — Test Level mech-21-floor-switch-room, buil
 
 ### mech-21-floor-switch/test-level — Test Level: mech-21-floor-switch-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-21-floor-switch-room.json (test:true) realising the teaching moment for Floor switch: First room: a floor switch in sight of its door, with the door too far to reach in one move. A player who steps on the switch, sees the door open, and steps off toward it arrives after it has closed, which teaches that the door is held rather than latched and that something has to stay on the plate.
 - Acceptance: mech-21-floor-switch-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-21-floor-switch/implement-mechanic — Implement Floor switch
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #21 deterministically in the pure step function per the spec rules. Rules: The linked door is open only while you, a bot or a block stands on the plate; Step off and it closes on the next move; Sprites show the plate pressed and the door state
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-21-floor-switch-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-21-floor-switch/sanity-check — Sanity check Floor switch in mech-21-floor-switch-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-21-floor-switch-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-21-floor-switch/20261101-182949-mech-21-floor-switch-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:30:04 · agent · on `mech-21-floor-switch`
+
+Ready for review: Floor switch — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-21-floor-switch/test-level: Test Level: mech-21-floor-switch-room — completed, commit 8976d0f — teaching room loads as a Test Level; far plate in sight of the door teaches held-not-latched, door-side plate is the corrected action
+- mech-21-floor-switch/implement-mechanic: Implement Floor switch — completed, commit 9e23c0e — floor-switch pack (generated assets, pure step logic), wiring, full YAML test coverage (13 pass, 1 explicit blocked-by-81 skip)
+- mech-21-floor-switch/sanity-check: Sanity check Floor switch in mech-21-floor-switch-room — completed, commit 1024a2c — every named test_case played, replay digest matches, golden regenerated with no existing level changed
+
+Evidence:
+- Screenshots: screenshots/features/mech-21-floor-switch/20261101-182949-mech-21-floor-switch-room-latest.png (gallery on the feature page)
+- Sessions: none recorded (no agent play session exists, so none is linked)
+
+Playtest:
+- Worktree: .worktrees/mech-21-floor-switch
+- Start: cd .worktrees/mech-21-floor-switch && source .venv/bin/activate && python tools/server.py --port 8527 — use 8527, board server stays on 8321
+- Game: http://127.0.0.1:8527/static/game.html — open the Test Level mech-21-floor-switch-room from the game menu; linked sessions replay from the Sessions menu.
+
+Human approval: the human approved starting all proposed mechanic features in chat this session. Not merged, not marked completed, not self-approved.
+
+### 2026-11-01T18:24:17 · agent · on `mech-21-floor-switch/test-level`
+
+Starting: build levels/mech-21-floor-switch-room.json (test:true) realising the teaching moment - plate in sight of its door, too far to reach before it closes; naive step-off-and-hurry fails, corrected action (second plate beside the door, step off through it) succeeds. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, layout checks in the mech test file, screenshot of the room.
+
+### 2026-11-01T18:24:34 · agent · on `mech-21-floor-switch/test-level`
+
+Done: levels/mech-21-floor-switch-room.json (test:true), commit 8976d0f. Layout verified: 15x7 rectangular, teaching plate S at (2,3) in sight of linked door D at (8,3) - six tiles away, so stepping off and hurrying arrives after the held door closes; second plate at (7,3) beside the door teaches stepping off through the held-open doorway; orb and warp beyond the door. Human approval: the human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T18:24:35 · agent · on `mech-21-floor-switch/implement-mechanic`
+
+Starting: floor-switch pack (manifest first, generated assets, pure deterministic step logic via pack/kernel hooks - plate terrain + linked door object, closes on the next move after vacating, no wall-clock reads), wiring in game-core.js/game.html/game.js, and tools/test_mech_21_floor_switch.py covering every YAML test_cases entry (block solution explicitly skipped-with-reason, blocked-by 81 push block which is not on main). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: node-driven GameCore behaviour tests + repo suites + screenshot.
+
+### 2026-11-01T18:28:37 · agent · on `mech-21-floor-switch/implement-mechanic`
+
+Done, commit 9e23c0e. Pack tools/static/packs/floor-switch/ (manifest first, then main.js): switch:plate terrain + switch:door object linked via legend link, door open only while a linked plate is occupied by the player, any bot actor or a blocks:push-block object; stepping off closes it on the next move (open through the step-off move, closed from the following move); per-cell switch_pressed/switch_open meta drives the pressed/open sprites in game.js; no wall-clock reads, restart is a fresh initialState. Assets: all 6 YAML entries generated as real art with scripts/gen-image (Muse Image, 512x512) into the pack assets/, bundled:true and declared via defineAsset. Wiring: game-core.js registers the pack, game.html loads it. Tests: tools/test_mech_21_floor_switch.py - 14 tests, 13 pass, 1 explicit skip (solution block holds the door, blocked-by 81 push block, pack not on this branch); crumbling + pack-folder suites still green (32 tests OK). Human approval: the human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T18:28:38 · agent · on `mech-21-floor-switch/sanity-check`
+
+Starting: play mech-21-floor-switch-room end to end (named YAML test_cases via the mech test file incl. SanityReplayTests digest proof), run repo suites, screenshot the teaching room from the worktree server on port 8527, upload evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: test output, replay digest match, screenshot attached.
+
+### 2026-11-01T18:29:54 · agent · on `mech-21-floor-switch/sanity-check`
+
+Done, commit 1024a2c (golden regen; sanity play itself needed no code change). Played every named YAML test_case end to end via tools/test_mech_21_floor_switch.py: adversarial step-off-and-hurry arrives after the door closes and returns unstranded; boundary closes on the next move (open during the step off, closed from the following move); boundary held while occupied (two wall pushes, door stays open); restart restores plate unpressed/door closed; SanityReplayTests full playthrough (far plate -> door-side plate -> through door -> orb -> warp, won) replays to the same digest twice. Solution block-holds-the-door is an explicit skipped-with-reason check (blocked-by 81 push block, pack not on this branch). Exact results: mech-21 suite 14 tests, 13 pass + 1 skip; touched suites (game-core, pack folders, refactor regression, crumbling, keys) green; full discover 275 tests with only pre-existing main failures (pm_review_ui x2, level_capture x1 - identical on untouched main) plus the golden level-set failure this commit fixes. Screenshot of the teaching room attached. No agent play session recorded, so none is linked. Human approval: the human approved starting all proposed mechanic features in chat this session.
+- Evidence: `screenshots/features/mech-21-floor-switch/20261101-182949-mech-21-floor-switch-room-latest.png`

@@ -1,7 +1,7 @@
 ---
 title: Dark room — sanity check
 summary: only tiles near Jolly are lit. Sanity-check for candidate mechanic #51 (Vision and Information, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -82,22 +82,64 @@ Needs a mechanics playground: new — Test Level mech-51-dark-room-room, built f
 
 ### mech-51-dark-room/test-level — Test Level: mech-51-dark-room-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-51-dark-room-room.json (test:true) realising the teaching moment for Dark room: First room: a dark room with an orb placed outside the light that surrounds the entrance. A player who follows the visible floor reaches the gate with one orb still missing and has to return, which teaches that the absence of a tile from view is not evidence that nothing is there.
 - Acceptance: mech-51-dark-room-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-51-dark-room/implement-mechanic — Implement Dark room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #51 deterministically in the pure step function per the spec rules. Rules: Tiles beyond two tiles from Jolly are not drawn at all in this room; The HUD still shows; The radius is the whole mechanic, so layout must be learned by walking it
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-51-dark-room-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-51-dark-room/sanity-check — Sanity check Dark room in mech-51-dark-room-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-51-dark-room-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-51-dark-room/20261101-191144-mech-51-dark-room-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T19:12:07 · agent · on `mech-51-dark-room`
+
+Ready for review: Dark room — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-51-dark-room/test-level: Test Level: mech-51-dark-room-room — completed, commit `3fbaa9ef423a99381836e94ef06697a7da7a74f8` — teaching room built, hidden orb outside entrance light
+- mech-51-dark-room/implement-mechanic: Implement Dark room — completed, commit `af81c05` (full hash in task comment) — radius-2 pack, wiring, 11/11 mechanic tests, golden regenerated
+- mech-51-dark-room/sanity-check: Sanity check Dark room in mech-51-dark-room-room — completed, commit `c75bab3ef3b3a8138b9f018086f9dd8adbdddeeb` — 40 tests OK, screenshot attached, replay digest match
+
+Evidence:
+- Screenshots: screenshots/features/mech-51-dark-room/20261101-191144-mech-51-dark-room-room-latest.png (gallery on the feature page)
+- Sessions: none recorded, so none linked; replay proof is SanityReplayTests (live == replay == replay2 digest, 21-step win)
+
+Playtest:
+- Worktree: `.worktrees/mech-51-dark-room`
+- Start: `cd .worktrees/mech-51-dark-room && source .venv/bin/activate && python tools/server.py --port 8561` — use `8561`, board server stays on 8321
+- Game: http://127.0.0.1:8561/static/game.html — open the Test Level `mech-51-dark-room-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T19:06:46 · agent · on `mech-51-dark-room/test-level`
+
+Starting: build levels/mech-51-dark-room-room.json (test:true) realising the teaching moment - orb outside entrance light, naive visible-floor walk reaches gate one orb short, corrected search succeeds. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, layout checks in tools/test_mech_51_dark_room.py.
+
+### 2026-11-01T19:07:12 · agent · on `mech-51-dark-room/test-level`
+
+Completed: built levels/mech-51-dark-room-room.json (test:true, dark_room:true), commit 3fbaa9ef423a99381836e94ef06697a7da7a74f8. Layout: entrance corridor y=1 with visible orb at (5,1), gate G at (11,1) + warp X at (12,1), hidden orb at (7,6) five tiles south of the corridor so it is outside the two-tile entrance light (Chebyshev distance from spawn (1,1) is 6,5). Naive visible-floor walk reaches the gate one orb short; searching south finds it. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: rows rectangular 15x9, 2 orbs; full behaviour checks land with the test file in implement-mechanic.
+
+### 2026-11-01T19:07:13 · agent · on `mech-51-dark-room/implement-mechanic`
+
+Starting: dark-room pack (tools/static/packs/dark-room/ manifest first, then main.js) + game-core/game wiring; pure Chebyshev radius-2 visibility helper, darkness overlay in game.js, HUD untouched; tools/test_mech_51_dark_room.py covering every YAML test_case. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: unit tests + repo suites, replay digest.
+
+### 2026-11-01T19:11:11 · agent · on `mech-51-dark-room/implement-mechanic`
+
+Completed: dark-room pack (manifest first, 3 bundled Muse-generated assets at 512x512 RGBA: dark-room-floor.png, darkness.png, jolly-in-dark.png - real generated art via image generation, no placeholder fallback needed), pure Chebyshev radius-2 helper (LIGHT_RADIUS=2, isVisible/isStateVisible) via pack onLevelLoad flag dark:room, game-core wiring + game.html script + game.js darkness overlay (HUD column untouched, still shows), golden corpus regenerated (only adds mech-51-dark-room-room, no existing readout changed), commit af81c05fb6bc6034ab39eed8a8ed811a7c6f6d15. Tests: tools.test_mech_51_dark_room 11/11 OK covering every YAML test_case (solution, adversarial, radius boundary, HUD, dark walkable/wall, restart, purity, SanityReplay digest 21 steps won); full discover 272 tests with only 2 pre-existing test_pm_review_ui failures also failing on untouched main (verified in detached base worktree). Human approval: the human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T19:11:17 · agent · on `mech-51-dark-room/sanity-check`
+
+Starting: run named test_cases end to end, screenshot teaching room from worktree server on 8561, replay-digest proof, PM evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: capture_level.sh screenshot plus test output attached.
+
+### 2026-11-01T19:11:50 · agent · on `mech-51-dark-room/sanity-check`
+
+Completed: ran named YAML test_cases end to end (solution search wins in 21 steps, adversarial gate-block then recover wins, radius boundary 2 drawn / 3 undrawn and moves with Jolly, HUD readout answers in the dark, restart restores orbs, SanityReplay digest live==replay==replay2). Suites: tools.test_mech_51_dark_room + game_core/game_sessions/hud/pack_folders/refactor_regression = 40 tests OK. Screenshot of the teaching room attached (lit radius around Jolly, rest black, HUD column visible). No recorded agent play session was made, so none is linked; replay proof is the SanityReplayTests digest match. Assets are real Muse-generated art (no placeholder fallback). Commit c75bab3ef3b3a8138b9f018086f9dd8adbdddeeb. Human approval: the human approved starting all proposed mechanic features in chat this session.
+- Evidence: `screenshots/features/mech-51-dark-room/20261101-191144-mech-51-dark-room-room-latest.png`

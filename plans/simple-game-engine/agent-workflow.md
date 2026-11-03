@@ -117,9 +117,11 @@ read-only in the UI; never try to edit or delete them.
    move and no lose/reset is a failure, however well the solution
    path plays.
 5. **Evidence and commit.** For any visual or playable change, capture
-   screenshots of the worktree build (see below) and, once the engine
-   supports it, record an agent-labelled play session of the Test Level.
-   Upload screenshots (`POST .../evidence`), then post the completion
+   screenshots of the worktree build (see below) and record
+   agent-labelled play sessions of the Test Level. Recording is
+   mandatory, not "once the engine supports it": a playable task is
+   not done without its sessions. Upload screenshots
+   (`POST .../evidence`), then post the completion
    comment with the returned paths in `attachments` and the session in
    `session_refs`. One commit per task on the feature branch:
 
@@ -138,6 +140,20 @@ read-only in the UI; never try to edit or delete them.
    feature-level agent comment using the template below. Starting the
    Test Level itself happens in the game's own menu; your comment only
    identifies `test_level` and links the worktree build's game URL.
+
+   **Q&A gate (mechanic-sanity-checks features).** Before roll-up, the
+   feature must carry a completed `qa-verification` task (`kind: "qa"`)
+   whose acceptance mandates running
+   `python3 tools/verify_mechanic_qa.py <feature-id> --code-root
+   .worktrees/<feature-id>` and pasting its report in the task's
+   completion comment. The verifier requires: at least one linked
+   agent session ending `won`, one agent naive-failure session, edge
+   coverage, deterministic replay of every linked session, screenshot
+   evidence, and a rule -> evidence table in the qa task comment. A
+   Node-only scripted input log does not satisfy this gate. If the
+   verifier exits non-zero, do not roll up: create/work a
+   `review-fixes` task for the failure and re-run the qa task. Never
+   mark a `qa` task `completed` on a failing verifier run.
 7. **Changes requested → review-fixes.** The human's **Request changes**
    records `review.decision = changes_requested` (comment required). Find
    it via `GET /api/pm/features/<id>` — you do not need the human to

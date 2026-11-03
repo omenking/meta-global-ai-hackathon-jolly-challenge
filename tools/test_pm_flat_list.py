@@ -2,7 +2,7 @@
 
 A feature is a single line item on the main board: the list must show
 one row per feature and must not render subtasks (or other sub-info)
-in full there. Subtasks live on the feature page and the kanban board.
+in full there. Subtasks live on the feature page only.
 
 Run with: python -m unittest tools.test_pm_flat_list -v
 """
@@ -27,7 +27,7 @@ class FlatListTests(unittest.TestCase):
     def test_list_uses_single_line_feature_rows(self):
         self.assertIn("function FeatureRow", self.src)
         self.assertIn("<FeatureRow", self.src)
-        row = _section(self.src, "function FeatureRow", "function Board")
+        row = _section(self.src, "function FeatureRow", "function EpicsPage")
         # The row is the feature itself: title links to its page,
         # with only feature-level status/priority/progress alongside.
         self.assertIn("featurePath(feature.id)", row)
@@ -36,7 +36,7 @@ class FlatListTests(unittest.TestCase):
         self.assertIn("progress", row)
 
     def test_row_renders_no_subtasks_or_subinfo(self):
-        row = _section(self.src, "function FeatureRow", "function Board")
+        row = _section(self.src, "function FeatureRow", "function EpicsPage")
         for forbidden in ("feature.tasks", "taskPath", "TaskStatusChip",
                           "feature.summary", "feature.requires",
                           "feature.branch", "No tasks"):

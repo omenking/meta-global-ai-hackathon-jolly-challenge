@@ -27,6 +27,41 @@ def _data():
     return data
 
 
+class CommentLabelsTest(unittest.TestCase):
+    def test_labels_normalize_and_survive_save_reload_and_export(self):
+        data = _data()
+        comment = add_feature_comment(data, 'game-shell', 'human', 'Several issues',
+                                      labels=' movement, graphics, , Movement ')
+        self.assertEqual(comment['labels'], ['movement', 'graphics'])
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'pm.yml'
+            save_pm(data, '', path)
+            restored, _ = load_pm(path)
+        feature = get_feature(restored, 'game-shell')
+        self.assertEqual(feature['comments'][0]['labels'], ['movement', 'graphics'])
+        self.assertIn('Labels: movement, graphics', export_feature_md(feature, restored))
+
+    def test_task_labels_edit_preserve_and_clear(self):
+        data = _data()
+        create_task(data, 'game-shell', 't1', 'First task')
+        comment = add_task_comment(data, 'game-shell', 't1', 'human', 'Issue', labels=['bug', ' bug '])
+        comments = get_feature(data, 'game-shell')['tasks'][0]['comments']
+        self.assertEqual(comment['labels'], ['bug'])
+        update_comment(comments, comment['id'], 'Edited')
+        self.assertEqual(comment['labels'], ['bug'])
+        update_comment(comments, comment['id'], 'Edited', labels='visual, layout')
+        self.assertEqual(comment['labels'], ['visual', 'layout'])
+        update_comment(comments, comment['id'], 'Edited', labels='')
+        self.assertEqual(comment['labels'], [])
+
+    def test_invalid_labels_rejected_and_legacy_comments_supported(self):
+        data = _data()
+        self.assertEqual(add_feature_comment(data, 'game-shell', 'human', 'Legacy')['labels'], [])
+        for labels in (42, {}, ['valid', 3]):
+            with self.assertRaises(StoreError):
+                add_feature_comment(data, 'game-shell', 'human', 'Bad labels', labels=labels)
+
+
 class FeatureCrudTest(unittest.TestCase):
     def test_create_and_progress(self):
         data = _data()

@@ -1,7 +1,7 @@
 ---
 title: Thief — sanity check
 summary: Flees from you, steals a key, and drops it at its burrow. Sanity-check for candidate mechanic #35 (Enemies and Bots, revised).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -85,22 +85,66 @@ Needs a mechanics playground: new — Test Level mech-35-thief-room, built from 
 
 ### mech-35-thief/test-level — Test Level: mech-35-thief-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-35-thief-room.json (test:true) realising the teaching moment for Thief: First room: you carry a key across an open room the thief crosses. A player who walks straight at it has the key snatched and watches it carried to a burrow they had not noticed, which teaches both that the key can be recovered and where the thief is trying to go.
 - Acceptance: mech-35-thief-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-35-thief/implement-mechanic — Implement Thief
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #35 deterministically in the pure step function per the spec rules. Rules: It moves one tile per player move away from you and is not lethal; If it starts a move next to you it snatches your most recent key, carried visibly, then runs for its burrow tile and drops the key there where you can pick it back up; Corner it and touch it before it reaches the burrow and it drops the key where it stands
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-35-thief-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-35-thief/sanity-check — Sanity check Thief in mech-35-thief-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-35-thief-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-35-thief/20261101-185012-mech-35-thief-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:51:14 · agent · on `mech-35-thief`
+
+Ready for review: Thief — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-35-thief/test-level: Test Level: mech-35-thief-room — completed, commit 8254938 — test:true room loads from the Test Levels menu; naive walk snatches, corrected route wins
+- mech-35-thief/implement-mechanic: Implement Thief — completed, commit 2c07129 — thief pack (controller+tick hooks, deterministic), engine/page wiring, 3 real generated assets, test_mech_35_thief 13 tests OK (1 skipped blocked-by ice)
+- mech-35-thief/sanity-check: Sanity check Thief in mech-35-thief-room — completed, commit 8375753 — 24-step playthrough, replay digest matches, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-35-thief/20261101-185012-mech-35-thief-room-latest.png
+- Sessions: none recorded (core-driven replay proof in SanityReplayTests instead; no session fabricated)
+
+Playtest:
+- Worktree: .worktrees/mech-35-thief
+- Start: cd .worktrees/mech-35-thief && source .venv/bin/activate && python tools/server.py --port 8542 — use 8542, board server stays on 8321
+- Game: http://127.0.0.1:8542/static/game.html — open the Test Level mech-35-thief-room from the game menu; linked sessions replay from the Sessions menu.
+
+Human approval: the human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T18:45:48 · agent · on `mech-35-thief/test-level`
+
+Starting: build levels/mech-35-thief-room.json (test:true) realising the teaching moment — player carries a key across an open room the thief crosses; walking straight at it gets the key snatched and carried to the burrow, corrected play avoids/corners it. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, rows rectangular, legend covers tiles, layout has player/key/thief/burrow/lock/warp.
+
+### 2026-11-01T18:46:04 · agent · on `mech-35-thief/test-level`
+
+Done: levels/mech-35-thief-room.json (test:true), commit 8254938. Open room: player + red key west, thief mid-room, burrow far south-east corner, red lock + warp east. Naive straight walk at the thief will be exercised in the sanity check; corrected route keeps distance to the lock. Verified: JSON parses, rows rectangular 13x8, every row char covered by legend.
+
+### 2026-11-01T18:46:06 · agent · on `mech-35-thief/implement-mechanic`
+
+Starting: thief pack under tools/static/packs/thief/ (manifest first, generated assets, main.js via defineAsset/defineTile/defineController/onTick only through pack/kernel hooks), wiring in game-core.js/game.html/game.js actor rendering, plus tools/test_mech_35_thief.py mirroring test_mech_5_crumbling_tile.py covering every YAML test_cases entry (slide case blocked-by ice gets explicit skipped-with-reason). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: node-driven core tests per rule + existing game-core/session suites green, no wall-clock reads.
+
+### 2026-11-01T18:49:28 · agent · on `mech-35-thief/implement-mechanic`
+
+Done: commit 2c07129. Pack tools/static/packs/thief/ (manifest first; main.js registers thief:burrow terrain + thief:thief actor controller/tick hooks only, deterministic, no wall-clock reads; game-core.js/game.html wiring; game.js renders the thief from state.actors and swaps to the carrying pose from flags). Real generated art for all 3 YAML assets (thief.png, thief-carrying-key.png, thief-burrow.png, 512x512 in pack assets/, bundled:true, defineAsset in main.js). Tests: python -m unittest tools.test_mech_35_thief -> 13 tests OK (1 skipped: slide-to-cut-it-off blocked-by ice tile mech-1, unbuilt on main). Existing suites (game-core, session-replay, game-sessions, keys-and-locks, crumbling, pack-folders, movement, game page/menus/input, hud, water, orbs, level-sprites) -> 121 tests OK total with the new suite after staging sprites via prep_level_sprites.sh in the worktree.
+
+### 2026-11-01T18:49:30 · agent · on `mech-35-thief/sanity-check`
+
+Starting: run named test_cases end to end in mech-35-thief-room, start worktree server on port 8542, screenshot the teaching room, replay-digest proof (SanityReplayTests), upload evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: screenshot attached, replay digest matches, suites green.
+
+### 2026-11-01T18:50:34 · agent · on `mech-35-thief/sanity-check`
+
+Done: commit 8375753. Played mech-35-thief-room end to end via the pure core (SanityReplayTests in tools/test_mech_35_thief.py): adversarial straight walk snatches the key beside the player, thief carries it to the burrow (11,5), drops it, player recovers it, opens the red lock and wins in 24 steps; live digest == replay digest == second replay digest. Corner flow drops the key where the thief stands (11,2) and re-pickup works; corrected far-lane route keeps the key and wins. Screenshot of the teaching room attached (worktree server on 8542, all sprites present, thief + burrow + key + lock + warp visible). No agent play session was recorded, so none is linked. Tests: test_mech_35_thief + game-core + session-replay = 26 tests OK (1 skipped, blocked-by ice).
+- Evidence: `screenshots/features/mech-35-thief/20261101-185012-mech-35-thief-room-latest.png`

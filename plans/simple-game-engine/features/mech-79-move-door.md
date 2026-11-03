@@ -1,7 +1,7 @@
 ---
 title: Move door — sanity check
 summary: opens after exactly 50 moves. Sanity-check for candidate mechanic #79 (Switches and Doors, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -81,22 +81,64 @@ Needs a mechanics playground: new — Test Level mech-79-move-door-room, built f
 
 ### mech-79-move-door/test-level — Test Level: mech-79-move-door-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-79-move-door-room.json (test:true) realising the teaching moment for Move door: First room: the move door at the end of a route that takes about forty moves, with the counter in the HUD. A player who plays efficiently arrives in the low forties to a closed door and has to find moves to spend, which teaches that this door is measuring the length of the route rather than the player's speed or keys.
 - Acceptance: mech-79-move-door-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-79-move-door/implement-mechanic — Implement Move door
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #79 deterministically in the pure step function per the spec rules. Rules: A move counter shows in the HUD; The door opens permanently on your 50th move input of the attempt and stays open after it, so the puzzle is planning a route of exactly that length, not finding a key
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-79-move-door-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-79-move-door/sanity-check — Sanity check Move door in mech-79-move-door-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-79-move-door-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-79-move-door/20261101-183950-mech-79-move-door-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:40:04 · agent · on `mech-79-move-door`
+
+Ready for review: Move door — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-79-move-door/test-level: Test Level: mech-79-move-door-room — completed, commit c7f03e1 — serpentine room, 44-move efficient route to the door, orb and warp beyond it
+- mech-79-move-door/implement-mechanic: Implement Move door — completed, commit 8962f17 — movedoor pack counts every move input, opens permanently on the 50th, HUD move counter, real generated art for all YAML assets
+- mech-79-move-door/sanity-check: Sanity check Move door in mech-79-move-door-room — completed, commit 3198e77 — all YAML test_cases played, replay digest matches, golden regenerated with no existing level changed
+
+Evidence:
+- Screenshots: screenshots/features/mech-79-move-door/20261101-183950-mech-79-move-door-room-latest.png (gallery on the feature page)
+- Sessions: none recorded in a browser; replay proof is SanityReplayTests in tools/test_mech_79_move_door.py (54-input solution replays to the same digest, won, 0 orbs left)
+
+Playtest:
+- Worktree: .worktrees/mech-79-move-door
+- Start: cd .worktrees/mech-79-move-door && source .venv/bin/activate && python tools/server.py --port 8534 — use 8534, board server stays on 8321
+- Game: http://127.0.0.1:8534/static/game.html — open the Test Level mech-79-move-door-room from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T18:35:40 · agent · on `mech-79-move-door/test-level`
+
+Starting: build levels/mech-79-move-door-room.json (test:true) realising the teaching moment — serpentine route of ~44 efficient moves to the move door with the move counter in the HUD; naive efficient arrival finds the door closed and must spend moves, corrected 50-move route succeeds. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, naive/corrected play in the mechanic tests.
+
+### 2026-11-01T18:36:02 · agent · on `mech-79-move-door/test-level`
+
+Done: levels/mech-79-move-door-room.json (test:true) committed as c7f03e1. Serpentine single-corridor room: efficient route is 44 moves to stand beside the move door (D at 6,7), so the naive efficient arrival in the low forties finds it closed and must spend moves pacing the revisitable corridor (never stranded); orb and warp lie beyond the door. Rows rectangular (14x9), legend covers every tile. Full naive-vs-corrected play proof lands with the mechanic tests in implement-mechanic.
+
+### 2026-11-01T18:36:03 · agent · on `mech-79-move-door/implement-mechanic`
+
+Starting: pack tools/static/packs/movedoor/ (manifest first, then main.js) wired into game-core.js/game.html/game.js following the crumbling pattern. Rule: every move input counts (kernel steps, blocked attempts included, per YAML definition); the door blocks while the count is under 50, opens permanently on the 50th move input via the pack tick hook, move counter in the HUD; no wall-clock reads. Real generated art via scripts/gen-image for move-door-closed.png, move-door-open.png, move-counter.png (placeholder fallback named if generation fails). Tests: tools/test_mech_79_move_door.py covering every YAML test_cases entry. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: unit tests plus game-core/session suites, worktree server screenshot in sanity-check.
+
+### 2026-11-01T18:39:09 · agent · on `mech-79-move-door/implement-mechanic`
+
+Done: commit 8962f17. Pack tools/static/packs/movedoor/ (manifest first) wired into game-core.js, game.html and game.js following the crumbling pattern: movedoor:door blocks while the move count is under 50; the kernel counts every step input in state.steps before movement resolves (blocked attempts, pushes and detours count, per the YAML move definition), so the 50th input opens the door and walks through; the pack tick hook mirrors the count into the movedoor:moves HUD counter and marks move_open permanently. Assets: real generated art via scripts/gen-image for all three YAML entries (move-door-closed.png, move-door-open.png tiles; move-counter.png gui), bundled in the pack and declared via defineAsset. Tests: tools/test_mech_79_move_door.py, 13 tests OK covering every YAML test_cases entry (solution fifty-move route, adversarial efficient arrival, boundary 49/50, stays-open, restart, purity, wiring, asset paths). Full tools discovery: 274 tests with only pre-existing failures (test_pm_review_ui x2 and test_level_capture x1, both reproduced on untouched main) plus the refactor golden level-set check, which is regenerated deliberately in sanity-check per repo precedent.
+
+### 2026-11-01T18:39:10 · agent · on `mech-79-move-door/sanity-check`
+
+Starting: play mech-79-move-door-room end to end, add SanityReplayTests replay-digest proof, regenerate the refactor golden for the new level (verifying no existing level readout changes), screenshot the teaching room from the worktree server on port 8534, upload evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: named YAML test_cases green, screenshot attached, feature rolled up to in_review.
+
+### 2026-11-01T18:39:56 · agent · on `mech-79-move-door/sanity-check`
+
+Done: commit 3198e77. Played mech-79-move-door-room end to end via the named YAML test_cases in tools/test_mech_79_move_door.py (14 tests, all OK): solution fifty-move route wins (50th input opens the door and walks through), adversarial efficient arrival at move 44 finds the door closed and paces to open it, boundary closed at 49 and open on exactly the 50th, open stays open after twenty more moves, restart restores closed door and zero counter. SanityReplayTests: the 54-input solution session replays to the same end state (live/replay/replay-2 digests match, won with 0 orbs left). Refactor golden regenerated: only mech-79-move-door-room added, no existing level readout changed. Full tools discovery: 275 tests, only pre-existing failures remain (test_pm_review_ui x2, test_level_capture x1 — both reproduced on untouched main). Assets: real generated art via scripts/gen-image for all three YAML entries (no placeholder fallback needed). Screenshot of the teaching room from the worktree build on port 8534 attached; no browser-recorded play session was linked (replay proof is the digest tests above).
+- Evidence: `screenshots/features/mech-79-move-door/20261101-183950-mech-79-move-door-room-latest.png`

@@ -1,7 +1,7 @@
 ---
 title: Secret wall — sanity check
 summary: looks solid, walk straight through. Sanity-check for candidate mechanic #59 (Vision and Information, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -83,22 +83,68 @@ Needs a mechanics playground: new — Test Level mech-59-secret-wall-room, built
 
 ### mech-59-secret-wall/test-level — Test Level: mech-59-secret-wall-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-59-secret-wall-room.json (test:true) realising the teaching moment for Secret wall: First room: a room whose last orb is behind a stretch of wall that the layout suggests is too thin, with a readable clue beside it. A player who treats every drawn wall as solid completes the room one orb short and must search the walls, which teaches that appearance and collision are not the same thing in this game.
 - Acceptance: mech-59-secret-wall-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-59-secret-wall/implement-mechanic — Implement Secret wall
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #59 deterministically in the pure step function per the spec rules. Rules: Drawn exactly as a wall but with no collision; The first time you walk through, its sprite fades so you know what you found; It never hides a required exit without a readable clue nearby
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-59-secret-wall-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-59-secret-wall/sanity-check — Sanity check Secret wall in mech-59-secret-wall-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-59-secret-wall-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-59-secret-wall/20261102-100020-mech-59-secret-wall-room-20261102-145958.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-02T10:00:31 · agent · on `mech-59-secret-wall`
+
+Ready for review: Secret wall — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-59-secret-wall/test-level: Test Level: mech-59-secret-wall-room — completed, commit `67a214f` — teaching room loads as Test Level, naive solid-wall play one orb short
+- mech-59-secret-wall/implement-mechanic: Implement Secret wall — completed, commit `b2bb2f3` — secret-wall pack, faded found variant, real generated art for all 4 YAML assets, 12 tests covering every YAML test_case
+- mech-59-secret-wall/sanity-check: Sanity check Secret wall in mech-59-secret-wall-room — completed, commit `68b83de` — replay-digest proof + golden corpus; full discover 273 tests, only 2 pre-existing test_pm_review_ui failures verified identical on untouched main (baseline)
+
+Evidence:
+- Screenshots: screenshots/features/mech-59-secret-wall/20261102-100020-mech-59-secret-wall-room-20261102-145958.png (gallery on the feature page)
+- Sessions: none recorded, none linked — replay evidence is SanityReplayTests digest match in tools.test_mech_59_secret_wall
+
+Playtest:
+- Worktree: `.worktrees/mech-59-secret-wall`
+- Start: `cd .worktrees/mech-59-secret-wall && source .venv/bin/activate && python tools/server.py --port 8567` — use `8567`, board server stays on 8321
+- Game: http://127.0.0.1:8567/static/game.html — open the Test Level `mech-59-secret-wall-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T19:23:16 · agent · on `mech-59-secret-wall/test-level`
+
+Starting: build levels/mech-59-secret-wall-room.json (test:true) realising the teaching moment — last orb behind a thin-looking secret wall stretch with a readable clue beside it; naive solid-wall play finishes one orb short, searching finds the passable stretch. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, naive path leaves 1 orb, corrected path through the secret wall wins.
+
+### 2026-11-01T19:23:32 · agent · on `mech-59-secret-wall/test-level`
+
+Done: levels/mech-59-secret-wall-room.json (test:true, 13x8). Divider wall column with one-tile secret stretch S at (5,2), readable clue ? at (2,3) on the main side, one orb on the main side and the last orb behind the secret wall; gate+exit on the main side so naive solid-wall play finishes one orb short with the gate shut. Commit 67a214f. Verified: game_levels loads it, rows rectangular, listed as Test Level.
+
+### 2026-11-01T19:23:33 · agent · on `mech-59-secret-wall/implement-mechanic`
+
+Starting: pack tools/static/packs/secret-wall/ (manifest first, then main.js) — secret:wall drawn as wall with no collision, first walk-through swaps to faded secret:wall-found; wired into game-core.js/game.html/game.js like crumbling; generated art for every YAML asset; unit test mirroring test_mech_5 covering every YAML test_case. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Verify: node-driven GameCore tests + repo suites green.
+
+### 2026-11-01T19:27:55 · agent · on `mech-59-secret-wall/implement-mechanic`
+
+Done: pack tools/static/packs/secret-wall/ (manifest first, main.js, assets/). secret:wall has no collision and swaps to faded secret:wall-found on first entry (passable both ways, restart restores); wired into game-core.js, game.html, game.js (S/s render branch). Real generated art for all 4 YAML assets (secret-wall.png, secret-wall-faded.png, wall.png, jolly-through-wall.png), bundled:true + defineAsset. Also fixed exit row so gate guards the warp. Tests: python -m unittest tools.test_mech_59_secret_wall = 12 tests OK covering every YAML test_case (solution, adversarial one-orb-short, fade, clue-by-required-exit layout, restart+replay digest). Existing suites: game-core/sessions/crumbling/page green; one pre-existing failure in test_keys_and_locks (key_red.png generated sprite absent in fresh worktree, also fails on untouched main). Commit b2bb2f3.
+
+### 2026-11-01T19:27:56 · agent · on `mech-59-secret-wall/sanity-check`
+
+Starting: run named test_cases end to end, start worktree server on 8567, screenshot the teaching room, replay-digest proof, PM evidence. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Verify: SanityReplayTests digest match + screenshot attached.
+
+### 2026-11-02T09:59:35 · agent · on `mech-59-secret-wall/sanity-check`
+
+Resuming: this in_progress sanity-check task is the stalled predecessor's (died on a provider rate limit mid-task), not another live session — resuming it here per parent instruction. test-level (67a214f) and implement-mechanic (b2bb2f3) already completed by predecessor; not re-claiming them. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Plan: end-to-end play of mech-59-secret-wall-room, SanityReplayTests replay-digest proof, worktree server on port 8567, screenshot via tools/capture_level.sh --page game --feature mech-59-secret-wall, evidence via API, roll-up to in_review.
+
+### 2026-11-02T10:00:25 · agent · on `mech-59-secret-wall/sanity-check`
+
+Done: end-to-end sanity play of mech-59-secret-wall-room. SanityReplayTests replay-digest proof passes (live == replay == replay2 digest, full solution wins). Screenshot from worktree server on port 8567 via tools/capture_level.sh --page game --feature mech-59-secret-wall (attached; room renders, secret wall indistinguishable from wall, clue ? beside divider, orbs both sides, 15 sprites none missing). No session file was recorded, so none is linked; replay evidence is the digest test. Tests: tools.test_mech_59_secret_wall 12 OK; full discover 273 tests with only the 2 pre-existing test_pm_review_ui failures, verified identical on untouched main (263 tests, same 2 failures) — baseline, not this feature. Golden corpus regenerated for the new room (only addition, no existing level changed). Commit 68b83de.
+- Evidence: `screenshots/features/mech-59-secret-wall/20261102-100020-mech-59-secret-wall-room-20261102-145958.png`

@@ -1,7 +1,7 @@
 ---
 title: Checkpoint tile — sanity check
 summary: Step on it and later hazards return you here with the timer intact. Sanity-check for candidate mechanic #48 (Terrain and Hazards, revised).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -97,22 +97,64 @@ Named test cases (from the candidate file; all must be played):
 
 ### mech-48-checkpoint-tile/test-level — Test Level: mech-48-checkpoint-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-48-checkpoint-tile-room.json (test:true) realising the teaching moment for Checkpoint tile: First room: a checkpoint tile just before a hazard corridor, placed slightly off the direct line. A player who runs the direct line and dies in the corridor is returned to the level start instead of the tile they passed, which teaches that a checkpoint only counts once it has been stepped on.
 - Acceptance: mech-48-checkpoint-tile-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-48-checkpoint-tile/implement-mechanic — Implement Checkpoint tile
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #48 deterministically in the pure step function per the spec rules. Rules: Stepping on it lights it and makes it your respawn; Any hazard or enemy death after that returns you to the last checkpoint you touched instead of restarting, with the timer still running and your orbs and keys as they were at the death; Multiple checkpoints: the last one touched is active
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-48-checkpoint-tile-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-48-checkpoint-tile/sanity-check — Sanity check Checkpoint tile in mech-48-checkpoint-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-48-checkpoint-tile-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-48-checkpoint-tile/20261101-181558-mech-48-checkpoint-tile-room-20261101-231552.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:16:15 · agent · on `mech-48-checkpoint-tile`
+
+Ready for review: Checkpoint tile — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-48-checkpoint-tile/test-level: Test Level: mech-48-checkpoint-tile-room — completed, commit 21ff1a1 — 18x9 teaching room, checkpoint off the direct line, hazard corridor, second checkpoint in the far zone; BFS-verified safe route
+- mech-48-checkpoint-tile/implement-mechanic: Implement Checkpoint tile — completed, commit 63d3e3a — packs/checkpoint-tile pack (manifest first, generated lit/unlit art bundled), hazard returns player to active checkpoint with timer/orbs/keys intact, last touched wins; 12 new tests OK, 38 existing tests OK
+- mech-48-checkpoint-tile/sanity-check: Sanity check Checkpoint tile — completed, commit c409e05 — all YAML test_cases played incl. adversarial skip and death-and-return replay digest match; screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-48-checkpoint-tile/20261101-181558-mech-48-checkpoint-tile-room-20261101-231552.png (gallery on the feature page)
+- Sessions: none recorded this run — replay proof is the SanityReplayTests stateDigest match in tools/test_mech_48_checkpoint_tile.py; no session is fabricated
+
+Playtest:
+- Worktree: .worktrees/mech-48-checkpoint-tile
+- Start: cd .worktrees/mech-48-checkpoint-tile && source .venv/bin/activate && python tools/server.py --port 8518 — use 8518, board server stays on 8321 (note: run bash tools/prep_level_sprites.sh or copy levels/mech-48-checkpoint-tile-room.json into tools/static/levels/ first if the staged copy is missing)
+- Game: http://127.0.0.1:8518/static/game.html — open the Test Level mech-48-checkpoint-tile-room from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T18:11:46 · agent · on `mech-48-checkpoint-tile/test-level`
+
+Starting: build levels/mech-48-checkpoint-tile-room.json (test:true) realising the teaching moment - checkpoint just before a hazard corridor, slightly off the direct line; naive direct run dies to the level start, corrected detour onto the checkpoint succeeds. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, rows/legend checks, naive-vs-corrected paths exercised by the mechanic test suite.
+
+### 2026-11-01T18:12:08 · agent · on `mech-48-checkpoint-tile/test-level`
+
+Done: levels/mech-48-checkpoint-tile-room.json (test:true, 18x9). Checkpoint K1 at (3,3) one row off the direct y=4 line, hazard corridor (H at (8,3),(7,4),(10,5)) between wall dividers, second checkpoint K2 at (14,3) in the far zone, orbs at (2,4)/(1,7)/(16,1), warp at (15,2). Verified by BFS: a hazard-free snake route reaches both checkpoints, the far orb and the warp; the direct y=4 line hits hazard (7,4). Commit: see hash in move.
+
+### 2026-11-01T18:12:09 · agent · on `mech-48-checkpoint-tile/implement-mechanic`
+
+Starting: pack tools/static/packs/checkpoint-tile/ (manifest first, then main.js) following the crumbling gold standard; checkpoint tile lights on touch (last touched wins), pack hazard returns the player to the active checkpoint with timer/orbs/keys intact instead of losing, no checkpoint means the hazard loses as usual. Pure step logic only via pack/kernel hooks (teleport/setMeta fx + actor flags), no wall-clock reads. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Verify: tools/test_mech_48_checkpoint_tile.py covering every YAML test_case, plus existing game-core/session suites.
+
+### 2026-11-01T18:14:19 · agent · on `mech-48-checkpoint-tile/implement-mechanic`
+
+Done: tools/static/packs/checkpoint-tile/ (manifest.json first, main.js, assets/). Checkpoint tile onEnter lights itself (setMeta checkpoint_active), unlights every other checkpoint, and stores the respawn in actor flags; the pack hazard tile teleports the player to the active checkpoint (timer/orbs/keys untouched because state never resets) or loses when none is active. Wired into game-core.js (registerCheckpointPack), game.html script tag, and game.js lit/unlit rendering for glyph K. Assets: REAL generated art via scripts/gen-image (muse-image-1.0) for checkpoint-off.png and checkpoint-on.png, 512x512 RGBA, bundled:true in manifest, defineAsset in main.js - no placeholder fallback needed. Tests: python -m unittest tools.test_mech_48_checkpoint_tile -v = 12 tests OK covering every YAML test_case (touch activates/death returns, last one wins, adversarial skip, restart+replay digest, plus solution win, purity, layout); existing suites tools.test_game_core/test_pack_folders/test_mech_5_crumbling_tile/test_session_replay/test_game_sessions/test_placeholder_sprites = 38 tests OK. Commit 63d3e3a.
+
+### 2026-11-01T18:14:20 · agent · on `mech-48-checkpoint-tile/sanity-check`
+
+Starting: play mech-48-checkpoint-tile-room end to end (all named test_cases already exercised in tools/test_mech_48_checkpoint_tile.py incl. SanityReplayTests digest proof), start the worktree game server on port 8518, screenshot the teaching room, upload evidence. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Verify: screenshot attached, test output recorded, server health check.
+
+### 2026-11-01T18:16:09 · agent · on `mech-48-checkpoint-tile/sanity-check`
+
+Done: played mech-48-checkpoint-tile-room end to end. Every YAML test_case verified in tools/test_mech_48_checkpoint_tile.py (12 tests OK): touch lights the checkpoint, hazard death returns there with timer (elapsed keeps counting from t_ms) and orbs intact, last checkpoint touched wins (K1 unlights), adversarial direct-line skip loses to the start, restart clears all checkpoints (fresh state meta {}), and SanityReplayTests prove a recorded 32-step death-and-return session replays to the identical stateDigest twice. No soft-lock: hazard-free snake route plus respawn/restart always resolves. Existing suites still green (38 tests: game_core, pack_folders, mech_5, session_replay, game_sessions, placeholder_sprites). Worktree game server ran on port 8518 (health 200), screenshot captured with tools/capture_level.sh --page game --feature mech-48-checkpoint-tile and uploaded as evidence; server stopped afterwards. No agent play session file was recorded, so none is linked. Commit c409e05.
+- Evidence: `screenshots/features/mech-48-checkpoint-tile/20261101-181558-mech-48-checkpoint-tile-room-20261101-231552.png`

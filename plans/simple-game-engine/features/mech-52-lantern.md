@@ -1,7 +1,7 @@
 ---
 title: Lantern — sanity check
 summary: widens your light for one room. Sanity-check for candidate mechanic #52 (Vision and Information, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -86,22 +86,66 @@ Needs a mechanics playground: new — Test Level mech-52-lantern-room, built fro
 
 ### mech-52-lantern/test-level — Test Level: mech-52-lantern-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-52-lantern-room.json (test:true) realising the teaching moment for Lantern: First room: a dark room with the lantern near its entrance and a one-way exit halfway through. A player who picks up the lantern and leaves by the one-way exit before searching the room loses the widened light with the orb still inside, which teaches that the lantern belongs to the room it is found in and that the room is finished before it is left.
 - Acceptance: mech-52-lantern-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-52-lantern/implement-mechanic — Implement Lantern
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #52 deterministically in the pure step function per the spec rules. Rules: Picking it up widens your radius from two tiles to four for that room only; Leaving the room ends it; It is not consumed by time; Its fuel partner is lantern oil
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-52-lantern-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-52-lantern/sanity-check — Sanity check Lantern in mech-52-lantern-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-52-lantern-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-52-lantern/20261101-191058-mech-52-lantern-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T19:11:16 · agent · on `mech-52-lantern`
+
+Ready for review: Lantern — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-52-lantern/test-level: Test Level: mech-52-lantern-room — completed, commit `49f1ec1` — dark lantern room, lantern near entrance, exit halfway; naive exit-first fails, corrected search-first succeeds
+- mech-52-lantern/implement-mechanic: Implement Lantern — completed, commit `ce10a72` — lantern pack (manifest, 5 real generated assets, deterministic radius counters 2->4, room-exit ends it, no time drain); tools.test_mech_52_lantern 15 tests OK, 2 explicit blocked-by skips (16 hidden orb, 4 one-way door)
+- mech-52-lantern/sanity-check: Sanity check Lantern in mech-52-lantern-room — completed, commit `31aed86` — replay digest matches live playthrough, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-52-lantern/20261101-191058-mech-52-lantern-room-latest.png (attached on sanity-check task)
+- Sessions: none recorded, none linked
+
+Playtest:
+- Worktree: `.worktrees/mech-52-lantern`
+- Start: `cd .worktrees/mech-52-lantern && source .venv/bin/activate && python tools/server.py --port 8562` — use `8562`, board server stays on 8321
+- Game: http://127.0.0.1:8562/static/game.html — open the Test Level `mech-52-lantern-room` from the game menu; linked sessions replay from the Sessions menu.
+
+Human approved starting all proposed mechanic features in chat this session. Not merged, not marked completed.
+
+### 2026-11-01T19:06:41 · agent · on `mech-52-lantern/test-level`
+
+Starting: build levels/mech-52-lantern-room.json (test:true) realising the teaching moment - lantern near entrance, orb searchable only at widened radius, room exit halfway; naive exit-first fails, corrected search-first succeeds. Human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, layout checks in tools test.
+
+### 2026-11-01T19:07:01 · agent · on `mech-52-lantern/test-level`
+
+Done: levels/mech-52-lantern-room.json (test:true) - lantern at (3,1) near entrance, orb at (9,1), room exit E at (5,4) in divider, gate+portal in next room. Commit 49f1ec1. Verified: game_levels loads it as a test level; naive/corrected play verified in implement-mechanic tests. Human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T19:07:02 · agent · on `mech-52-lantern/implement-mechanic`
+
+Starting: lantern pack under tools/static/packs/lantern/ (manifest first, generated assets, main.js via pack/kernel hooks only, deterministic counters, no wall-clock), wiring in game-core.js/game.html/game.js, plus tools/test_mech_52_lantern.py covering every YAML test_cases entry (blocked-by cases as explicit skips). Human approved starting all proposed mechanic features in chat this session. Verify: node-driven core tests + existing suites.
+
+### 2026-11-01T19:09:44 · agent · on `mech-52-lantern/implement-mechanic`
+
+Done: tools/static/packs/lantern/ (manifest.json first, main.js, 5 real generated assets via scripts/gen-image: lantern.png, lantern-room-floor.png, jolly-with-lantern.png, jolly-without-lantern.png, lantern-held.png - all 512x512, bundled:true, defineAsset in main.js) + wiring in game-core.js/game.html/game.js (orb drawn only inside light radius, jolly-with-lantern pose). Deterministic counters lantern:held/lantern:radius only through pack tile effects; no wall-clock. Tests: python -m unittest tools.test_mech_52_lantern -v = 15 tests OK (2 explicit skips: blocked-by 16 hidden orb, blocked-by 4 one-way door). Existing suites: test_game_core/test_pack_folders/test_mech_5_crumbling_tile/test_session_replay/test_game_sessions green; test_level_sprites/test_orbs_and_gate/test_keys_and_locks sprite failures are pre-existing on clean main (identical 6F+1E). Commit below. Human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T19:09:45 · agent · on `mech-52-lantern/sanity-check`
+
+Starting: play mech-52-lantern-room end to end, screenshot from worktree server on port 8562, replay-digest proof via SanityReplayTests, PM evidence. Human approved starting all proposed mechanic features in chat this session. Assets are real generated art (no placeholder fallback needed).
+
+### 2026-11-01T19:11:04 · agent · on `mech-52-lantern/sanity-check`
+
+Done: played mech-52-lantern-room end to end via Node core tests - solution (pickup, search at 4 tiles, collect orb, exit, gate, portal) wins; adversarial exit-first loses lantern at E, radius back to 2, gate shut with 1 orb left, never stranded; waiting 60s of t_ms never shrinks radius; restart restores lantern + radius 2. Replay: SanityReplayTests live digest == replay digest == re-replay digest, 18 steps, final (5,7) orbs 0 won. Screenshot attached (worktree build on port 8562; sprites show magenta fallback in the fresh worktree because level-sprites staging is a main-checkout prep step - glyphs/HUD readable). Assets: 5 real generated images via scripts/gen-image, no placeholder fallback. No agent session recorded, so none linked. Commit 31aed86. Human approved starting all proposed mechanic features in chat this session.
+- Evidence: `screenshots/features/mech-52-lantern/20261101-191058-mech-52-lantern-room-latest.png`

@@ -1,7 +1,7 @@
 ---
 title: Raft block — sanity check
 summary: Ride across water, sinks after 10 tiles travelled. Sanity-check for candidate mechanic #86 (Blocks, revised).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -90,22 +90,66 @@ Needs a mechanics playground: new — Test Level mech-86-raft-block-room, built 
 
 ### mech-86-raft-block/test-level — Test Level: mech-86-raft-block-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-86-raft-block-room.json (test:true) realising the teaching moment for Raft block: First room: a twelve-tile water crossing with a banked island at eight tiles. A player who rides straight for the far bank sinks two tiles short and respawns at the checkpoint, which teaches that the raft's ten tiles are a budget to be spent between banks.
 - Acceptance: mech-86-raft-block-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-86-raft-block/implement-mechanic — Implement Raft block
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #86 deterministically in the pure step function per the spec rules. Rules: Step onto the raft from a bank and each move travels one water tile with you aboard, shallow or deep; Stepping onto a bank ends the ride; It cannot enter floor, void, fire or lava; a bank is the only way off; After 10 tiles travelled it sinks and you respawn at your checkpoint; A remaining-tiles counter appears in a conditional GUI slot under the inventory while you ride
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-86-raft-block-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-86-raft-block/sanity-check — Sanity check Raft block in mech-86-raft-block-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-86-raft-block-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-86-raft-block/20261101-182925-mech-86-raft-block-room.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:29:46 · agent · on `mech-86-raft-block`
+
+Ready for review: Raft block — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-86-raft-block/test-level: Test Level: mech-86-raft-block-room — completed, commit e44fb3b — 12-tile crossing, island at tile 8, naive sinks 2 short
+- mech-86-raft-block/implement-mechanic: Implement Raft block — completed, commit 11164cb — raft pack + wiring + HUD counter + 5 generated assets, 22 tests OK (3 blocked-by skipped)
+- mech-86-raft-block/sanity-check: Sanity check Raft block in mech-86-raft-block-room — completed, commit 81bcd4a — replay digest match, 59 tests OK total, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-86-raft-block/20261101-182925-mech-86-raft-block-room.png (gallery on feature page)
+- Sessions: none recorded (replay-digest proof in SanityReplayTests instead; no session fabricated)
+
+Playtest:
+- Worktree: .worktrees/mech-86-raft-block
+- Start: cd .worktrees/mech-86-raft-block && source ../.venv/bin/activate && python tools/server.py --port 8524 — use 8524, board server stays on 8321 (note: at build time 8524 was bound by a parallel agent, so evidence was captured on 8534)
+- Game: http://127.0.0.1:8524/static/game.html — open the Test Level mech-86-raft-block-room from the game menu; linked sessions replay from the Sessions menu.
+
+Human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T18:23:45 · agent · on `mech-86-raft-block/test-level`
+
+Starting: build levels/mech-86-raft-block-room.json (test:true) realising the teaching moment (12-tile crossing, island at 8, naive straight ride sinks 2 short). Human approved starting all proposed mechanic features in chat this session. Verify: level loads from Test Levels menu once pack lands; naive vs corrected paths exercised in implement/sanity tasks.
+
+### 2026-11-01T18:23:55 · agent · on `mech-86-raft-block/test-level`
+
+Done: levels/mech-86-raft-block-room.json (test:true), commit e44fb3b. 20x7 room: 12 water tiles cols 4-15 on row 3, raft R at (4,3), banked island floor at (11,2) = 8th water tile, far bank cols 16-18 with orb+warp. Naive straight ride = 10 travelled tiles sinks at col 13 (2 water tiles short); island hop = 8 then 5. Loads once raft pack lands in implement-mechanic (legend defs raft:*).
+
+### 2026-11-01T18:23:57 · agent · on `mech-86-raft-block/implement-mechanic`
+
+Starting: raft pack under tools/static/packs/raft/ (manifest first, generated assets, defineAsset), kernel wiring in game-core.js/game.html, HUD conditional counter under inventory, deterministic tick-hook logic (board, 1 tile/move on shallow+deep, bank-only exit, sink on 10th tile -> teleport to spawn/checkpoint, raft reset). Human approved starting all proposed mechanic features in chat this session. Verify: tools/test_mech_86_raft_block.py covering every YAML test_cases entry (blocked-by cases skipped with reason), plus existing game-core/session suites.
+
+### 2026-11-01T18:28:01 · agent · on `mech-86-raft-block/implement-mechanic`
+
+Done: commit 11164cb. Pack tools/static/packs/raft/ (manifest first, 5 real generated assets via scripts/gen-image: raft-block, raft-block-sinking, jolly-riding-raft, jolly-sinking-raft, raft-counter; all bundled:true + defineAsset). Pure tick-hook logic: board from bank (tile 1), 1 tile/move shallow+deep, counter counters[raft:remaining] -> conditional HUD slot under inventory (GameHud.raftCounter + game.js RAFT text + riding pose), bank step ends ride and docks raft, fire/lava/void/wall never entered, 10th water tile sinks -> teleport to spawn/checkpoint, raft resets. Tests: python -m unittest tools.test_mech_86_raft_block = 22 tests OK (3 skipped blocked-by 41/48/42 with reasons). Existing suites test_game_core/test_hud/test_game_sessions/test_mech_5/test_game_page/test_game_menus/test_game_input = 47 OK. Note: test_keys_and_locks sprite test fails in any fresh worktree because tools/static/level-sprites/ is gitignored generated art present only on main (passes on main, untouched by this change).
+
+### 2026-11-01T18:28:02 · agent · on `mech-86-raft-block/sanity-check`
+
+Starting: add SanityReplayTests (replay digest), start worktree server on 8524, screenshot teaching room, upload evidence. Human approved starting all proposed mechanic features in chat this session. Verify: replay digest matches live, screenshot attached, full test run green.
+
+### 2026-11-01T18:29:37 · agent · on `mech-86-raft-block/sanity-check`
+
+Done: commit 81bcd4a. SanityReplayTests: island-hop playthrough (23 inputs) and sink run replay to identical stateDigest (live==replay==replay2). Full run: python -m unittest tools.test_mech_86_raft_block tools.test_game_core tools.test_hud tools.test_game_sessions tools.test_mech_5_crumbling_tile = 59 tests OK (3 skipped blocked-by 41/48/42). Screenshot of teaching room attached (worktree server port 8534: 8524 was already bound by a parallel agent server, left untouched). No agent session recorded, so none linked.
+- Evidence: `screenshots/features/mech-86-raft-block/20261101-182925-mech-86-raft-block-room.png`

@@ -1,7 +1,7 @@
 ---
 title: Chaser — sanity check
 summary: copies your moves to hunt you. Sanity-check for candidate mechanic #32 (Enemies and Bots, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -83,22 +83,65 @@ Needs a mechanics playground: new — Test Level mech-32-chaser-room, built from
 
 ### mech-32-chaser/test-level — Test Level: mech-32-chaser-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-32-chaser-room.json (test:true) realising the teaching moment for Chaser: First room: a chaser in an open room with one dead end. A player who runs straight for the orb leads the chaser's copied steps into the dead end behind them and is caught, so the retry teaches that your own path is the control you have over it.
 - Acceptance: mech-32-chaser-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-32-chaser/implement-mechanic — Implement Chaser
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #32 deterministically in the pure step function per the spec rules. Rules: After each of your moves it takes one step in the same direction you just moved, if that tile is free; Otherwise it stays; It is lethal on touch, so your own path steers it into walls
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-32-chaser-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-32-chaser/sanity-check — Sanity check Chaser in mech-32-chaser-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-32-chaser-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-32-chaser/20261101-184353-mech-32-chaser-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:44:00 · agent · on `mech-32-chaser`
+
+Ready for review: Chaser — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-32-chaser/test-level: Test Level: mech-32-chaser-room — completed, commit 311ba61 — teaching room loads from Test Levels menu; naive straight run is caught, corrected line wins
+- mech-32-chaser/implement-mechanic: Implement Chaser — completed, commit c93a549 — chaser pack (controller copies each player move one step if free, tick touch loses, blocked pose); tools.test_mech_32_chaser 13 tests OK, 1 skipped (mud, blocked-by 47); existing suites 71 run with 2 pre-existing level-sprites failures unrelated to this change
+- mech-32-chaser/sanity-check: Sanity check Chaser in mech-32-chaser-room — completed, commit 74f5ece — full playthrough replays to the same end state (digest match), screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-32-chaser/20261101-184353-mech-32-chaser-room-latest.png (gallery on the feature page)
+- Sessions: none recorded (none fabricated); replay proof is in SanityReplayTests
+- Assets: chaser.png, chaser-blocked.png generated with scripts/gen-image, bundled in the pack
+
+Playtest:
+- Worktree: .worktrees/mech-32-chaser
+- Start: cd .worktrees/mech-32-chaser && source .venv/bin/activate && python tools/server.py --port 8539 — use 8539, board server stays on 8321
+- Game: http://127.0.0.1:8539/static/game.html — open the Test Level mech-32-chaser-room from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T18:39:22 · agent · on `mech-32-chaser/test-level`
+
+Starting: build levels/mech-32-chaser-room.json (test:true) realising the teaching moment (open room, one dead end; naive straight run to orb gets caught, corrected path leads chaser into wall). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, naive/corrected play verified in the mechanic test suite.
+
+### 2026-11-01T18:41:13 · agent · on `mech-32-chaser/test-level`
+
+Done: levels/mech-32-chaser-room.json (test:true), commit 311ba61. Open room, chaser on the top lane between player and orb/warp, dead end at the warp corner. Verified by search over the pure step function: naive straight run right is caught on the warp tile (chaser held at the wall, player steps onto it, lost); corrected line (drop to lower lane, cross, rise to orb/warp) wins. Full behavioural proof lands in the implement-mechanic test suite.
+
+### 2026-11-01T18:41:14 · agent · on `mech-32-chaser/implement-mechanic`
+
+Starting: chaser pack under tools/static/packs/chaser/ (manifest first, generated assets, controller + tick touch rule through pack/kernel hooks only), wiring in game-core.js/game.html/game.js actor rendering. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: tools/test_mech_32_chaser.py covering every YAML test_cases entry (mud case skipped-with-reason, blocked-by 47), plus existing suites.
+
+### 2026-11-01T18:42:49 · agent · on `mech-32-chaser/implement-mechanic`
+
+Done: commit c93a549. Pack tools/static/packs/chaser/ (manifest first; main.js registers a chaser:chaser actor controller copying each real player move one step through kernel enterability, plus a tick touch rule that loses on overlap and sets the blocked pose; assets chaser.png + chaser-blocked.png generated with scripts/gen-image, 512x512, bundled:true, defineAsset). Wiring: game-core.js pack list, game.html script tag, game.js actor sprite rendering. Also fixes the teaching-room top row to full 15-wide. Tests: python -m unittest tools.test_mech_32_chaser -v -> 13 tests OK (1 skipped: mud print following, blocked-by 47 mud tile not built). Existing suites: 71 tests run, 2 pre-existing failures in test_orbs_and_gate/test_keys_and_locks over generated level-sprites files that exist only as untracked art on the main checkout (absent in any fresh worktree; untouched by this change).
+
+### 2026-11-01T18:42:49 · agent · on `mech-32-chaser/sanity-check`
+
+Starting: play mech-32-chaser-room end to end (named YAML test_cases), screenshot via tools/capture_level.sh on port 8539, replay-digest proof in SanityReplayTests. Human approval: the human approved starting all proposed mechanic features in chat this session. Assets: both YAML tiles generated with scripts/gen-image (no placeholder fallback needed).
+
+### 2026-11-01T18:43:53 · agent · on `mech-32-chaser/sanity-check`
+
+Done: commit 74f5ece. Played mech-32-chaser-room end to end via SanityReplayTests: the 26-move corrected line (park the chaser low against the right wall, cross the top lane) wins with orbs 0; live digest == replay digest == replay-of-copy digest. Adversarial naive straight run loses on the warp tile as the teaching moment warns, and a fresh state restores player and chaser for retry. python -m unittest tools.test_mech_32_chaser -> 13 tests OK (1 skipped: mud print following, blocked-by 47). Screenshot attached (worktree server on port 8539). No agent play session was recorded, so none is linked. Assets: chaser.png and chaser-blocked.png generated with scripts/gen-image (real art, no placeholder fallback).
+- Evidence: `screenshots/features/mech-32-chaser/20261101-184353-mech-32-chaser-room-latest.png`

@@ -96,6 +96,16 @@ animations, sounds. Reference `scratchpad/full-level-ui.png` if applicable.>
   no legal move and no lose/reset fails the ticket.>
 - Record play sessions for replay: <yes — sessions are the review evidence /
   no — screenshots only, and why>
+- Q&A verification (`qa-verification` task, kind `qa`): run
+  `python3 tools/verify_mechanic_qa.py <feature-id>`; acceptance requires
+  exit 0, the report pasted in the task comment, agent success (`won`) +
+  naive-failure + edge sessions linked, and the tables below filled in.
+- Rule -> evidence: <one row per Player-Facing Behavior / Edge Cases rule:
+  rule text -> tier (unit / level / session) -> test name or session id +
+  step range. Uncovered rules block review.>
+- Interaction audit: <new mechanic x existing families (walls, orbs,
+  locks, switches, enemies, water, hazards, restart): interacts /
+  blocked-by / passes-through / n-a; flag asymmetries for the human.>
 
 ## Tasks
 

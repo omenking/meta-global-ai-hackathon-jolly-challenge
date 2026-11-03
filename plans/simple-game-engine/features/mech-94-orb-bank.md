@@ -1,7 +1,7 @@
 ---
 title: Orb bank — sanity check
 summary: gate counts orbs banked last level. Sanity-check for candidate mechanic #94 (Orbs, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -81,22 +81,64 @@ Needs a mechanics playground: new — Test Level mech-94-orb-bank-room, built fr
 
 ### mech-94-orb-bank/test-level — Test Level: mech-94-orb-bank-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-94-orb-bank-room.json (test:true) realising the teaching moment for Orb bank: First room: a level that ends with a visible bonus orb beside the warp, followed by a bank gate in the next level. A player who warps past the bonus arrives at the bank gate with nothing banked and must take the long way round, which teaches that what is banked in one level is spent in another.
 - Acceptance: mech-94-orb-bank-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-94-orb-bank/implement-mechanic — Implement Orb bank
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #94 deterministically in the pure step function per the spec rules. Rules: A higher-level campaign rule: bonus orbs you bank at a warp are remembered, and a later bank gate deducts from that bank instead of orbs in its own level; The bank shows in the HUD between levels
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-94-orb-bank-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-94-orb-bank/sanity-check — Sanity check Orb bank in mech-94-orb-bank-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-94-orb-bank-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-94-orb-bank/20261101-191241-mech-94-orb-bank-room-20261102-001215.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T19:14:43 · agent · on `mech-94-orb-bank`
+
+Ready for review: Orb bank — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-94-orb-bank/test-level: Test Level: mech-94-orb-bank-room — completed, commit `7c3befc` — two-chamber teaching room loads as a Test Level; naive warp-past-bonus arrives with an empty bank
+- mech-94-orb-bank/implement-mechanic: Implement Orb bank — completed, commit `021c2bb` — orb-bank pack (bank:bonus-orb/warp/entry/gate) through pack/kernel hooks, BANK HUD counter, generated assets bundled
+- mech-94-orb-bank/sanity-check: Sanity check Orb bank in mech-94-orb-bank-room — completed, commit `e2629cf` — all five YAML test_cases pass, replay digest matches, golden corpus regenerated
+
+Evidence:
+- Screenshots: screenshots/features/mech-94-orb-bank/20261101-191241-mech-94-orb-bank-room-20261102-001215.png (gallery on the feature page)
+- Sessions: none recorded (no session is linked; replay proof is the SanityReplayTests digest match in tools/test_mech_94_orb_bank.py)
+
+Playtest:
+- Worktree: `.worktrees/mech-94-orb-bank`
+- Start: `cd .worktrees/mech-94-orb-bank && source .venv/bin/activate && python tools/server.py --port 8560` — use `8560`, board server stays on 8321
+- Game: http://127.0.0.1:8560/static/game.html — open the Test Level `mech-94-orb-bank-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T19:07:26 · agent · on `mech-94-orb-bank/test-level`
+
+Starting: build levels/mech-94-orb-bank-room.json (test:true) realising the teaching moment — bonus orb beside the bank warp in the first chamber, bank gate in the second chamber, long way round so warping past the bonus never strands the player. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, naive warp-past-bonus path arrives with empty bank and must take the long way, corrected bonus-then-warp path pays the gate.
+
+### 2026-11-01T19:07:59 · agent · on `mech-94-orb-bank/test-level`
+
+Done: levels/mech-94-orb-bank-room.json (test:true), commit 7c3befc. Two chambers in one room: bonus orb B beside bank warp W with a counted orb on the direct line (naive warp-past-bonus arrives with an empty bank), bank gate K (cost 1) on the short way to the exit in the second chamber, open long way round the south side, counted orb in chamber two. Verified: game_levels loads it, rows rectangular 15x12, listed as a Test Level.
+
+### 2026-11-01T19:08:00 · agent · on `mech-94-orb-bank/implement-mechanic`
+
+Starting: orb-bank pack under tools/static/packs/orb-bank/ (manifest first, generated assets, main.js via pack/kernel hooks only), wiring in game-core.js/game.html/game.js/game-hud.js, and tools/test_mech_94_orb_bank.py covering every orbs.yml #94 test_case. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: node-driven pure-step tests for solution/adversarial/boundary/only-bonus/restart+replay, plus existing game-core/session suites green.
+
+### 2026-11-01T19:11:53 · agent · on `mech-94-orb-bank/implement-mechanic`
+
+Done: commit 021c2bb. Pack tools/static/packs/orb-bank/ (manifest first; main.js registers bank:bonus-orb/bank:warp/bank:entry/bank:gate/bank:gate-open purely through pack/kernel hooks, counters bank:bank/bank:pending, per-gate cost from legend bank_cost in cell meta, no wall-clock reads). Wiring: game-core.js registers the pack and readout exposes bank/bank_pending; game.html loads it; game-hud.js adds bankCount; game.js adds the BANK HUD readout and the K/k gate sprite switch. Assets: real generated art (512x512 RGBA) for bank-gate-closed.png, bank-gate-open.png, bank-counter.png, all bundled:true in manifest and defineAsset in main.js. Tests: python -m unittest tools.test_mech_94_orb_bank plus crumbling/orbs/pack-folders/game-core/hud/warp suites = 111 tests OK after prep_level_sprites.sh in the worktree (the one initial sprite failure was the gitignored generated sprites missing in a fresh worktree, pre-existing).
+
+### 2026-11-01T19:11:54 · agent · on `mech-94-orb-bank/sanity-check`
+
+Starting: run the named orbs.yml #94 test_cases end to end (solution, adversarial, boundary, only-bonus, restart+replay), add SanityReplayTests replay-digest proof, start the worktree game server on 8560, screenshot the teaching room, upload evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: replay digest equals live digest, screenshot attached, full suites green.
+
+### 2026-11-01T19:14:33 · agent · on `mech-94-orb-bank/sanity-check`
+
+Done: commit e2629cf. Ran every orbs.yml #94 test_case end to end in tools/test_mech_94_orb_bank.py (12 tests OK): solution bank-then-spend, adversarial warp-past-bonus with long way round, boundary exact deduction / one-short, only-bonus-orbs bank, restart restores entry bank, plus SanityReplayTests — the 27-step two-chamber playthrough replays to the same end bank with matching live/replay digests. Ran the full tools suite (273 tests): only pre-existing failures in test_pm_review_ui (2, also failing on untouched main) remain; the golden corpus was regenerated deliberately (only the new room added, no existing readout changed) and game/session suites stay green (83 tests OK). Screenshot of the teaching room from the worktree build on port 8560 attached; assets are real generated art, no placeholder fallback. No agent play session was recorded, so none is linked.
+- Evidence: `screenshots/features/mech-94-orb-bank/20261101-191241-mech-94-orb-bank-room-20261102-001215.png`

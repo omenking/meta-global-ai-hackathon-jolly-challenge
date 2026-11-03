@@ -1,7 +1,7 @@
 ---
 title: Teleport pair — sanity check
 summary: enter one pad, exit its twin. Sanity-check for candidate mechanic #3 (Movement Tiles, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -84,22 +84,72 @@ Needs a mechanics playground: new — Test Level mech-3-teleport-pair-room, buil
 
 ### mech-3-teleport-pair/test-level — Test Level: mech-3-teleport-pair-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-3-teleport-pair-room.json (test:true) realising the teaching moment for Teleport pair: First room: two pads of different marks in one chamber. A player who steps on pads at random arrives back where they started and makes no progress, which teaches that pads are pairs to be identified rather than doors that simply open.
 - Acceptance: mech-3-teleport-pair-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-3-teleport-pair/implement-mechanic — Implement Teleport pair
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #3 deterministically in the pure step function per the spec rules. Rules: Stepping on a pad instantly moves you to its paired pad (same mark) keeping your direction; If a block sits on the twin, the teleport does not happen; Pads work both ways
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-3-teleport-pair-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-3-teleport-pair/sanity-check — Sanity check Teleport pair in mech-3-teleport-pair-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-3-teleport-pair-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-3-teleport-pair/20261101-175152-mech-3-teleport-pair-room-latest.png`
+- Session: `game-mech-3-teleport-pair-room-20261101225134-n8ms1c` (mech-3-teleport-pair-room, agent, won)
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T17:52:31 · agent · on `mech-3-teleport-pair`
+
+Ready for review: Teleport pair — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-3-teleport-pair/test-level: Test Level: mech-3-teleport-pair-room — completed, commit 3672ebb — teaching room loads as a test level; decoy pair B loops to a sealed alcove (naive pad-stepping makes no progress), pair A links the sealed goal chamber
+- mech-3-teleport-pair/implement-mechanic: Implement Teleport pair — completed, commit f204df9 — teleport pack (same-mark twin, direction kept, both ways, occupied-twin guard, deterministic pure step) with real generated pad art; 15 tests OK, 1 skipped (blocked-twin case blocked-by 81 push block, guard proven at state level)
+- mech-3-teleport-pair/sanity-check: Sanity check Teleport pair in mech-3-teleport-pair-room — completed, commit d9af1c7 — screenshot attached, agent session replay digest d17dc72a matches live play, existing suites green
+
+Evidence:
+- Screenshots: screenshots/features/mech-3-teleport-pair/20261101-175152-mech-3-teleport-pair-room-latest.png (gallery on the feature page)
+- Sessions: game-mech-3-teleport-pair-room-20261101225134-n8ms1c (mech-3-teleport-pair-room, agent, won) — replay: http://127.0.0.1:8502/static/game.html?replay=game-mech-3-teleport-pair-room-20261101225134-n8ms1c&t=0 — file preserved at sessions/features/mech-3-teleport-pair/game-mech-3-teleport-pair-room-20261101225134-n8ms1c.jsonl on the main checkout
+
+Playtest:
+- Worktree: .worktrees/mech-3-teleport-pair
+- Start: cd .worktrees/mech-3-teleport-pair && source /home/andrew/Sites/meta-global-ai-hackathon-jolly-challenge/.venv/bin/activate && python tools/server.py --port 8502 — use 8502, board server stays on 8321
+- Game: http://127.0.0.1:8502/static/game.html — open the Test Level mech-3-teleport-pair-room from the game menu; linked sessions replay from the Sessions menu.
+
+Human approval: the human approved starting all proposed mechanic features in chat this session. Not merged, not marked completed — awaiting human review.
+
+### 2026-11-01T17:45:48 · agent · on `mech-3-teleport-pair/test-level`
+
+Starting: build levels/mech-3-teleport-pair-room.json (test:true) realising the teaching moment — two pads of different marks in the start chamber; stepping on pads at random (decoy pair B to a sealed alcove and back) makes no progress, the identified pair A links to the sealed goal chamber. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads from the game Test Levels menu, naive action fails as described and corrected action succeeds (covered by tools tests in later tasks).
+
+### 2026-11-01T17:45:59 · agent · on `mech-3-teleport-pair/test-level`
+
+Done: levels/mech-3-teleport-pair-room.json (test:true), commit 3672ebb. Layout: start chamber with pads a (mark A, x4,y1) and b (mark B, x8,y1); B twins to a sealed one-row alcove (x6,y4) and back — random pad-stepping returns to visited pads with no progress; A twins to the sealed goal chamber (x3,y7) holding the orb and exit X. Verified: game_levels.load_level + list_levels show the room as a test level. Full naive-vs-corrected play proof lands with the implement-mechanic tests.
+
+### 2026-11-01T17:46:00 · agent · on `mech-3-teleport-pair/implement-mechanic`
+
+Starting: teleport pack under tools/static/packs/teleport/ (manifest first, generated assets, defineAsset), pads as terrain defs teleport:pad-a/teleport:pad-b whose onEnterTerrain pushes the kernel teleport effect to the same-mark twin (direction kept, both ways, no chain on arrival, twin occupied by an object blocks it), wired into game-core.js + game.html like crumbling. Tests: tools/test_mech_3_teleport_pair.py mirroring test_mech_5_crumbling_tile.py covering every YAML test_case (blocked-twin case blocked-by 81 push block gets an explicit skipped-with-reason check). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: node-driven GameCore step tests + existing game-core/session suites stay green.
+
+### 2026-11-01T17:48:55 · agent · on `mech-3-teleport-pair/implement-mechanic`
+
+Done: pack tools/static/packs/teleport/ (manifest first; main.js defines teleport:pad-a/teleport:pad-b as terrain defs whose onEnterTerrain pushes the kernel teleport effect to the same-mark twin — direction kept, both ways, arrival never chains; an object on the twin prevents the teleport), wired into game-core.js (Node require + browser global + createEngine) and game.html script tag, following the crumbling pattern. Assets: REAL generated art via scripts/gen-image (Muse Image, grounded on floor/wall reference sprites) — teleport-pad-a.png (cyan A) and teleport-pad-b.png (magenta B), 512x512 in the pack assets/, bundled:true in manifest.json and defineAsset in main.js; no placeholder fallback needed. Tests: tools/test_mech_3_teleport_pair.py — 13 tests OK, 1 skipped. Every YAML test_case covered: solution paired pads link chambers + both ways (pass), adversarial random pads via decoy pair B to sealed alcove and back (pass), blocked twin (explicit skip: blocked-by 81 push block, no pushable block tile exists yet; the pack occupancy guard is separately proven at state level by occupying the twin cell), restart+replay with digest match (pass). Existing suites: game-core, game-sessions, pack-folders, mech-5, player-movement, game-input, keys-and-locks, placeholder-sprites — 69 tests OK (1 skipped) after running tools/prep_level_sprites.sh in the fresh worktree. Commit: see next move.
+
+### 2026-11-01T17:52:22 · agent · on `mech-3-teleport-pair/implement-mechanic`
+
+Commit for implement-mechanic: f204df9 (pack teleport/ with manifest + main.js + generated teleport-pad-a.png/teleport-pad-b.png, game-core.js/game.html wiring, tools/test_mech_3_teleport_pair.py).
+
+### 2026-11-01T17:49:02 · agent · on `mech-3-teleport-pair/sanity-check`
+
+Starting: play mech-3-teleport-pair-room end to end (already covered by SanityReplayTests digest proof), screenshot the teaching room from the worktree build on port 8502, upload evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: screenshot attached, replay digest matches, unit suites green.
+
+### 2026-11-01T17:52:15 · agent · on `mech-3-teleport-pair/sanity-check`
+
+Done: played mech-3-teleport-pair-room end to end from the worktree build (http://127.0.0.1:8502, server started detached from the worktree; board stays on 8321). Screenshot attached (teaching room: cyan pad A and magenta pad B in the start chamber, B twin in the sealed alcove, A twin with orb and exit in the sealed goal chamber; 14 sprites, none missing). Recorded agent play session game-mech-3-teleport-pair-room-20261101225134-n8ms1c (level mech-3-teleport-pair-room, agent, won at 11,7 in 11 steps; driven headlessly through the real game page with ?creator=agent): Node replay of its recorded {t_ms,input} log reaches the identical state digest d17dc72a as the live browser run. SanityReplayTests also prove live-vs-replay digest equality for the scripted solution. Tests: tools.test_mech_3_teleport_pair 15 tests OK, 1 skipped (blocked-twin YAML case, blocked-by 81 push block — guard proven at state level); existing suites game-core/game-sessions/pack-folders/mech-5/player-movement/game-input/keys-and-locks/placeholder-sprites green (69 tests OK). Assets: real generated art (scripts/gen-image), no placeholder fallback. Session file preserved at sessions/features/mech-3-teleport-pair/game-mech-3-teleport-pair-room-20261101225134-n8ms1c.jsonl on the main checkout. Commits: test-level 3672ebb, implement-mechanic f204df9, sanity-check d9af1c7.
+- Evidence: `screenshots/features/mech-3-teleport-pair/20261101-175152-mech-3-teleport-pair-room-latest.png`
+- Session: `game-mech-3-teleport-pair-room-20261101225134-n8ms1c` (mech-3-teleport-pair-room, agent, won)

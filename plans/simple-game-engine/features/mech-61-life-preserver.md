@@ -1,7 +1,7 @@
 ---
 title: Life preserver — sanity check
 summary: Float across water, take one inventory slot. Sanity-check for candidate mechanic #61 (Gear and Items, revised).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -85,22 +85,64 @@ Needs a mechanics playground: new — Test Level mech-61-life-preserver-room, bu
 
 ### mech-61-life-preserver/test-level — Test Level: mech-61-life-preserver-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-61-life-preserver-room.json (test:true) realising the teaching moment for Life preserver: First room: a life preserver on the near bank and deep water beyond it. A player who wades straight in without picking it up is returned to the checkpoint as soon as the water deepens, which teaches that the preserver is the permission and that deep water will still cost two moves a tile once they have it.
 - Acceptance: mech-61-life-preserver-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-61-life-preserver/implement-mechanic — Implement Life preserver
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #61 deterministically in the pure step function per the spec rules. Rules: Picking it up fills one inventory slot; While held, water tiles are walkable and deep water still costs two moves per tile (41); Without it, entering deep water sends you back to your checkpoint; It is held for the rest of the level
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-61-life-preserver-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-61-life-preserver/sanity-check — Sanity check Life preserver in mech-61-life-preserver-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-61-life-preserver-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-61-life-preserver/20261101-185849-mech-61-life-preserver-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:58:53 · agent · on `mech-61-life-preserver`
+
+Ready for review: Life preserver — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-61-life-preserver/test-level: Test Level — completed, commit 8128f3c — teaching room loads
+- mech-61-life-preserver/implement-mechanic: Implement — completed, commit 0e541b3 — 30 tests OK (2 skipped blocked-by 41/48)
+- mech-61-life-preserver/sanity-check: Sanity check — completed, commit c5b48e0 — replay digest match, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-61-life-preserver/20261101-185849-mech-61-life-preserver-room-latest.png
+- Sessions: none recorded (not fabricated)
+
+Playtest:
+- Worktree: .worktrees/mech-61-life-preserver
+- Start: cd .worktrees/mech-61-life-preserver && source .venv/bin/activate && python tools/server.py --port 8549 — board stays on 8321
+- Game: http://127.0.0.1:8549/static/game.html — open Test Level mech-61-life-preserver-room from the game menu
+
+### 2026-11-01T18:55:02 · agent · on `mech-61-life-preserver/test-level`
+
+Starting: human approved starting all proposed mechanic features in chat this session. Build test level, pack, tests per agent-workflow. Verify: unit tests, replay digest, screenshot on port 8549.
+
+### 2026-11-01T18:55:13 · agent · on `mech-61-life-preserver/test-level`
+
+Done: levels/mech-61-life-preserver-room.json (test:true) — preserver on near bank, shallow ~~ then deep DDD, orb+warp far side. Naive wade fails, corrected succeeds (verified in implement tests). Commit: pending hash in next comment.
+
+### 2026-11-01T18:55:13 · agent · on `mech-61-life-preserver/implement-mechanic`
+
+Starting: human approved in chat this session. Pack preserver + wiring + full YAML test_cases tests. Verify: node-driven unittest + repo suites.
+
+### 2026-11-01T18:57:10 · agent · on `mech-61-life-preserver/implement-mechanic`
+
+Done: pack tools/static/packs/life-preserver/ (manifest first, main.js via kernel hooks, 5 real generated assets bundled), wired in game-core.js+game.html, level bypass row added. Tests: python -m unittest tools.test_mech_61_life_preserver tools.test_mech_5_crumbling_tile tools.test_game_core = 30 tests OK (skipped=2 blocked-by 41/48 with reasons). Commit 0e541b3.
+
+### 2026-11-01T18:57:10 · agent · on `mech-61-life-preserver/sanity-check`
+
+Starting: human approved in chat. Sanity: full tests, server 8549, screenshot, replay digest.
+
+### 2026-11-01T18:58:52 · agent · on `mech-61-life-preserver/sanity-check`
+
+Done: SanityReplayTests replay digest matches live; screenshot attached. Tests: mech suite 11 OK (2 skipped blocked-by 41/48); full discover 272 tests with only 2 pre-existing test_pm_review_ui failures also failing on untouched main. Golden corpus regenerated deliberately (new level only, no existing readout changed). Assets: 5 real gen-image files. Commit c5b48e0.
+- Evidence: `screenshots/features/mech-61-life-preserver/20261101-185849-mech-61-life-preserver-room-latest.png`

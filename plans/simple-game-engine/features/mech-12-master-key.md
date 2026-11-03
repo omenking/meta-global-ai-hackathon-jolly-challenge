@@ -1,7 +1,7 @@
 ---
 title: Master key — sanity check
 summary: opens any lock, then breaks. Sanity-check for candidate mechanic #12 (Keys and Locks, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -81,22 +81,66 @@ Needs a mechanics playground: new — Test Level mech-12-master-key-room, built 
 
 ### mech-12-master-key/test-level — Test Level: mech-12-master-key-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-12-master-key-room.json (test:true) realising the teaching moment for Master key: First room: a master key with a red lock nearby, whose red key is also in the room, and a blue lock further on with no blue key in sight. A player who spends the master key on the convenient red lock has nothing for the blue lock and must restart, which teaches that the master key is saved for the colour that cannot be found.
 - Acceptance: mech-12-master-key-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-12-master-key/implement-mechanic — Implement Master key
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #12 deterministically in the pure step function per the spec rules. Rules: A silver key that fits any lock; Pressing it into a lock of any colour consumes the master key and dissolves that one lock only
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-12-master-key-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-12-master-key/sanity-check — Sanity check Master key in mech-12-master-key-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-12-master-key-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-12-master-key/20261101-183820-mech-12-master-key-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:38:33 · agent · on `mech-12-master-key`
+
+Ready for review: Master key — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-12-master-key/test-level: Test Level: mech-12-master-key-room — completed, commit `2db2b94` — 13x8 teaching room, naive spend fails / corrected save succeeds
+- mech-12-master-key/implement-mechanic: Implement Master key — completed, commit `547586d` — master-key pack + generated assets; 11 tests OK (1 blocked-by-11 skip), 78 existing tests OK
+- mech-12-master-key/sanity-check: Sanity check Master key — completed, commit `c6c4575` — named test_cases end to end, replay digest matches, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-12-master-key/20261101-183820-mech-12-master-key-room-latest.png (gallery on the feature page)
+- Sessions: none recorded — none linked (not fabricated); replay proof is SanityReplayTests digest match in tools/test_mech_12_master_key.py
+
+Playtest:
+- Worktree: `.worktrees/mech-12-master-key`
+- Start: `cd .worktrees/mech-12-master-key && source .venv/bin/activate && python tools/server.py --port 8536` — use `8536`, board server stays on 8321
+- Game: http://127.0.0.1:8536/static/game.html — open the Test Level `mech-12-master-key-room` from the game menu; linked sessions replay from the Sessions menu.
+
+Human approval: the human approved starting all proposed mechanic features in chat this session. Not merged, not marked completed, not self-approved — awaiting human review.
+
+### 2026-11-01T18:35:16 · agent · on `mech-12-master-key/test-level`
+
+Starting: build levels/mech-12-master-key-room.json (test:true) realising the teaching moment — master key + red lock nearby with red key also in room, blue lock beyond with no blue key; naive spend on red fails, corrected save succeeds. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, rows rectangular, layout positions, naive/corrected sequences distinguished by master-key pack semantics.
+
+### 2026-11-01T18:35:35 · agent · on `mech-12-master-key/test-level`
+
+Done: levels/mech-12-master-key-room.json (test:true), 13x8. P(1,1), master M(3,1), red key r(3,2) off the direct line to red lock R(5,3), blue lock B(7,5), orb(7,6) beyond blue. Naive (master only -> R) consumes master, blue stays locked; corrected (collect both -> R prefers red, B spends master) reaches orb. Commit 2db2b94. Human approval stated in claim: human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T18:35:36 · agent · on `mech-12-master-key/implement-mechanic`
+
+Starting: pack tools/static/packs/master-key/ (manifest first, main.js via defineAsset/defineTile/defineItem, pure step hooks only, no wall-clock), wiring in game-core.js + game.html, real generated assets master-key.png/master-key-held.png (fallback placeholder named if gen fails), plus tools/test_mech_12_master_key.py covering every YAML test_cases entry (twin-lock blocked-by 11 as skipped-with-reason). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: node-driven GameCore sequences + unittest suites.
+
+### 2026-11-01T18:37:56 · agent · on `mech-12-master-key/implement-mechanic`
+
+Done: tools/static/packs/master-key/{manifest.json,main.js,assets/master-key.png,assets/master-key-held.png} — real Muse-generated 512x512 RGBA art via scripts/gen-image (no fallback needed); pack wired in game-core.js (engine list + registerMasterKeyPack) and game.html. Logic: master:master-key fits any master:lock-<colour>, consumed on use, exactly one lock dissolves; matching coloured key spent first so fetching red saves master for blue; pure step only, no wall-clock. Tests: tools/test_mech_12_master_key.py 11 tests OK (skipped=1 blocked-by 11 twin lock, explicit). Existing suites (game_core, keys_and_locks, mech_5, pack_folders, game_sessions, session_replay, game_page, orbs_and_gate, player_movement): 78 tests OK after prep_level_sprites.sh in worktree. Commit 547586d.
+
+### 2026-11-01T18:37:57 · agent · on `mech-12-master-key/sanity-check`
+
+Starting: run named YAML test_cases end to end (already in SanityReplayTests), start worktree server on 8536, screenshot teaching room via capture_level.sh, replay-digest proof, PM evidence upload. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: unittest output + screenshot + health check.
+
+### 2026-11-01T18:38:25 · agent · on `mech-12-master-key/sanity-check`
+
+Done: named YAML test_cases played end to end via tools/test_mech_12_master_key.py — 11 tests OK (skipped=1: twin-lock blocked-by 11, explicit skip-with-reason, never faked). Solution (save master for blue) reaches orb with orbs_left 0; adversarial (master on red) leaves blue locked, player can walk back, restart restores; one-use boundary dissolves exactly one lock; SanityReplayTests replay digest matches live (13 steps). Screenshot of teaching room from worktree server on 8536 attached (17 sprites, none missing; silver master distinct from red key). No agent play session recorded, so none linked (not fabricated). Commit c6c4575 (evidence-only sanity commit; code in 547586d). Assets: real scripts/gen-image art, no placeholder fallback.
+- Evidence: `screenshots/features/mech-12-master-key/20261101-183820-mech-12-master-key-room-latest.png`

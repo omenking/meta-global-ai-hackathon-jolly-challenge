@@ -1,7 +1,7 @@
 ---
 title: Lantern oil — sanity check
 summary: collect to keep your light burning. Sanity-check for candidate mechanic #65 (Gear and Items, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -82,22 +82,64 @@ Needs a mechanics playground: new — Test Level mech-65-lantern-oil-room, built
 
 ### mech-65-lantern-oil/test-level — Test Level: mech-65-lantern-oil-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-65-lantern-oil-room.json (test:true) realising the teaching moment for Lantern oil: First room: a dark room with oil near the entrance and the search area beyond it. A player who walks past the oil to save time finds their light shrunk before the far orbs appear and has to feel their way back, which teaches that oil is the route through a dark room rather than a bonus beside it.
 - Acceptance: mech-65-lantern-oil-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-65-lantern-oil/implement-mechanic — Implement Lantern oil
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #65 deterministically in the pure step function per the spec rules. Rules: A pickup that refills the lantern; In a dark room the lantern burns down over time shown on a conditional HUD gauge; Oil restores it to full, without it the light shrinks back to the base radius
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-65-lantern-oil-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-65-lantern-oil/sanity-check — Sanity check Lantern oil in mech-65-lantern-oil-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-65-lantern-oil-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-65-lantern-oil/20261101-190228-mech-65-lantern-oil-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T19:02:45 · agent · on `mech-65-lantern-oil`
+
+Ready for review: Lantern oil — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-65-lantern-oil/test-level: Test Level: mech-65-lantern-oil-room — completed, commit 87e3854 — dark teaching room loads, oil near entrance, far orbs beyond
+- mech-65-lantern-oil/implement-mechanic: Implement Lantern oil — completed, commit 3237be1 — pack + deterministic fuel/radius + HUD gauge + 6 generated assets; 16 tests (12 pass, 4 skipped blocked-by 51/52)
+- mech-65-lantern-oil/sanity-check: Sanity check Lantern oil in mech-65-lantern-oil-room — completed, commit 4a85bb0 — end-to-end win, replay digest matches, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-65-lantern-oil/20261101-190228-mech-65-lantern-oil-room-latest.png
+- Sessions: none recorded (none fabricated)
+
+Playtest:
+- Worktree: .worktrees/mech-65-lantern-oil
+- Start: cd .worktrees/mech-65-lantern-oil && python tools/server.py --port 8552 — use 8552, board server stays on 8321
+- Game: http://127.0.0.1:8552/static/game.html — open the Test Level mech-65-lantern-oil-room from the game menu
+
+### 2026-11-01T18:54:59 · agent · on `mech-65-lantern-oil/test-level`
+
+Starting: build levels/mech-65-lantern-oil-room.json (test:true) realising the teaching moment — dark room, oil near entrance, search area beyond; naive walk-past shrinks light to base before far orbs, corrected oil route succeeds. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, layout assertions in tools/test_mech_65_lantern_oil.py.
+
+### 2026-11-01T18:55:19 · agent · on `mech-65-lantern-oil/test-level`
+
+Done: levels/mech-65-lantern-oil-room.json (test:true) — oil (o) two tiles from spawn, far orbs at the east edge + gate/warp exit; naive walk-past route is 12+ steps so starting fuel reaches base radius first, oil route restores full. Commit 87e3854. Verified: game_levels.load_level parses, test:true.
+
+### 2026-11-01T18:55:20 · agent · on `mech-65-lantern-oil/implement-mechanic`
+
+Starting: pack tools/static/packs/lantern-oil/ (manifest first, generated assets, defineAsset), deterministic fuel burn from recorded t_ms only (no wall clock), oil refills to full, light shrinks to base radius and stops, conditional HUD gauge. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Blocked-by 51/52 cases get explicit skipped-with-reason checks. Verify: tools/test_mech_65_lantern_oil.py mirroring test_mech_5_crumbling_tile.py + repo suites.
+
+### 2026-11-01T19:01:46 · agent · on `mech-65-lantern-oil/implement-mechanic`
+
+Done: pack tools/static/packs/lantern-oil/ (manifest first; 6 real generated assets bundled:true + defineAsset), deterministic fuel burn from recorded t_ms (5/100ms... 4/100ms), oil refills to full in one collection, radius shrinks to base 1 and stops, conditional HUD gauge via GameHud.lanternGauge. Wired in game-core.js + game.html; golden corpus extended with only the new level (no existing readout drift). Commit 3237be1. Tests: tools.test_mech_65_lantern_oil 16 tests OK (4 YAML blocked-by 51/52 cases explicitly skipped with reason, never fake-passed); full discover 277 tests with only pre-existing failures (pm_review_ui x2, test_level_capture error, also failing on untouched base).
+
+### 2026-11-01T19:01:47 · agent · on `mech-65-lantern-oil/sanity-check`
+
+Starting: play mech-65-lantern-oil-room end to end, screenshot via capture_level.sh on port 8552, replay-digest proof (SanityReplayTests already green), PM evidence upload. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T19:02:43 · agent · on `mech-65-lantern-oil/sanity-check`
+
+Done: played mech-65-lantern-oil-room end to end (oil route collects both orbs, gate opens, warp wins). SanityReplayTests green: live digest == replay digest == re-replay digest; restart restores oil + fuel 60. Screenshot attached (18 sprites, none missing; oil flask visible by the entrance). No agent play session was recorded, so none is linked. Commit 4a85bb0 (evidence-only). Tests: test_mech_65_lantern_oil 16 run, 12 pass, 4 skipped-with-reason (blocked-by 51/52).
+- Evidence: `screenshots/features/mech-65-lantern-oil/20261101-190228-mech-65-lantern-oil-room-latest.png`

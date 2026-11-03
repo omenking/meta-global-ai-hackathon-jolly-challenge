@@ -1,7 +1,7 @@
 ---
 title: Final door — sanity check
 summary: needs one key of each colour held. Sanity-check for candidate mechanic #100 (Keys and Locks, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -82,22 +82,65 @@ Needs a mechanics playground: new — Test Level mech-100-final-door-room, built
 
 ### mech-100-final-door/test-level — Test Level: mech-100-final-door-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-100-final-door-room.json (test:true) realising the teaching moment for Final door: First room: the final door at the end of a corridor, with one colour's key visible back the way you came. A player who walks straight to the door is told by nothing happening that a colour is missing and faces the whole corridor back, which teaches that the door is an inventory check to be prepared for rather than a lock to be opened on arrival.
 - Acceptance: mech-100-final-door-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-100-final-door/implement-mechanic — Implement Final door
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #100 deterministically in the pure step function per the spec rules. Rules: The door checks your inventory, bot included, for at least one key of each colour at the same time; If you hold them all it opens permanently and consumes none of them; If any colour is missing it does nothing
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-100-final-door-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-100-final-door/sanity-check — Sanity check Final door in mech-100-final-door-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-100-final-door-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-100-final-door/20261101-184114-mech-100-final-door-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:41:43 · agent · on `mech-100-final-door`
+
+Ready for review: Final door — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-100-final-door/test-level: Test Level: mech-100-final-door-room — completed, commit `c2d1f16` — corridor Test Level loads, silver behind spawn, door at corridor end
+- mech-100-final-door/implement-mechanic: Implement Final door — completed, commit `967085b` — final-door pack checks all 5 colours held, opens permanently consuming none, real generated art bundled
+- mech-100-final-door/sanity-check: Sanity check Final door in mech-100-final-door-room — completed, commit `00c575f` — every YAML test_cases entry played, replay digest matches, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-100-final-door/20261101-184114-mech-100-final-door-room-latest.png (gallery on the feature page)
+- Sessions: none recorded (no agent play session was recorded, so none is linked; replay proof is SanityReplayTests digest equality)
+- Tests: tools.test_mech_100_final_door 15 tests OK (skipped=1, bot-held colours blocked-by 40 Mule bot); combined touched suites 51 tests OK (skipped=1)
+
+Playtest:
+- Worktree: `.worktrees/mech-100-final-door`
+- Start: `cd .worktrees/mech-100-final-door && source .venv/bin/activate && python tools/server.py --port 8537` — use `8537`, board server stays on 8321
+- Game: http://127.0.0.1:8537/static/game.html — open the Test Level `mech-100-final-door-room` from the game menu
+
+### 2026-11-01T18:35:32 · agent · on `mech-100-final-door/test-level`
+
+Starting: build levels/mech-100-final-door-room.json (test:true) realising the teaching moment for Final door (candidate #100, Keys and Locks) — corridor with final door at the end, silver key visible back behind spawn, four colours ahead; naive straight walk fails, backtrack succeeds. The human approved starting all proposed mechanic features in chat this session. Verify: level loads from Test Levels menu, rows rectangular, legend covers tiles, layout pins naive-fail/corrected-succeed positions.
+
+### 2026-11-01T18:35:56 · agent · on `mech-100-final-door/test-level`
+
+Done: built levels/mech-100-final-door-room.json (test:true), commit c2d1f16. Single corridor 20x3: silver key at (1,1) behind spawn (3,1), red/gold/green/blue at (5,1)/(7,1)/(9,1)/(11,1), final door D at (14,1), warp X at (16,1). Verified: game_levels.load_level loads it, rows rectangular (20,20,20), listed as Test Level. The human approved starting all proposed mechanic features in chat this session. Naive straight walk collects 4 colours and is blocked at the door; corrected walk turns back for silver first. Full behaviour proof lands with the implement-mechanic tests.
+
+### 2026-11-01T18:36:01 · agent · on `mech-100-final-door/implement-mechanic`
+
+Starting: implement Final door (candidate #100) as pack tools/static/packs/final-door/ (manifest first, then main.js) following crumbling/keys-locks: closed door blocks unless inventory (bot included, single inventory array) holds at least one key of each colour (red, gold, green, blue, silver), opens permanently to the open tile consuming none; wiring in game-core.js + game.html; generated art for final-door-closed.png / final-door-open.png / final-door-colour-check.png declared via defineAsset bundled:true; test file tools/test_mech_100_final_door.py mirroring test_mech_5_crumbling_tile.py covering every YAML test_cases entry (bot-held colours blocked-by 40 as explicit skipped-with-reason). The human approved starting all proposed mechanic features in chat this session. Verify: node-driven pure-step tests + existing game-core/session suites stay green, no wall-clock reads.
+
+### 2026-11-01T18:40:16 · agent · on `mech-100-final-door/implement-mechanic`
+
+Done: pack tools/static/packs/final-door/ (manifest.json first, main.js, assets/), commit 967085b. Closed door blocks unless the single kernel inventory (bot-inclusive once mule bot 40 lands) holds keys:key-<colour> for all of red/gold/green/blue/silver; stepping on it with every colour swaps it to final-door:open permanently and consumes none; missing any colour blocks the step and spends nothing. Wired in game-core.js (engine pack list + registerFinalDoorPack) and game.html; game.js swaps closed/open sprites on the D tile. Assets are real generated art (Muse image generation, centre-cropped to 512x512 RGBA) for final-door-closed.png, final-door-open.png, final-door-colour-check.png, each manifest bundled:true with its YAML shows text and declared via defineAsset. Tests: python3 -m unittest tools.test_mech_100_final_door -> 14 tests OK (skipped=1: bot-held colours blocked-by 40 Mule bot, explicit skip with reason). Existing suites tools.test_game_core + test_keys_and_locks + test_pack_folders + test_mech_5_crumbling_tile + test_game_sessions + test_session_replay -> 47 tests OK (after bash tools/prep_level_sprites.sh in the fresh worktree; the keys sprite check fails identically on the untouched tree without that generated dir). No wall-clock reads; the human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T18:40:17 · agent · on `mech-100-final-door/sanity-check`
+
+Starting: play mech-100-final-door-room end to end over every YAML test_cases entry (solution, adversarial straight-to-door, last-colour boundary, bot-held colours blocked-by 40 as skipped, restart+replay digest), screenshot the teaching room from the worktree build on port 8537, upload evidence. The human approved starting all proposed mechanic features in chat this session. Verify: SanityReplayTests digest match, screenshot attached, full unit suites green.
+
+### 2026-11-01T18:41:23 · agent · on `mech-100-final-door/sanity-check`
+
+Done: played mech-100-final-door-room end to end over every YAML test_cases entry, commit 00c575f. Solution (turn back for silver, then cross holding all 5 colours): door opens permanently, consumes none, warp reached won. Adversarial (walk straight to the door): presses do nothing, no key consumed, corridor back never strands. Last-colour boundary: every-colour-but-one press does nothing (plus synthetic per-colour missing matrix and duplicate-adds-nothing checks), collecting the last colour opens. Bot-held colours: blocked-by 40 (Mule bot), explicit skipTest with reason, never a fake pass. Restart restores the closed door and every key (fresh initialState). Replay: SanityReplayTests — live 17-step playthrough digest equals replay and re-replay digests, final (16,1) won with all colours held. Tests: tools.test_mech_100_final_door 15 tests OK (skipped=1); combined with game-core/keys/pack-folders/crumbling suites 51 tests OK (skipped=1). Screenshot of the teaching room attached (worktree build on port 8537). No agent play session was recorded, so none is linked. The human approved starting all proposed mechanic features in chat this session.
+- Evidence: `screenshots/features/mech-100-final-door/20261101-184114-mech-100-final-door-room-latest.png`

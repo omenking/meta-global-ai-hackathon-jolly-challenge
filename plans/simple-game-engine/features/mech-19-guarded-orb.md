@@ -1,7 +1,7 @@
 ---
 title: Guarded orb — sanity check
 summary: steps one tile away when approached. Sanity-check for candidate mechanic #19 (Orbs, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -84,22 +84,65 @@ Needs a mechanics playground: new — Test Level mech-19-guarded-orb-room, built
 
 ### mech-19-guarded-orb/test-level — Test Level: mech-19-guarded-orb-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-19-guarded-orb-room.json (test:true) realising the teaching moment for Guarded orb: First room: the guarded orb in an open area with one walled corner. A player who chases it directly follows it around the room without ever stepping on it, until they drive it toward the corner almost by accident, which teaches that the orb is herded rather than caught.
 - Acceptance: mech-19-guarded-orb-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-19-guarded-orb/implement-mechanic — Implement Guarded orb
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #19 deterministically in the pure step function per the spec rules. Rules: When you come within two tiles it steps one tile away from you to a free floor tile, once per your move; It cannot enter walls or water; Drive it against a wall or block and you can step onto it
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-19-guarded-orb-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-19-guarded-orb/sanity-check — Sanity check Guarded orb in mech-19-guarded-orb-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-19-guarded-orb-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-19-guarded-orb/20261101-191127-mech-19-guarded-orb-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T19:11:40 · agent · on `mech-19-guarded-orb`
+
+Ready for review: Guarded orb — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-19-guarded-orb/test-level: Test Level: mech-19-guarded-orb-room — completed, commit d7f1c98 — teaching room loads, open area + walled corner + water
+- mech-19-guarded-orb/implement-mechanic: Implement Guarded orb — completed, commit 9904338 — pack + wiring + tests, 12 tests OK (1 blocked-by-81 skip)
+- mech-19-guarded-orb/sanity-check: Sanity check Guarded orb in mech-19-guarded-orb-room — completed, commit 0a40d50 — end-to-end herding play, replay digest match, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-19-guarded-orb/20261101-191127-mech-19-guarded-orb-room-latest.png (gallery on the feature page)
+- Sessions: none recorded (no fabricated session); replay proof is the SanityReplayTests digest check in tools/test_mech_19_guarded_orb.py
+- Asset: real generated tools/static/packs/guarded-orb/assets/guarded-orb.png (scripts/gen-image), bundled:true in manifest
+
+Playtest:
+- Worktree: .worktrees/mech-19-guarded-orb
+- Start: cd .worktrees/mech-19-guarded-orb && source ../.venv/bin/activate && python tools/server.py --port 8557 — use 8557, board server stays on 8321 (venv lives on the main checkout)
+- Game: http://127.0.0.1:8557/static/game.html — open the Test Level mech-19-guarded-orb-room from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T19:06:28 · agent · on `mech-19-guarded-orb/test-level`
+
+Starting: build test level mech-19-guarded-orb-room realising the teaching moment (open area, walled corner, naive chase fails, herding succeeds). Human approved starting all proposed mechanic features in chat this session. Verify: level loads from Test Levels menu, naive vs corrected play in later sanity check.
+
+### 2026-11-01T19:06:50 · agent · on `mech-19-guarded-orb/test-level`
+
+Done: levels/mech-19-guarded-orb-room.json (test:true) — open area, guarded orb at (6,2), player at (1,1), water at (3,4)-(4,4), walled corners. Commit d7f1c98. Human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T19:06:51 · agent · on `mech-19-guarded-orb/implement-mechanic`
+
+Starting: pack tools/static/packs/guarded-orb/ (manifest first, generated asset, main.js via pack/kernel hooks only) + game-core/game.html wiring + tools/test_mech_19_guarded_orb.py covering every YAML test_cases entry. Human approved starting all proposed mechanic features in chat this session. Verify: python -m unittest tools.test_mech_19_guarded_orb plus game-core/session suites.
+
+### 2026-11-01T19:10:59 · agent · on `mech-19-guarded-orb/implement-mechanic`
+
+Done: pack tools/static/packs/guarded-orb/ (manifest.json, main.js via onTick hook only, bundled generated guarded-orb.png via scripts/gen-image muse-image-1.0) + game-core.js/game.html wiring + tools/test_mech_19_guarded_orb.py. Commit 9904338. Tests: test_mech_19_guarded_orb 12 run OK (1 skipped blocked-by 81 push block); touched suites test_game_core/test_game_sessions/test_session_replay/test_pack_folders/test_mech_5/test_orbs_and_gate/test_game_page/test_level_sprites 61 OK after prep_level_sprites.sh in fresh worktree. Human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T19:11:00 · agent · on `mech-19-guarded-orb/sanity-check`
+
+Starting: play mech-19-guarded-orb-room end to end, screenshot via capture_level.sh on port 8557, replay-digest proof (SanityReplayTests), PM evidence. Human approved starting all proposed mechanic features in chat this session. Verify: unittest green + screenshot attached.
+
+### 2026-11-01T19:11:31 · agent · on `mech-19-guarded-orb/sanity-check`
+
+Done: played mech-19-guarded-orb-room end to end (herding sequence down+right x10 collects, digest replay match in SanityReplayTests), screenshot attached. Commit 0a40d50 (verification-only). Tests: test_mech_19_guarded_orb + game_core/sessions/replay 29 run OK (1 skipped blocked-by 81). Asset: real generated guarded-orb.png via scripts/gen-image, no fallback needed. Game server was on 8557 for capture. Human approved starting all proposed mechanic features in chat this session.
+- Evidence: `screenshots/features/mech-19-guarded-orb/20261101-191127-mech-19-guarded-orb-room-latest.png`

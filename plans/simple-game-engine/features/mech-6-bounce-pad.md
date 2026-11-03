@@ -1,7 +1,7 @@
 ---
 title: Bounce pad — sanity check
 summary: Launches you two tiles in the direction you choose, after a one-move pause. Sanity-check for candidate mechanic #6 (Movement Tiles, revised).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -85,22 +85,65 @@ Needs a mechanics playground: new — Test Level mech-6-bounce-pad-room, built f
 
 ### mech-6-bounce-pad/test-level — Test Level: mech-6-bounce-pad-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-6-bounce-pad-room.json (test:true) realising the teaching moment for Bounce pad: First room: the pad sits in sight of a guard, pointed at a gap. A player who steps straight onto it is caught while it compresses, or launches in the direction they happened to press and lands badly, so the retry teaches that the pause and the chosen direction are both part of the move.
 - Acceptance: mech-6-bounce-pad-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-6-bounce-pad/implement-mechanic — Implement Bounce pad
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #6 deterministically in the pure step function per the spec rules. Rules: Step on the pad and it compresses for one move with you standing on it, exposed; Your next directional input launches you two tiles that way, clearing the tile in between; The landing tile must be floor; The strategy is choosing the launch direction and surviving the pause
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-6-bounce-pad-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-6-bounce-pad/sanity-check — Sanity check Bounce pad in mech-6-bounce-pad-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-6-bounce-pad-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-6-bounce-pad/20261101-175335-mech-6-bounce-pad-room-20261101-225304.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T17:53:51 · agent · on `mech-6-bounce-pad`
+
+Ready for review: Bounce pad — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-6-bounce-pad/test-level: Test Level: mech-6-bounce-pad-room — completed, commit `744a42e` — 13x8 test room: pad west of a one-tile void gap with floor beyond, far orb and exit, second pad facing the wall
+- mech-6-bounce-pad/implement-mechanic: Implement Bounce pad — completed, commit `e15da5e` — bounce pack via pack/kernel hooks only (one-move compression, chosen two-tile launch, floor-only landing), real generated art for all three YAML assets
+- mech-6-bounce-pad/sanity-check: Sanity check Bounce pad in mech-6-bounce-pad-room — completed, commit `3c0f72a` — 50 tests OK (1 explicit skip: guard adversarial blocked-by 37), replay digest matches live playthrough
+
+Evidence:
+- Screenshots: screenshots/features/mech-6-bounce-pad/20261101-175335-mech-6-bounce-pad-room-20261101-225304.png (gallery on the feature page)
+- Sessions: none recorded, so none linked — replay-digest proof lives in tools/test_mech_6_bounce_pad.py SanityReplayTests
+- Known gap: adversarial caught-in-the-pause is blocked-by mechanic 37 (guard), not built; it is an explicit skipped test with reason, never a fake pass. Pre-existing test_pm_review_ui failures (2) verified identical on untouched main.
+
+Playtest:
+- Worktree: `.worktrees/mech-6-bounce-pad`
+- Start: `cd .worktrees/mech-6-bounce-pad && source .venv/bin/activate && python tools/server.py --port 8504` — use `8504`, board server stays on 8321
+- Game: http://127.0.0.1:8504/static/game.html — open the Test Level `mech-6-bounce-pad-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T17:46:51 · agent · on `mech-6-bounce-pad/test-level`
+
+Starting: build levels/mech-6-bounce-pad-room.json (test:true) realising the Bounce pad teaching moment (pad in sight of gap, naive immediate/directional launch fails or lands badly, corrected pause-then-chosen-direction launch succeeds). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, rows/legend valid, layout asserts in tools/test_mech_6_bounce_pad.py (added with implement task, room checks run here via node/python).
+
+### 2026-11-01T17:47:08 · agent · on `mech-6-bounce-pad/test-level`
+
+Done: levels/mech-6-bounce-pad-room.json (test:true, 13x8) — pad B at (5,3) west of one-tile void gap V at (6,3) with floor landing at (7,3), far orb (9,1) and exit X (11,1); second pad (10,5) faces the east wall so a careless launch lands badly. Commit 744a42e. Test: python game_levels load/list check passed (rectangular rows, legend covers every tile, BV adjacency, listed as Test Level). Behavioural naive-vs-corrected play is asserted in tools/test_mech_6_bounce_pad.py with the implement task (defs do not exist until that commit).
+
+### 2026-11-01T17:47:09 · agent · on `mech-6-bounce-pad/implement-mechanic`
+
+Starting: bounce pack (tools/static/packs/bounce/ manifest first, then main.js) implementing candidate mechanic #6 deterministically through pack/kernel hooks only (tile onEnter/blocks + onTick teleport/setMeta effects, no wall-clock reads), wired into game-core.js, game.html and game.js rendering, plus REAL generated art for bounce-pad.png, bounce-pad-compressed.png, jolly-launching.png (scripts/gen-image; placeholder fallback named if generation fails). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: tools/test_mech_6_bounce_pad.py covering every YAML test_cases entry (guard adversarial explicitly skipped as blocked-by 37) plus existing suites.
+
+### 2026-11-01T17:52:41 · agent · on `mech-6-bounce-pad/implement-mechanic`
+
+Done: pack tools/static/packs/bounce/ (manifest first, main.js) implementing mechanic #6 through pack/kernel hooks only (pad onEnter arms bounce_stage meta, void blocks/onEnter, onTick teleport/setMeta launch; deterministic, no wall-clock reads), wired in game-core.js/game.html/game.js (compressed-stage sprite swap, jolly-launching pose on launch steps). REAL generated art via scripts/gen-image (muse-image-1.0): bounce-pad.png, bounce-pad-compressed.png, jolly-launching.png, all 512x512 bundled in manifest with shows text and defineAsset. Commit e15da5e. Tests: python -m unittest tools.test_mech_6_bounce_pad = 12 tests OK (1 skipped: adversarial caught-in-pause blocked-by 37 guard, not built); YAML cases covered: solution launch over gap, exactly-two-tiles + floor-only landing (wall landing falls, on-foot void falls), one-move pause boundary (early press and stepping off are the pause, waiting while ready does not launch or spend it), restart+replay digest match. Golden regenerated deliberately (only mech-6-bounce-pad-room added, zero existing-level readout divergence). Existing suites: full tools discover 273 tests with only the 2 pre-existing test_pm_review_ui failures (verified failing identically on untouched main).
+
+### 2026-11-01T17:52:42 · agent · on `mech-6-bounce-pad/sanity-check`
+
+Starting: play mech-6-bounce-pad-room end to end (named YAML test_cases via tools/test_mech_6_bounce_pad.py SanityReplayTests replay-digest proof), screenshot the teaching room from the worktree server on port 8504, upload evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. No session will be fabricated; replay digest is the recorded-play proof unless a real agent session is recorded.
+
+### 2026-11-01T17:53:42 · agent · on `mech-6-bounce-pad/sanity-check`
+
+Done: played mech-6-bounce-pad-room end to end. Commit 3c0f72a. Exact results: python -m unittest tools.test_mech_6_bounce_pad tools.test_game_core tools.test_game_sessions tools.test_session_replay tools.test_pack_folders tools.test_mech_5_crumbling_tile tools.test_refactor_regression = 50 tests OK (1 skipped: adversarial caught-in-pause, blocked-by 37 guard not built, explicit skip with reason). SanityReplayTests: the 14-input solution playthrough (step on pad, wait out the one-move compression, launch east over the void, far orb, exit) replays to the same end state (live digest == replay digest == second replay digest, final pos 11,1 orbs_left 1 status won). Screenshot of the teaching room from the worktree build (port 8504) attached; it renders both pads, the void gap, orbs and exit with no missing sprites. No agent session file was recorded, so none is linked; the replay-digest test is the recorded-play proof. Asset note: all three YAML assets are real scripts/gen-image art (no placeholder fallback needed).
+- Evidence: `screenshots/features/mech-6-bounce-pad/20261101-175335-mech-6-bounce-pad-room-20261101-225304.png`

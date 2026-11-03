@@ -1,7 +1,7 @@
 ---
 title: Sticky tile — sanity check
 summary: takes two moves to cross. Sanity-check for candidate mechanic #8 (Movement Tiles, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -85,22 +85,66 @@ Needs a mechanics playground: new — Test Level mech-8-sticky-tile-room, built 
 
 ### mech-8-sticky-tile/test-level — Test Level: mech-8-sticky-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work` · Commit: `1b02dbe`
 - Description: Build levels/mech-8-sticky-tile-room.json (test:true) realising the teaching moment for Sticky tile: First room: a sticky shortcut crosses a patroller's loop. A player who takes it is still straining on the first tile when the patroller, which is not slowed, reaches them, so the retry teaches that the shortcut costs moves rather than distance.
 - Acceptance: mech-8-sticky-tile-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-8-sticky-tile/implement-mechanic — Implement Sticky tile
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work` · Commit: `7a382a2`
 - Description: Implement candidate mechanic #8 deterministically in the pure step function per the spec rules. Rules: Entering takes two inputs: the first you strain and stay, the second you step off; The tile stays reusable; Enemies are not slowed by it, which is where its pressure comes from
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-8-sticky-tile-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-8-sticky-tile/sanity-check — Sanity check Sticky tile in mech-8-sticky-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work` · Commit: `cf65cb9`
 - Description: Play mech-8-sticky-tile-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-8-sticky-tile/20261101-175212-mech-8-sticky-tile-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T17:52:25 · agent · on `mech-8-sticky-tile`
+
+Ready for review: Sticky tile — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-8-sticky-tile/test-level: Test Level: mech-8-sticky-tile-room — completed, commit `1b02dbe` — Test Level loads from the game menu; sticky shortcut SSS in a wall divider, orb beyond, long way back on plain floor
+- mech-8-sticky-tile/implement-mechanic: Implement Sticky tile — completed, commit `7a382a2` — sticky pack + generic kernel blocksExit hook; 13 tests OK (2 blocked-by-31 skips with reason); existing touched suites green; golden regenerated with only the new level added
+- mech-8-sticky-tile/sanity-check: Sanity check Sticky tile in mech-8-sticky-tile-room — completed, commit `cf65cb9` — full 33-step playthrough replays to the same digest; screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-8-sticky-tile/20261101-175212-mech-8-sticky-tile-room-latest.png (gallery on the feature page)
+- Sessions: none recorded — replay-digest proof is in SanityReplayTests (no session fabricated)
+
+Playtest:
+- Worktree: `.worktrees/mech-8-sticky-tile`
+- Start: `cd .worktrees/mech-8-sticky-tile && source .venv/bin/activate && python tools/server.py --port 8506` — use `8506`, board server stays on 8321
+- Game: http://127.0.0.1:8506/static/game.html — open the Test Level `mech-8-sticky-tile-room` from the game menu; linked sessions replay from the Sessions menu.
+
+Notes: real generated art for both YAML assets (sticky.png, jolly-straining.png) via scripts/gen-image — no placeholder fallback. Patroller cases blocked-by 31 remain explicit skips. Pre-existing failures on base (test_pm_review_ui x2, test_level_capture x1) verified identical on a pristine 32f47ac checkout.
+
+### 2026-11-01T17:46:14 · agent · on `mech-8-sticky-tile/test-level`
+
+Starting: build levels/mech-8-sticky-tile-room.json (test:true) realising the sticky teaching moment (sticky shortcut SSS in a wall divider, orb beyond, long way back on plain floor). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, rows rectangular, legend covers tiles; naive one-input exit stays (strain), two-input exit succeeds once the mechanic lands.
+
+### 2026-11-01T17:46:34 · agent · on `mech-8-sticky-tile/test-level`
+
+Done: levels/mech-8-sticky-tile-room.json (test:true) — 3-tile sticky shortcut SSS in a wall divider, orb beyond, return orb on the long-way bottom passage (plain floor under the divider, so the room never soft-locks). Commit 1b02dbe. Verified: game_levels.load_level ok, rows rectangular, legend covers every tile, listed as Test Level. Naive/corrected play is exercised in the implement-mechanic tests (one input strains in place, second steps off).
+
+### 2026-11-01T17:46:35 · agent · on `mech-8-sticky-tile/implement-mechanic`
+
+Starting: sticky pack (tools/static/packs/sticky/ manifest first, then main.js) + kernel/game wiring following crumbling. Rule: leaving a sticky tile takes two inputs (first strains in place, second steps off), tile reusable, enemies not slowed (player-only exit rule; patroller integration blocked-by 31). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: tools/test_mech_8_sticky_tile.py covering every YAML test_case (blocked-by cases skipped with reason), plus existing game-core/session suites, no wall-clock reads.
+
+### 2026-11-01T17:51:27 · agent · on `mech-8-sticky-tile/implement-mechanic`
+
+Done: sticky pack (tools/static/packs/sticky/ manifest first, main.js, generated assets sticky.png + jolly-straining.png via scripts/gen-image, both bundled:true) + generic kernel blocksExit exit-veto hook (no mechanic literals; kernel purity strict passes) + game-core/game.html/game.js wiring (straining pose). Commit 7a382a2. Tests: tools.test_mech_8_sticky_tile 13 tests OK (2 blocked-by-31 skips with reason: patroller adversarial + patroller enemy-speed integration; pack-level player-only veto covered for real). Existing suites: game-core/session-replay/pack-folders/player-movement/crumbling/refactor-regression green (57 tests OK in the touched set); golden regenerated deliberately — only adds mech-8-sticky-tile-room, no existing level readout changed. Pre-existing failures on base 32f47ac (verified on pristine checkout): test_pm_review_ui x2, test_level_capture x1 — untouched by this change.
+
+### 2026-11-01T17:51:28 · agent · on `mech-8-sticky-tile/sanity-check`
+
+Starting: play mech-8-sticky-tile-room end to end (every YAML test_case), replay-digest proof, screenshot from the worktree server on port 8506. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: SanityReplayTests digest match, capture_level.sh screenshot uploaded as evidence.
+
+### 2026-11-01T17:52:18 · agent · on `mech-8-sticky-tile/sanity-check`
+
+Done: played mech-8-sticky-tile-room end to end. Every YAML test_case exercised in tools/test_mech_8_sticky_tile.py (14 tests OK, 2 skipped): solution crossing at two inputs per sticky tile, exactly-two-inputs + reusable (incl. wall-bump boundary), restart restores, replay digest matches live (SanityReplayTests, 33-step playthrough, orbs 0, back at start). Blocked-by-31 cases (patroller adversarial, patroller enemy speed) are explicit skips with reason — never faked; the player-only exit veto is covered for real at pack level. Assets are real generated art (scripts/gen-image), no placeholder fallback needed. Screenshot from the worktree build on port 8506 attached. Commit cf65cb9.
+- Evidence: `screenshots/features/mech-8-sticky-tile/20261101-175212-mech-8-sticky-tile-room-latest.png`

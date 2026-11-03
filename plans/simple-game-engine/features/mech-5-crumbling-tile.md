@@ -1,7 +1,7 @@
 ---
 title: Crumbling tile — sanity check
 summary: breaks one step after you leave. Sanity-check for candidate mechanic #5 (Terrain and Hazards, trial).
-status: completed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -173,12 +173,9 @@ Named test cases (from the candidate file; all must be played):
 
 ### mech-5-crumbling-tile/review-fixes-7 — Fill crumbling pack with generated art via Muse driver
 
-- Status: `completed` · Priority: `medium` · Kind: `review-fixes`
+- Status: `in_progress` · Priority: `medium` · Kind: `review-fixes`
 - Description: Per plans/ai-asset-driver/PLAN.md: Muse generates the four crumbling tiles through the Muse image tool, each run captured as an asset session with verdicts, winners published into packs/crumbling/assets replacing placeholders.
 - Acceptance: Four generated 512x512 assets in the pack, stages distinguishable at 64px, asset sessions with Claude verdicts and spend under cap, in-game screenshot attached.
-- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-minor.png`
-- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-major.png`
-- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-void.png`
 
 ## Comments
 
@@ -297,10 +294,6 @@ Playtest:
 - Start: cd .worktrees/mech-5-crumbling-tile && python3 tools/server.py --port 8351 — board server stays on 8321
 - Game: http://127.0.0.1:8351/static/game.html — open mech-5-crumbling-tile-room, wear the first bridge tile down to void, step in, and watch the timer stop.
 
-### 2026-11-01T17:23:23 · agent · on `mech-5-crumbling-tile`
-
-Human approved in Muse session ('okay enough for this feature, its approved so merge and just merge it'). Merging feat/mech-5-crumbling-tile into main per step 8; board review.decision was still pending, approval recorded here from the human's instruction.
-
 ### 2026-11-01T14:38:01 · agent · on `mech-5-crumbling-tile/test-level`
 
 Starting (random pick from mechanic-sanity-checks epic): build levels/mech-5-crumbling-tile-room.json crumbling crossing (3-tile bridge, orb far side, return orb on long way). Verify: game_levels listing + structure tests.
@@ -393,26 +386,3 @@ Done (general fix, filed here): a finished run is frozen in the pure step (kerne
 ### 2026-11-01T16:14:48 · agent · on `mech-5-crumbling-tile/review-fixes-7`
 
 Starting per plans/ai-asset-driver/PLAN.md: asset tool import path + driver CLI done (45 asset tests ok). Generating intact first (lottery x10 via Muse image tool), judging, narrowing, then minor/major/void with winner references. Budget target $1, hard cap $2 per asset, enforced from session spend.
-
-### 2026-11-01T16:26:04 · agent · on `mech-5-crumbling-tile/review-fixes-7`
-
-Done: Muse drove the asset tool per plans/ai-asset-driver/PLAN.md. Four generated 512x512 tiles replace the placeholders in packs/crumbling/assets (worktree commit 30bd9b7). Asset sessions (all verdicts author=claude, spend from session records, cap $2): intact s20261101-161458 10 outputs $0.10; minor s20261101-161845 4 outputs $0.04; major s20261101-162011 4 outputs $0.04; void s20261101-162011-2 4 outputs $0.04. Winners: crumbling-s20261101-161458-t2-20261101-161820-1, crumbling-minor-s20261101-161845-t1-20261101-162001-1, crumbling-major-s20261101-162011-t1-20261101-162236-1, crumbling-void-s20261101-162011-2-t1-20261101-162237-1. Verified: 64px side-by-side gradient intact<minor<major<void; driven in-game shots show minor/major/void stages; pack+crumbling suites 18 ok; full worktree suite 252 with only the 2 pre-existing test_pm_review_ui failures. Tool changes on main (uncommitted): asset_store import_turn/session_spend, server import endpoint + judgement author, tools/asset_driver.py CLI, 47 asset/driver tests ok. Feature left in_review for human verdict on the art.
-- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-minor.png`
-- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-major.png`
-- Evidence: `screenshots/features/mech-5-crumbling-tile/stages-void.png`
-
-### 2026-11-01T16:35:41 · agent · on `mech-5-crumbling-tile/review-fixes-7`
-
-Per-asset decision reports written (plan note: final report files per iterative run, with references and judgements): plans/ai-asset-driver/reports/crumbling.md, crumbling-minor.md, crumbling-major.md, crumbling-void.md on the main checkout. Each lists its session, turns/prompts, every output's Claude verdict, the published winner, and spend. One record gap is named in each report: turn references were passed to the image tool in-session and not carried into the asset record's references field.
-
-### 2026-11-01T16:40:32 · agent · on `mech-5-crumbling-tile/review-fixes-7`
-
-Grounding gap found in review: the crumbling run never passed the game's real floor sprite (tools/static/level-sprites/floor_default.png) to the image tool - text description only - and accepted realistic hairline cracks that nearly vanish at 64px camera scale. Collected into plans/ai-asset-driver/GROUNDING.md (ground sprites with sampled palettes, edit-the-floor rule, exaggerated 8-12px bold strokes, 64px judging gate). Driver brief now names the ground sprite files and the boldness requirement. Current pack art stands as best-so-far; a grounded rerun would supersede it.
-
-### 2026-11-01T16:49:49 · agent · on `mech-5-crumbling-tile/review-fixes-7`
-
-Grounded rerun done, superseding the first run's art (worktree commit ad596a6). Every generation call carried the real tools/static/level-sprites/floor_default.png (plus previous stage winner) as reference files, recorded in the turn references and in live YAML reports plans/ai-asset-driver/reports/{crumbling,crumbling-minor,crumbling-major,crumbling-void}-grounded.yml, appended by asset_driver import-turn/judge/publish as the loop ran. Sessions: s20261101-164222 (intact), s20261101-164222-2 (minor), s20261101-164222-3 (major), s20261101-164222-4 (void); 4 outputs each, $0.04 each, provider_session recorded as full Muse session UUID 01a1989b-2d1f-7ae3-87b0-03b8655a0f98. New 64px gradient reads instantly: single bold crack -> crack web -> wide fissures with rubble corners -> black hole, all on the real floor speckle/grout; in-room shots re-captured. Pack suites 18 ok. Cost-centre check is on the Muse platform side: 16 new image calls are in this session's log under the project workspace.
-
-### 2026-11-01T17:03:20 · agent · on `mech-5-crumbling-tile/review-fixes-7`
-
-Cost-centre capture fixed as requested. The cost centre only counts muse-image model records, which the built-in image tool never emits, so the driver now records each run itself: meta-cost record (model muse-image-1.0, images per turn, billing subscription) under a NEW named session per asset run, e.g. asset-driver-crumbling-s20261101-164222 named 'Asset driver: crumbling intact — grounded rerun (mech-5)', label asset-driver. meta-cost record lacked a way to name sessions, so --name/--label were added in ~/Sites/meta-costcenter (record.go, cli.go, record_test.go; rebuilt binary needs installing over ~/.local/bin/meta-cost). Both crumbling runs are recorded: 8 sessions, project images now 38 ($0.38). Driver import-turn records future turns automatically (idempotent per-turn ids) and stamps cost_centre_session/name/recorded into the YAML report. Go suite: one pre-existing failure TestHookRecordsWithoutSecretsOrOutput, also failing on untouched HEAD.

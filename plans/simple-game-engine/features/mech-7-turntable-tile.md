@@ -1,7 +1,7 @@
 ---
 title: Turntable tile — sanity check
 summary: A framed tile that turns your on-foot movement 90 degrees, never a slide. Sanity-check for candidate mechanic #7 (Movement Tiles, revised).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -86,22 +86,64 @@ Needs a mechanics playground: new — Test Level mech-7-turntable-tile-room, bui
 
 ### mech-7-turntable-tile/test-level — Test Level: mech-7-turntable-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-7-turntable-tile-room.json (test:true) realising the teaching moment for Turntable tile: First room: a turntable stands before a junction, its arrow visible in the frame. A player who steps on it while thinking about the junction is nudged down the arrow's lane into a one-way stretch and has to loop back, which teaches that the framed arrow, rather than their next input, decides where it sends them on foot.
 - Acceptance: mech-7-turntable-tile-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-7-turntable-tile/implement-mechanic — Implement Turntable tile
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #7 deterministically in the pure step function per the spec rules. Rules: The tile is drawn in a rotating frame with an arrow; Stepping onto it on foot turns the arrow 90 degrees clockwise and nudges you one tile in the arrow direction, automatically on entry, nothing to press; Sliding on ice or riding a conveyor passes straight over it: momentum and belt direction do not turn
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-7-turntable-tile-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-7-turntable-tile/sanity-check — Sanity check Turntable tile in mech-7-turntable-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-7-turntable-tile-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-7-turntable-tile/20261101-174915-mech-7-turntable-tile-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T17:50:03 · agent · on `mech-7-turntable-tile`
+
+Ready for review: Turntable tile — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-7-turntable-tile/test-level: Test Level: mech-7-turntable-tile-room — completed, commit `72cb79e` — teaching room loads as test level, turntable before junction with east orb/warp lane and loop-back floor
+- mech-7-turntable-tile/implement-mechanic: Implement Turntable tile — completed, commit `d176073` — turntable pack (pure onEnterTerrain rotate-90-CW + nudge, 4 real generated assets), 12 turntable tests OK (1 blocked-by skip)
+- mech-7-turntable-tile/sanity-check: Sanity check Turntable tile in mech-7-turntable-tile-room — completed, commit `f565c31` — all YAML test_cases run, replay digest matches, screenshot attached, 59-suite run green
+
+Evidence:
+- Screenshots: screenshots/features/mech-7-turntable-tile/20261101-174915-mech-7-turntable-tile-room-latest.png (attached on sanity-check task; gallery on the feature page)
+- Sessions: none recorded, so none linked (never fabricated)
+
+Playtest:
+- Worktree: `.worktrees/mech-7-turntable-tile`
+- Start: `cd .worktrees/mech-7-turntable-tile && source .venv/bin/activate && python tools/server.py --port 8505` — use `8505`, board server stays on 8321
+- Game: http://127.0.0.1:8505/static/game.html — open the Test Level `mech-7-turntable-tile-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T17:45:09 · agent · on `mech-7-turntable-tile/test-level`
+
+Starting: build test level mech-7-turntable-tile-room realising teaching moment (naive step onto turntable nudges into one-way lane/loop, corrected route succeeds). Human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, naive vs corrected play in Node core tests.
+
+### 2026-11-01T17:45:30 · agent · on `mech-7-turntable-tile/test-level`
+
+Done: levels/mech-7-turntable-tile-room.json (test:true), commit 72cb79e. Turntable T at (5,2) arrow starts north before open junction; east lane carries orb at (7,2) and warp at (8,2); open floor loops back so nudged player is never stranded. Naive: stepping on T expecting to pause/decide auto-nudges east. Corrected: ride nudge, collect orb, warp. Full play verification in sanity-check.
+
+### 2026-11-01T17:45:31 · agent · on `mech-7-turntable-tile/implement-mechanic`
+
+Starting: turntable pack (tools/static/packs/turntable) with pure terrain onEnterTerrain hook - on-foot entry rotates arrow 90 CW in cell meta and returns forced nudge; wiring in game-core.js/game.html/game.js. Human approved starting all proposed mechanic features in chat this session. Verify: tools/test_mech_7_turntable_tile.py covering every YAML test_case (blocked-by ice case skipped with reason), existing suites green.
+
+### 2026-11-01T17:47:30 · agent · on `mech-7-turntable-tile/implement-mechanic`
+
+Done: commit d176073. Pack tools/static/packs/turntable (manifest first, main.js terrain onEnterTerrain: rotate arrow 90 CW in cell meta + forced nudge, seeded from legend; no wall-clock). Wired game-core.js/game.html/game.js (direction texture swap). Assets: 4 real generated images via scripts/gen-image (turntable-north/east/south/west.png, bundled:true, defineAsset). Tests: python -m unittest tools.test_mech_7_turntable_tile = 12 tests OK (1 skipped: blocked-by 1 ice/2 conveyor, explicit skip-with-reason, never fake pass); existing suites test_mech_5+pack_folders+game_core+session_replay+player_movement = 42 tests OK.
+
+### 2026-11-01T17:47:30 · agent · on `mech-7-turntable-tile/sanity-check`
+
+Starting: sanity check - run named YAML test_cases end to end, screenshot teaching room on port 8505, replay-digest proof. Human approved starting all proposed mechanic features in chat this session. Verify: SanityReplayTests digest match, screenshot via capture_level.sh, server health check.
+
+### 2026-11-01T17:49:56 · agent · on `mech-7-turntable-tile/sanity-check`
+
+Done: commit f565c31 (turntable room added to regression golden; no existing level readout changed). Sanity: every YAML test_case exercised in tools/test_mech_7_turntable_tile.py - solution (turn+nudge east, orb, warp won), adversarial (nudged while thinking, loops back to start, never stranded), exactly-90 (east/south/west/north over 4 entries), no-entry-no-turn, restart (fresh arrow north) + SanityReplayTests replay-digest match (live=replay=replay2). Slides/belts case blocked-by 1 (ice tile)/2 (conveyor), not built: explicit skipped-with-reason, never fake pass. Screenshot of teaching room attached (turntable north, framed arrow visible). Server: worktree game on 8505 health-checked (game.html 200, level API lists room). Full suites: 59 tests OK (1 skipped). No agent play session recorded, so none linked.
+- Evidence: `screenshots/features/mech-7-turntable-tile/20261101-174915-mech-7-turntable-tile-room-latest.png`

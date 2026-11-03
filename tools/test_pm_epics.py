@@ -80,7 +80,7 @@ class EpicUiTests(unittest.TestCase):
         self.assertIn("/pm/epics", self.src)
         self.assertIn("function EpicsPage", self.src)
         self.assertIn("function EpicShow", self.src)
-        row = self.src[self.src.index("function FeatureRow"):self.src.index("function Board")]
+        row = self.src[self.src.index("function FeatureRow"):self.src.index("function EpicsPage")]
         self.assertIn("feature.epic", row)
 
 

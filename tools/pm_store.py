@@ -43,7 +43,7 @@ def _task_status(value: object) -> str:
 PRIORITIES = ("low", "medium", "high", "urgent")
 AUTHORS = ("human", "agent")
 REVIEW_DECISIONS = ("pending", "changes_requested", "approved_for_merge")
-TASK_KINDS = ("work", "review-fixes")
+TASK_KINDS = ("work", "review-fixes", "qa")
 
 SPEC_KEYS = (
     "goal", "user_story", "use_case", "behavior", "edge_cases",
@@ -183,6 +183,23 @@ def _normalize_session_ref(entry: dict) -> dict:
     }
 
 
+def _norm_comment_labels(value: object) -> list[str]:
+    if value is None:
+        return []
+    if isinstance(value, str):
+        value = value.split(',')
+    if not isinstance(value, list) or any(not isinstance(label, str) for label in value):
+        raise StoreError("comment labels must be a comma-separated string or list of strings")
+    labels = []
+    seen = set()
+    for label in value:
+        label = label.strip()
+        if label and label.casefold() not in seen:
+            labels.append(label)
+            seen.add(label.casefold())
+    return labels
+
+
 def _normalize_comment(entry: object) -> dict:
     if not isinstance(entry, dict):
         raise StoreError("each comment must be a mapping")
@@ -198,6 +215,7 @@ def _normalize_comment(entry: object) -> dict:
         "author": author,
         "created": entry.get("created") or "",
         "body": body,
+        "labels": _norm_comment_labels(entry.get("labels")),
         "attachments": _norm_attachments(entry.get("attachments")),
         "session_refs": _norm_session_refs(entry.get("session_refs")),
     }
@@ -759,14 +777,14 @@ def _next_comment_id(comments: list[dict]) -> str:
 
 def _add_comment_to(comments: list[dict], author: str, body: str,
                     attachments: object = None,
-                    session_refs: object = None) -> dict:
+                    session_refs: object = None, labels: object = None) -> dict:
     _check_author(author)
     if not isinstance(body, str) or not body.strip():
         raise StoreError("comment body must not be empty")
     comment = _normalize_comment({
         "id": _next_comment_id(comments), "author": author,
         "created": _now(), "body": body.strip(),
-        "attachments": attachments or [], "session_refs": session_refs or [],
+        "labels": labels, "attachments": attachments or [], "session_refs": session_refs or [],
     })
     comments.append(comment)
     return comment
@@ -774,21 +792,21 @@ def _add_comment_to(comments: list[dict], author: str, body: str,
 
 def add_feature_comment(data: dict, fid: str, author: str, body: str,
                         attachments: object = None,
-                        session_refs: object = None) -> dict:
+                        session_refs: object = None, labels: object = None) -> dict:
     feature = get_feature(data, fid)
     comment = _add_comment_to(feature["comments"], author, body,
-                              attachments, session_refs)
+                              attachments, session_refs, labels)
     _touch(feature)
     return comment
 
 
 def add_task_comment(data: dict, fid: str, tid: str, author: str, body: str,
                      attachments: object = None,
-                     session_refs: object = None) -> dict:
+                     session_refs: object = None, labels: object = None) -> dict:
     feature = get_feature(data, fid)
     task = get_task(feature, tid)
     comment = _add_comment_to(task["comments"], author, body,
-                              attachments, session_refs)
+                              attachments, session_refs, labels)
     _touch(task)
     _touch(feature)
     return comment
@@ -803,12 +821,14 @@ def _find_comment(comments: list[dict], cid: str) -> dict:
 
 def update_comment(comments: list[dict], cid: str, body: str,
                    attachments: object = None,
-                   session_refs: object = None) -> dict:
+                   session_refs: object = None, labels: object = None) -> dict:
     comment = _find_comment(comments, cid)
     if comment["author"] != "human":
         raise StoreError("agent comments are read-only")
     if not isinstance(body, str) or not body.strip():
         raise StoreError("comment body must not be empty")
+    if labels is not None:
+        comment["labels"] = _norm_comment_labels(labels)
     comment["body"] = body.strip()
     if attachments is not None:
         comment["attachments"] = _norm_attachments(attachments)
@@ -952,6 +972,8 @@ def export_feature_md(feature: dict, data: dict) -> str:
         lines.append(f"### {c.get('created', '')} · {c.get('author', '')} · on `{scope}`")
         lines.append("")
         lines.append(c.get("body") or "")
+        if c.get("labels"):
+            lines.append("- Labels: " + ", ".join(c["labels"]))
         for a in c.get("attachments") or []:
             lines.append(f"- Evidence: `{a}`")
         for s in c.get("session_refs") or []:

@@ -1,7 +1,7 @@
 ---
 title: Mud tile — sanity check
 summary: leaves footprints enemies can follow. Sanity-check for candidate mechanic #47 (Terrain and Hazards, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -98,22 +98,66 @@ Named test cases (from the candidate file; all must be played):
 
 ### mech-47-mud-tile/test-level — Test Level: mech-47-mud-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-47-mud-tile-room.json (test:true) realising the teaching moment for Mud tile: First room: a muddy loop on the way to an orb, with a chaser in the level. A player who walks the direct muddy line leads the chaser along their own prints to the orb room and is caught there, which teaches that mud carries their route to enemies and that a false trail could have been left instead.
 - Acceptance: mech-47-mud-tile-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-47-mud-tile/implement-mechanic — Implement Mud tile
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #47 deterministically in the pure step function per the spec rules. Rules: You leave scent prints in mud; A chaser or patroller stepping into mud follows the order of your prints instead of its normal rule until the prints end; Laying a loop of prints baits it in a circle
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-47-mud-tile-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-47-mud-tile/sanity-check — Sanity check Mud tile in mech-47-mud-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-47-mud-tile-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-47-mud-tile/20261101-181519-mech-47-mud-tile-room-20261101-231509.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:15:32 · agent · on `mech-47-mud-tile`
+
+Ready for review: Mud tile — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-47-mud-tile/test-level: Test Level: mech-47-mud-tile-room — completed, commit 37213e7 — muddy-loop teaching room (test:true)
+- mech-47-mud-tile/implement-mechanic: Implement Mud tile — completed, commit f0c2184 — pack packs/mud-tile with ordered scent prints, real generated assets, test_mech_47_mud_tile.py
+- mech-47-mud-tile/sanity-check: Sanity check Mud tile — completed, commit 4d0aa81 — 74 tests OK (skipped=2 blocked-by 32), replay digest match, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-47-mud-tile/20261101-181519-mech-47-mud-tile-room-20261101-231509.png (gallery on feature page)
+- Sessions: none recorded (none fabricated); replay proof is SanityReplayTests digest match over the 30-step solution log
+
+Playtest:
+- Worktree: .worktrees/mech-47-mud-tile
+- Start: cd .worktrees/mech-47-mud-tile && source ../.venv/bin/activate && python tools/server.py --port 8517 (run bash tools/prep_level_sprites.sh first) — use 8517, board server stays on 8321
+- Game: http://127.0.0.1:8517/static/game.html — open the Test Level mech-47-mud-tile-room from the game menu
+
+Note: enemy-follows-prints cases remain blocked-by mech 32 (chaser, unbuilt) as explicit skipped-with-reason tests; never merged, never self-approved.
+
+### 2026-11-01T18:11:24 · agent · on `mech-47-mud-tile/test-level`
+
+Starting: build levels/mech-47-mud-tile-room.json (test:true) realising the muddy-loop teaching moment (naive muddy line leaves ordered scent prints; corrected dry route succeeds). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads, rectangular rows, legend covers tiles, mud loop + dry route present.
+
+### 2026-11-01T18:11:51 · agent · on `mech-47-mud-tile/test-level`
+
+Done: levels/mech-47-mud-tile-room.json (test:true), commit 37213e7. Muddy loop MMMMM/M...M/MMMMM on way to far orb, dry bottom passage as corrected route, return orb on dry route. Naive muddy line leaves ordered prints (verified in implement task); dry route succeeds with no trail. Level loads via game_levels in the mech test (see implement-mechanic).
+
+### 2026-11-01T18:11:52 · agent · on `mech-47-mud-tile/implement-mechanic`
+
+Starting: pack tools/static/packs/mud-tile/ (manifest first, main.js via pack/kernel hooks only, pure deterministic step, no wall-clock), wiring in game-core.js/game.html/game.js, generated assets, and tools/test_mech_47_mud_tile.py covering every YAML test_cases entry (blocked-by 32 cases as explicit skipped-with-reason). Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: new mech tests + game-core/session suites green.
+
+### 2026-11-01T18:14:07 · agent · on `mech-47-mud-tile/implement-mechanic`
+
+Done: pack tools/static/packs/mud-tile/ (manifest.json first, main.js mud:mud terrain via onEnterTerrain setMeta mud_order + incCounter mud:print_count, no wall-clock), assets mud.png + mud-prints.png REAL generated art via scripts/gen-image (512x512 RGBA), wiring game-core.js/game.html/game.js (mud-prints sprite swap), tools/test_mech_47_mud_tile.py. Commit f0c2184. Tests: python -m unittest tools.test_mech_47_mud_tile tools.test_pack_folders tools.test_game_core tools.test_game_sessions tools.test_session_replay = 33 tests OK (skipped=2, both blocked-by 32 chaser with explicit reasons).
+
+### 2026-11-01T18:14:08 · agent · on `mech-47-mud-tile/sanity-check`
+
+Starting: run named test_cases end to end, screenshot teaching room via worktree server on 8517, replay-digest proof (SanityReplayTests), PM evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: mech tests green, screenshot attached, digest match reported.
+
+### 2026-11-01T18:15:22 · agent · on `mech-47-mud-tile/sanity-check`
+
+Done: sanity-check commit 4d0aa81. Named test_cases end to end: prints record order PASS, dry-route/no-trail PASS, solution (muddy line to far orb + dry return, both orbs, back at start) PASS, restart+replay PASS (SanityReplayTests digest match, 30 steps), enemy-follows-prints + adversarial false trail SKIPPED blocked-by 32 (chaser unbuilt) with explicit reasons in test file. Suites: tools.test_mech_47_mud_tile + test_pack_folders + test_game_core + test_game_sessions + test_session_replay + test_mech_5_crumbling_tile + test_player_movement + test_orbs_and_gate = 74 tests OK (skipped=2). Screenshot of teaching room from worktree build on port 8517 attached. Assets: mud.png/mud-prints.png real generated art via scripts/gen-image (no placeholder fallback). No agent play session recorded (none fabricated).
+- Evidence: `screenshots/features/mech-47-mud-tile/20261101-181519-mech-47-mud-tile-room-20261101-231509.png`

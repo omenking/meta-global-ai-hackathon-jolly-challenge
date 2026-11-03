@@ -1,7 +1,7 @@
 ---
 title: Decoy Jolly — sanity check
 summary: A copy of you that enemies chase instead of you, placed where you stand. Sanity-check for candidate mechanic #39 (Enemies and Bots, revised).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -86,22 +86,66 @@ Needs a mechanics playground: new — Test Level mech-39-decoy-jolly-room, built
 
 ### mech-39-decoy-jolly/test-level — Test Level: mech-39-decoy-jolly-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-39-decoy-jolly-room.json (test:true) realising the teaching moment for Decoy Jolly: First room: the decoy pickup stands just before a guarded corridor, but not yet in sight of it. A player who walks through without pausing drops the copy where enemies cannot see it and is chased as normal, which teaches that a decoy only works where it can be seen by what it is meant to distract.
 - Acceptance: mech-39-decoy-jolly-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-39-decoy-jolly/implement-mechanic — Implement Decoy Jolly
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #39 deterministically in the pure step function per the spec rules. Rules: You carry one decoy in a slot; Walking over its pickup drops the copy on your current tile as you step off it, so deployment is walking through it, no new key needed; It lasts 20 moves; While it stands, patrollers, chasers and blockers target the decoy tile instead of you
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-39-decoy-jolly-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-39-decoy-jolly/sanity-check — Sanity check Decoy Jolly in mech-39-decoy-jolly-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-39-decoy-jolly-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-39-decoy-jolly/20261101-184854-mech-39-decoy-jolly-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:49:09 · agent · on `mech-39-decoy-jolly`
+
+Ready for review: Decoy Jolly — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-39-decoy-jolly/test-level: Test Level room — completed, commit `63ec225` — teaching room loads, naive unseen fails, corrected wins
+- mech-39-decoy-jolly/implement-mechanic: Implement Decoy Jolly — completed, commit `d305337` — pack, wiring, 3 generated assets, 12 tests OK skipped=1 (blocker blocked-by 34)
+- mech-39-decoy-jolly/sanity-check: Sanity check — completed, commit `d305337` (evidence run on implement code) — 22 tests OK skipped=1, replay digest match, screenshot attached on task
+
+Evidence:
+- Screenshots: screenshots/features/mech-39-decoy-jolly/20261101-184854-mech-39-decoy-jolly-room-latest.png (on sanity-check task)
+- Sessions: none recorded; replay verified via SanityReplayTests digest, no fabricated session
+
+Playtest:
+- Worktree: `.worktrees/mech-39-decoy-jolly`
+- Start: `cd .worktrees/mech-39-decoy-jolly && source .venv/bin/activate && python tools/server.py --port 8546` — use `8546`, board server stays on 8321
+- Game: http://127.0.0.1:8546/static/game.html — open the Test Level `mech-39-decoy-jolly-room` from the game menu; linked sessions replay from the Sessions menu.
+
+Note: static level copy staged locally in worktree tools/static/levels/ (gitignored) for screenshot; canonical level is levels/mech-39-decoy-jolly-room.json. Human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T18:45:05 · agent · on `mech-39-decoy-jolly/test-level`
+
+Starting: build mech-39-decoy-jolly-room teaching level. Human approved starting all proposed mechanic features in chat this session. Verify: level loads, naive fails, corrected succeeds.
+
+### 2026-11-01T18:45:36 · agent · on `mech-39-decoy-jolly/test-level`
+
+Done: levels/mech-39-decoy-jolly-room.json (test:true), commit 8c1c228. Pickup D at (5,2) before guarded corridor row; guard patrols east room. Naive rush drops unseen, one-step hesitation drops in sight. Human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T18:45:37 · agent · on `mech-39-decoy-jolly/implement-mechanic`
+
+Starting: decoy pack (pickup->slot->deploy on step-off, 20 moves, guard targeting/LOS), wiring, assets, full YAML test_cases. Human approved starting all proposed mechanic features in chat this session. Verify: node-driven unit tests + repo suites.
+
+### 2026-11-01T18:47:57 · agent · on `mech-39-decoy-jolly/implement-mechanic`
+
+Done: decoy pack tools/static/packs/decoy/ (manifest-first, 3 real generated assets via scripts/gen-image, defineAsset bundled:true), wiring in game-core.js/game.html, tools/test_mech_39_decoy_jolly.py covering all YAML test_cases. Commit d305337 (test-level commit amended to 63ec225). Tests: test_mech_39 12 OK skipped=1 (blocker blocked-by 34); combined suites 40 OK. Human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T18:47:58 · agent · on `mech-39-decoy-jolly/sanity-check`
+
+Starting: sanity play, screenshot, replay digest on port 8546. Human approved starting all proposed mechanic features in chat this session.
+
+### 2026-11-01T18:49:04 · agent · on `mech-39-decoy-jolly/sanity-check`
+
+Sanity done: corrected play wins, naive unseen loses and retry wins, 20-move expiry, replay digest matches (SanityReplayTests). Tests: 22 OK skipped=1 sanity run; combined earlier 40 OK. Screenshot attached. Assets: 3 real gen-image files. No session fabricated; replay digest via core.replay in tests. Human approved starting all proposed mechanic features in chat this session.
+- Evidence: `screenshots/features/mech-39-decoy-jolly/20261101-184854-mech-39-decoy-jolly-room-latest.png`

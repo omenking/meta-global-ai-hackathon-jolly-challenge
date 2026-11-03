@@ -1,7 +1,7 @@
 ---
 title: Chain switch — sanity check
 summary: switches must fire in order. Sanity-check for candidate mechanic #28 (Switches and Doors, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -82,22 +82,64 @@ Needs a mechanics playground: new — Test Level mech-28-chain-switch-room, buil
 
 ### mech-28-chain-switch/test-level — Test Level: mech-28-chain-switch-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-28-chain-switch-room.json (test:true) realising the teaching moment for Chain switch: First room: three switches with clear order marks and an info tile beside the first. A player who presses the nearest switch first because it is nearest resets the chain and lights nothing, which teaches that the order, rather than the pressing, is the puzzle.
 - Acceptance: mech-28-chain-switch-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-28-chain-switch/implement-mechanic — Implement Chain switch
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #28 deterministically in the pure step function per the spec rules. Rules: Switches carry order marks; Pressing them in order lights each in turn and opens the linked door at the last one; Pressing out of order resets all of them
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-28-chain-switch-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-28-chain-switch/sanity-check — Sanity check Chain switch in mech-28-chain-switch-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-28-chain-switch-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-28-chain-switch/20261101-183241-mech-28-chain-switch-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:32:52 · agent · on `mech-28-chain-switch`
+
+Ready for review: Chain switch — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-28-chain-switch/test-level: Test Level: mech-28-chain-switch-room — completed, commit `e258d7c` — teaching room built, nearest switch is the last in order
+- mech-28-chain-switch/implement-mechanic: Implement Chain switch — completed, commit `2733e3e` — chain-switch pack, generated assets, 12 new tests green, 132 touched-suite tests green
+- mech-28-chain-switch/sanity-check: Sanity check Chain switch in mech-28-chain-switch-room — completed, commit `4a85a1f` — end-to-end play, replay digest match, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-28-chain-switch/20261101-183241-mech-28-chain-switch-room-latest.png (gallery on the feature page)
+- Sessions: none recorded (no session is linked; replay proof is the SanityReplayTests digest match in tools/test_mech_28_chain_switch.py)
+
+Playtest:
+- Worktree: `.worktrees/mech-28-chain-switch`
+- Start: `cd .worktrees/mech-28-chain-switch && source .venv/bin/activate && python tools/server.py --port 8531` — use `8531`, board server stays on 8321
+- Game: http://127.0.0.1:8531/static/game.html — open the Test Level `mech-28-chain-switch-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T18:28:28 · agent · on `mech-28-chain-switch/test-level`
+
+Starting: build levels/mech-28-chain-switch-room.json (test:true) realising the teaching moment — three order-marked chain switches, nearest switch is not first, info tile beside switch 1; naive nearest-first press resets, in-order press opens the door. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads from Test Levels menu, rows rectangular, legend covers tiles, naive action fails and corrected action succeeds (full play evidence in sanity-check).
+
+### 2026-11-01T18:28:56 · agent · on `mech-28-chain-switch/test-level`
+
+Done: levels/mech-28-chain-switch-room.json (test:true), commit e258d7c. Layout: spawn (1,1), switch 3 at (3,1) nearest (naive trap), switch 1 at (9,3) beside info tile at (8,3), switch 2 at (4,5), chain door in divider at (10,4), exit X at (13,4). Structural check: rows all 15 wide, legend covers every tile. Full load/play verification follows in implement-mechanic and sanity-check (level references chain: defs registered by the new pack).
+
+### 2026-11-01T18:28:57 · agent · on `mech-28-chain-switch/implement-mechanic`
+
+Starting: implement Chain switch pack (tools/static/packs/chain-switch/) following crumbling pattern — manifest first, bundled assets, pure deterministic step logic via pack/kernel hooks only (counters chain:progress/chain:total, setObject lit/open variants, no wall-clock reads); wire into game-core.js and game.html; write tools/test_mech_28_chain_switch.py mirroring test_mech_5_crumbling_tile.py covering every YAML test_cases entry. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: unit tests green, existing suites stay green, replay digest matches.
+
+### 2026-11-01T18:32:18 · agent · on `mech-28-chain-switch/implement-mechanic`
+
+Done: commit 2733e3e. Pack tools/static/packs/chain-switch/ (manifest first, main.js) following crumbling: counters chain:progress/chain:total counted at level load, lit/open states via setObject def swaps, door blocks until progress==total, out-of-order press resets all lit switches, complete chain ignores further presses; pure step only, no wall-clock reads (kernel purity 0). Assets: all 4 YAML assets generated with scripts/gen-image (muse-image-1.0, 512x512) into pack assets/, bundled:true in manifest, defineAsset in main.js — chain-switch-unlit.png, chain-switch-lit.png, door-closed.png, door-open.png. Wiring: game-core.js registers pack, game.html loads it, game.js swaps lit/open textures, board.js draws order-mark overlays. Tests: tools/test_mech_28_chain_switch.py 12 tests OK covering every YAML test_cases entry (solution in-order, adversarial nearest-first, boundary reset-all, boundary door-only-at-last, restart+replay digest, purity, assets); existing suites 132 tests OK after prep_level_sprites.sh in the fresh worktree (the 2 initial sprite failures were the missing generated level-sprites, pre-existing in any fresh worktree).
+
+### 2026-11-01T18:32:19 · agent · on `mech-28-chain-switch/sanity-check`
+
+Starting: play mech-28-chain-switch-room end to end (naive nearest-first fails, in-order succeeds), screenshot the teaching room from the worktree server on port 8531, verify replay digest via SanityReplayTests, upload evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: screenshot attached, replay digest matches, tests green.
+
+### 2026-11-01T18:32:46 · agent · on `mech-28-chain-switch/sanity-check`
+
+Done: commit 4a85a1f (evidence commit; sanity work is play + proof, no code change). Played mech-28-chain-switch-room end to end via the pure step function: naive nearest-first press (switch 3) lights nothing and resets, corrected order 1-2-3 lights each in turn, door opens only at the last press, walk through to exit wins. Replay proof: SanityReplayTests live digest == replay digest == second replay digest, final (13,4) won progress 3. Unit: tools.test_mech_28_chain_switch 12 tests OK; touched suites 132 tests OK. Screenshot of the teaching room from the worktree build (port 8531) attached; no agent play session was recorded, so none is linked. Assets all generated with scripts/gen-image, no placeholder fallback.
+- Evidence: `screenshots/features/mech-28-chain-switch/20261101-183241-mech-28-chain-switch-room-latest.png`

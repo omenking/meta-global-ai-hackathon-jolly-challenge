@@ -1,7 +1,7 @@
 ---
 title: Heavy block — sanity check
 summary: Takes two pushes per tile; power gloves make it one push. Sanity-check for candidate mechanic #87 (Blocks, revised).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -89,22 +89,64 @@ Needs a mechanics playground: new — Test Level mech-87-heavy-block-room, built
 
 ### mech-87-heavy-block/test-level — Test Level: mech-87-heavy-block-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-87-heavy-block-room.json (test:true) realising the teaching moment for Heavy block: First room: a heavy block on the way to a switch, with a patroller crossing behind it. A player who starts pushing without watching the patrol is caught while straining on the first push and restarts the room, which teaches that the strain is real time in which other things still move.
 - Acceptance: mech-87-heavy-block-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-87-heavy-block/implement-mechanic — Implement Heavy block
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #87 deterministically in the pure step function per the spec rules. Rules: It moves only onto empty floor or a switch plate, exactly as a push block (81); water, deep water, void, fire and lava block it; First push input: Jolly shows a pushing/straining graphic and the block budges but stays, second consecutive push moves it one tile; Time and enemies keep running while you strain; Wearing power gloves (89) moves it in a single push
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-87-heavy-block-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-87-heavy-block/sanity-check — Sanity check Heavy block in mech-87-heavy-block-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-87-heavy-block-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-87-heavy-block/20261101-182954-mech-87-heavy-block-room.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T18:30:18 · agent · on `mech-87-heavy-block`
+
+Ready for review: Heavy block — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-87-heavy-block/test-level: Test Level: mech-87-heavy-block-room — completed, commit 6b38923 — test:true room loads; patroller crosses the pushing column behind the block
+- mech-87-heavy-block/implement-mechanic: Implement Heavy block — completed, commit fbd24b5 — pack tools/static/packs/heavy-block (manifest first, 4 real generated assets), two-push strain, gloves one push, fail-closed destinations; 18 tests OK (3 skipped-with-reason for blocked-by integrations)
+- mech-87-heavy-block/sanity-check: Sanity check Heavy block — completed, commit 25c8f4a — golden corpus regenerated; replay digest live==replay==replay2; full discover 279 tests with only 2 pre-existing PM review-UI failures (also on untouched main)
+
+Evidence:
+- Screenshots: screenshots/features/mech-87-heavy-block/20261101-182954-mech-87-heavy-block-room.png (gallery on the feature page)
+- Sessions: none recorded, none linked
+
+Playtest:
+- Worktree: .worktrees/mech-87-heavy-block
+- Start: cd .worktrees/mech-87-heavy-block && source .venv/bin/activate && python tools/server.py --port 8525 — use 8525, board server stays on 8321 (run bash tools/prep_level_sprites.sh once in the worktree so the game page can load the new level)
+- Game: http://127.0.0.1:8525/static/game.html — open the Test Level mech-87-heavy-block-room from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T18:23:37 · agent · on `mech-87-heavy-block/test-level`
+
+Starting: build levels/mech-87-heavy-block-room.json (test:true) realising the teaching moment (heavy block on the way to a switch, patroller crossing behind; naive push while straining is caught, timed push succeeds). HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, layout tests, naive-vs-corrected play in the sanity check.
+
+### 2026-11-01T18:24:06 · agent · on `mech-87-heavy-block/test-level`
+
+Done: levels/mech-87-heavy-block-room.json (test:true), commit 6b38923. Layout: player west, heavy block H on the lane to switch plate S and switch gate D guarding orb+warp; patroller E patrols the pushing column behind the block; power gloves V south-west. Verified: game_levels loads it, rows rectangular, legend covers every tile. Naive-vs-corrected play proof lands in the sanity check.
+
+### 2026-11-01T18:24:07 · agent · on `mech-87-heavy-block/implement-mechanic`
+
+Starting: heavy-block pack under tools/static/packs/ (manifest first, generated assets, pure step logic via pack/kernel hooks: first push budges/strains, second consecutive push moves, gloves one push, fail-closed destinations, patroller keeps moving during strain) plus tools/test_mech_87_heavy_block.py covering every YAML test_cases entry. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Verify: unit tests under Node, existing game-core/session suites stay green.
+
+### 2026-11-01T18:26:56 · agent · on `mech-87-heavy-block/implement-mechanic`
+
+Done: tools/static/packs/heavy-block/ (manifest first; 4 real generated assets via scripts/gen-image: heavy-block.png, heavy-block-budging.png, jolly-straining.png, jolly-pushing-heavy.png, all bundled:true + defineAsset), pack/kernel hooks only (first push budges+strains with pending, second consecutive push moves, gloves one push, fail-closed destinations, patroller keeps moving during strain, contact loses), wired in game-core.js/game.html/game.js (budging sprite + straining/pushing Jolly poses). Commit fbd24b5. Tests: tools.test_mech_87_heavy_block 18 tests OK (3 skipped-with-reason for blocked-by 29/31/89+41/43/44 integrations, rules exercised for real on pack stand-ins); tools.test_game_core + test_game_sessions + test_mech_5_crumbling_tile 23 tests OK.
+
+### 2026-11-01T18:26:57 · agent · on `mech-87-heavy-block/sanity-check`
+
+Starting: play mech-87-heavy-block-room end to end (named YAML test_cases), screenshot the teaching room from the worktree build on port 8525, replay-digest proof, PM evidence. HUMAN APPROVAL: the human approved starting all proposed mechanic features in chat this session. Verify: full unit suites, screenshot attached, replay digest match.
+
+### 2026-11-01T18:30:00 · agent · on `mech-87-heavy-block/sanity-check`
+
+Done: played mech-87-heavy-block-room end to end. Named YAML test_cases: solution (two pushes per tile onto the switch, gate opens, orb+warp, won), adversarial (naive right,right caught while straining — patroller advances during the strain step and the run is lost, block unmoved; timed waits succeed), first-push-budges/second-moves (+ non-consecutive pushes never move it), blocked destinations (water/deep/fire/lava/void/wall never move it, no pending) and gloves boundary (one push with gloves), restart+replay (fresh state restores block, no pending; SanityReplayTests live==replay==replay2 digest). Tests: tools.test_mech_87_heavy_block 18 OK (3 skipped-with-reason: blocked-by 29/31/89+41/43/44 integrations, rules for real on pack stand-ins); full discover 279 tests: 2 pre-existing PM review-UI failures (also failing on untouched main) + golden corpus regenerated for the new room (commit 25c8f4a, test_refactor_regression now green). Assets: 4 real generated images via scripts/gen-image (no placeholder fallback). No agent play session was recorded, so none is linked. Screenshot attached; game build live during check at http://127.0.0.1:8525/static/game.html?level=mech-87-heavy-block-room.
+- Evidence: `screenshots/features/mech-87-heavy-block/20261101-182954-mech-87-heavy-block-room.png`

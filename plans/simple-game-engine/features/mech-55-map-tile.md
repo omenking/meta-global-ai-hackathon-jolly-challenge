@@ -1,7 +1,7 @@
 ---
 title: Map tile — sanity check
 summary: briefly shows the whole level. Sanity-check for candidate mechanic #55 (Vision and Information, trial).
-status: proposed
+status: in_review
 priority: medium
 epic: mechanic-sanity-checks
 requires:
@@ -80,22 +80,64 @@ Needs a mechanics playground: new — Test Level mech-55-map-tile-room, built fr
 
 ### mech-55-map-tile/test-level — Test Level: mech-55-map-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Build levels/mech-55-map-tile-room.json (test:true) realising the teaching moment for Map tile: First room: the map tile at the entrance to a branching room, with three seconds of full view. A player who glances and runs takes the branch that looked shortest and finds the lock they have no key for, which teaches that the glimpse has to be read before it is acted on because it will not come back.
 - Acceptance: mech-55-map-tile-room loads from the game Test Levels menu; the naive first action fails as the teaching moment describes and the corrected action can succeed.
 
 ### mech-55-map-tile/implement-mechanic — Implement Map tile
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Implement candidate mechanic #55 deterministically in the pure step function per the spec rules. Rules: Stepping on it consumes it and shows the whole level as an overlay for three seconds while play continues, then the view fades back; What you did not memorise, you lose
 - Acceptance: Every rule in the feature spec's Player-Facing Behavior holds in mech-55-map-tile-room; no unrecorded wall-clock reads; existing repo tests still pass.
 
 ### mech-55-map-tile/sanity-check — Sanity check Map tile in mech-55-map-tile-room
 
-- Status: `proposed` · Priority: `medium` · Kind: `work`
+- Status: `completed` · Priority: `medium` · Kind: `work`
 - Description: Play mech-55-map-tile-room end-to-end exercising every spec rule, attach a screenshot, record an agent play session and verify replay reaches the same end state.
 - Acceptance: Screenshot evidence attached, recorded session linked, replay digest matches, and the feature is ready to roll up for review.
+- Evidence: `screenshots/features/mech-55-map-tile/20261101-192743-mech-55-map-tile-room-latest.png`
 
 ## Comments
 
-_(no comments yet)_
+### 2026-11-01T19:28:38 · agent · on `mech-55-map-tile`
+
+Ready for review: Map tile — sanity check (3/3 tasks completed)
+
+Tasks:
+- mech-55-map-tile/test-level: Test Level: mech-55-map-tile-room — completed, commit `dd819ef` — branching room loads as test level; naive short branch blocked at blue lock, corrected long branch wins
+- mech-55-map-tile/implement-mechanic: Implement Map tile — completed, commit `6a19749` — maptile pack, 3s t_ms overlay consumed tile, real generated assets; 11/11 new tests, 106/106 touched suites
+- mech-55-map-tile/sanity-check: Sanity check Map tile in mech-55-map-tile-room — completed, commit `5f955ce` — all YAML test_cases end to end, replay digest match, screenshot attached
+
+Evidence:
+- Screenshots: screenshots/features/mech-55-map-tile/20261101-192743-mech-55-map-tile-room-latest.png (attached on sanity-check task; gallery on the feature page)
+- Sessions: none recorded — no agent play session was recorded, so none is linked (replay proof is SanityReplayTests digest match in tools/test_mech_55_map_tile.py)
+
+Playtest:
+- Worktree: `.worktrees/mech-55-map-tile`
+- Start: `cd .worktrees/mech-55-map-tile && source .venv/bin/activate && python tools/server.py --port 8565` — use `8565`, board server stays on 8321
+- Game: http://127.0.0.1:8565/static/game.html — open the Test Level `mech-55-map-tile-room` from the game menu; linked sessions replay from the Sessions menu.
+
+### 2026-11-01T19:23:41 · agent · on `mech-55-map-tile/test-level`
+
+Starting: build levels/mech-55-map-tile-room.json (test:true) realising the teaching moment - map tile at entrance to branching room; naive short branch hits a lock with no key, corrected long branch finds the key. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: level loads via game_levels, naive path blocked at lock, corrected path wins.
+
+### 2026-11-01T19:23:55 · agent · on `mech-55-map-tile/test-level`
+
+Done: levels/mech-55-map-tile-room.json (test:true, 17x9) - map tile M at entrance, short north branch to blue lock B (no blue key in room), long south branch with red key r to red lock R, orb behind, gate G before warp X. Commit dd819ef. Verified: game_levels.load_level parses, rows rectangular, listed as test level.
+
+### 2026-11-01T19:23:56 · agent · on `mech-55-map-tile/implement-mechanic`
+
+Starting: pack tools/static/packs/maptile/ (manifest first, generated assets, main.js via pack/kernel hooks only) + wiring in game-core.js/game.html/game.js; deterministic overlay from recorded t_ms (3000ms), consumed tile, restart restores. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: tools/test_mech_55_map_tile.py covering every YAML test_case, plus existing suites.
+
+### 2026-11-01T19:27:07 · agent · on `mech-55-map-tile/implement-mechanic`
+
+Done: tools/static/packs/maptile/ (manifest first; map.png/map-spent.png/map-overlay.png REAL generated art via scripts/gen-image, 512x512, bundled:true, defineAsset in main.js) + wiring in game-core.js/game.html/game.js (overlay is a view of state.flags). Mechanic: onEnter consumes tile to map:spent and sets map_overlay_until_ms = t_ms+3000; tick hook clears at t_ms>=until; play continues; no wall-clock reads. Commit 6a19749. Tests: tools.test_mech_55_map_tile 11/11 OK (all 5 YAML test_cases); touched suites 106/106 OK after prep_level_sprites.sh (2 sprite-existence failures in the fresh worktree were missing generated level-sprites, pass after prep, also pass on main).
+
+### 2026-11-01T19:27:08 · agent · on `mech-55-map-tile/sanity-check`
+
+Starting: run named test_cases end to end, start worktree server on 8565, screenshot teaching room via capture_level.sh, upload evidence. Human approval: the human approved starting all proposed mechanic features in chat this session. Verify: SanityReplayTests digest match + screenshot attached.
+
+### 2026-11-01T19:28:08 · agent · on `mech-55-map-tile/sanity-check`
+
+Done: all 5 YAML test_cases run end to end in tools.test_mech_55_map_tile (11/11 OK incl. SanityReplayTests replay-digest match, 32 steps, won at (15,7) orbs 0). Screenshot of teaching room captured from worktree server on 8565 (map tile sprite, blue lock short branch, red key/lock long branch visible) and attached. No agent play session was recorded, so none is linked. Commit 5f955ce (evidence commit; sanity itself changed no code). Assets are real generated art, no placeholder fallback.
+- Evidence: `screenshots/features/mech-55-map-tile/20261101-192743-mech-55-map-tile-room-latest.png`
