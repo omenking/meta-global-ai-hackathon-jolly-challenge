@@ -1,0 +1,13 @@
+{
+  "pack": "bonus-orb",
+  "main": "main.js",
+  "assets": [
+    {"file": "bonus-orb.png", "kind": "tiles", "bundled": true,
+     "shows": "bonus orb with a gold ring, distinct from a counted orb"},
+    {"file": "timer-gain.png", "kind": "gui", "bundled": true,
+     "shows": "timer gain indicator showing the 10 seconds added when a bonus orb is taken"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
