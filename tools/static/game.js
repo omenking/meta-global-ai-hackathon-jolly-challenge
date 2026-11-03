@@ -347,9 +347,11 @@
   function setInventory(slots) {
     for (let i = 0; i < inventoryIcons.length; i++) {
       const color = slots[i];
-      const tex = color && textures['key_' + color + '.png']
-        ? textures['key_' + color + '.png']
-        : (color ? textures['key.png'] : null);
+      const tex = color === 'dash' && textures['dash-charge.png']
+        ? textures['dash-charge.png']
+        : (color && textures['key_' + color + '.png']
+          ? textures['key_' + color + '.png']
+          : (color ? textures['key.png'] : null));
       inventoryIcons[i].visible = !!tex;
       if (tex && inventoryIcons[i].texture !== tex) inventoryIcons[i].texture = tex;
     }
@@ -458,6 +460,15 @@
         ? textures['jolly-fall.png']
         : (straining && textures['jolly-straining.png']
           ? textures['jolly-straining.png'] : textures['jolly.png']);
+      // Fallen pose while the run is lost, dashing pose on the step
+      // a dash fired, normal pose otherwise.
+      const pActor = (state.actors || []).find((a) => a.id === 'player');
+      const dashed = pActor && pActor.flags
+        && pActor.flags.dash_step === state.steps;
+      const pose = state.status === 'lost' && textures['jolly-fall.png']
+        ? textures['jolly-fall.png']
+        : (dashed && textures['jolly-dashing.png']
+          ? textures['jolly-dashing.png'] : textures['jolly.png']);
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     marker.clear();
@@ -508,6 +519,13 @@
         const tdir = (tmeta && tmeta.turntable_dir) || 'north';
         const ttex = textures['turntable-' + tdir + '.png'];
         if (ttex && dt.sprite.texture !== ttex) dt.sprite.texture = ttex;
+      } else if (dt.ch === 'D') {
+        // Dash tile: spent face while the player holds the charge.
+        dt.sprite.visible = true;
+        const held = (state.inventory || []).some(
+          (e) => e.item === 'dash:charge');
+        const dtex = textures[held ? 'dash-tile-spent.png' : 'dash-tile.png'];
+        if (dtex && dt.sprite.texture !== dtex) dt.sprite.texture = dtex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open

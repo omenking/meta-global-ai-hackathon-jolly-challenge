@@ -1,0 +1,23 @@
+{
+  "name": "mech-9-dash-tile-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-9-dash-tile Test Level: dash tile (D) on the straight top corridor the player is already walking east along, far wall two tiles east of it; keeping east spends the stored dash against the wall, while the zigzag south/east/south/east changes direction to keep the charge, then east+east dashes over the one-tile gap (V) to the orb and warp",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "X": {"base": "floor_default.png", "label": "warp (exit)", "sprite": "portal.png"},
+    "D": {"base": "floor_default.png", "label": "dash tile", "text": "D", "def": "dash:dash-tile"},
+    "V": {"base": "floor_default.png", "label": "gap (hole)", "text": "V", "def": "dash:gap"}
+  },
+  "rows": [
+    "#############",
+    "#P..D.#######",
+    "####..#######",
+    "#####..V.*X##",
+    "#############"
+  ]
+}
