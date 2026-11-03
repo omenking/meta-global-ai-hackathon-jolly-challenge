@@ -1,0 +1,16 @@
+{
+  "pack": "ice",
+  "main": "main.js",
+  "assets": [
+    {"file": "ice.png", "kind": "tiles", "bundled": true,
+     "shows": "ice tile, slippery floor the player slides across in the entry direction"},
+    {"file": "jolly-sliding.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly sliding on ice, unable to steer or stop until a braking wall, lock or block"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-sliding.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly sliding on ice, unable to steer or stop until a braking wall, lock or block"}
+  ],
+  "gui": [],
+  "blocks": []
+}
