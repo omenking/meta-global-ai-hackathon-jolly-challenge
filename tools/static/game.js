@@ -806,6 +806,13 @@
           : (gc2 === 'H' ? 'scorched.png' : 'floor_default.png');
         const tex2 = textures[texName2];
         if (tex2 && dt.sprite.texture !== tex2) dt.sprite.texture = tex2;
+      } else if (dt.ch === 'S') {
+        dt.sprite.visible = true;
+        const smeta = state.meta && state.meta[dt.x + ',' + dt.y];
+        const texName = (smeta && smeta.sand_print)
+          ? 'sand-prints.png' : 'sand.png';
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
