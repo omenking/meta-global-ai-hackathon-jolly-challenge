@@ -66,6 +66,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PouchPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, HourglassPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, StillPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, GhostPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -130,6 +131,7 @@
     PouchPack = require('./packs/orb-pouch/main.js');
     HourglassPack = require('./packs/hourglass/main.js');
     StillPack = require('./packs/still/main.js');
+    GhostPack = require('./packs/ghost/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -193,6 +195,7 @@
     PouchPack = root.GamePackOrbPouch;
     HourglassPack = root.GamePackHourglass;
     StillPack = root.GamePackStill;
+    GhostPack = root.GamePackGhost;
   }
 
   function createEngine(packRegisters) {
@@ -361,6 +364,7 @@
   // player stands on a still tile, and the core expiry check must
   // read the held value, not the raw recorded elapsed time.
   const engine = createEngine([StillPack, CorePack, KeysPack, WaterPack, CrumblePack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, GhostPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -473,6 +477,7 @@
     registerOrbPouchPack: PouchPack,
     registerHourglassPack: HourglassPack,
     registerStillPack: StillPack,
+    registerGhostPack: GhostPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;

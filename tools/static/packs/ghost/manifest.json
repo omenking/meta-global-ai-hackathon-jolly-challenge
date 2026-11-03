@@ -1,0 +1,15 @@
+{
+  "pack": "ghost",
+  "main": "main.js",
+  "assets": [
+    {"file": "ghost-start.png", "kind": "tiles", "bundled": true,
+     "shows": "ghost at the start of its replay, one step behind the failed attempt timeline"},
+    {"file": "ghost-jolly.png", "kind": "jolly_states", "bundled": true,
+     "shows": "ghost copy of Jolly replaying the failed attempt move for move"},
+    {"file": "ghost-jolly-fading.png", "kind": "jolly_states", "bundled": true,
+     "shows": "ghost fading as its replay ends"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

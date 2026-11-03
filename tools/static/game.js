@@ -304,6 +304,10 @@
     mapOverlay.alpha = 0.88; mapOverlay.visible = false;
     board.addChild(mapOverlay);
   }
+  // Ghost pack: replay ghosts are a view of state.flags positions,
+  // redrawn from state on every step like the player sprite.
+  const ghostLayer = new PIXI.Container();
+  board.addChild(ghostLayer);
   // Right-hand column: grey panel like the original side panel.
   // Each readout is a label sprite over a backplate box holding
   // three blue digit sprites; values come only from GameHud helpers
@@ -663,6 +667,17 @@
           if (!lit) darkOverlay.rect(dx * TILE, dy * TILE, TILE, TILE).fill(0x000000);
         }
       }
+    ghostLayer.removeChildren();
+    for (const g of (state.flags && state.flags.ghost_positions) || []) {
+      const texName = g.fading ? 'ghost-jolly-fading.png'
+        : (g.kind === 'start' ? 'ghost-start.png' : 'ghost-jolly.png');
+      const tex = textures[texName];
+      if (!tex) continue;
+      const spr = new PIXI.Sprite(tex);
+      spr.scale.set(scale);
+      spr.position.set(g.x * TILE, g.y * TILE);
+      if (g.fading) spr.alpha = 0.45;
+      ghostLayer.addChild(spr);
     }
     document.getElementById('dbg-player').textContent =
       state.player.x + ', ' + state.player.y;
