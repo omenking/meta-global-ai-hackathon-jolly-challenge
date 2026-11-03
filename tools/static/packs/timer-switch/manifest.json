@@ -1,0 +1,20 @@
+{
+  "pack": "timer-switch",
+  "main": "main.js",
+  "assets": [
+    {"file": "timer-switch-ready.png", "kind": "tiles", "bundled": true,
+     "shows": "timer switch ready to press, linked door closed and no countdown running"},
+    {"file": "timer-switch-running.png", "kind": "tiles", "bundled": true,
+     "shows": "timer switch just pressed, linked door open and countdown started"},
+    {"file": "door-closed.png", "kind": "tiles", "bundled": true,
+     "shows": "closed timer door blocking the doorway like wall"},
+    {"file": "door-open.png", "kind": "tiles", "bundled": true,
+     "shows": "open timer door, walkable doorway while the countdown runs"}
+  ],
+  "jolly_states": [],
+  "gui": [
+    {"file": "timer-countdown.png", "kind": "gui", "bundled": true,
+     "shows": "visible 5-second countdown on the door, showing the seconds left before it closes"}
+  ],
+  "blocks": []
+}
