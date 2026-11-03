@@ -266,6 +266,17 @@
   }
   const marker = new PIXI.Graphics();
   board.addChild(marker);
+  // Revealed mimics patrol away from their placed tile, so pooled
+  // sprites follow the 'N' cells in the projected grid each frame.
+  const mimicPool = [];
+  for (let i = 0; i < 4; i++) {
+    const spr = new PIXI.Sprite(textures['mimic-revealed.png']
+      || PIXI.Texture.EMPTY);
+    spr.scale.set(scale);
+    spr.visible = false;
+    board.addChild(spr);
+    mimicPool.push(spr);
+  }
   // Right-hand column: grey panel like the original side panel.
   // Each readout is a label sprite over a backplate box holding
   // three blue digit sprites; values come only from GameHud helpers
@@ -736,12 +747,29 @@
         if (bx >= 0 && dt.sprite.position) {
           dt.sprite.position.set(bx * TILE, by * TILE);
         }
+      } else if (dt.ch === 'M') {
+        // Disguised mimic looks like an orb on its placed tile;
+        // once revealed ('N') the pooled sprites take over.
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'M';
+        const tex = textures['mimic-orb.png'];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
           : !!(state.grid[dt.y] && state.grid[dt.y][dt.x] === dt.ch);
       }
     }
+    let mimicIdx = 0;
+    for (let gy = 0; gy < state.grid.length; gy++) {
+      for (let gx = 0; gx < state.grid[gy].length; gx++) {
+        if (state.grid[gy][gx] !== 'N' || mimicIdx >= mimicPool.length) continue;
+        const spr = mimicPool[mimicIdx++];
+        spr.position.set(gx * TILE, gy * TILE);
+        spr.visible = true;
+      }
+    }
+    for (; mimicIdx < mimicPool.length; mimicIdx++) mimicPool[mimicIdx].visible = false;
     retryGroup.visible = state.status === 'lost';
     // The HUD win screen is only for the last level; mid-chain a
     // win shows the level summary (its Next button) instead.

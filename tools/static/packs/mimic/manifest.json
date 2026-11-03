@@ -1,0 +1,13 @@
+{
+  "pack": "mimic",
+  "main": "main.js",
+  "assets": [
+    {"file": "mimic-orb.png", "kind": "tiles", "bundled": true,
+     "shows": "mimic disguised as an orb, identical to a real orb at a distance"},
+    {"file": "mimic-revealed.png", "kind": "tiles", "bundled": true,
+     "shows": "mimic revealed within one tile, patrolling and lethal on touch"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}
