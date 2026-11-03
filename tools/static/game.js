@@ -581,6 +581,16 @@
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
         dt.sprite.visible = true;
+      } else if (dt.ch === 'T' || dt.ch === 'a' || dt.ch === 'b') {
+        // Toggle pack: the switch face and both doors swap sprites
+        // in place and never disappear, so follow the live def.
+        const oid = state.objects && state.objects[dt.y]
+          && state.objects[dt.y][dt.x];
+        const odef = oid && window.GameCore.getTileDef
+          ? window.GameCore.getTileDef(oid) : null;
+        const otex = odef && odef.sprite && textures[odef.sprite];
+        if (otex && dt.sprite.texture !== otex) dt.sprite.texture = otex;
+        dt.sprite.visible = !!oid;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
