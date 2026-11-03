@@ -1,0 +1,19 @@
+{
+  "pack": "echo",
+  "main": "main.js",
+  "assets": [
+    {"file": "echo.png", "kind": "tiles", "bundled": true,
+     "shows": "echo tile ready to ping, before the player stands on it"},
+    {"file": "echo-cooling.png", "kind": "tiles", "bundled": true,
+     "shows": "echo tile spent and not yet reusable, in the few moves after a ping"}
+  ],
+  "jolly_states": [
+    {"file": "jolly-on-echo.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly standing on the echo tile as the ping fires"}
+  ],
+  "gui": [
+    {"file": "echo-ping.png", "kind": "gui", "bundled": true,
+     "shows": "eight-direction indicator pointing toward the nearest hidden orb, direction only with no picture or distance"}
+  ],
+  "blocks": []
+}

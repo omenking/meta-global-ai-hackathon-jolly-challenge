@@ -1,0 +1,24 @@
+{
+  "name": "mech-54-echo-tile-room",
+  "time_limit": 120,
+  "test": true,
+  "source": "mech-54-echo-tile Test Level: echo tile at (3,1) pings east toward the nearest orb at (7,1) hidden behind water hazard at (5,1)-(6,1); walking the pinged line straight east meets the water and loses, detouring via row 2 around the water reaches the orb; second orb at (11,3) is farther so the ping names the nearer one; gate at (11,1) and warp at (12,1)",
+  "tile": 64,
+  "legend": {
+    ".": {"label": "floor", "sprite": "floor_default.png"},
+    "#": {"label": "wall", "sprite": "wall.png"},
+    "P": {"base": "floor_default.png", "label": "player (Jolly)", "sprite": "jolly.png"},
+    "*": {"base": "floor_default.png", "label": "chip (orb)", "sprite": "orb.png"},
+    "e": {"base": "floor_default.png", "label": "echo tile", "text": "e", "def": "echo:echo"},
+    "~": {"base": "floor_default.png", "label": "water (hazard)", "def": "water:water"},
+    "G": {"base": "floor_default.png", "label": "gate", "sprite": "gate.png"},
+    "X": {"label": "portal (exit)", "sprite": "portal.png"}
+  },
+  "rows": [
+    "###############",
+    "#P.e.~~*...GX.#",
+    "#.............#",
+    "#..........*..#",
+    "###############"
+  ]
+}

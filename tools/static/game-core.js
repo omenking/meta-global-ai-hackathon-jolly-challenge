@@ -54,6 +54,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DarkRoomPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LanternPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, FogPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, EchoPack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -106,6 +107,7 @@
     DarkRoomPack = require('./packs/dark-room/main.js');
     LanternPack = require('./packs/lantern/main.js');
     FogPack = require('./packs/fog/main.js');
+    EchoPack = require('./packs/echo/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -157,6 +159,7 @@
     DarkRoomPack = root.GamePackDarkRoom;
     LanternPack = root.GamePackLantern;
     FogPack = root.GamePackFog;
+    EchoPack = root.GamePackEcho;
   }
 
   function createEngine(packRegisters) {
@@ -300,6 +303,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DarkRoomPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LanternPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, FogPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, EchoPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -400,6 +404,7 @@
     isDarkStateVisible: DarkRoomPack.isStateVisible,
     registerLanternPack: LanternPack,
     registerFogPack: FogPack, isFogRevealed: FogPack.isRevealed,
+    registerEchoPack: EchoPack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
