@@ -763,6 +763,16 @@
           && state.grid[dt.y][dt.x] === 'U');
         const gtex = textures['guard-facing-' + gfacing + '.png'];
         if (gtex && dt.sprite.texture !== gtex) dt.sprite.texture = gtex;
+      } else if (dt.ch === 'A') {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'A' || gc === 'a';
+        const texName = gc === 'a' ? 'alarm-inert.png' : 'alarm.png';
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'S') {
+        const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = gc === 'S' || gc === 'E';
+        if (dt.sprite.text !== undefined) dt.sprite.text = gc === 'E' ? 'E' : 'S';
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
