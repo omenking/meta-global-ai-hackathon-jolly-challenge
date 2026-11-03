@@ -83,14 +83,11 @@
         ? state.counters['lantern:radius'] : 1 };
   }
 
-  const api = { digitsFor, timerSeconds, orbsLeft, levelNumber,
-    inventorySlots, keyColor, INVENTORY_SLOTS, KEY_COLORS, lanternGauge };
   function raftCounter(state) {
     if (!state || !state.flags || !state.flags['raft:riding']) return null;
     const v = state.counters && state.counters['raft:remaining'];
     return typeof v === 'number' ? v : null;
   }
-  const api = { digitsFor, timerSeconds, orbsLeft, levelNumber, raftCounter,
   // Banked bonus orbs (orb-bank pack counter): the HUD shows the
   // bank between levels so a bank gate's price is known up front.
   function bankCount(state) {
@@ -102,7 +99,8 @@
   }
 
   const api = { digitsFor, timerSeconds, orbsLeft, bankCount, levelNumber,
-    inventorySlots, keyColor, INVENTORY_SLOTS, KEY_COLORS };
+    inventorySlots, keyColor, INVENTORY_SLOTS, KEY_COLORS,
+    lanternGauge, raftCounter };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameHud = api;
 })(typeof window !== 'undefined' ? window : globalThis);

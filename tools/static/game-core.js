@@ -8,81 +8,26 @@
 // gate_open) computed here, never stored as kernel truth.
 (function (root) {
   'use strict';
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, IcePack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, ConveyorPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TeleportPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, OneWayPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, BouncePack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TurntablePack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, StickyPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DashPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, FanPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TwinLockPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MasterKeyPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TimedOrbPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, HiddenPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, HeavyPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack;
-  let GuardedPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, BonusPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, FloorSwitchPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TogglePack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TimerPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, OneTimePack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, ChainPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, WeightPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MirrorPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PatrollerPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, ChaserPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, SleeperPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, BlockerPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, ThiefPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MimicPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, GuardPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, AlarmPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DecoyPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MulePack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DeepWaterPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, CurrentPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, FirePack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LavaPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, SandPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, GlassPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MudPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, CheckpointPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, IceBridgePack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DarkRoomPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LanternPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, FogPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, EchoPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MapTilePack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, InfoPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, SecretWallPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PeepPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LifePreserverPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, CleatsPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MagnetPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, LanternPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PouchPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, HourglassPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, StillPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, GhostPack;
-  let MoveDoorPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PushBlockPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, IceBlockPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack,
-    BombPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, MirrorPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, RaftPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, HeavyPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, GlovesPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, DirtBlockPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, PowerPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TwinPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, SwapPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, OrbBankPack;
-  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, FinalDoorPack;
-  if (typeof module !== 'undefined' && module.exports) {
+    IcePack, ConveyorPack, TeleportPack, OneWayPack,
+    BouncePack, TurntablePack, StickyPack, DashPack,
+    FanPack, TwinLockPack, MasterKeyPack, TimedOrbPack,
+    HiddenPack, HeavyPack, GuardedPack, BonusPack,
+    FloorSwitchPack, TogglePack, TimerPack, OneTimePack,
+    ChainPack, WeightPack, MirrorPack, PatrollerPack,
+    ChaserPack, SleeperPack, BlockerPack, ThiefPack,
+    MimicPack, GuardPack, AlarmPack, DecoyPack,
+    MulePack, DeepWaterPack, CurrentPack, FirePack,
+    LavaPack, SandPack, GlassPack, MudPack,
+    CheckpointPack, IceBridgePack, DarkRoomPack, LanternPack,
+    FogPack, EchoPack, MapTilePack, InfoPack,
+    SecretWallPack, PeepPack, LifePreserverPack, CleatsPack,
+    MagnetPack, LanternOilPack, PouchPack, HourglassPack,
+    StillPack, GhostPack, MoveDoorPack, PushBlockPack,
+    IceBlockPack, BombPack, MirrorBlockPack, RaftPack,
+    HeavyBlockPack, GlovesPack, DirtBlockPack, PowerPack,
+    TwinPack, SwapPack, OrbBankPack, FinalDoorPack;
+if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
     KeysPack = require('./packs/keys-locks/main.js');
@@ -142,7 +87,7 @@
     LifePreserverPack = require('./packs/life-preserver/main.js');
     CleatsPack = require('./packs/ice-cleats/main.js');
     MagnetPack = require('./packs/magnet-glove/main.js');
-    LanternPack = require('./packs/lantern-oil/main.js');
+    LanternOilPack = require('./packs/lantern-oil/main.js');
     PouchPack = require('./packs/orb-pouch/main.js');
     HourglassPack = require('./packs/hourglass/main.js');
     StillPack = require('./packs/still/main.js');
@@ -151,9 +96,9 @@
     PushBlockPack = require('./packs/push-block/main.js');
     IceBlockPack = require('./packs/ice-block/main.js');
     BombPack = require('./packs/bomb-block/main.js');
-    MirrorPack = require('./packs/mirror-block/main.js');
+    MirrorBlockPack = require('./packs/mirror-block/main.js');
     RaftPack = require('./packs/raft/main.js');
-    HeavyPack = require('./packs/heavy-block/main.js');
+    HeavyBlockPack = require('./packs/heavy-block/main.js');
     GlovesPack = require('./packs/power-gloves/main.js');
     DirtBlockPack = require('./packs/dirt-block/main.js');
     PowerPack = require('./packs/power-switches/main.js');
@@ -220,7 +165,7 @@
     LifePreserverPack = root.GamePackLifePreserver;
     CleatsPack = root.GamePackIceCleats;
     MagnetPack = root.GamePackMagnetGlove;
-    LanternPack = root.GamePackLanternOil;
+    LanternOilPack = root.GamePackLanternOil;
     PouchPack = root.GamePackOrbPouch;
     HourglassPack = root.GamePackHourglass;
     StillPack = root.GamePackStill;
@@ -229,9 +174,9 @@
     PushBlockPack = root.GamePackPushBlock;
     IceBlockPack = root.GamePackIceBlock;
     BombPack = root.GamePackBombBlock;
-    MirrorPack = root.GamePackMirrorBlock;
+    MirrorBlockPack = root.GamePackMirrorBlock;
     RaftPack = root.GamePackRaft;
-    HeavyPack = root.GamePackHeavyBlock;
+    HeavyBlockPack = root.GamePackHeavyBlock;
     GlovesPack = root.GamePackPowerGloves;
     DirtBlockPack = root.GamePackDirtBlock;
     PowerPack = root.GamePackPowerSwitches;
@@ -316,7 +261,6 @@
         timer_frozen: !!((state.counters || {})['hourglass:collected']
           && state.t_ms - (state.counters || {})['hourglass:collect_ms'] >= 0
           && state.t_ms - (state.counters || {})['hourglass:collect_ms'] < 10000),
-        t_ms: state.t_ms, input: state.last_input };
         t_ms: state.t_ms, input: state.last_input,
         raft_riding: !!(state.flags && state.flags['raft:riding']),
         raft_remaining: (state.counters && typeof state.counters['raft:remaining'] === 'number') ? state.counters['raft:remaining'] : null };
@@ -352,82 +296,29 @@
       getTileDef: function (id) { return registry.getTile(id); } };
   }
 
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, IcePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, ConveyorPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TeleportPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, OneWayPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, BouncePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TurntablePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, StickyPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DashPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, FanPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TwinLockPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MasterKeyPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TimedOrbPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, HiddenPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, HeavyPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, GuardedPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, BonusPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, FloorSwitchPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TogglePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TimerPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, OneTimePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, ChainPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, WeightPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MirrorPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PatrollerPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, ChaserPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, SleeperPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, BlockerPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, ThiefPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MimicPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, GuardPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, AlarmPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DecoyPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MulePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DeepWaterPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, CurrentPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, FirePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LavaPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, SandPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, GlassPack, CrumblePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MudPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, CheckpointPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, IceBridgePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DarkRoomPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LanternPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, FogPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, EchoPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MapTilePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, InfoPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, SecretWallPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PeepPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LifePreserverPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, CleatsPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MagnetPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, LanternPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PouchPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, HourglassPack]);
-  // Still registers first: its tick holds elapsed_s while the
-  // player stands on a still tile, and the core expiry check must
-  // read the held value, not the raw recorded elapsed time.
-  const engine = createEngine([StillPack, CorePack, KeysPack, WaterPack, CrumblePack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, GhostPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack,
-    MoveDoorPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PushBlockPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, IceBlockPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, BombPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, MirrorPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, RaftPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, HeavyPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, GlovesPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, DirtBlockPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, PowerPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TwinPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, SwapPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, OrbBankPack]);
-  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, FinalDoorPack]);
+    // All packs registered together after the submission
+  // force-merge; StillPack first so its tick can hold
+  // elapsed_s before the core expiry check reads it.
+  const engine = createEngine([
+    StillPack, CorePack, KeysPack, WaterPack,
+    CrumblePack, IcePack, ConveyorPack, TeleportPack,
+    OneWayPack, BouncePack, TurntablePack, StickyPack,
+    DashPack, FanPack, TwinLockPack, MasterKeyPack,
+    TimedOrbPack, HiddenPack, HeavyPack, GuardedPack,
+    BonusPack, FloorSwitchPack, TogglePack, TimerPack,
+    OneTimePack, ChainPack, WeightPack, MirrorPack,
+    PatrollerPack, ChaserPack, SleeperPack, BlockerPack,
+    ThiefPack, MimicPack, GuardPack, AlarmPack,
+    DecoyPack, MulePack, DeepWaterPack, CurrentPack,
+    FirePack, LavaPack, SandPack, GlassPack,
+    MudPack, CheckpointPack, IceBridgePack, DarkRoomPack,
+    LanternPack, FogPack, EchoPack, MapTilePack,
+    InfoPack, SecretWallPack, PeepPack, LifePreserverPack,
+    CleatsPack, MagnetPack, LanternOilPack, PouchPack,
+    HourglassPack, GhostPack, MoveDoorPack, PushBlockPack,
+    IceBlockPack, BombPack, MirrorBlockPack, RaftPack,
+    HeavyBlockPack, GlovesPack, DirtBlockPack, PowerPack,
+    TwinPack, SwapPack, OrbBankPack, FinalDoorPack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -536,7 +427,7 @@
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerLifePreserverPack: LifePreserverPack,
     registerIceCleatsPack: CleatsPack,
     registerMagnetPack: MagnetPack,
-    registerLanternOilPack: LanternPack,
+    registerLanternOilPack: LanternOilPack,
     registerOrbPouchPack: PouchPack,
     registerHourglassPack: HourglassPack,
     registerStillPack: StillPack,
@@ -545,9 +436,9 @@
     registerPushBlockPack: PushBlockPack,
     registerIceBlockPack: IceBlockPack,
     registerBombPack: BombPack,
-    registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerMirrorPack: MirrorPack,
+    registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerMirrorBlockPack: MirrorBlockPack,
     registerRaftPack: RaftPack,
-    registerHeavyBlockPack: HeavyPack,
+    registerHeavyBlockPack: HeavyBlockPack,
     registerPowerGlovesPack: GlovesPack,
     registerDirtBlockPack: DirtBlockPack,
     registerPowerSwitchesPack: PowerPack,

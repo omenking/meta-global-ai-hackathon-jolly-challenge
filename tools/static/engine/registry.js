@@ -6,9 +6,8 @@
   'use strict';
   function createRegistry() {
     const tiles = new Map(), items = new Map(), assets = new Map();
-    const levelDefHooks = [], levelHooks = [], tickHooks = [], controllers = new Map();
-    const beforeMoveHooks = [];
     const levelDefHooks = [], levelHooks = [], tickHooks = [], timerHooks = [], controllers = new Map();
+    const beforeMoveHooks = [];
     const api = {
       defineTile: function (id, def) { tiles.set(id, Object.assign({ id: id }, def)); },
       defineItem: function (id, def) { items.set(id, Object.assign({ id: id }, def)); },
@@ -47,8 +46,7 @@
       getItem: function (id) { return items.get(id) || null; },
       getController: function (defId) { return controllers.get(defId) || null; },
       _levelDefHooks: levelDefHooks, _levelHooks: levelHooks, _tickHooks: tickHooks,
-      _beforeMoveHooks: beforeMoveHooks,
-      _levelDefHooks: levelDefHooks, _levelHooks: levelHooks, _tickHooks: tickHooks, _timerHooks: timerHooks,
+      _beforeMoveHooks: beforeMoveHooks, _timerHooks: timerHooks,
       tileIds: function () { return [...tiles.keys()]; },
     };
     api.registerPack = function (registerFn) { registerFn(api); return api; };

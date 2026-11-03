@@ -272,8 +272,8 @@
     spr.scale.set(scale);
     spr.position.set(actor.x * TILE, actor.y * TILE);
     board.addChild(spr);
-    actorSprites.push({ id: actor.id, sprite: spr });
     actorSprites.push({ id: actor.id, def: actor.def, sprite: spr });
+  }
   let botSprite = null;
   if (textures['mule-bot.png']) {
     botSprite = new PIXI.Sprite(textures['mule-bot.png']);
@@ -483,16 +483,13 @@
       const color = slots[i];
       const tex = color === 'dash' && textures['dash-charge.png']
         ? textures['dash-charge.png']
-        : (color && textures['key_' + color + '.png']
+        : (color && textures['key_' + color + '.png'])
           ? textures['key_' + color + '.png']
-          : (color ? textures['key.png'] : null));
-      const tex = color && textures['key_' + color + '.png']
-        ? textures['key_' + color + '.png']
-        : (color && textures[color + '-slot.png'])
-          ? textures[color + '-slot.png']
-          : (color && textures[color + '.png'])
-            ? textures[color + '.png']
-            : (color ? textures['key.png'] : null);
+          : (color && textures[color + '-slot.png'])
+            ? textures[color + '-slot.png']
+            : (color && textures[color + '.png'])
+              ? textures[color + '.png']
+              : (color ? textures['key.png'] : null);
       inventoryIcons[i].visible = !!tex;
       if (tex && inventoryIcons[i].texture !== tex) inventoryIcons[i].texture = tex;
     }
@@ -524,7 +521,6 @@
     powerGroup.addChild(powerSprite);
     insertHudSection(powerGroup, 150, 4);
   }
-  insertHudSection(inventoryGroup, 104, 4);
   const retryGroup = new PIXI.Container();
   retryGroup.visible = false;
   const retryMsg = new PIXI.Text({ text: "Time's up \u2014 you lost!", style: {
@@ -630,85 +626,63 @@
     if (playerSprite) {
       playerSprite.position.set(state.player.x * TILE,
         state.player.y * TILE);
-      // Fallen pose while the run is lost, launching pose on the
-      // step a bounce launch lands, normal pose otherwise.
+      // Jolly pose: fallen while lost; otherwise the first active
+      // mechanic pose wins (launch, dash, strain/heavy push, raft,
+      // wading, peeping, still, lantern, gloves); normal otherwise.
+      // Combined from per-mechanic pose blocks at submission merge.
+      const pActor = (state.actors || []).find((a) => a.id === 'player');
       const launching = state.status !== 'lost' &&
         (state.last_effects || []).indexOf('bounceLaunch') >= 0 &&
         textures['jolly-launching.png'];
-      const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png']
-        : (launching ? textures['jolly-launching.png'] : textures['jolly.png']);
-      // Fallen pose while the run is lost, straining pose while the
-      // player is mid-strain on a sticky tile, normal pose otherwise.
-      const pActor = state.actors &&
-        state.actors.find((a) => a.id === 'player');
       const straining = !!(pActor && pActor.flags &&
         pActor.flags.sticky_strained);
-      const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png']
-        : (straining && textures['jolly-straining.png']
-          ? textures['jolly-straining.png'] : textures['jolly.png']);
-      // Fallen pose while the run is lost, dashing pose on the step
-      // a dash fired, normal pose otherwise.
-      const pActor = (state.actors || []).find((a) => a.id === 'player');
       const dashed = pActor && pActor.flags
         && pActor.flags.dash_step === state.steps;
-      const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png']
-        : (dashed && textures['jolly-dashing.png']
-          ? textures['jolly-dashing.png'] : textures['jolly.png']);
-      // Fallen pose while the run is lost, wading pose while
-      // standing on deep water, normal pose otherwise.
       const onDeep = state.terrain && state.terrain[state.player.y] &&
         state.terrain[state.player.y][state.player.x] === 'deep:water';
-      const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png']
-        : (onDeep && textures['jolly-wading.png']
-          ? textures['jolly-wading.png'] : textures['jolly.png']);
-        : (state.counters && state.counters['lantern:held'] > 0
-          && textures['jolly-with-lantern.png']
-          ? textures['jolly-with-lantern.png'] : textures['jolly.png']);
-      // Fallen pose while the run is lost, peeping pose while the
-      // peep preview holds Jolly on the hole, normal pose otherwise.
-      const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png']
-        : ((state.flags || {})['peep:active'] && textures['jolly-peeping.png']
-          ? textures['jolly-peeping.png'] : textures['jolly.png']);
-      // Fallen pose while the run is lost, thinking pose while the
-      // timer is held on a still tile, normal pose otherwise.
-      const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png']
-        : (state.flags && state.flags['still:held'] && textures['jolly-still.png']
-          ? textures['jolly-still.png'] : textures['jolly.png']);
-      // Fallen pose while the run is lost, normal pose otherwise.
       const raftPose = window.GameHud.raftCounter(state) !== null &&
         textures['jolly-riding-raft.png'];
-      const pose = raftPose ? textures['jolly-riding-raft.png']
-        : (state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png'] : textures['jolly.png']);
-      // Fallen pose while the run is lost, normal pose otherwise;
-      // a heavy-block budge pending shows Jolly straining and the
-      // step that completes a heavy push shows the pushing pose.
       const heavyPose = state.flags && state.flags.heavy_pending
         && textures['jolly-straining.png'] ? textures['jolly-straining.png']
         : (state.flags && state.flags.heavy_last_push_step === state.steps
           && textures['jolly-pushing-heavy.png']
           ? textures['jolly-pushing-heavy.png'] : null);
-      const pose = state.status === 'lost' && textures['jolly-fall.png']
-        ? textures['jolly-fall.png'] : (heavyPose || textures['jolly.png']);
-      // Fallen pose while the run is lost, gloved pose while the
-      // power gloves are held, normal pose otherwise.
       const gloved = (state.inventory || []).some(
         (e) => e.item === 'gloves:gloves');
       const pose = state.status === 'lost' && textures['jolly-fall.png']
         ? textures['jolly-fall.png']
-        : (gloved && textures['jolly-power-gloves.png']
-          ? textures['jolly-power-gloves.png'] : textures['jolly.png']);
+        : launching ? textures['jolly-launching.png']
+        : (dashed && textures['jolly-dashing.png'])
+          ? textures['jolly-dashing.png']
+        : (straining && textures['jolly-straining.png'])
+          ? textures['jolly-straining.png']
+        : heavyPose ? heavyPose
+        : raftPose ? textures['jolly-riding-raft.png']
+        : (onDeep && textures['jolly-wading.png'])
+          ? textures['jolly-wading.png']
+        : ((state.flags || {})['peep:active'] && textures['jolly-peeping.png'])
+          ? textures['jolly-peeping.png']
+        : (state.flags && state.flags['still:held'] && textures['jolly-still.png'])
+          ? textures['jolly-still.png']
+        : (state.counters && state.counters['lantern:held'] > 0
+          && textures['jolly-with-lantern.png'])
+          ? textures['jolly-with-lantern.png']
+        : (gloved && textures['jolly-power-gloves.png'])
+          ? textures['jolly-power-gloves.png']
+        : textures['jolly.png'];
       if (pose && playerSprite.texture !== pose) playerSprite.texture = pose;
     }
     for (const as of actorSprites) {
       const actor = (state.actors || []).find((a) => a.id === as.id);
-      if (actor) as.sprite.position.set(actor.x * TILE, actor.y * TILE);
+      if (!actor) continue;
+      as.sprite.position.set(actor.x * TILE, actor.y * TILE);
+      if (as.def === 'sleeper:sleeper') {
+        const texName = state.flags && state.flags['sleeper:awake']
+          ? 'sleeper-awake.png' : 'sleeper-asleep.png';
+        const tex = textures[texName];
+        if (tex && as.sprite.texture !== tex) as.sprite.texture = tex;
+      }
+    }
     // Chaser actors are a view of state.actors, like the player.
     for (const actor of state.actors || []) {
       if (actor.def !== 'chaser:chaser') continue;
@@ -726,14 +700,7 @@
       const tex = actor.flags && actor.flags.blocked
         ? textures['chaser-blocked.png'] : textures['chaser.png'];
       if (tex && spr.texture !== tex) spr.texture = tex;
-      if (!actor) continue;
-      as.sprite.position.set(actor.x * TILE, actor.y * TILE);
-      if (as.def === 'sleeper:sleeper') {
-        const texName = state.flags && state.flags['sleeper:awake']
-          ? 'sleeper-awake.png' : 'sleeper-asleep.png';
-        const tex = textures[texName];
-        if (tex && as.sprite.texture !== tex) as.sprite.texture = tex;
-      }
+    }
     // Thief actors are a view of state.actors, like the player: the
     // sprite follows the actor, and carrying a snatched key swaps
     // to the carrying pose so the steal is visible.
@@ -753,6 +720,7 @@
       const tex = actor.flags && actor.flags.carrying
         ? textures['thief-carrying-key.png'] : textures['thief.png'];
       if (tex && spr.texture !== tex) spr.texture = tex;
+    }
     if (botSprite) {
       const bot = (state.actors || []).find((a) => a.def === 'mule:bot');
       botSprite.visible = !!bot;
@@ -763,6 +731,7 @@
           ? textures['mule-bot-waiting.png'] : textures['mule-bot.png'];
         if (btex && botSprite.texture !== btex) botSprite.texture = btex;
       }
+    }
     if (twinSprite) {
       const twin = (state.actors || []).find((a) => a.def === 'twin:second');
       twinSprite.visible = !!twin;
@@ -781,6 +750,7 @@
           if (!lit) darkOverlay.rect(dx * TILE, dy * TILE, TILE, TILE).fill(0x000000);
         }
       }
+    }
     ghostLayer.removeChildren();
     for (const g of (state.flags && state.flags.ghost_positions) || []) {
       const texName = g.fading ? 'ghost-jolly-fading.png'
@@ -848,15 +818,21 @@
       // grid char so the hole stays visible instead of turning back
       // into plain floor.
       if (dt.ch === 'D') {
+        // Orb-pouch door. The final-door branch below also claims
+        // 'D'; levels are separate rooms, and open/closed still
+        // follows the grid char, so first-match is acceptable here.
         const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
         dt.sprite.visible = true;
         const texName = gc === 'D' ? 'orb-door-closed.png' : 'orb-door-open.png';
-      if (dt.ch === 'H') {
+        const tex = textures[texName];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'H') {
         const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
         dt.sprite.visible = gc === 'H' || gc === 'h';
         const texName = gc === 'h' ? 'hourglass-spent.png' : 'hourglass.png';
         const tex = textures[texName];
         if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+      } else if (dt.ch === 'D') {
         const gcDoor = state.grid[dt.y] && state.grid[dt.y][dt.x];
         dt.sprite.visible = gcDoor === 'D' || gcDoor === 'd';
         const doorTex = textures[gcDoor === 'd'
@@ -1290,6 +1266,7 @@
     for (; mimicIdx < mimicPool.length; mimicIdx++) mimicPool[mimicIdx].visible = false;
     if (mapOverlay) {
       mapOverlay.visible = !!(state.flags && state.flags['map_overlay_active']);
+    }
     // Bomb blocks slide: their sprites follow the live bomb cells
     // in state instead of the cell the level placed them on, and a
     // consumed bomb's sprite hides. A cracked wall ('W') needs no
@@ -1308,10 +1285,12 @@
         dt.sprite.visible = !!cell;
         if (cell) dt.sprite.position.set(cell.x * TILE, cell.y * TILE);
       });
+    }
     for (const es of enemySprites) {
       const ea = state.actors.find((a) => a.id === es.id);
       if (ea) es.sprite.position.set(ea.x * TILE + TILE / 2, ea.y * TILE + TILE / 2);
       es.sprite.visible = !!ea;
+    }
     // Pooled block sprites follow the blocks' current grid cells
     // (creation order matches the row-major scan of state.grid).
     for (const bch of ['B', 'H']) {
@@ -1347,6 +1326,7 @@
     }
     if (frozenBadge) {
       frozenBadge.visible = window.GameCore.readout(state).timer_frozen;
+    }
     if (powerSprite && state.counters
         && typeof state.counters['power:count'] === 'number') {
       const ptex = textures['power-counter-'
