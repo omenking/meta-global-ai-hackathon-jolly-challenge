@@ -28,6 +28,7 @@
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, FloorSwitchPack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TogglePack;
   let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, TimerPack;
+  let Registry, Kernel, KeysPack, CorePack, WaterPack, CrumblePack, OneTimePack;
   if (typeof module !== 'undefined' && module.exports) {
     Registry = require('./engine/registry.js');
     Kernel = require('./engine/kernel.js');
@@ -54,6 +55,7 @@
     FloorSwitchPack = require('./packs/floor-switch/main.js');
     TogglePack = require('./packs/toggle-switch/main.js');
     TimerPack = require('./packs/timer-switch/main.js');
+    OneTimePack = require('./packs/one-time-switch/main.js');
   } else {
     Registry = root.GameRegistry; Kernel = root.GameKernel;
     KeysPack = root.GamePackKeysLocks;
@@ -79,6 +81,7 @@
     FloorSwitchPack = root.GamePackFloorSwitch;
     TogglePack = root.GamePackToggleSwitch;
     TimerPack = root.GamePackTimerSwitch;
+    OneTimePack = root.GamePackOneTimeSwitch;
   }
 
   function createEngine(packRegisters) {
@@ -196,6 +199,7 @@
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, FloorSwitchPack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TogglePack]);
   const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, TimerPack]);
+  const engine = createEngine([CorePack, KeysPack, WaterPack, CrumblePack, OneTimePack]);
 
   // --- Legacy char helpers (compatibility surface for tests/game.js) ---
   function findPlayer(level) {
@@ -268,6 +272,7 @@
     registerFloorSwitchPack: FloorSwitchPack,
     registerTogglePack: TogglePack,
     registerWaterPack: WaterPack, registerCrumblingPack: CrumblePack, registerTimerSwitchPack: TimerPack,
+    registerOneTimeSwitchPack: OneTimePack,
     registry: engine.registry, kernel: engine.kernel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.GameCore = api;
