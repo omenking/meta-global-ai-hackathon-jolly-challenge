@@ -1,0 +1,21 @@
+{
+  "pack": "magnet-glove",
+  "main": "main.js",
+  "assets": [
+    {"file": "magnet-glove.png", "kind": "tiles", "bundled": true,
+     "shows": "magnet glove pickup before it is collected into a slot"},
+    {"file": "magnet-glove-collected.png", "kind": "tiles", "bundled": true,
+     "shows": "empty pickup tile after the glove has been taken"},
+    {"file": "jolly-magnet-glove.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly wearing the held magnet glove"},
+    {"file": "jolly-magnet-pulling.png", "kind": "jolly_states", "bundled": true,
+     "shows": "Jolly staying in place with the glove raised while a metal block slides one tile toward them"},
+    {"file": "magnet-glove-slot.png", "kind": "gui", "bundled": true,
+     "shows": "magnet glove icon filling one inventory slot while held"},
+    {"file": "metal-block.png", "kind": "blocks", "bundled": true,
+     "shows": "metal block that can be pushed normally or pulled one tile toward a glove wearer in a clear line"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

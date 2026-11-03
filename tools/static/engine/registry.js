@@ -7,6 +7,7 @@
   function createRegistry() {
     const tiles = new Map(), items = new Map(), assets = new Map();
     const levelDefHooks = [], levelHooks = [], tickHooks = [], controllers = new Map();
+    const beforeMoveHooks = [];
     const api = {
       defineTile: function (id, def) { tiles.set(id, Object.assign({ id: id }, def)); },
       defineItem: function (id, def) { items.set(id, Object.assign({ id: id }, def)); },
@@ -31,11 +32,16 @@
       onLevelDefs: function (fn) { levelDefHooks.push(fn); },
       onLevelLoad: function (fn) { levelHooks.push(fn); },
       onTick: function (fn) { tickHooks.push(fn); },
+      // Before-move hooks run inside step() just before the player's
+      // move is attempted: fn(state, actor, dirName) may mutate the
+      // (already cloned) state and returns false to veto the move.
+      onBeforeMove: function (fn) { beforeMoveHooks.push(fn); },
       defineController: function (defId, fn) { controllers.set(defId, fn); },
       getTile: function (id) { return tiles.get(id) || null; },
       getItem: function (id) { return items.get(id) || null; },
       getController: function (defId) { return controllers.get(defId) || null; },
       _levelDefHooks: levelDefHooks, _levelHooks: levelHooks, _tickHooks: tickHooks,
+      _beforeMoveHooks: beforeMoveHooks,
       tileIds: function () { return [...tiles.keys()]; },
     };
     api.registerPack = function (registerFn) { registerFn(api); return api; };
