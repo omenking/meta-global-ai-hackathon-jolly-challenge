@@ -608,6 +608,24 @@
         const tn = dt.ch === 'S' ? (gc2 === 'B' ? 'one-time-switch-broken.png' : 'one-time-switch-intact.png') : (gc2 === 'O' ? 'door-open.png' : 'door-closed.png');
         const tx = textures[tn];
         if (tx && dt.sprite.texture !== tx) dt.sprite.texture = tx;
+      } else if (dt.ch === '1' || dt.ch === '2' || dt.ch === '3') {
+        // Chain switch: lit and unlit share the order-mark sprite
+        // slot; the visible stage follows the object def in state.
+        const cdef = state.objects && state.objects[dt.y]
+          && state.objects[dt.y][dt.x];
+        const tex = textures[/-lit$/.test(cdef || '')
+          ? 'chain-switch-lit.png' : 'chain-switch-unlit.png'];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+        dt.sprite.visible = true;
+      } else if (dt.ch === 'D') {
+        // Chain door: closed sprite blocks like wall, open sprite
+        // shows the walkable doorway after the final press.
+        const ddef = state.objects && state.objects[dt.y]
+          && state.objects[dt.y][dt.x];
+        const tex = textures[ddef === 'chain:door-open'
+          ? 'door-open.png' : 'door-closed.png'];
+        if (tex && dt.sprite.texture !== tex) dt.sprite.texture = tex;
+        dt.sprite.visible = true;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
