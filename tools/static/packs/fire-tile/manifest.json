@@ -1,0 +1,13 @@
+{
+  "pack": "fire-tile",
+  "main": "main.js",
+  "assets": [
+    {"file": "fire.png", "kind": "tiles", "bundled": true,
+     "shows": "burning fire on flammable floor, lethal while alight"},
+    {"file": "scorched.png", "kind": "tiles", "bundled": true,
+     "shows": "burnt-out floor after the fire dies, safe to cross"}
+  ],
+  "jolly_states": [],
+  "gui": [],
+  "blocks": []
+}

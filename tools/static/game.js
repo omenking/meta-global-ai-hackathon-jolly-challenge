@@ -796,6 +796,16 @@
         const gc = state.grid[dt.y] && state.grid[dt.y][dt.x];
         dt.sprite.visible = gc === 'S' || gc === 'E';
         if (dt.sprite.text !== undefined) dt.sprite.text = gc === 'E' ? 'E' : 'S';
+      } else if (dt.ch === 'F' || dt.ch === 'g' || dt.ch === 'w') {
+        // Fire pack: a grass/wood/fire cell follows the grid char —
+        // burning fire ('F') and burnt-out scorched floor ('H')
+        // swap textures, plain flammable floor shows the base.
+        const gc2 = state.grid[dt.y] && state.grid[dt.y][dt.x];
+        dt.sprite.visible = true;
+        const texName2 = gc2 === 'F' ? 'fire.png'
+          : (gc2 === 'H' ? 'scorched.png' : 'floor_default.png');
+        const tex2 = textures[texName2];
+        if (tex2 && dt.sprite.texture !== tex2) dt.sprite.texture = tex2;
       } else {
         dt.sprite.visible = dt.ch === 'G'
           ? !state.gate_open
