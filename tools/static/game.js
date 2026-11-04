@@ -74,12 +74,12 @@
   })();
   let level;
   try {
-    const res = await fetch('levels/' + levelName + '.json');
+    const res = await fetch('/api/game/levels/' + encodeURIComponent(levelName));
     if (!res.ok) throw new Error('HTTP ' + res.status);
     level = await res.json();
   } catch (err) {
-    fail('Could not load levels/' + levelName + '.json: ' + err.message +
-      '. Run tools/prep_level_sprites.sh first.');
+    fail('Could not load level ' + levelName + ': ' + err.message +
+      '. Check that levels/' + levelName + '.json exists.');
     return;
   }
   // Renderer-owned world scale: a level's own tile value never changes

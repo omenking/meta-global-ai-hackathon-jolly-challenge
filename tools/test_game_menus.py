@@ -62,10 +62,21 @@ class GameMenuTests(unittest.TestCase):
         self.assertEqual(len(level["rows"]), 6)
         self.assertTrue(all(len(r) == 7 for r in level["rows"]))
 
-    def test_prep_stages_all_levels(self):
-        script = (ROOT / "tools" / "prep_level_sprites.sh").read_text(
-            encoding="utf-8")
-        self.assertIn('cp "$ROOT/levels/"*.json "$LVL/"', script)
+    def test_every_listed_level_loads(self):
+        # The menu lists levels/ via /api/game/levels; the loaders
+        # fetch /api/game/levels/<id> (game_levels.load_level), so
+        # every listed level must load — no staged copy in between.
+        for item in game_levels.list_levels(ROOT / "levels"):
+            level = game_levels.load_level(ROOT / "levels", item["id"])
+            self.assertIn("rows", level, item["id"])
+            self.assertIn("legend", level, item["id"])
+
+    def test_pages_load_levels_from_api_not_staged_copy(self):
+        for page in ("game.js", "level-preview.html"):
+            src = (ROOT / "tools" / "static" / page).read_text(
+                encoding="utf-8")
+            self.assertIn("/api/game/levels/", src, page)
+            self.assertNotIn("fetch('levels/'", src, page)
 
 
 if __name__ == "__main__":

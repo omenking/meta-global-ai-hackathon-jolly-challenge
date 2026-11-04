@@ -23,7 +23,8 @@ class GamePageTests(unittest.TestCase):
 
     def test_renders_chosen_level_from_rows_and_legend(self):
         self.assertIn("params.get('level')", self.js)
-        self.assertIn("'levels/' + levelName + '.json'", self.js)
+        self.assertIn("'/api/game/levels/' + encodeURIComponent(levelName)",
+                      self.js)
         self.assertIn("level.rows", self.js)
         self.assertIn("level.legend", self.js)
         self.assertIn("'level-sprites/' + name", self.js)

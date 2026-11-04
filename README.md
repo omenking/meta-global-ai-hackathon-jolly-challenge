@@ -123,15 +123,15 @@ keyed sprites derived from `assets/published`. Key/lock colors are currently
 hue-rotated placeholders; real variants come later through the asset tool.
 
 ```sh
-bash tools/prep_level_sprites.sh   # derive sprites + stage level JSON
+bash tools/prep_level_sprites.sh   # derive sprites (level JSON needs no staging)
 source .venv/bin/activate
 python tools/server.py
 ```
 
 Then open http://127.0.0.1:8321/static/level-preview.html in a browser
-(`?level=chip1` selects the level file). Edit the grid in
-`levels/chip1.json` (rows plus legend) and re-run the prep script to
-restage it. See [plans/level-preview-tool/plan.md](./plans/level-preview-tool/plan.md).
+(`?level=chip1` selects the level file). The server reads `levels/*.json`
+directly, so edits and new level files load on refresh with no prep step.
+See [plans/level-preview-tool/plan.md](./plans/level-preview-tool/plan.md).
 
 ### Screenshots
 

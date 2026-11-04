@@ -7,21 +7,19 @@
 #
 # Reads assets/published/*.png (never modifies them) and writes:
 #   tools/static/level-sprites/*.png  - keyed RGBA tiles + hue placeholders
-#   tools/static/levels/chip1.json    - staged copy of levels/chip1.json
 #
-# The staged copy exists because tools/server.py only serves /static/* and
-# /outputs/*, so a repo-root levels/ file would 404 under it. The canonical
-# level file stays at levels/chip1.json; re-run this script after editing it.
+# Level JSON needs no staging: tools/server.py serves levels/*.json
+# directly via GET /api/game/levels/<id>, so new or edited levels load
+# without re-running this script. Only sprite changes need a re-run.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SRC="$ROOT/assets/published"
 OUT="$ROOT/tools/static/level-sprites"
-LVL="$ROOT/tools/static/levels"
 FFMPEG="${FFMPEG:-ffmpeg}"
 
 command -v "$FFMPEG" >/dev/null || { echo "ffmpeg not found" >&2; exit 1; }
-mkdir -p "$OUT" "$LVL"
+mkdir -p "$OUT"
 
 # Newest stamped file wins; lexicographic sort == chronological for this stamp.
 # The stamp must start with a digit: a bare "$1-*" glob would also match
@@ -88,5 +86,4 @@ done
 "$FFMPEG" -y -nostdin -v error -i "$GUI/backplate.png" \
   -vf "colorkey=0x00FF00:0.20:0.10,format=rgba" "$GOUT/backplate.png"
 
-cp "$ROOT/levels/"*.json "$LVL/"
 echo "wrote $(ls "$OUT" | wc -l) sprites to $OUT"

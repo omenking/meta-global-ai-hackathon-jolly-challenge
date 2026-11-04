@@ -1,8 +1,9 @@
 """Focused checks for level-preview sprite preparation.
 
 Verifies that tools/prep_level_sprites.sh derived keyed RGBA sprites from
-assets/published, staged the level JSON next to the preview page, and that
-every sprite id referenced by levels/chip1.json resolves to a file.
+assets/published and that every sprite id referenced by levels/chip1.json
+resolves to a file. Level JSON itself is served from levels/ by the
+/api/game/levels/<id> endpoint; no staged copy is involved.
 
 Run with: python -m unittest tools.test_level_sprites -v
 (or: python tools/test_level_sprites.py)
@@ -16,7 +17,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LEVEL_SRC = ROOT / "levels" / "chip1.json"
-LEVEL_STAGED = ROOT / "tools" / "static" / "levels" / "chip1.json"
 SPRITES_DIR = ROOT / "tools" / "static" / "level-sprites"
 
 KEYED_SPRITES = ("jolly.png", "key.png", "orb.png", "gate.png")
@@ -66,12 +66,6 @@ class LevelSpriteTests(unittest.TestCase):
             for cell in row:
                 self.assertIn(cell, self.level["legend"],
                               f"cell {cell!r} missing from legend")
-
-    def test_staged_level_matches_source(self):
-        self.assertTrue(LEVEL_STAGED.is_file(),
-                        "prep script must stage levels/chip1.json for serving")
-        self.assertEqual(LEVEL_STAGED.read_bytes(), LEVEL_SRC.read_bytes(),
-                         "staged level JSON must equal the source")
 
     def test_referenced_sprites_are_rgba_512(self):
         for name in sorted(_referenced_sprites(self.level)):

@@ -24,7 +24,6 @@ from capture_level import launch_browser
 CAPTURE_SH = ROOT / "tools" / "capture_level.sh"
 PREP_SH = ROOT / "tools" / "prep_level_sprites.sh"
 SPRITES_DIR = ROOT / "tools" / "static" / "level-sprites"
-STAGED_LEVEL = ROOT / "tools" / "static" / "levels" / "chip1.json"
 
 
 def _chrome_present():
@@ -86,8 +85,7 @@ def _ffprobe_dims(path):
 class LevelCaptureTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if not (SPRITES_DIR / "jolly.png").is_file() \
-                or not STAGED_LEVEL.is_file():
+        if not (SPRITES_DIR / "jolly.png").is_file():
             subprocess.run(["bash", str(PREP_SH)], check=True)
         cls.port = _free_port()
         cls.server = subprocess.Popen(
